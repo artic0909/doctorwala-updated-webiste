@@ -15,7 +15,7 @@
     <meta property="og:title" content="{{ ucfirst($path->clinic_name) }} - Pathology Services | Doctorwala">
     <meta property="og:description" content="Explore {{ ucfirst($path->clinic_name) }} located at {{ ucfirst($path->clinic_address) }}. Get reliable pathology tests and healthcare services. Book your appointment today.">
     <meta property="og:image" content="{{ asset('storage/' . ($path->banner->pathologybanner ?? 'default_image.jpg')) }}">
-    <meta property="og:url" content="{{ url('/dw/pathology/' . $path->id) }}">
+    <meta property="og:url" content="{{ url('/dw/pathology/' . $path->slug) }}">
 
     <!-- Twitter Card Tags -->
     <meta name="twitter:title" content="{{ ucfirst($path->clinic_name) }} - Pathology Services | Doctorwala">
@@ -557,17 +557,17 @@
                             </div>
                         </div>
                         <div class="team-text position-relative bg-light text-start rounded-bottom p-4 pt-5">
-                            <h4 class="mb-2"><a href="{{url('/dw/pathology/'.$path->id)}}"
+                            <h4 class="mb-2"><a href="{{url('/dw/pathology/'.$path->slug)}}"
                                     style="text-decoration: none; text-transform: capitalize;" class="text-dark">{{$path->clinic_name}}</a></h4>
 
 
-                            <p class="text-primary mb-2"><a href="{{url('/dw/pathology/'.$path->id)}}"
+                            <p class="text-primary mb-2"><a href="{{url('/dw/pathology/'.$path->slug)}}"
                                     style="text-decoration: none; text-transform: capitalize;"
                                     class="text-primary">{{$path->clinic_address}}</a></p>
 
 
 
-                            <a href="{{url('/dw/pathology/'.$path->id)}}" class="btn btn-primary p-2 w-100"
+                            <a href="{{url('/dw/pathology/'.$path->slug)}}" class="btn btn-primary p-2 w-100"
                                 style="text-decoration: none;">OPEN NOW</a>
 
                         </div>
@@ -650,7 +650,7 @@
         and
         OPDs to ensure that you receive accurate and timely medical tests and consultations. for more information
         feel
-        free to call us or write us directly at <b>support@doctorwala.info.</b>
+        free to call us or write us directly at <b>info.doctorwala@gmail.com</b>
     </marquee>
     <!-- marquee text end -->
 
@@ -800,6 +800,60 @@
     <script src="{{asset('../js/main.js')}}"></script>
     <script src="{{asset('../js/cards-scroll.js')}}"></script>
     <script src="{{asset('../js/captcha.js')}}"></script>
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+
+            // 1. Parse browser & OS from userAgent
+            const ua = navigator.userAgent;
+            const browser = ua.includes('Chrome') ? 'Chrome' :
+                ua.includes('Firefox') ? 'Firefox' :
+                ua.includes('Safari') ? 'Safari' :
+                ua.includes('Edge') ? 'Edge' :
+                'Other';
+
+            const os = ua.includes('Windows') ? 'Windows' :
+                ua.includes('Mac') ? 'MacOS' :
+                ua.includes('Android') ? 'Android' :
+                ua.includes('iPhone') || ua.includes('iPad') ? 'iOS' :
+                ua.includes('Linux') ? 'Linux' :
+                'Other';
+
+            const deviceType = /Mobi|Android|iPhone|iPad/i.test(ua) ? 'Mobile' : 'Desktop';
+
+            // 2. Get approx location from IP (free, no key needed)
+            let country = null,
+                city = null;
+            try {
+                const geo = await fetch('https://ipapi.co/json/');
+                const geoData = await geo.json();
+                country = geoData.country_name;
+                city = geoData.city;
+            } catch (e) {}
+
+            // 3. Send to Laravel
+            fetch('{{ route("visitor.track") }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: JSON.stringify({
+                    page_url: window.location.href,
+                    referrer: document.referrer || null,
+                    browser: browser,
+                    os: os,
+                    device_type: deviceType,
+                    screen_size: `${screen.width}x${screen.height}`,
+                    language: navigator.language,
+                    timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+                    country: country,
+                    city: city,
+                })
+            });
+        });
+    </script>
 </body>
 
 </html>

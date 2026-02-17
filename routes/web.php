@@ -9,6 +9,10 @@ use App\Http\Controllers\Front\FrontContactusPageController;
 use App\Http\Controllers\Front\FrontHomePageController;
 use App\Http\Controllers\Front\FrontPrivacyPolicyPageController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\User\UserAllDoctorHandleController;
+use App\Http\Controllers\User\UserAllOPDHandleController;
+use App\Http\Controllers\User\UserAllPathologyHandleController;
+use App\Http\Controllers\VisitorTrackController;
 use Illuminate\Support\Facades\Route;
 
 // Error page if any page not found
@@ -56,3 +60,21 @@ Route::get('/opd/search-specialist', [FrontHomePageController::class, 'opdContac
     ->name('opd.search.doctor.specialist');
 
 Route::get('/global-search', [FrontHomePageController::class, 'globalSearch'])->name('global.search');
+
+
+
+// Universal
+Route::get('/opd/{slug}', [UserAllOPDHandleController::class, 'singleOPDView'])
+    ->name('opd.single')
+    ->where('slug', '[a-z0-9]+(?:-[a-z0-9]+)*');
+
+Route::get('/pathology/{slug}', [UserAllPathologyHandleController::class, 'singlePathView'])
+    ->name('pathology.single')
+    ->where('slug', '[a-z0-9]+(?:-[a-z0-9]+)*');
+
+Route::get('/doctor/{slug}', [UserAllDoctorHandleController::class, 'singleDocView'])
+    ->name('doctor.single')
+    ->where('slug', '[a-z0-9]+(?:-[a-z0-9]+)*');
+
+
+Route::post('/track-visitor', [VisitorTrackController::class, 'store'])->name('visitor.track');

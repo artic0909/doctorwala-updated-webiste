@@ -15,7 +15,7 @@
     <!-- Open Graph Tags -->
     <meta property="og:title" content="{{ ucfirst($doc->partner_doctor_name) }} - Find Doctors | Doctorwala">
     <meta property="og:description" content="Find {{ ucfirst($doc->partner_doctor_name) }} at {{ ucfirst($doc->partner_doctor_address) }}. Book your consultation with a trusted doctor today.">
-    <meta property="og:url" content="{{ url('/dw/doctor/' . $doc->id) }}">
+    <meta property="og:url" content="{{ url('/dw/doctor/' . $doc->slug) }}">
 
     <!-- Twitter Card Tags -->
     <meta name="twitter:title" content="{{ ucfirst($doc->partner_doctor_name) }} - Find Doctors | Doctorwala">
@@ -558,17 +558,17 @@
                             </div>
                         </div>
                         <div class="team-text position-relative bg-light text-start rounded-bottom p-4 pt-5">
-                            <h4 class="mb-2"><a href="{{url('/dw/doctor/'.$doc->id)}}"
+                            <h4 class="mb-2"><a href="{{url('/dw/doctor/'.$doc->slug)}}"
                                     style="text-decoration: none; text-transform: capitalize;" class="text-dark">{{$doc->partner_doctor_name}}</a></h4>
 
 
-                            <p class="text-primary mb-2"><a href="{{url('/dw/doctor/'.$doc->id)}}"
+                            <p class="text-primary mb-2"><a href="{{url('/dw/doctor/'.$doc->slug)}}"
                                     style="text-decoration: none; text-transform: capitalize;"
                                     class="text-primary">{{$doc->partner_doctor_address}}</a></p>
 
 
 
-                            <a href="{{url('/dw/doctor/'.$doc->id)}}" class="btn btn-primary p-2 w-100"
+                            <a href="{{url('/dw/doctor/'.$doc->slug)}}" class="btn btn-primary p-2 w-100"
                                 style="text-decoration: none;">OPEN NOW</a>
 
                         </div>
@@ -655,7 +655,7 @@
         and
         OPDs to ensure that you receive accurate and timely medical tests and consultations. for more information
         feel
-        free to call us or write us directly at <b>support@doctorwala.info.</b>
+        free to call us or write us directly at <b>info.doctorwala@gmail.com</b>
     </marquee>
     <!-- marquee text end -->
 
@@ -805,6 +805,60 @@
     <script src="{{asset('../js/main.js')}}"></script>
     <script src="{{asset('../js/cards-scroll.js')}}"></script>
     <script src="{{asset('../js/captcha.js')}}"></script>
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+
+            // 1. Parse browser & OS from userAgent
+            const ua = navigator.userAgent;
+            const browser = ua.includes('Chrome') ? 'Chrome' :
+                ua.includes('Firefox') ? 'Firefox' :
+                ua.includes('Safari') ? 'Safari' :
+                ua.includes('Edge') ? 'Edge' :
+                'Other';
+
+            const os = ua.includes('Windows') ? 'Windows' :
+                ua.includes('Mac') ? 'MacOS' :
+                ua.includes('Android') ? 'Android' :
+                ua.includes('iPhone') || ua.includes('iPad') ? 'iOS' :
+                ua.includes('Linux') ? 'Linux' :
+                'Other';
+
+            const deviceType = /Mobi|Android|iPhone|iPad/i.test(ua) ? 'Mobile' : 'Desktop';
+
+            // 2. Get approx location from IP (free, no key needed)
+            let country = null,
+                city = null;
+            try {
+                const geo = await fetch('https://ipapi.co/json/');
+                const geoData = await geo.json();
+                country = geoData.country_name;
+                city = geoData.city;
+            } catch (e) {}
+
+            // 3. Send to Laravel
+            fetch('{{ route("visitor.track") }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: JSON.stringify({
+                    page_url: window.location.href,
+                    referrer: document.referrer || null,
+                    browser: browser,
+                    os: os,
+                    device_type: deviceType,
+                    screen_size: `${screen.width}x${screen.height}`,
+                    language: navigator.language,
+                    timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+                    country: country,
+                    city: city,
+                })
+            });
+        });
+    </script>
 </body>
 
 </html>

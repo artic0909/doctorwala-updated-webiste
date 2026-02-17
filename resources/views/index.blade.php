@@ -6,7 +6,7 @@
     <title>Doctorwala Info</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-<link href="{{asset('fav5.png')}}" rel="icon">
+    <link href="{{asset('fav5.png')}}" rel="icon">
 
     <!-- Google Web Fonts -->
     <link rel="preconnect" href="https://fonts.gstatic.com">
@@ -90,7 +90,7 @@
     <meta name="keywords" content="{{$opd->clinic_name}}, {{$opd->clinic_city}}, {{$opd->clinic_pincode}}, {{$opd->clinic_landmark}}, doctorwala, doctorwala.info, doctorwala.in, doctorwala.com, doctorwala">
     <meta property="og:title" content="{{$opd->clinic_name}} - Doctorwala">
     <meta property="og:description" content="{{$opd->clinic_city}}, {{$opd->clinic_landmark}} - Doctorwala">
-    <meta property="og:url" content="{{url('/dw/opd/'.$opd->id)}}">
+    <meta property="og:url" content="{{url('/dw/opd/'.$opd->slug)}}">
     <meta name="twitter:title" content="{{$opd->clinic_name}} - Doctorwala">
     <meta name="twitter:description" content="{{$opd->clinic_city}},{{$opd->clinic_pincode}} - Doctorwala">
     @endforeach
@@ -110,7 +110,7 @@
     <meta name="keywords" content="{{$path->clinic_name}}, {{$path->clinic_city}}, {{$path->clinic_pincode}}, {{$path->clinic_landmark}}, doctorwala, doctorwala.info, doctorwala.in, doctorwala.com, doctorwala">
     <meta property="og:title" content="{{$path->clinic_name}} - Doctorwala">
     <meta property="og:description" content="{{$path->clinic_city}}, {{$path->clinic_landmark}} - Doctorwala">
-    <meta property="og:url" content="{{url('/dw/path/'.$path->id)}}">
+    <meta property="og:url" content="{{url('/dw/path/'.$path->slug)}}">
     <meta name="twitter:title" content="{{$path->clinic_name}} - Doctorwala">
     <meta name="twitter:description" content="{{$path->clinic_city}},{{$path->clinic_pincode}} - Doctorwala">
     @endforeach
@@ -130,7 +130,7 @@
     <meta name="keywords" content="{{$doc->partner_doctor_name}}, {{$doc->partner_doctor_city}},{{$doc->partner_doctor_pincode}}, {{$doc->partner_doctor_landmark}}, doctorwala, doctorwala.info, doctorwala.in, doctorwala.com, doctorwala">
     <meta property="og:title" content="{{$doc->partner_doctor_name}} - Doctorwala">
     <meta property="og:description" content="{{$doc->partner_doctor_city}},{{$doc->partner_doctor_pincode}}, {{$doc->partner_doctor_landmark}} - Doctorwala">
-    <meta property="og:url" content="{{url('/dw/doctor/'.$doc->id)}}">
+    <meta property="og:url" content="{{url('/dw/doctor/'.$doc->slug)}}">
     <meta name="twitter:title" content="{{$doc->partner_doctor_name}} - Doctorwala">
     <meta name="twitter:description" content="{{$doc->partner_doctor_city}},{{$doc->partner_doctor_pincode}} - Doctorwala">
     @endforeach
@@ -151,7 +151,7 @@
 
 
     <!-- Favicon -->
-    
+
 
 </head>
 
@@ -764,11 +764,20 @@
                             @endif
 
                             <div class="card-body">
-                                <a href="{{url('/dw/opd/'.$opd->id)}}" class="text-decoration-none my-dd">
+                                @auth
+                                <a href="{{url('/dw/opd/'.$opd->slug)}}" class="text-decoration-none my-dd">
                                     <h5 class="card-title" style="text-transform: capitalize;">{{$opd->clinic_name}}</h5>
                                     <p class="card-text text-primary ppp m-0" style="font-weight: 700; text-transform: capitalize;">{{$opd->clinic_city}},{{$opd->clinic_pincode}}</p>
                                     <p class="card-text text-primary ppp m-0" style="font-weight: 700; text-transform: capitalize;">{{$opd->clinic_landmark}}</p>
                                 </a>
+                                @endauth
+                                @guest
+                                <a href="{{url('/opd/'.$opd->slug)}}" class="text-decoration-none my-dd">
+                                    <h5 class="card-title" style="text-transform: capitalize;">{{$opd->clinic_name}}</h5>
+                                    <p class="card-text text-primary ppp m-0" style="font-weight: 700; text-transform: capitalize;">{{$opd->clinic_city}},{{$opd->clinic_pincode}}</p>
+                                    <p class="card-text text-primary ppp m-0" style="font-weight: 700; text-transform: capitalize;">{{$opd->clinic_landmark}}</p>
+                                </a>
+                                @endguest
                             </div>
 
                         </div>
@@ -861,8 +870,7 @@
                     </div>
                 </div>
                 <div class="col-lg-5 service-item wow zoomIn" data-wow-delay="0.9s">
-                    <div class="position-relative rounded h-100 d-flex flex-column align-items-center justify-content-center text-center p-4"
-                        >
+                    <div class="position-relative rounded h-100 d-flex flex-column align-items-center justify-content-center text-center p-4">
                         <div class="textss" style="background-color: rgba(48, 46, 46, 0.26); padding: 5px;">
                             <h3 class="text-white mb-3">We Offer</h3>
                             <p class="text-white mb-3" style="font-weight: 700;">Our search engine features a wide range
@@ -923,11 +931,20 @@
                             <img src="https://media.istockphoto.com/id/1222357475/vector/image-preview-icon-picture-placeholder-for-website-or-ui-ux-design-vector-illustration.jpg?s=612x612&w=0&k=20&c=KuCo-dRBYV7nz2gbk4J9w1WtTAgpTdznHu55W9FjimE=" class="card-img-top" alt="Default Image" style="object-fit: contain; height: 298px; width: 298px; background-color: white;">
                             @endif
                             <div class="card-body">
-                                <a href="{{url('/dw/pathology/'.$path->id)}}" class="text-decoration-none my-dd">
+                                @auth
+                                <a href="{{url('/dw/pathology/'.$path->slug)}}" class="text-decoration-none my-dd">
                                     <h5 class="card-title" style="text-transform: capitalize;">{{$path->clinic_name}}</h5>
                                     <p class="card-text text-primary ppp m-0" style="font-weight: 700; text-transform: capitalize;">{{$path->clinic_city}},{{$path->clinic_pincode}}</p>
                                     <p class="card-text text-primary ppp m-0" style="font-weight: 700; text-transform: capitalize;">{{$path->clinic_landmark}}</p>
                                 </a>
+                                @endauth
+                                @guest
+                                <a href="{{url('/pathology/'.$path->slug)}}" class="text-decoration-none my-dd">
+                                    <h5 class="card-title" style="text-transform: capitalize;">{{$path->clinic_name}}</h5>
+                                    <p class="card-text text-primary ppp m-0" style="font-weight: 700; text-transform: capitalize;">{{$path->clinic_city}},{{$path->clinic_pincode}}</p>
+                                    <p class="card-text text-primary ppp m-0" style="font-weight: 700; text-transform: capitalize;">{{$path->clinic_landmark}}</p>
+                                </a>
+                                @endguest
                             </div>
                         </div>
                         @endforeach
@@ -996,23 +1013,6 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     <!-- Doctors Cards Start -->
     <div class="container-fluid bg-primary bg-appointment my-5 wow fadeInUp p-3" data-wow-delay="0.1s">
         <div class="container">
@@ -1044,11 +1044,20 @@
                             <img src="https://media.istockphoto.com/id/1222357475/vector/image-preview-icon-picture-placeholder-for-website-or-ui-ux-design-vector-illustration.jpg?s=612x612&w=0&k=20&c=KuCo-dRBYV7nz2gbk4J9w1WtTAgpTdznHu55W9FjimE=" class="card-img-top" alt="Default Image" style="object-fit: contain; height: 298px; width: 298px; background-color: white;">
                             @endif
                             <div class="card-body">
-                                <a href="{{url('/dw/doctor/'.$doc->id)}}" class="text-decoration-none my-dd">
+                                @auth
+                                <a href="{{url('/dw/doctor/'.$doc->slug)}}" class="text-decoration-none my-dd">
                                     <h5 class="card-title" style="text-transform: capitalize;">{{$doc->partner_doctor_name}}</h5>
                                     <p class="card-text text-primary ppp m-0" style="font-weight: 700; text-transform: capitalize;">{{$doc->partner_doctor_city}},{{$doc->partner_doctor_pincode}}</p>
                                     <p class="card-text text-primary ppp m-0" style="font-weight: 700; text-transform: capitalize;">{{$doc->partner_doctor_landmark}}</p>
                                 </a>
+                                @endauth
+                                @guest
+                                <a href="{{url('/doctor/'.$doc->slug)}}" class="text-decoration-none my-dd">
+                                    <h5 class="card-title" style="text-transform: capitalize;">{{$doc->partner_doctor_name}}</h5>
+                                    <p class="card-text text-primary ppp m-0" style="font-weight: 700; text-transform: capitalize;">{{$doc->partner_doctor_city}},{{$doc->partner_doctor_pincode}}</p>
+                                    <p class="card-text text-primary ppp m-0" style="font-weight: 700; text-transform: capitalize;">{{$doc->partner_doctor_landmark}}</p>
+                                </a>
+                                @endguest
                             </div>
                         </div>
                         @endforeach
@@ -1152,7 +1161,7 @@
         to doctors, we also connect you with pathologists and OPDs. If you require diagnostic services or need to visit
         an OPD for consultation, DoctorWala.info is your go-to platform. We collaborate with trusted pathologists and
         OPDs to ensure that you receive accurate and timely medical tests and consultations. for more information feel
-        free to call us or write us directly at <b>support@doctorwala.info.</b>
+        free to call us or write us directly at <b>info.doctorwala@gmail.com</b>
     </marquee>
     <!-- marquee text end -->
 
@@ -1314,17 +1323,21 @@
             const searchOpdButton = document.querySelector('#searchOpdButton');
             const searchPathologyButton = document.querySelector('#searchPathologyButton');
             const resultsContainer = document.querySelector('#opdPathBothResultsShowIFsearchOPDshowOPDIFSearchPathShowPath');
+            const globalContainer = document.querySelector('#globalResultsContainer');
 
-            // Function to render results
+            // OPD & Pathology cards (slug-based URL)
             const renderResults = (results, type) => {
                 results.forEach(item => {
                     const imageUrl = item.banner && (type === 'OPD' ? item.banner.opdbanner : item.banner.pathologybanner) ?
                         `/storage/${type === 'OPD' ? item.banner.opdbanner : item.banner.pathologybanner}` :
                         'https://media.istockphoto.com/id/1222357475/vector/image-preview-icon-picture-placeholder-for-website-or-ui-ux-design-vector-illustration.jpg?s=612x612&w=0&k=20&c=KuCo-dRBYV7nz2gbk4J9w1WtTAgpTdznHu55W9FjimE=';
 
-                    const name = type === 'OPD' ? item.clinic_name : item.clinic_name;
-                    const address = type === 'OPD' ? item.clinic_address : item.clinic_address;
-                    const detailUrl = type === 'OPD' ? `/dw/opd/${item.id}` : `/dw/pathology/${item.id}`;
+                    const name = item.clinic_name;
+                    const address = item.clinic_address;
+                    const detailUrl = type === 'OPD' ?
+                        `/dw/opd/${item.slug}` // slug
+                        :
+                        `/dw/pathology/${item.slug}`; // slug
 
                     resultsContainer.innerHTML += `
                 <div class="col-lg-4 wow slideInUp" data-wow-delay="0.3s">
@@ -1340,85 +1353,194 @@
                         </div>
                         <div class="team-text position-relative bg-light text-start rounded-bottom p-4 pt-5">
                             <h4 class="mb-2">
-                                <a href="${detailUrl}" style="text-decoration: none; text-transform: capitalize;" class="text-dark">
-                                    ${name}
-                                </a>
+                                <a href="${detailUrl}" style="text-decoration: none; text-transform: capitalize;" class="text-dark">${name}</a>
                             </h4>
                             <p class="text-primary mb-2">
-                                <a href="${detailUrl}" style="text-decoration: none; text-transform: capitalize;" class="text-primary">
-                                    ${address}
-                                </a>
+                                <a href="${detailUrl}" style="text-decoration: none; text-transform: capitalize;" class="text-primary">${address}</a>
                             </p>
-                            <a href="${detailUrl}" class="btn btn-primary p-2 w-100" style="text-decoration: none;">OPEN NOW</a>
+                            <a href="${detailUrl}" class="btn btn-primary p-2 w-100">OPEN NOW</a>
                         </div>
                     </div>
-                </div>
-            `;
+                </div>`;
                 });
             };
 
-            // Search OPD
+            // Doctor cards (slug-based URL)
+            const renderDoctorResults = (results, container) => {
+                results.forEach(item => {
+                    const imageUrl = item.banner && item.banner.doctorbanner ?
+                        `/storage/${item.banner.doctorbanner}` :
+                        'https://media.istockphoto.com/id/1222357475/vector/image-preview-icon-picture-placeholder-for-website-or-ui-ux-design-vector-illustration.jpg?s=612x612&w=0&k=20&c=KuCo-dRBYV7nz2gbk4J9w1WtTAgpTdznHu55W9FjimE=';
+
+                    const name = item.partner_doctor_name;
+                    const address = item.partner_doctor_address;
+                    const detailUrl = `/dw/doctor/${item.slug}`; // slug
+
+                    container.innerHTML += `
+                <div class="col-lg-4 wow slideInUp" data-wow-delay="0.3s">
+                    <div class="team-item">
+                        <div class="position-relative rounded-top" style="z-index: 1;">
+                            <img class="img-fluid rounded-top w-100" src="${imageUrl}" alt="" style="border: 1px solid #ddd;">
+                            <div class="position-absolute top-100 start-50 translate-middle bg-light rounded p-2 d-flex">
+                                <a class="btn btn-primary btn-square m-1" href="#"><i class="fab fa-twitter fw-normal"></i></a>
+                                <a class="btn btn-primary btn-square m-1" href="#"><i class="fab fa-facebook-f fw-normal"></i></a>
+                                <a class="btn btn-primary btn-square m-1" href="#"><i class="fa-solid fa-location-dot"></i></a>
+                                <a class="btn btn-primary btn-square m-1" href="#"><i class="fab fa-instagram fw-normal"></i></a>
+                            </div>
+                        </div>
+                        <div class="team-text position-relative bg-light text-start rounded-bottom p-4 pt-5">
+                            <h4 class="mb-2">
+                                <a href="${detailUrl}" style="text-decoration: none; text-transform: capitalize;" class="text-dark">${name}</a>
+                            </h4>
+                            <p class="text-primary mb-2">
+                                <a href="${detailUrl}" style="text-decoration: none; text-transform: capitalize;" class="text-primary">${address}</a>
+                            </p>
+                            <a href="${detailUrl}" class="btn btn-primary p-2 w-100">OPEN NOW</a>
+                        </div>
+                    </div>
+                </div>`;
+                });
+            };
+
+            // Search OPD by specialist
             searchOpdButton.addEventListener('click', function(e) {
                 e.preventDefault();
-
                 const selectedSpecialist = specialistDropdown.value;
 
                 if (selectedSpecialist && selectedSpecialist !== 'Select Specialist') {
-                    fetch(`{{ route('opd.search.doctor.specialist') }}?search=${selectedSpecialist}`)
-                        .then(response => response.json())
+                    fetch(`{{ route('opd.search.doctor.specialist') }}?search=${encodeURIComponent(selectedSpecialist)}`)
+                        .then(res => res.json())
                         .then(data => {
-                            const {
-                                opd_results
-                            } = data;
-
-                            resultsContainer.innerHTML = ''; // Clear previous results
-
-                            if (opd_results.length > 0) {
-                                renderResults(opd_results, 'OPD');
+                            resultsContainer.innerHTML = '';
+                            if (data.opd_results.length > 0) {
+                                renderResults(data.opd_results, 'OPD');
                             } else {
                                 resultsContainer.innerHTML = '<p>No OPD results found for the selected specialist.</p>';
                             }
                         })
-                        .catch(error => console.error('Error fetching OPD contacts:', error));
+                        .catch(error => console.error('Error:', error));
                 } else {
                     alert('Please select a valid specialist.');
                 }
             });
 
-            // Search Pathology
+            // Search Pathology by test type
             searchPathologyButton.addEventListener('click', function(e) {
                 e.preventDefault();
-
                 const selectedType = pathologyDropdown.value;
 
                 if (selectedType && selectedType !== 'Select Type') {
-                    fetch(`{{ route('opd.search.doctor.specialist') }}?search=${selectedType}`)
-                        .then(response => response.json())
+                    fetch(`{{ route('opd.search.doctor.specialist') }}?search=${encodeURIComponent(selectedType)}`)
+                        .then(res => res.json())
                         .then(data => {
-                            const {
-                                pathology_results
-                            } = data;
-
-                            resultsContainer.innerHTML = ''; // Clear previous results
-
-                            if (pathology_results.length > 0) {
-                                renderResults(pathology_results, 'Pathology');
+                            resultsContainer.innerHTML = '';
+                            if (data.pathology_results.length > 0) {
+                                renderResults(data.pathology_results, 'Pathology');
                             } else {
                                 resultsContainer.innerHTML = '<p>No Pathology results found for the selected type.</p>';
                             }
                         })
-                        .catch(error => console.error('Error fetching Pathology contacts:', error));
+                        .catch(error => console.error('Error:', error));
                 } else {
                     alert('Please select a valid type.');
                 }
             });
+
+            // Global search (if you have a global search input)
+            const globalSearchInput = document.querySelector('#globalSearchInput');
+            const globalSearchButton = document.querySelector('#globalSearchButton');
+
+            if (globalSearchButton) {
+                globalSearchButton.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const searchTerm = globalSearchInput.value.trim();
+
+                    if (searchTerm) {
+                        fetch(`{{ route('global.search') }}?search=${encodeURIComponent(searchTerm)}`)
+                            .then(res => res.json())
+                            .then(data => {
+                                globalContainer.innerHTML = '';
+
+                                const allOPD = [...data.opd_results, ...data.opd_results_by_ids];
+                                const allPath = [...data.pathology_results, ...data.pathology_results_by_ids];
+
+                                // Deduplicate by id
+                                const uniqueOPD = allOPD.filter((v, i, a) => a.findIndex(t => t.id === v.id) === i);
+                                const uniquePath = allPath.filter((v, i, a) => a.findIndex(t => t.id === v.id) === i);
+
+                                if (uniqueOPD.length) renderResults(uniqueOPD, 'OPD'); // slug
+                                if (uniquePath.length) renderResults(uniquePath, 'Pathology'); // slug
+                                if (data.doctor_results.length) renderDoctorResults(data.doctor_results, globalContainer); // slug
+
+                                if (!uniqueOPD.length && !uniquePath.length && !data.doctor_results.length) {
+                                    globalContainer.innerHTML = '<p>No results found.</p>';
+                                }
+                            })
+                            .catch(error => console.error('Error:', error));
+                    } else {
+                        alert('Please enter a search term.');
+                    }
+                });
+            }
         });
     </script>
 
 
 
 
+<script>
+        document.addEventListener('DOMContentLoaded', async () => {
 
+            // 1. Parse browser & OS from userAgent
+            const ua = navigator.userAgent;
+            const browser = ua.includes('Chrome') ? 'Chrome' :
+                ua.includes('Firefox') ? 'Firefox' :
+                ua.includes('Safari') ? 'Safari' :
+                ua.includes('Edge') ? 'Edge' :
+                'Other';
+
+            const os = ua.includes('Windows') ? 'Windows' :
+                ua.includes('Mac') ? 'MacOS' :
+                ua.includes('Android') ? 'Android' :
+                ua.includes('iPhone') || ua.includes('iPad') ? 'iOS' :
+                ua.includes('Linux') ? 'Linux' :
+                'Other';
+
+            const deviceType = /Mobi|Android|iPhone|iPad/i.test(ua) ? 'Mobile' : 'Desktop';
+
+            // 2. Get approx location from IP (free, no key needed)
+            let country = null,
+                city = null;
+            try {
+                const geo = await fetch('https://ipapi.co/json/');
+                const geoData = await geo.json();
+                country = geoData.country_name;
+                city = geoData.city;
+            } catch (e) {}
+
+            // 3. Send to Laravel
+            fetch('{{ route("visitor.track") }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: JSON.stringify({
+                    page_url: window.location.href,
+                    referrer: document.referrer || null,
+                    browser: browser,
+                    os: os,
+                    device_type: deviceType,
+                    screen_size: `${screen.width}x${screen.height}`,
+                    language: navigator.language,
+                    timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+                    country: country,
+                    city: city,
+                })
+            });
+        });
+    </script>
+    
 </body>
 
 </html>

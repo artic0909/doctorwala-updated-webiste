@@ -93,7 +93,7 @@ class DwUserController extends Controller
         if (Auth::guard('dwuser')->attempt($credentials)) {
             // Login successful
             $request->session()->regenerate();
-            return redirect()->route('dw.opd')->with('success', 'Login successful! You are now logged in.');
+            return redirect()->intended(route('dw.opd'))->with('success', 'Login successful! You are now logged in.');
         }
 
         // Login failed

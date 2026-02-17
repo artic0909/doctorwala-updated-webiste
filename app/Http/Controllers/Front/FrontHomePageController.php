@@ -52,13 +52,14 @@ class FrontHomePageController extends Controller
             ->pluck('currently_loggedin_partner_id');
 
         $OPDresults = PartnerOPDContactModel::whereIn('currently_loggedin_partner_id', $partnerOPDIds)
+            ->where('status', 'active')
             ->with('banner')
-            ->get();
-
+            ->get(['id', 'clinic_name', 'clinic_address', 'slug', 'currently_loggedin_partner_id']); // 👈 slug included
 
         $Pathresults = PartnerPathologyContactModel::whereIn('currently_loggedin_partner_id', $partnerPathIds)
+            ->where('status', 'active')
             ->with('banner')
-            ->get();
+            ->get(['id', 'clinic_name', 'clinic_address', 'slug', 'currently_loggedin_partner_id']); // 👈 slug included
 
         return response()->json([
             'opd_results' => $OPDresults,
@@ -67,75 +68,75 @@ class FrontHomePageController extends Controller
     }
 
 
-
-
     public function globalSearch(Request $request)
     {
         $searchTerm = $request->get('search');
 
-        // Search in PartnerOPDContactModel
-        $opdResults = PartnerOPDContactModel::where('clinic_state', 'like', "%{$searchTerm}%")
-            ->orWhere('clinic_city', 'like', "%{$searchTerm}%")
-            ->orWhere('clinic_pincode', 'like', "%{$searchTerm}%")
-            ->orWhere('clinic_name', 'like', "%{$searchTerm}%")
-            ->orWhere('clinic_contact_person_name', 'like', "%{$searchTerm}%")
-            ->orWhere('clinic_email', 'like', "%{$searchTerm}%")
-            ->orWhere('clinic_landmark', 'like', "%{$searchTerm}%")
-            ->orWhere('clinic_address', 'like', "%{$searchTerm}%")
+        $opdResults = PartnerOPDContactModel::where(function ($q) use ($searchTerm) {
+            $q->where('clinic_state', 'like', "%{$searchTerm}%")
+                ->orWhere('clinic_city', 'like', "%{$searchTerm}%")
+                ->orWhere('clinic_pincode', 'like', "%{$searchTerm}%")
+                ->orWhere('clinic_name', 'like', "%{$searchTerm}%")
+                ->orWhere('clinic_contact_person_name', 'like', "%{$searchTerm}%")
+                ->orWhere('clinic_email', 'like', "%{$searchTerm}%")
+                ->orWhere('clinic_landmark', 'like', "%{$searchTerm}%")
+                ->orWhere('clinic_address', 'like', "%{$searchTerm}%");
+        })
+            ->where('status', 'active')
             ->with('banner')
-            ->get();
+            ->get(['id', 'clinic_name', 'clinic_address', 'slug', 'currently_loggedin_partner_id']); // 👈 slug included
 
-        // Search in PartnerPathologyContactModel
-        $pathologyResults = PartnerPathologyContactModel::where('clinic_state', 'like', "%{$searchTerm}%")
-            ->orWhere('clinic_city', 'like', "%{$searchTerm}%")
-            ->orWhere('clinic_pincode', 'like', "%{$searchTerm}%")
-            ->orWhere('clinic_name', 'like', "%{$searchTerm}%")
-            ->orWhere('clinic_contact_person_name', 'like', "%{$searchTerm}%")
-            ->orWhere('clinic_email', 'like', "%{$searchTerm}%")
-            ->orWhere('clinic_landmark', 'like', "%{$searchTerm}%")
-            ->orWhere('clinic_address', 'like', "%{$searchTerm}%")
+        $pathologyResults = PartnerPathologyContactModel::where(function ($q) use ($searchTerm) {
+            $q->where('clinic_state', 'like', "%{$searchTerm}%")
+                ->orWhere('clinic_city', 'like', "%{$searchTerm}%")
+                ->orWhere('clinic_pincode', 'like', "%{$searchTerm}%")
+                ->orWhere('clinic_name', 'like', "%{$searchTerm}%")
+                ->orWhere('clinic_contact_person_name', 'like', "%{$searchTerm}%")
+                ->orWhere('clinic_email', 'like', "%{$searchTerm}%")
+                ->orWhere('clinic_landmark', 'like', "%{$searchTerm}%")
+                ->orWhere('clinic_address', 'like', "%{$searchTerm}%");
+        })
+            ->where('status', 'active')
             ->with('banner')
-            ->get();
+            ->get(['id', 'clinic_name', 'clinic_address', 'slug', 'currently_loggedin_partner_id']); // 👈 slug included
 
-        // Search in PartnerDoctorContactModel
-        $doctorResults = PartnerDoctorContactModel::where('partner_doctor_name', 'like', "%{$searchTerm}%")
-            ->orWhere('partner_doctor_specialist', 'like', "%{$searchTerm}%")
-            ->orWhere('partner_doctor_designation', 'like', "%{$searchTerm}%")
-            ->orWhere('partner_doctor_fees', 'like', "%{$searchTerm}%")
-            ->orWhere('partner_doctor_mobile', 'like', "%{$searchTerm}%")
-            ->orWhere('partner_doctor_email', 'like', "%{$searchTerm}%")
-            ->orWhere('partner_doctor_landmark', 'like', "%{$searchTerm}%")
-            ->orWhere('partner_doctor_pincode', 'like', "%{$searchTerm}%")
-            ->orWhere('partner_doctor_state', 'like', "%{$searchTerm}%")
-            ->orWhere('partner_doctor_city', 'like', "%{$searchTerm}%")
-            ->orWhere('partner_doctor_address', 'like', "%{$searchTerm}%")
+        $doctorResults = PartnerDoctorContactModel::where(function ($q) use ($searchTerm) {
+            $q->where('partner_doctor_name', 'like', "%{$searchTerm}%")
+                ->orWhere('partner_doctor_specialist', 'like', "%{$searchTerm}%")
+                ->orWhere('partner_doctor_designation', 'like', "%{$searchTerm}%")
+                ->orWhere('partner_doctor_mobile', 'like', "%{$searchTerm}%")
+                ->orWhere('partner_doctor_email', 'like', "%{$searchTerm}%")
+                ->orWhere('partner_doctor_landmark', 'like', "%{$searchTerm}%")
+                ->orWhere('partner_doctor_pincode', 'like', "%{$searchTerm}%")
+                ->orWhere('partner_doctor_state', 'like', "%{$searchTerm}%")
+                ->orWhere('partner_doctor_city', 'like', "%{$searchTerm}%")
+                ->orWhere('partner_doctor_address', 'like', "%{$searchTerm}%");
+        })
+            ->where('status', 'active')
             ->with('banner')
-            ->get();
+            ->get(['id', 'partner_doctor_name', 'partner_doctor_address', 'slug', 'currently_loggedin_partner_id']); // 👈 slug included
 
-        // Search in PartnerAllOPDDoctorModel (for matching partner ids)
         $partnerOPDIds = PartnerAllOPDDoctorModel::where('doctor_specialist', 'like', '%' . $searchTerm . '%')
             ->pluck('currently_loggedin_partner_id');
 
-        // Search in PartnerAllPathologyTestModel (for matching partner ids)
         $partnerPathIds = PartnerAllPathologyTestModel::where('test_type', 'like', '%' . $searchTerm . '%')
             ->pluck('currently_loggedin_partner_id');
 
-        // Fetch results from PartnerOPDContactModel using partner IDs
         $OPDresultsByIds = PartnerOPDContactModel::whereIn('currently_loggedin_partner_id', $partnerOPDIds)
+            ->where('status', 'active')
             ->with('banner')
-            ->get();
+            ->get(['id', 'clinic_name', 'clinic_address', 'slug', 'currently_loggedin_partner_id']); // 👈 slug included
 
-        // Fetch results from PartnerPathologyContactModel using partner IDs
         $PathresultsByIds = PartnerPathologyContactModel::whereIn('currently_loggedin_partner_id', $partnerPathIds)
+            ->where('status', 'active')
             ->with('banner')
-            ->get();
+            ->get(['id', 'clinic_name', 'clinic_address', 'slug', 'currently_loggedin_partner_id']); // 👈 slug included
 
-        // Combine all results
         return response()->json([
-            'opd_results' => $opdResults,
-            'pathology_results' => $pathologyResults,
-            'doctor_results' => $doctorResults,
-            'opd_results_by_ids' => $OPDresultsByIds,
+            'opd_results'              => $opdResults,
+            'pathology_results'        => $pathologyResults,
+            'doctor_results'           => $doctorResults,
+            'opd_results_by_ids'       => $OPDresultsByIds,
             'pathology_results_by_ids' => $PathresultsByIds,
         ]);
     }

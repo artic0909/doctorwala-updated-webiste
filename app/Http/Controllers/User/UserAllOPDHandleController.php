@@ -40,19 +40,22 @@ class UserAllOPDHandleController extends Controller
     {
         $user = Auth::guard('dwuser')->user();
         $aboutDetails = SuperAboutusModel::get();
-        $states = PartnerOPDContactModel::distinct()->pluck('clinic_state')->toArray();
-        $cities = PartnerOPDContactModel::distinct()->pluck('clinic_city')->toArray();
+        $states = PartnerOPDContactModel::where('status', 'active')
+            ->distinct()->pluck('clinic_state')->toArray();
+        $cities = PartnerOPDContactModel::where('status', 'active')
+            ->distinct()->pluck('clinic_city')->toArray();
 
         // Apply filters
         $opds = PartnerOPDContactModel::with('banner')
             ->where('status', 'active')
-            ->when($request->state, function ($query) use ($request) {
+            ->when($request->filled('state'), function ($query) use ($request) {
                 return $query->where('clinic_state', $request->state);
             })
-            ->when($request->city, function ($query) use ($request) {
+            ->when($request->filled('city'), function ($query) use ($request) {
                 return $query->where('clinic_city', $request->city);
             })
-            ->paginate(6);
+            ->paginate(6)
+            ->appends($request->query());
 
         return view('opd', compact('aboutDetails', 'user', 'opds', 'states', 'cities'));
     }
@@ -60,17 +63,13 @@ class UserAllOPDHandleController extends Controller
 
 
 
-    public function singleOPDView($id)
+    public function singleOPDView($slug)
     {
         $aboutDetails = SuperAboutusModel::get();
         $user = Auth::guard('dwuser')->user();
 
 
-
-
-
-
-        $opd = PartnerOPDContactModel::with('banner')->find($id);
+        $opd = PartnerOPDContactModel::with('banner')->where('slug', $slug)->first();
         if (!$opd) {
             return redirect()->back()->with('error', 'OPD record not found');
         }
@@ -87,7 +86,6 @@ class UserAllOPDHandleController extends Controller
         foreach ($doctors as $doctor) {
             $doctor->visit_day_time = json_decode($doctor->visit_day_time, true);
         }
-
 
         return view('single-opd-details', compact('aboutDetails', 'user', 'opd', 'doctors', 'services', 'photos', 'aboutClinics'));
     }

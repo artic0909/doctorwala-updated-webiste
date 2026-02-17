@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class PartnerDoctorContactModel extends Model
 {
@@ -26,11 +27,50 @@ class PartnerDoctorContactModel extends Model
         'partner_doctor_address',
         'visit_day_time',
         'status',
+        'slug',         // added
     ];
 
     protected $casts = [
         'visit_day_time' => 'array', //it contain fields like partner_doctor_visit_day, partner_doctor_visit_start_time, partner_doctor_visit_end_time
     ];
+
+    // Auto-generate slug from partner_doctor_name
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($model) {
+            if (empty($model->slug)) {
+                $model->slug = static::generateUniqueSlug($model->partner_doctor_name);
+            }
+        });
+
+        static::updating(function ($model) {
+            if ($model->isDirty('partner_doctor_name')) {
+                $model->slug = static::generateUniqueSlug($model->partner_doctor_name, $model->id);
+            }
+        });
+    }
+
+    public static function generateUniqueSlug($doctorName, $ignoreId = null)
+    {
+        $slug = Str::slug($doctorName);
+        $original = $slug;
+        $count = 1;
+
+        while (true) {
+            $query = static::where('slug', $slug);
+            if ($ignoreId) {
+                $query->where('id', '!=', $ignoreId);
+            }
+            if (!$query->exists()) {
+                break;
+            }
+            $slug = $original . '-' . $count++;
+        }
+
+        return $slug;
+    }
 
 
 

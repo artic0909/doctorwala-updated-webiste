@@ -35,29 +35,29 @@ class UserAllDoctorHandleController extends Controller
     }
 
 
-
-
-
-
+    
 
 
     public function docFilterSearch(Request $request)
     {
         $user = Auth::guard('dwuser')->user();
         $aboutDetails = SuperAboutusModel::get();
-        $states = PartnerDoctorContactModel::distinct()->pluck('partner_doctor_state')->toArray();
-        $cities = PartnerDoctorContactModel::distinct()->pluck('partner_doctor_city')->toArray();
+        $states = PartnerDoctorContactModel::where('status', 'active')
+            ->distinct()->pluck('partner_doctor_state')->toArray();
+        $cities = PartnerDoctorContactModel::where('status', 'active')
+            ->distinct()->pluck('partner_doctor_city')->toArray();
 
         // Apply filters
         $docs = PartnerDoctorContactModel::with('banner')
             ->where('status', 'active')
-            ->when($request->state, function ($query) use ($request) {
+            ->when($request->filled('state'), function ($query) use ($request) {
                 return $query->where('partner_doctor_state', $request->state);
             })
-            ->when($request->city, function ($query) use ($request) {
+            ->when($request->filled('city'), function ($query) use ($request) {
                 return $query->where('partner_doctor_city', $request->city);
             })
-            ->paginate(6);
+            ->paginate(6)
+            ->appends($request->query());
 
         return view('doctor', compact('aboutDetails', 'user', 'docs', 'states', 'cities'));
     }
@@ -74,23 +74,19 @@ class UserAllDoctorHandleController extends Controller
 
 
 
-    public function singleDocView($id)
+    public function singleDocView($slug)
     {
         $aboutDetails = SuperAboutusModel::get();
         $user = Auth::guard('dwuser')->user();
 
-
-        $doc = PartnerDoctorContactModel::with('banner')->find($id);
+        $doc = PartnerDoctorContactModel::with('banner')->where('slug', $slug)->first();
         if (!$doc) {
             return redirect()->back()->with('error', 'Doctor record not found');
         }
 
-
         if (is_string($doc->visit_day_time)) {
             $doc->visit_day_time = json_decode($doc->visit_day_time, true);
         }
-
-
 
         // now take all details from PartnerAllOPDDoctorModel's table where PartnerOPDContactModel's currently_loggedin_partner_id same as PartnerAllOPDDoctorModel's currently_loggedin_partner_id data
 
@@ -100,9 +96,6 @@ class UserAllDoctorHandleController extends Controller
         $services = PartnerServiceListModel::where('currently_loggedin_partner_id', $partnerId)->get();
         $photos = PartnerGalleryModel::where('currently_loggedin_partner_id', $partnerId)->get();
         $aboutClinics = PartnerAboutDetailsModel::where('currently_loggedin_partner_id', $partnerId)->get();
-
-
-
 
         return view('single-doctor-details', compact('aboutDetails', 'user', 'doc', 'services', 'photos', 'aboutClinics'));
     }

@@ -368,7 +368,7 @@
         to doctors, we also connect you with pathologists and OPDs. If you require diagnostic services or need to visit
         an OPD for consultation, DoctorWala.info is your go-to platform. We collaborate with trusted pathologists and
         OPDs to ensure that you receive accurate and timely medical tests and consultations. for more information feel
-        free to call us or write us directly at <b>support@doctorwala.info.</b>
+        free to call us or write us directly at <b>info.doctorwala@gmail.com</b>
     </marquee>
     <!-- marquee text end -->
 
@@ -478,7 +478,58 @@
     <script src="../js/main.js"></script>
     <!-- <script src="../js/cards-scroll.js"></script> -->
 
+<script>
+        document.addEventListener('DOMContentLoaded', async () => {
 
+            // 1. Parse browser & OS from userAgent
+            const ua = navigator.userAgent;
+            const browser = ua.includes('Chrome') ? 'Chrome' :
+                ua.includes('Firefox') ? 'Firefox' :
+                ua.includes('Safari') ? 'Safari' :
+                ua.includes('Edge') ? 'Edge' :
+                'Other';
+
+            const os = ua.includes('Windows') ? 'Windows' :
+                ua.includes('Mac') ? 'MacOS' :
+                ua.includes('Android') ? 'Android' :
+                ua.includes('iPhone') || ua.includes('iPad') ? 'iOS' :
+                ua.includes('Linux') ? 'Linux' :
+                'Other';
+
+            const deviceType = /Mobi|Android|iPhone|iPad/i.test(ua) ? 'Mobile' : 'Desktop';
+
+            // 2. Get approx location from IP (free, no key needed)
+            let country = null,
+                city = null;
+            try {
+                const geo = await fetch('https://ipapi.co/json/');
+                const geoData = await geo.json();
+                country = geoData.country_name;
+                city = geoData.city;
+            } catch (e) {}
+
+            // 3. Send to Laravel
+            fetch('{{ route("visitor.track") }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: JSON.stringify({
+                    page_url: window.location.href,
+                    referrer: document.referrer || null,
+                    browser: browser,
+                    os: os,
+                    device_type: deviceType,
+                    screen_size: `${screen.width}x${screen.height}`,
+                    language: navigator.language,
+                    timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+                    country: country,
+                    city: city,
+                })
+            });
+        });
+    </script>
 </body>
 
 </html>

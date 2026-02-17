@@ -158,7 +158,7 @@
     <!-- Navbar Start -->
     <nav class="navbar navbar-expand-lg bg-white navbar-light shadow-sm px-5 py-3 py-lg-0">
         <a href="/" class="navbar-brand p-0">
-            
+
             <img class="m-0 nav-bar-logo" src="{{asset('img/logo3.png')}}" width="300" alt="DoctorWala">
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
@@ -203,7 +203,7 @@
     <!-- Navbar Start -->
     <nav class="navbar navbar-expand-lg bg-white navbar-light shadow-sm px-5 py-3 py-lg-0">
         <a href="/dw" class="navbar-brand p-0">
-            
+
             <img class="m-0 nav-bar-logo" src="{{asset('img/logo3.png')}}" width="300" alt="DoctorWala">
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
@@ -542,7 +542,7 @@
                             </p>
 
                             <p class="contact_d d-texts">
-                                <strong><i class="fa fa-phone me-2"></i>Phone: +91-<a href="mailto:{{$opd->clinic_mobile_number}}" class="a-not">{{$opd->clinic_mobile_number}}</a></strong>
+                                <strong><i class="fa fa-phone me-2"></i>Phone: +91-<a href="tel:{{$opd->clinic_mobile_number}}" class="a-not">{{$opd->clinic_mobile_number}}</a></strong>
                             </p>
 
                             <p class="email_d d-texts">
@@ -567,8 +567,7 @@
 
                         <div class="d-buttons mt-5">
                             <a href="" data-bs-toggle="modal" data-bs-target="#myInquirySendModal{{$opd->id}}"
-                                class="btn btn-dark btn-darkk py-md-3 px-md-5 me-3 mb-2 animated slideInLeft">Send
-                                Inquiry</a>
+                                class="btn btn-dark btn-darkk py-md-3 px-md-5 me-3 mb-2 animated slideInLeft">Book Appointment</a>
 
                             <a href="{{$opd->clinic_google_map_link}}" target="_blank" class="btn btn-secondary py-md-3 px-md-5 me-3 mb-2 animated slideInRight">See
                                 Location</a>
@@ -706,7 +705,7 @@
                                     <p>
                                     <ul class="list-group list-group-flush text-start" style="margin-top: -60px;">
                                         <!-- <li class="list-group-item"><strong style="text-transform: capitalize;">Designation : {{$doctor->doctor_designation}}</strong></li> -->
-                                        <li class="list-group-item"><strong style="text-transform: capitalize;" class="d-flex align-items-center gap-2"><img src="{{asset('img/surgeon.png')}}" alt="" width="26">  {{$doctor->doctor_specialist}}</strong></li>
+                                        <li class="list-group-item"><strong style="text-transform: capitalize;" class="d-flex align-items-center gap-2"><img src="{{asset('img/surgeon.png')}}" alt="" width="26"> {{$doctor->doctor_specialist}}</strong></li>
                                         <li class="list-group-item"><strong class="d-flex align-items-center gap-2"><img src="{{asset('img/pay.png')}}" alt="" width="26"> ₹ {{$doctor->doctor_fees}}</strong></li>
                                         @if($doctor->doctor_more)
                                         <li class="list-group-item"><strong class="d-flex align-items-start gap-2"><img src="{{asset('img/ad.png')}}" alt="" width="26"> {{$doctor->doctor_more}}</strong></li>
@@ -1092,22 +1091,40 @@
                             <div class="col-6">
                                 <label for="user_name" class="form-label fw-bold"><span class="text-danger"><i
                                             class="fa fa-stethoscope" aria-hidden="true"></i></span> Your Name</label>
+                                @auth
                                 <input type="text" class="form-control border-0 bg-light px-4" value="{{ $user->user_name }}"
                                     name="user_name" id="user_name" style="height: 55px;" readonly>
+                                @endauth
+                                @guest
+                                <input type="text" class="form-control border-0 bg-light px-4" value="Guest"
+                                    name="user_name" id="user_name" style="height: 55px;" readonly>
+                                @endguest
                             </div>
 
                             <div class="col-6">
                                 <label for="user_mobile" class="form-label fw-bold"><span class="text-danger"><i
                                             class="fa fa-stethoscope" aria-hidden="true"></i></span> Your Mobile</label>
+                                @auth
                                 <input type="text" class="form-control border-0 bg-light px-4" value="{{ $user->user_mobile }}"
-                                    name="user_mobile" id="user_mobile" style="height: 55px;" readonly>
+                                    name="user_mobile" id="user_mobile" style="height: 55px;">
+                                @endauth
+                                @guest
+                                <input type="text" class="form-control border-0 bg-light px-4" placeholder="Mobile"
+                                    name="user_mobile" id="user_mobile" style="height: 55px;" required>
+                                @endguest
                             </div>
 
                             <div class="col-12">
                                 <label for="user_email" class="form-label fw-bold"><span class="text-danger"><i
                                             class="fa fa-stethoscope" aria-hidden="true"></i></span> Your Email</label>
+                                @auth
                                 <input type="text" class="form-control border-0 bg-light px-4"
                                     value="{{ $user->user_email }}" name="user_email" id="user_email" style="height: 55px;" readonly>
+                                @endauth
+                                @guest
+                                <input type="text" class="form-control border-0 bg-light px-4" value=""
+                                    name="user_email" id="user_email" style="height: 55px;" placeholder="Email" required>
+                                @endguest
                             </div>
 
 
@@ -1119,7 +1136,7 @@
                                     placeholder="Message" name="user_inquiry" id="user_inquiry" required></textarea>
                             </div>
                             <div class="col-12">
-                                <button class="btn btn-primary w-100 py-3" type="submit">Send Inquiry</button>
+                                <button class="btn btn-primary w-100 py-3" type="submit">Book Appointment</button>
                             </div>
                         </div>
                     </form>
@@ -1160,7 +1177,12 @@
             <div class="modal-content">
                 <div class="modal-body d-flex flex-column align-middle justify-center align-items-center">
                     <h2 class="modal-title" id="profileUpdateSuccessModalLabel"><span class="text-primary">+</span> SUCCESS <span class="text-primary">+</span></h2>
+                    @auth
                     <h2 class="text-primary text-center">Hello {{ $user->user_name }}, Your Inquiry Is Sent Successfully</h2>
+                    @endauth
+                    @guest
+                    <h2 class="text-primary text-center">Hello Guest User, Your Inquiry Is Sent Successfully</h2>
+                    @endguest
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn p-2 btn-primary w-100" data-bs-dismiss="modal">CLOSE</button>
@@ -1176,7 +1198,12 @@
             <div class="modal-content">
                 <div class="modal-body d-flex flex-column align-middle justify-center align-items-center">
                     <h3 class="modal-title" id="profileUpdateSuccessModalLabel"><span class="text-primary">+</span> ERROR <span class="text-primary">+</span></h3>
+                    @auth
                     <h4 class="text-danger text-center">Hello {{ $user->user_name }}, Your Inquiry Is Not Sent !!</h4>
+                    @endauth
+                    @guest
+                    <h4 class="text-danger text-center">Hello Guest User, Your Inquiry Is Not Sent !!</h4>
+                    @endguest
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn p-2 btn-primary w-100" data-bs-dismiss="modal">CLOSE</button>
@@ -1251,15 +1278,27 @@
                             <div class="col-6">
                                 <label for="user_name" class="form-label fw-bold"><span class="text-danger"><i
                                             class="fa fa-stethoscope" aria-hidden="true"></i></span> Your Name</label>
+                                            @auth
                                 <input type="text" class="form-control border-0 bg-light px-4" value="{{ $user->user_name }}"
                                     name="user_name" id="user_name" style="height: 55px;" readonly>
+                                    @endauth
+                                    @guest
+                                    <input type="text" class="form-control border-0 bg-light px-4" value="Guest"
+                                        name="user_name" id="user_name" style="height: 55px;" readonly>
+                                    @endguest
                             </div>
 
                             <div class="col-6">
                                 <label for="user_email" class="form-label fw-bold"><span class="text-danger"><i
                                             class="fa fa-stethoscope" aria-hidden="true"></i></span> Your Email</label>
+                                            @auth
                                 <input type="text" class="form-control border-0 bg-light px-4"
-                                    value="{{ $user->user_email }}" name="user_email" id="user_email" style="height: 55px;" readonly>
+                                    value="{{ $user->user_email }}" name="user_email" id="user_email" style="height: 55px;">
+                                    @endauth
+                                    @guest
+                                    <input type="text" class="form-control border-0 bg-light px-4" value="Guest"
+                                        name="user_email" id="user_email" style="height: 55px;">
+                                    @endguest
                             </div>
 
                             <div class="col-12">
@@ -1314,7 +1353,12 @@
             <div class="modal-content">
                 <div class="modal-body d-flex flex-column align-middle justify-center align-items-center">
                     <h2 class="modal-title" id="profileUpdateSuccessModalLabel"><span class="text-primary">+</span> SUCCESS <span class="text-primary">+</span></h2>
+                    @auth
                     <h2 class="text-primary text-center">Hello {{ $user->user_name }}, Thanks for Your Feedback</h2>
+                    @endauth
+                    @guest
+                    <h2 class="text-primary text-center">Hello Guest User, Thanks for Your Feedback</h2>
+                    @endguest
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn p-2 btn-primary w-100" data-bs-dismiss="modal">CLOSE</button>
@@ -1330,7 +1374,12 @@
             <div class="modal-content">
                 <div class="modal-body d-flex flex-column align-middle justify-center align-items-center">
                     <h3 class="modal-title" id="profileUpdateSuccessModalLabel"><span class="text-primary">+</span> ERROR <span class="text-primary">+</span></h3>
+                    @auth
                     <h4 class="text-danger text-center">Hello {{ $user->user_name }}, There was an error in sending your feedback, Please try again!</h4>
+                    @endauth
+                    @guest
+                    <h4 class="text-danger text-center">Hello Guest User, There was an error in sending your feedback, Please try again!</h4>
+                    @endguest
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn p-2 btn-primary w-100" data-bs-dismiss="modal">CLOSE</button>
@@ -1368,7 +1417,7 @@
         to doctors, we also connect you with pathologists and OPDs. If you require diagnostic services or need to visit
         an OPD for consultation, DoctorWala.info is your go-to platform. We collaborate with trusted pathologists and
         OPDs to ensure that you receive accurate and timely medical tests and consultations. for more information feel
-        free to call us or write us directly at <b>support@doctorwala.info.</b>
+        free to call us or write us directly at <b>info.doctorwala@gmail.com</b>
     </marquee>
     <!-- marquee text end -->
 
@@ -1490,6 +1539,59 @@
                 document.getElementById('user-rating').textContent = rating;
 
                 document.getElementById('rating').value = rating;
+            });
+        });
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+
+            // 1. Parse browser & OS from userAgent
+            const ua = navigator.userAgent;
+            const browser = ua.includes('Chrome') ? 'Chrome' :
+                ua.includes('Firefox') ? 'Firefox' :
+                ua.includes('Safari') ? 'Safari' :
+                ua.includes('Edge') ? 'Edge' :
+                'Other';
+
+            const os = ua.includes('Windows') ? 'Windows' :
+                ua.includes('Mac') ? 'MacOS' :
+                ua.includes('Android') ? 'Android' :
+                ua.includes('iPhone') || ua.includes('iPad') ? 'iOS' :
+                ua.includes('Linux') ? 'Linux' :
+                'Other';
+
+            const deviceType = /Mobi|Android|iPhone|iPad/i.test(ua) ? 'Mobile' : 'Desktop';
+
+            // 2. Get approx location from IP (free, no key needed)
+            let country = null,
+                city = null;
+            try {
+                const geo = await fetch('https://ipapi.co/json/');
+                const geoData = await geo.json();
+                country = geoData.country_name;
+                city = geoData.city;
+            } catch (e) {}
+
+            // 3. Send to Laravel
+            fetch('{{ route("visitor.track") }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: JSON.stringify({
+                    page_url: window.location.href,
+                    referrer: document.referrer || null,
+                    browser: browser,
+                    os: os,
+                    device_type: deviceType,
+                    screen_size: `${screen.width}x${screen.height}`,
+                    language: navigator.language,
+                    timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+                    country: country,
+                    city: city,
+                })
             });
         });
     </script>

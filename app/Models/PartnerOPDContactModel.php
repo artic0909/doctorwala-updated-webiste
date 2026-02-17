@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class PartnerOPDContactModel extends Model
 {
@@ -24,20 +25,56 @@ class PartnerOPDContactModel extends Model
         'clinic_google_map_link',
         'clinic_address',
         'status',
+        'slug',         // added
     ];
 
+    //  Auto-generate slug from clinic_name
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($model) {
+            if (empty($model->slug)) {
+                $model->slug = static::generateUniqueSlug($model->clinic_name);
+            }
+        });
+
+        static::updating(function ($model) {
+            if ($model->isDirty('clinic_name')) {
+                $model->slug = static::generateUniqueSlug($model->clinic_name, $model->id);
+            }
+        });
+    }
+
+    public static function generateUniqueSlug($clinicName, $ignoreId = null)
+    {
+        $slug = Str::slug($clinicName);
+        $original = $slug;
+        $count = 1;
+
+        while (true) {
+            $query = static::where('slug', $slug);
+            if ($ignoreId) {
+                $query->where('id', '!=', $ignoreId);
+            }
+            if (!$query->exists()) {
+                break;
+            }
+            $slug = $original . '-' . $count++;
+        }
+
+        return $slug;
+    }
 
     public function partner()
     {
         return $this->belongsTo(DwPartnerModel::class, 'currently_loggedin_partner_id');
     }
 
-
     public function banner()
     {
         return $this->hasOne(PartnerOPDBannerModel::class, 'currently_loggedin_partner_id', 'currently_loggedin_partner_id');
     }
-
 
     public function doctors()
     {

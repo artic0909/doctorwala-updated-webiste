@@ -41,19 +41,22 @@ class UserAllPathologyHandleController extends Controller
     {
         $user = Auth::guard('dwuser')->user();
         $aboutDetails = SuperAboutusModel::get();
-        $states = PartnerPathologyContactModel::distinct()->pluck('clinic_state')->toArray();
-        $cities = PartnerPathologyContactModel::distinct()->pluck('clinic_city')->toArray();
+        $states = PartnerPathologyContactModel::where('status', 'active')
+            ->distinct()->pluck('clinic_state')->toArray();
+        $cities = PartnerPathologyContactModel::where('status', 'active')
+            ->distinct()->pluck('clinic_city')->toArray();
 
         // Apply filters
         $paths = PartnerPathologyContactModel::with('banner')
             ->where('status', 'active')
-            ->when($request->state, function ($query) use ($request) {
+            ->when($request->filled('state'), function ($query) use ($request) {
                 return $query->where('clinic_state', $request->state);
             })
-            ->when($request->city, function ($query) use ($request) {
+            ->when($request->filled('city'), function ($query) use ($request) {
                 return $query->where('clinic_city', $request->city);
             })
-            ->paginate(6);
+            ->paginate(6)
+            ->appends($request->query());
 
         return view('pathology', compact('aboutDetails', 'user', 'paths', 'states', 'cities'));
     }
@@ -65,17 +68,13 @@ class UserAllPathologyHandleController extends Controller
 
 
 
-    public function singlePathView($id)
+    public function singlePathView($slug)
     {
         $aboutDetails = SuperAboutusModel::get();
         $user = Auth::guard('dwuser')->user();
 
 
-
-
-
-
-        $path = PartnerPathologyContactModel::with('banner')->find($id);
+        $path = PartnerPathologyContactModel::with('banner')->where('slug', $slug)->first();
         if (!$path) {
             return redirect()->back()->with('error', 'Pathology record not found');
         }
@@ -85,8 +84,6 @@ class UserAllPathologyHandleController extends Controller
 
         $partnerId = $path->currently_loggedin_partner_id;
 
-
-
         $tests = PartnerAllPathologyTestModel::where('currently_loggedin_partner_id', $partnerId)->get();
 
 
@@ -94,12 +91,9 @@ class UserAllPathologyHandleController extends Controller
         $photos = PartnerGalleryModel::where('currently_loggedin_partner_id', $partnerId)->get();
         $aboutClinics = PartnerAboutDetailsModel::where('currently_loggedin_partner_id', $partnerId)->get();
 
-
-
         foreach ($tests as $test) {
             $test->test_day_time = json_decode($test->test_day_time, true);
         }
-
 
         return view('single-path-details', compact('aboutDetails', 'user', 'path', 'tests', 'services', 'photos', 'aboutClinics'));
     }
