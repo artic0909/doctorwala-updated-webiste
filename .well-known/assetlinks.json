@@ -1,0 +1,15 @@
+[
+  {
+    "relation": [
+      "delegate_permission/common.handle_all_urls",
+      "delegate_permission/common.get_login_creds"
+    ],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.doctorwala.dochealth",
+      "sha256_cert_fingerprints": [
+        "19:8C:01:61:A0:64:66:0A:AF:2D:26:3E:62:28:3C:BA:B2:57:51:0C:A4:BF:6F:16:9A:A5:D0:1E:CD:BB:EE:12"
+      ]
+    }
+  }
+]
