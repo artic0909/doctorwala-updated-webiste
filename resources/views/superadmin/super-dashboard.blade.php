@@ -193,6 +193,298 @@
                 }
             }
         }
+
+        /* ── Stat Cards ── */
+        .va-stat-card {
+            border-radius: 16px;
+            padding: 22px 20px 20px;
+            position: relative;
+            overflow: hidden;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            box-shadow: 0 6px 24px rgba(0, 0, 0, 0.10);
+        }
+
+        .va-stat-blue {
+            background: linear-gradient(135deg, #0d6efd 0%, #0a58ca 100%);
+        }
+
+        .va-stat-green {
+            background: linear-gradient(135deg, #0d9e5c 0%, #07814a 100%);
+        }
+
+        .va-stat-purple {
+            background: linear-gradient(135deg, #6f42c1 0%, #5a32a3 100%);
+        }
+
+        .va-stat-orange {
+            background: linear-gradient(135deg, #fd7c0d 0%, #ca6008 100%);
+        }
+
+        .va-stat-icon {
+            width: 52px;
+            height: 52px;
+            border-radius: 14px;
+            background: rgba(255, 255, 255, 0.18);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            flex-shrink: 0;
+            backdrop-filter: blur(4px);
+        }
+
+        .va-stat-body {
+            flex: 1;
+            position: relative;
+            z-index: 1;
+        }
+
+        .va-stat-body h3 {
+            font-size: 1.8rem;
+            font-weight: 800;
+            margin: 0 0 2px;
+            line-height: 1;
+        }
+
+        .va-stat-body p {
+            font-size: 0.78rem;
+            margin: 0;
+            opacity: 0.8;
+            font-weight: 500;
+        }
+
+        .va-trend {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 2px 8px;
+            border-radius: 10px;
+            margin-top: 5px;
+        }
+
+        .va-stat-wave {
+            position: absolute;
+            right: -20px;
+            bottom: -20px;
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.07);
+        }
+
+        .va-stat-wave::before {
+            content: '';
+            position: absolute;
+            inset: 18px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.06);
+        }
+
+        /* ── Chart Cards ── */
+        .va-card {
+            background: #fff;
+            border-radius: 16px;
+            padding: 20px 22px 18px;
+            box-shadow: 0 3px 18px rgba(0, 0, 0, 0.07);
+            border: 1px solid rgba(0, 0, 0, 0.04);
+            height: 100%;
+        }
+
+        .va-card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .va-card-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .va-card-title>i {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background: #f0f4ff;
+            color: #0d6efd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            flex-shrink: 0;
+        }
+
+        .va-card-title h5 {
+            font-size: 0.92rem;
+            font-weight: 800;
+            color: #0d1e3a;
+            margin: 0 0 2px;
+        }
+
+        .va-card-title p {
+            font-size: 0.7rem;
+            color: #94a3b8;
+            margin: 0;
+        }
+
+        .va-badge {
+            font-size: 0.68rem;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            padding: 4px 12px;
+            border-radius: 20px;
+            text-transform: uppercase;
+        }
+
+        .va-badge-blue {
+            background: #e9f0ff;
+            color: #0d6efd;
+        }
+
+        .va-badge-green {
+            background: #e0f7ef;
+            color: #0d9e5c;
+        }
+
+        .va-badge-purple {
+            background: #ede5ff;
+            color: #6f42c1;
+        }
+
+        .va-chart-wrap {
+            position: relative;
+            width: 100%;
+        }
+
+        /* ── Legend ── */
+        .va-legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 12px;
+            justify-content: center;
+        }
+
+        .va-legend-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.72rem;
+            font-weight: 600;
+            color: #555;
+        }
+
+        .va-legend-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+
+        /* ── Top Pages Table ── */
+        .va-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.84rem;
+        }
+
+        .va-table thead th {
+            padding: 10px 14px;
+            font-size: 0.7rem;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            color: #94a3b8;
+            border-bottom: 2px solid #f0f4ff;
+            background: #f9faff;
+        }
+
+        .va-table tbody td {
+            padding: 11px 14px;
+            border-bottom: 1px solid #f4f7ff;
+            color: #333;
+            vertical-align: middle;
+        }
+
+        .va-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .va-table tbody tr:hover td {
+            background: #f9faff;
+        }
+
+        .va-rank {
+            width: 26px;
+            height: 26px;
+            border-radius: 8px;
+            background: #f0f4ff;
+            color: #0d6efd;
+            font-size: 0.72rem;
+            font-weight: 800;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .va-page-url {
+            color: #0d6efd;
+            text-decoration: none;
+            font-size: 0.8rem;
+            transition: color 0.2s;
+        }
+
+        .va-page-url:hover {
+            color: #0a58ca;
+            text-decoration: underline;
+        }
+
+        .va-page-url i {
+            font-size: 0.65rem;
+            margin-right: 4px;
+        }
+
+        .va-progress-wrap {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            min-width: 140px;
+        }
+
+        .va-progress-bar {
+            height: 6px;
+            border-radius: 6px;
+            background: linear-gradient(90deg, #0d6efd, #00c9a7);
+            flex-shrink: 0;
+            min-width: 4px;
+            transition: width 0.4s ease;
+        }
+
+        .va-progress-wrap span {
+            font-size: 0.72rem;
+            font-weight: 700;
+            color: #0d6efd;
+            white-space: nowrap;
+        }
+
+        @media (max-width: 768px) {
+            .va-stat-body h3 {
+                font-size: 1.4rem;
+            }
+
+            .va-card {
+                padding: 16px;
+            }
+        }
     </style>
 </head>
 
@@ -805,6 +1097,219 @@
                 </div>
 
 
+                <!-- Analitics in barchart -->
+                {{-- ── Summary Stat Cards ── --}}
+                <div class="row g-3 mb-4">
+
+                    <div class="col-xl-3 col-md-6">
+                        <div class="va-stat-card va-stat-blue">
+                            <div class="va-stat-icon"><i class="fa-solid fa-users"></i></div>
+                            <div class="va-stat-body">
+                                <h3>{{ number_format($totalVisitors) }}</h3>
+                                <p>Total Visitors</p>
+                            </div>
+                            <div class="va-stat-wave"></div>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-3 col-md-6">
+                        <div class="va-stat-card va-stat-green">
+                            <div class="va-stat-icon"><i class="fa-solid fa-calendar-check"></i></div>
+                            <div class="va-stat-body">
+                                <h3>{{ number_format($todayVisitors) }}</h3>
+                                <p>Today's Visitors</p>
+                                @if($yesterdayCount > 0)
+                                @php $change = round((($todayVisitors - $yesterdayCount) / $yesterdayCount) * 100, 1); @endphp
+                                <span class="va-trend {{ $change >= 0 ? 'va-trend-up' : 'va-trend-down' }}">
+                                    <i class="bi bi-arrow-{{ $change >= 0 ? 'up' : 'down' }}-right-circle-fill"></i>
+                                    {{ abs($change) }}% vs yesterday
+                                </span>
+                                @endif
+                            </div>
+                            <div class="va-stat-wave"></div>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-3 col-md-6">
+                        <div class="va-stat-card va-stat-purple">
+                            <div class="va-stat-icon"><i class="fa-solid fa-fingerprint"></i></div>
+                            <div class="va-stat-body">
+                                <h3>{{ number_format($uniqueIPs) }}</h3>
+                                <p>Unique IP Addresses</p>
+                            </div>
+                            <div class="va-stat-wave"></div>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-3 col-md-6">
+                        <div class="va-stat-card va-stat-orange">
+                            <div class="va-stat-icon"><i class="fa-solid fa-clock-rotate-left"></i></div>
+                            <div class="va-stat-body">
+                                <h3>{{ number_format($yesterdayCount) }}</h3>
+                                <p>Yesterday's Visitors</p>
+                            </div>
+                            <div class="va-stat-wave"></div>
+                        </div>
+                    </div>
+
+                </div>
+
+                {{-- ── Row 1: Daily Line Chart + Device Doughnut ── --}}
+                <div class="row g-3 mb-4">
+
+                    {{-- Daily Visitors – Last 30 Days --}}
+                    <div class="col-xl-8 col-md-12">
+                        <div class="va-card">
+                            <div class="va-card-header">
+                                <div class="va-card-title">
+                                    <i class="fa-solid fa-arrow-trend-up"></i>
+                                    <div>
+                                        <h5>Daily Visitors</h5>
+                                        <p>Last 30 days traffic overview</p>
+                                    </div>
+                                </div>
+                                <span class="va-badge va-badge-blue">30 Days</span>
+                            </div>
+                            <div class="va-chart-wrap" style="height:260px">
+                                <canvas id="dailyVisitorsChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- Device Breakdown --}}
+                    <div class="col-xl-4 col-md-12">
+                        <div class="va-card">
+                            <div class="va-card-header">
+                                <div class="va-card-title">
+                                    <i class="fa-solid fa-mobile-screen"></i>
+                                    <div>
+                                        <h5>Device Types</h5>
+                                        <p>Desktop · Mobile · Tablet</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="va-chart-wrap" style="height:220px">
+                                <canvas id="deviceChart"></canvas>
+                            </div>
+                            <div class="va-legend" id="deviceLegend"></div>
+                        </div>
+                    </div>
+
+                </div>
+
+                {{-- ── Row 2: Hourly Today + Browser + OS ── --}}
+                <div class="row g-3 mb-4">
+
+                    {{-- Hourly Today --}}
+                    <div class="col-xl-5 col-md-12">
+                        <div class="va-card">
+                            <div class="va-card-header">
+                                <div class="va-card-title">
+                                    <i class="fa-solid fa-clock"></i>
+                                    <div>
+                                        <h5>Hourly Traffic</h5>
+                                        <p>Today's visits by hour</p>
+                                    </div>
+                                </div>
+                                <span class="va-badge va-badge-green">Today</span>
+                            </div>
+                            <div class="va-chart-wrap" style="height:220px">
+                                <canvas id="hourlyChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- Browser Breakdown --}}
+                    <div class="col-xl-4 col-md-7">
+                        <div class="va-card">
+                            <div class="va-card-header">
+                                <div class="va-card-title">
+                                    <i class="fa-brands fa-chrome"></i>
+                                    <div>
+                                        <h5>Browsers</h5>
+                                        <p>Top browsers used</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="va-chart-wrap" style="height:220px">
+                                <canvas id="browserChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- OS Breakdown --}}
+                    <div class="col-xl-3 col-md-5">
+                        <div class="va-card">
+                            <div class="va-card-header">
+                                <div class="va-card-title">
+                                    <i class="fa-solid fa-tv"></i>
+                                    <div>
+                                        <h5>OS</h5>
+                                        <p>Operating systems</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="va-chart-wrap" style="height:220px">
+                                <canvas id="osChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                {{-- ── Row 3: Top Pages Table ── --}}
+                <div class="row g-3 mb-4">
+                    <div class="col-12">
+                        <div class="va-card">
+                            <div class="va-card-header">
+                                <div class="va-card-title">
+                                    <i class="fa-solid fa-link"></i>
+                                    <div>
+                                        <h5>Top Pages</h5>
+                                        <p>Most visited URLs</p>
+                                    </div>
+                                </div>
+                                <span class="va-badge va-badge-purple">Top 8</span>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="va-table">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Page URL</th>
+                                            <th>Visits</th>
+                                            <th>Share</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach($topPages as $i => $page)
+                                        @php
+                                        $share = $totalVisitors > 0 ? round(($page->total / $totalVisitors) * 100, 1) : 0;
+                                        $shortUrl = strlen($page->page_url) > 60 ? substr($page->page_url, 0, 60) . '…' : $page->page_url;
+                                        @endphp
+                                        <tr>
+                                            <td><span class="va-rank">{{ $i + 1 }}</span></td>
+                                            <td>
+                                                <a href="{{ $page->page_url }}" target="_blank" class="va-page-url" title="{{ $page->page_url }}">
+                                                    <i class="bi bi-box-arrow-up-right"></i> {{ $shortUrl }}
+                                                </a>
+                                            </td>
+                                            <td><strong>{{ number_format($page->total) }}</strong></td>
+                                            <td>
+                                                <div class="va-progress-wrap">
+                                                    <div class="va-progress-bar" style="width: {{ $share }}%"></div>
+                                                    <span>{{ $share }}%</span>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
 
 
 
@@ -878,22 +1383,366 @@
     <!-- End custom js for this page-->
 
 
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <script>
-        
+        (function() {
+
+            // ── Shared palette ──────────────────────────────────────────
+            const PALETTE = [
+                '#0d6efd', '#0d9e5c', '#6f42c1', '#fd7c0d',
+                '#dc3545', '#0d6e6e', '#e91e8c', '#ff9800',
+                '#00bcd4', '#9c27b0'
+            ];
+
+            // ── Helper: fill missing dates in last 30 days ─────────────
+            function buildDailyLabels() {
+                const labels = [],
+                    vals = [];
+                for (let i = 29; i >= 0; i--) {
+                    const d = new Date();
+                    d.setDate(d.getDate() - i);
+                    labels.push(d.toISOString().slice(0, 10));
+                    vals.push(0);
+                }
+                return {
+                    labels,
+                    vals
+                };
+            }
+
+            // ── 1. Daily Visitors Line Chart ───────────────────────────
+            (function() {
+                const {
+                    labels,
+                    vals
+                } = buildDailyLabels();
+                const raw = @json($dailyVisitors);
+
+                raw.forEach(r => {
+                    const idx = labels.indexOf(r.date);
+                    if (idx !== -1) vals[idx] = r.total;
+                });
+
+                const shortLabels = labels.map(d => {
+                    const dt = new Date(d);
+                    return dt.toLocaleDateString('en-IN', {
+                        month: 'short',
+                        day: 'numeric'
+                    });
+                });
+
+                new Chart(document.getElementById('dailyVisitorsChart'), {
+                    type: 'line',
+                    data: {
+                        labels: shortLabels,
+                        datasets: [{
+                            label: 'Visitors',
+                            data: vals,
+                            borderColor: '#0d6efd',
+                            backgroundColor: 'rgba(13,110,253,0.08)',
+                            fill: true,
+                            tension: 0.42,
+                            pointBackgroundColor: '#0d6efd',
+                            pointRadius: 3,
+                            pointHoverRadius: 6,
+                            borderWidth: 2.5,
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false
+                            },
+                            tooltip: {
+                                backgroundColor: '#0d1e3a',
+                                titleFont: {
+                                    weight: '800'
+                                },
+                                callbacks: {
+                                    title: ctx => labels[ctx[0].dataIndex],
+                                }
+                            }
+                        },
+                        scales: {
+                            x: {
+                                grid: {
+                                    display: false
+                                },
+                                ticks: {
+                                    maxTicksLimit: 10,
+                                    font: {
+                                        size: 10
+                                    },
+                                    color: '#94a3b8',
+                                    maxRotation: 0,
+                                }
+                            },
+                            y: {
+                                beginAtZero: true,
+                                grid: {
+                                    color: '#f0f4ff'
+                                },
+                                ticks: {
+                                    font: {
+                                        size: 10
+                                    },
+                                    color: '#94a3b8',
+                                    precision: 0
+                                }
+                            }
+                        }
+                    }
+                });
+            })();
+
+            // ── 2. Device Doughnut Chart ───────────────────────────────
+            (function() {
+                const raw = @json($deviceBreakdown);
+                const labels = raw.map(r => r.device_type ?? 'Unknown');
+                const data = raw.map(r => r.total);
+                const colors = PALETTE.slice(0, labels.length);
+
+                new Chart(document.getElementById('deviceChart'), {
+                    type: 'doughnut',
+                    data: {
+                        labels,
+                        datasets: [{
+                            data,
+                            backgroundColor: colors,
+                            borderWidth: 2,
+                            borderColor: '#fff',
+                            hoverOffset: 6
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        cutout: '68%',
+                        plugins: {
+                            legend: {
+                                display: false
+                            },
+                            tooltip: {
+                                backgroundColor: '#0d1e3a'
+                            }
+                        }
+                    }
+                });
+
+                // Custom legend
+                const legend = document.getElementById('deviceLegend');
+                labels.forEach((l, i) => {
+                    legend.innerHTML += `<div class="va-legend-item">
+                <div class="va-legend-dot" style="background:${colors[i]}"></div>${l} (${data[i]})
+            </div>`;
+                });
+            })();
+
+            // ── 3. Hourly Bar Chart (Today) ────────────────────────────
+            (function() {
+                const raw = @json($hourlyToday);
+                const hours = Array.from({
+                    length: 24
+                }, (_, i) => i);
+                const counts = hours.map(h => {
+                    const found = raw.find(r => r.hour == h);
+                    return found ? found.total : 0;
+                });
+                const labels = hours.map(h => h.toString().padStart(2, '0') + ':00');
+
+                new Chart(document.getElementById('hourlyChart'), {
+                    type: 'bar',
+                    data: {
+                        labels,
+                        datasets: [{
+                            label: 'Visits',
+                            data: counts,
+                            backgroundColor: counts.map((_, i) => {
+                                const now = new Date().getHours();
+                                return i === now ? '#0d6efd' : 'rgba(13,110,253,0.18)';
+                            }),
+                            borderRadius: 6,
+                            borderSkipped: false,
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false
+                            },
+                            tooltip: {
+                                backgroundColor: '#0d1e3a'
+                            }
+                        },
+                        scales: {
+                            x: {
+                                grid: {
+                                    display: false
+                                },
+                                ticks: {
+                                    maxTicksLimit: 8,
+                                    font: {
+                                        size: 9
+                                    },
+                                    color: '#94a3b8',
+                                    maxRotation: 0
+                                }
+                            },
+                            y: {
+                                beginAtZero: true,
+                                grid: {
+                                    color: '#f0f4ff'
+                                },
+                                ticks: {
+                                    font: {
+                                        size: 9
+                                    },
+                                    color: '#94a3b8',
+                                    precision: 0
+                                }
+                            }
+                        }
+                    }
+                });
+            })();
+
+            // ── 4. Browser Horizontal Bar Chart ───────────────────────
+            (function() {
+                const raw = @json($browserBreakdown);
+                const labels = raw.map(r => r.browser ?? 'Unknown');
+                const data = raw.map(r => r.total);
+
+                new Chart(document.getElementById('browserChart'), {
+                    type: 'bar',
+                    data: {
+                        labels,
+                        datasets: [{
+                            label: 'Users',
+                            data,
+                            backgroundColor: PALETTE.slice(0, labels.length),
+                            borderRadius: 6,
+                            borderSkipped: false,
+                        }]
+                    },
+                    options: {
+                        indexAxis: 'y',
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false
+                            },
+                            tooltip: {
+                                backgroundColor: '#0d1e3a'
+                            }
+                        },
+                        scales: {
+                            x: {
+                                beginAtZero: true,
+                                grid: {
+                                    color: '#f0f4ff'
+                                },
+                                ticks: {
+                                    font: {
+                                        size: 9
+                                    },
+                                    color: '#94a3b8',
+                                    precision: 0
+                                }
+                            },
+                            y: {
+                                grid: {
+                                    display: false
+                                },
+                                ticks: {
+                                    font: {
+                                        size: 10
+                                    },
+                                    color: '#333'
+                                }
+                            }
+                        }
+                    }
+                });
+            })();
+
+            // ── 5. OS Polar Area Chart ─────────────────────────────────
+            (function() {
+                const raw = @json($osBreakdown);
+                const labels = raw.map(r => r.os ?? 'Unknown');
+                const data = raw.map(r => r.total);
+                const colors = PALETTE.slice(0, labels.length);
+
+                new Chart(document.getElementById('osChart'), {
+                    type: 'polarArea',
+                    data: {
+                        labels,
+                        datasets: [{
+                            data,
+                            backgroundColor: colors.map(c => c + 'cc'),
+                            borderColor: colors,
+                            borderWidth: 1.5,
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'bottom',
+                                labels: {
+                                    font: {
+                                        size: 9
+                                    },
+                                    padding: 8,
+                                    boxWidth: 10
+                                }
+                            },
+                            tooltip: {
+                                backgroundColor: '#0d1e3a'
+                            }
+                        },
+                        scales: {
+                            r: {
+                                ticks: {
+                                    font: {
+                                        size: 8
+                                    },
+                                    color: '#94a3b8',
+                                    backdropColor: 'transparent'
+                                },
+                                grid: {
+                                    color: '#f0f4ff'
+                                }
+                            }
+                        }
+                    }
+                });
+            })();
+
+        })();
+    </script>
+
+
+    <script>
         function updateCurrentDate() {
-            const today = new Date(); 
+            const today = new Date();
             const options = {
                 year: 'numeric',
                 month: 'short',
                 day: '2-digit'
-            }; 
-            const formattedDate = today.toLocaleDateString('en-US', options); 
+            };
+            const formattedDate = today.toLocaleDateString('en-US', options);
 
-            
+
             document.getElementById('currentDate').textContent = formattedDate;
         }
 
-        
+
         updateCurrentDate();
     </script>
 </body>

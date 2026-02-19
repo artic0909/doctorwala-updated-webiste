@@ -9,6 +9,7 @@ use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\VerifyEmailController;
+use App\Http\Controllers\Superadmin\DashboardController;
 use App\Http\Controllers\Superadmin\SuperAboutusController;
 use App\Http\Controllers\Superadmin\SuperAllFeedbacksController;
 use App\Http\Controllers\Superadmin\SuperAllOnlyDoctorHandleController;
@@ -80,9 +81,13 @@ Route::middleware('auth:web')->group(function () {
     // ===========================================================================================================
     // ========================================== Super Admin Restricted Routes Start ============================
     // ===========================================================================================================
-    Route::get('/superadmin/super-dashboard', function () {
-        return view('superadmin.super-dashboard');
-    })->middleware(['auth', 'verified'])->name('superadmin.super-dashboard');
+    // Route::get('/superadmin/super-dashboard', function () {
+    //     return view('superadmin.super-dashboard');
+    // })->middleware(['auth', 'verified'])->name('superadmin.super-dashboard');
+
+    Route::get('/superadmin/super-dashboard', [DashboardController::class, 'index'])
+    ->middleware(['auth', 'verified'])
+    ->name('superadmin.super-dashboard');
 
 
     Route::get('/superadmin/super-home-banner', function () {
