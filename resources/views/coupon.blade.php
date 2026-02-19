@@ -93,7 +93,7 @@
     <nav class="navbar navbar-expand-lg bg-white navbar-light shadow-sm px-5 py-3 py-lg-0">
         <a href="/" class="navbar-brand p-0">
             <!-- <h1 class="m-0 text-primary"><i class="fa fa-tooth me-2"></i>DentCare</h1> -->
-            <img class="m-0 nav-bar-logo" src="{{asset('img/logo3.png')}}" width="300" alt="DoctorWala">
+            <img class="m-0 nav-bar-logo" src="{{asset('img/logoo.png')}}" width="300" alt="DoctorWala">
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
             <span class="navbar-toggler-icon"></span>
@@ -105,9 +105,9 @@
                 <div class="nav-item dropdown">
                     <a href="#" class="nav-link dropdown-toggle active" data-bs-toggle="dropdown">Search</a>
                     <div class="dropdown-menu m-0">
-                        <a href="/dw/opd" class="dropdown-item">OPD Details</a>
-                        <a href="/dw/doctor" class="dropdown-item">Doctor Details</a>
-                        <a href="/dw/pathology" class="dropdown-item">Pathology Details</a>
+                        <a href="/opd" class="dropdown-item">OPD Details</a>
+                        <a href="/doctor" class="dropdown-item">Doctor Details</a>
+                        <a href="/pathology" class="dropdown-item">Pathology Details</a>
                         <a href="/coupons" class="dropdown-item">Coupon Details </a>
                     </div>
                 </div>
@@ -138,7 +138,7 @@
     <nav class="navbar navbar-expand-lg bg-white navbar-light shadow-sm px-5 py-3 py-lg-0">
         <a href="/dw" class="navbar-brand p-0">
             <!-- <h1 class="m-0 text-primary"><i class="fa fa-tooth me-2"></i>DentCare</h1> -->
-            <img class="m-0 nav-bar-logo" src="{{asset('img/logo3.png')}}" width="300" alt="DoctorWala">
+            <img class="m-0 nav-bar-logo" src="{{asset('img/logoo.png')}}" width="300" alt="DoctorWala">
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
             <span class="navbar-toggler-icon"></span>

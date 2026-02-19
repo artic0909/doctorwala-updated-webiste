@@ -77,4 +77,9 @@ Route::get('/doctor/{slug}', [UserAllDoctorHandleController::class, 'singleDocVi
     ->where('slug', '[a-z0-9]+(?:-[a-z0-9]+)*');
 
 
+Route::get('/opd', [UserAllOPDHandleController::class, 'index'])->name('opd');
+Route::get('/doctor', [UserAllDoctorHandleController::class, 'index'])->name('doctor');
+Route::get('/pathology', [UserAllPathologyHandleController::class, 'index'])->name('pathology');
+
+
 Route::post('/track-visitor', [VisitorTrackController::class, 'store'])->name('visitor.track');

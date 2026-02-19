@@ -448,31 +448,31 @@
                                 style="color: red; font-weight: 1000;">+</span></h1>
                         <div class="input-group">
                             <i class="fa-solid fa-user"></i>
-                            <input type="text" placeholder="Your Name*" name="user_name" id="user_name" required>
+                            <input type="text" placeholder="Your Name*" name="user_name" id="user_name" required value="{{ old('user_name') }}">
                         </div>
 
 
                         <div class="input-group">
                             <i class="fa-solid fa-phone"></i>
-                            <input type="number" placeholder="Mobile Number*" name="user_mobile" id="user_mobile" required>
+                            <input type="number" placeholder="Mobile Number*" name="user_mobile" id="user_mobile" required value="{{ old('user_mobile') }}">
                         </div>
 
 
                         <div class="input-group">
                             <i class="fa-solid fa-building"></i>
-                            <input type="text" name="user_city" id="user_city" placeholder="Your City*" required>
+                            <input type="text" name="user_city" id="user_city" placeholder="Your City*" required value="{{ old('user_city') }}">
                         </div>
 
 
                         <div class="input-group">
                             <i class="fa-solid fa-at"></i>
-                            <input type="email" placeholder="Email ID*" name="user_email" id="user_email" required>
+                            <input type="email" placeholder="Email ID*" name="user_email" id="user_email" required value="{{ old('user_email') }}">
                         </div>
 
 
                         <div class="input-group">
                             <i class="fa-solid fa-lock signin-lock-icon"></i>
-                            <input type="password" placeholder="Password at least 8 characters*" name="user_password" id="user_password" required>
+                            <input type="password" placeholder="Password at least 8 characters*" name="user_password" id="user_password" required value="{{ old('user_password') }}">
                             
                         </div>
                         
@@ -525,11 +525,11 @@
                                 style="color: red; font-weight: 1000;">+</span></h1>
                         <div class="input-group">
                             <i class="fa-solid fa-at"></i>
-                            <input type="email" placeholder="Email" name="user_email" id="user_email">
+                            <input type="email" placeholder="Email" name="user_email" id="user_email" required value="{{ old('user_email') }}">
                         </div>
                         <div class="input-group">
                             <i class="fa-regular fa-eye login-eye-icon"></i>
-                            <input type="password" placeholder="Password" name="user_password" id="user_password">
+                            <input type="password" placeholder="Password" name="user_password" id="user_password" required value="{{ old('user_password') }}">
                         </div>
 
                         <div class="input-group"

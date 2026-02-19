@@ -102,7 +102,7 @@
     <nav class="navbar navbar-expand-lg bg-white navbar-light shadow-sm px-5 py-3 py-lg-0">
         <a href="/" class="navbar-brand p-0">
 
-            <img class="m-0 nav-bar-logo" src="{{asset('img/logo3.png')}}" width="300" alt="DoctorWala">
+            <img class="m-0 nav-bar-logo" src="{{asset('img/logoo.png')}}" width="300" alt="DoctorWala">
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
             <span class="navbar-toggler-icon"></span>
@@ -114,9 +114,9 @@
                 <div class="nav-item dropdown">
                     <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Search</a>
                     <div class="dropdown-menu m-0">
-                        <a href="/dw/opd" class="dropdown-item">OPD Details</a>
-                        <a href="/dw/doctor" class="dropdown-item">Doctor Details</a>
-                        <a href="/dw/pathology" class="dropdown-item">Pathology Details</a>
+                        <a href="/opd" class="dropdown-item">OPD Details</a>
+                        <a href="/doctor" class="dropdown-item">Doctor Details</a>
+                        <a href="/pathology" class="dropdown-item">Pathology Details</a>
                         <!-- <a href="/coupons" class="dropdown-item">Coupon Details </a> -->
                     </div>
                 </div>
@@ -147,7 +147,7 @@
     <nav class="navbar navbar-expand-lg bg-white navbar-light shadow-sm px-5 py-3 py-lg-0">
         <a href="/dw" class="navbar-brand p-0">
 
-            <img class="m-0 nav-bar-logo" src="{{asset('img/logo3.png')}}" width="300" alt="DoctorWala">
+            <img class="m-0 nav-bar-logo" src="{{asset('img/logoo.png')}}" width="300" alt="DoctorWala">
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
             <span class="navbar-toggler-icon"></span>
@@ -243,7 +243,7 @@
                                 <div class="col-12 col-sm-6">
                                     <input type="text" class="form-control bg-light border-0"
                                         placeholder="Clinic Name *" style="height: 55px;" name="partner_clinic_name"
-                                        id="partner_clinic_name" required>
+                                        id="partner_clinic_name" required value="{{old('partner_clinic_name')}}">
                                 </div>
 
 
@@ -251,7 +251,7 @@
                                 <div class="col-12 col-sm-6">
                                     <input type="text" class="form-control bg-light border-0"
                                         placeholder="Contact Person *" style="height: 55px;" name="partner_contact_person_name"
-                                        id="partner_contact_person_name" required>
+                                        id="partner_contact_person_name" required value="{{old('partner_contact_person_name')}}">
                                 </div>
 
 
@@ -259,7 +259,7 @@
                                 <div class="col-12 col-sm-6">
                                     <input type="number" class="form-control bg-light border-0"
                                         placeholder="Mobile Number *" style="height: 55px;" name="partner_mobile_number"
-                                        id="partner_mobile_number" required>
+                                        id="partner_mobile_number" required value="{{old('partner_mobile_number')}}">
                                 </div>
 
 
@@ -267,77 +267,68 @@
 
                                 <div class="col-12 col-sm-6">
                                     <input type="email" class="form-control bg-light border-0" placeholder="Email ID *"
-                                        style="height: 55px;" name="partner_email" id="partner_email" required>
+                                        style="height: 55px;" name="partner_email" id="partner_email" required value="{{old('partner_email')}}">
                                 </div>
-
-
 
 
                                 <div class="col-12 col-sm-6">
                                     <select class="form-select bg-light border-0" style="height: 55px;" name="partner_state"
                                         id="partner_state" required>
-                                        <option selected>Select State</option>
-                                        <option value="Andaman and Nicobar Islands">Andaman and Nicobar Islands</option>
-                                        <option value="Andhra Pradesh">Andhra Pradesh</option>
-                                        <option value="Arunachal Pradesh">Arunachal Pradesh</option>
-                                        <option value="Assam">Assam</option>
-                                        <option value="Bihar">Bihar</option>
-                                        <option value="Chandigarh">Chandigarh</option>
-                                        <option value="Chhattisgarh">Chhattisgarh</option>
-                                        <option value="Dadra and Nagar Haveli and Daman and Diu">Dadra and Nagar Haveli
-                                            and Daman and Diu</option>
-                                        <option value="Delhi">Delhi</option>
-                                        <option value="Goa">Goa</option>
-                                        <option value="Gujarat">Gujarat</option>
-                                        <option value="Haryana">Haryana</option>
-                                        <option value="Himachal Pradesh">Himachal Pradesh</option>
-                                        <option value="Jammu and Kashmir">Jammu and Kashmir</option>
-                                        <option value="Jharkhand">Jharkhand</option>
-                                        <option value="Karnataka">Karnataka</option>
-                                        <option value="Kerala">Kerala</option>
-                                        <option value="Ladakh">Ladakh</option>
-                                        <option value="Lakshadweep">Lakshadweep</option>
-                                        <option value="Madhya Pradesh">Madhya Pradesh</option>
-                                        <option value="Maharashtra">Maharashtra</option>
-                                        <option value="Manipur">Manipur</option>
-                                        <option value="Meghalaya">Meghalaya</option>
-                                        <option value="Mizoram">Mizoram</option>
-                                        <option value="Nagaland">Nagaland</option>
-                                        <option value="Odisha">Odisha</option>
-                                        <option value="Puducherry">Puducherry</option>
-                                        <option value="Punjab">Punjab</option>
-                                        <option value="Rajasthan">Rajasthan</option>
-                                        <option value="Sikkim">Sikkim</option>
-                                        <option value="Tamil Nadu">Tamil Nadu</option>
-                                        <option value="Telangana">Telangana</option>
-                                        <option value="Tripura">Tripura</option>
-                                        <option value="Uttar Pradesh">Uttar Pradesh</option>
-                                        <option value="Uttarakhand">Uttarakhand</option>
-                                        <option value="West Bengal">West Bengal</option>
+                                        <option value="">Select State</option>
+                                        <option value="Andaman and Nicobar Islands" {{ old('partner_state') == 'Andaman and Nicobar Islands' ? 'selected' : '' }}>Andaman and Nicobar Islands</option>
+                                        <option value="Andhra Pradesh" {{ old('partner_state') == 'Andhra Pradesh' ? 'selected' : '' }}>Andhra Pradesh</option>
+                                        <option value="Arunachal Pradesh" {{ old('partner_state') == 'Arunachal Pradesh' ? 'selected' : '' }}>Arunachal Pradesh</option>
+                                        <option value="Assam" {{ old('partner_state') == 'Assam' ? 'selected' : '' }}>Assam</option>
+                                        <option value="Bihar" {{ old('partner_state') == 'Bihar' ? 'selected' : '' }}>Bihar</option>
+                                        <option value="Chandigarh" {{ old('partner_state') == 'Chandigarh' ? 'selected' : '' }}>Chandigarh</option>
+                                        <option value="Chhattisgarh" {{ old('partner_state') == 'Chhattisgarh' ? 'selected' : '' }}>Chhattisgarh</option>
+                                        <option value="Dadra and Nagar Haveli and Daman and Diu" {{ old('partner_state') == 'Dadra and Nagar Haveli and Daman and Diu' ? 'selected' : '' }}>Dadra and Nagar Haveli and Daman and Diu</option>
+                                        <option value="Delhi" {{ old('partner_state') == 'Delhi' ? 'selected' : '' }}>Delhi</option>
+                                        <option value="Goa" {{ old('partner_state') == 'Goa' ? 'selected' : '' }}>Goa</option>
+                                        <option value="Gujarat" {{ old('partner_state') == 'Gujarat' ? 'selected' : '' }}>Gujarat</option>
+                                        <option value="Haryana" {{ old('partner_state') == 'Haryana' ? 'selected' : '' }}>Haryana</option>
+                                        <option value="Himachal Pradesh" {{ old('partner_state') == 'Himachal Pradesh' ? 'selected' : '' }}>Himachal Pradesh</option>
+                                        <option value="Jammu and Kashmir" {{ old('partner_state') == 'Jammu and Kashmir' ? 'selected' : '' }}>Jammu and Kashmir</option>
+                                        <option value="Jharkhand" {{ old('partner_state') == 'Jharkhand' ? 'selected' : '' }}>Jharkhand</option>
+                                        <option value="Karnataka" {{ old('partner_state') == 'Karnataka' ? 'selected' : '' }}>Karnataka</option>
+                                        <option value="Kerala" {{ old('partner_state') == 'Kerala' ? 'selected' : '' }}>Kerala</option>
+                                        <option value="Ladakh" {{ old('partner_state') == 'Ladakh' ? 'selected' : '' }}>Ladakh</option>
+                                        <option value="Lakshadweep" {{ old('partner_state') == 'Lakshadweep' ? 'selected' : '' }}>Lakshadweep</option>
+                                        <option value="Madhya Pradesh" {{ old('partner_state') == 'Madhya Pradesh' ? 'selected' : '' }}>Madhya Pradesh</option>
+                                        <option value="Maharashtra" {{ old('partner_state') == 'Maharashtra' ? 'selected' : '' }}>Maharashtra</option>
+                                        <option value="Manipur" {{ old('partner_state') == 'Manipur' ? 'selected' : '' }}>Manipur</option>
+                                        <option value="Meghalaya" {{ old('partner_state') == 'Meghalaya' ? 'selected' : '' }}>Meghalaya</option>
+                                        <option value="Mizoram" {{ old('partner_state') == 'Mizoram' ? 'selected' : '' }}>Mizoram</option>
+                                        <option value="Nagaland" {{ old('partner_state') == 'Nagaland' ? 'selected' : '' }}>Nagaland</option>
+                                        <option value="Odisha" {{ old('partner_state') == 'Odisha' ? 'selected' : '' }}>Odisha</option>
+                                        <option value="Puducherry" {{ old('partner_state') == 'Puducherry' ? 'selected' : '' }}>Puducherry</option>
+                                        <option value="Punjab" {{ old('partner_state') == 'Punjab' ? 'selected' : '' }}>Punjab</option>
+                                        <option value="Rajasthan" {{ old('partner_state') == 'Rajasthan' ? 'selected' : '' }}>Rajasthan</option>
+                                        <option value="Sikkim" {{ old('partner_state') == 'Sikkim' ? 'selected' : '' }}>Sikkim</option>
+                                        <option value="Tamil Nadu" {{ old('partner_state') == 'Tamil Nadu' ? 'selected' : '' }}>Tamil Nadu</option>
+                                        <option value="Telangana" {{ old('partner_state') == 'Telangana' ? 'selected' : '' }}>Telangana</option>
+                                        <option value="Tripura" {{ old('partner_state') == 'Tripura' ? 'selected' : '' }}>Tripura</option>
+                                        <option value="Uttar Pradesh" {{ old('partner_state') == 'Uttar Pradesh' ? 'selected' : '' }}>Uttar Pradesh</option>
+                                        <option value="Uttarakhand" {{ old('partner_state') == 'Uttarakhand' ? 'selected' : '' }}>Uttarakhand</option>
+                                        <option value="West Bengal" {{ old('partner_state') == 'West Bengal' ? 'selected' : '' }}>West Bengal</option>
                                     </select>
                                 </div>
 
 
-
-
-
                                 <div class="col-12 col-sm-6">
-                                    <input type="text" class="form-control bg-light border-0" placeholder="City *" style="height: 55px;" name="partner_city" id="partner_city" required>
+                                    <input type="text" class="form-control bg-light border-0" placeholder="City *" style="height: 55px;" name="partner_city" id="partner_city" required value="{{ old('partner_city') }}">
                                 </div>
-
-
-
 
 
                                 <div class="col-12 col-sm-6">
                                     <input type="number" class="form-control bg-light border-0" placeholder="Pin Code *"
-                                        style="height: 55px;" name="partner_pincode" id="partner_pincode" required>
+                                        style="height: 55px;" name="partner_pincode" id="partner_pincode" required value="{{ old('partner_pincode') }}">
                                 </div>
 
 
                                 <div class="col-12 col-sm-6">
                                     <input type="text" class="form-control bg-light border-0" placeholder="Landmark *"
-                                        style="height: 55px;" name="partner_landmark" id="partner_landmark" required>
+                                        style="height: 55px;" name="partner_landmark" id="partner_landmark" required value="{{ old('partner_landmark') }}">
                                 </div>
 
 
@@ -346,7 +337,7 @@
 
                                 <div class="col-12">
                                     <textarea name="partner_address" class="form-control bg-light border-0" rows="5"
-                                        id="partner_address" placeholder="Full Address *" required></textarea>
+                                        id="partner_address" placeholder="Full Address *" required>{{ old('partner_address') }}</textarea>
                                 </div>
 
 
@@ -358,7 +349,7 @@
                                 <div class="col-12">
                                     <input type="password" class="form-control bg-light border-0"
                                         placeholder="Password *" style="height: 55px;" name="partner_password"
-                                        id="partner_password" required>
+                                        id="partner_password" required value="{{ old('partner_password') }}">
                                 </div>
 
 
@@ -384,7 +375,7 @@
 
 
 
-
+                                <!-- 
                                 <div class="col-12">
                                     <p class="text-white fw-bold" style="text-align: left;">Registration Type <span
                                             class="text-dark">*</span></p>
@@ -408,6 +399,40 @@
                                             <label for="doctor" class="form-check-label text-white"
                                                 style="font-size: 1.3rem; font-weight: 700;">Doctor&nbsp;</label>
                                             <input type="checkbox" name="registration_type[]" id="doctor" value="Doctor" style="transform: scale(1.5); cursor: pointer;">&nbsp;
+                                        </p>
+
+                                    </div>
+                                </div> -->
+
+                                <div class="col-12">
+                                    <p class="text-white fw-bold" style="text-align: left;">Registration Type <span
+                                            class="text-dark">*</span></p>
+
+                                    <div class="form-check form-check-inline"
+                                        style="display: flex;  justify-content: space-between; align-items: center;">
+
+                                        <p>
+                                            <label for="opd" class="form-check-label text-white"
+                                                style="font-size: 1.3rem; font-weight: 700;">OPD&nbsp;</label>
+                                            <input type="checkbox" name="registration_type[]" id="opd" value="OPD"
+                                                style="transform: scale(1.5); cursor: pointer;"
+                                                {{ is_array(old('registration_type')) && in_array('OPD', old('registration_type')) ? 'checked' : '' }}>&nbsp;
+                                        </p>
+
+                                        <p>
+                                            <label for="pathology" class="form-check-label text-white"
+                                                style="font-size: 1.3rem; font-weight: 700;">Path&nbsp;</label>
+                                            <input type="checkbox" name="registration_type[]" id="pathology" value="Pathology"
+                                                style="transform: scale(1.5); cursor: pointer;"
+                                                {{ is_array(old('registration_type')) && in_array('Pathology', old('registration_type')) ? 'checked' : '' }}>&nbsp;
+                                        </p>
+
+                                        <p>
+                                            <label for="doctor" class="form-check-label text-white"
+                                                style="font-size: 1.3rem; font-weight: 700;">Doctor&nbsp;</label>
+                                            <input type="checkbox" name="registration_type[]" id="doctor" value="Doctor"
+                                                style="transform: scale(1.5); cursor: pointer;"
+                                                {{ is_array(old('registration_type')) && in_array('Doctor', old('registration_type')) ? 'checked' : '' }}>&nbsp;
                                         </p>
 
                                     </div>
@@ -737,7 +762,7 @@
 
 
 
-<script>
+    <script>
         document.addEventListener('DOMContentLoaded', async () => {
 
             // 1. Parse browser & OS from userAgent

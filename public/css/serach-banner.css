@@ -1,0 +1,375 @@
+/* ══════════════════════════════
+   SEARCH BANNER SECTION
+══════════════════════════════ */
+.search-banner-section {
+    position: relative;
+    margin-top: -80px;
+    margin-bottom: 3rem;
+    z-index: 10;
+    padding: 0 15px;
+}
+
+.search-cards-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+}
+
+/* ── Each Search Card ── */
+.search-card {
+    position: relative;
+    padding: 36px 32px 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    overflow: hidden;
+    transition: transform 0.3s ease;
+}
+
+.search-card::before {
+    content: "";
+    position: absolute;
+    top: -40px;
+    right: -40px;
+    width: 130px;
+    height: 130px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.06);
+    pointer-events: none;
+}
+
+.search-card::after {
+    content: "";
+    position: absolute;
+    bottom: -50px;
+    left: -30px;
+    width: 160px;
+    height: 160px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.04);
+    pointer-events: none;
+}
+
+/* Card 1 — Search All */
+.search-card-all {
+    background: linear-gradient(145deg, #0d6efd, #0a58ca);
+}
+
+/* Card 2 — OPD */
+.search-card-opd {
+    background: linear-gradient(145deg, #1a9e3f, #157a32);
+    border-left: 1px solid rgba(255, 255, 255, 0.1);
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Card 3 — Pathology */
+.search-card-path {
+    background: linear-gradient(145deg, #0d9bbf, #0a7a99);
+}
+
+/* ── Card Icon Header ── */
+.search-card-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.search-card-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(6px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    color: #fff;
+    flex-shrink: 0;
+    transition:
+        background 0.25s ease,
+        transform 0.25s ease;
+}
+
+.search-card:hover .search-card-icon {
+    background: rgba(255, 255, 255, 0.25);
+    transform: rotate(-5deg) scale(1.1);
+}
+
+.search-card-header h3 {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: #fff;
+    margin: 0;
+    letter-spacing: 0.3px;
+}
+
+.search-card-header p {
+    font-size: 0.72rem;
+    color: rgba(255, 255, 255, 0.65);
+    margin: 0;
+    letter-spacing: 0.3px;
+}
+
+/* ── Input & Select ── */
+.search-input-wrap {
+    position: relative;
+}
+
+.search-input-wrap i {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #0d6efd;
+    font-size: 0.85rem;
+    pointer-events: none;
+    z-index: 2;
+}
+
+.search-card .form-control,
+.search-card .form-select {
+    height: 46px;
+    border-radius: 12px;
+    border: none;
+    padding-left: 38px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #333;
+    background: #fff;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    transition:
+        box-shadow 0.2s ease,
+        transform 0.2s ease;
+    outline: none;
+}
+
+.search-card .form-control:focus,
+.search-card .form-select:focus {
+    box-shadow:
+        0 0 0 3px rgba(255, 255, 255, 0.4),
+        0 4px 15px rgba(0, 0, 0, 0.1);
+    transform: translateY(-1px);
+}
+
+.search-card .form-control::placeholder {
+    color: #aaa;
+    font-weight: 400;
+}
+
+/* ── Search Button ── */
+.search-card .btn-search {
+    height: 46px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.15);
+    border: 2px solid rgba(255, 255, 255, 0.4);
+    color: #fff;
+    font-size: 0.82rem;
+    font-weight: 800;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.25s ease;
+    backdrop-filter: blur(6px);
+}
+
+.search-card .btn-search:hover {
+    background: #fff;
+    border-color: #fff;
+    color: #0d6efd;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+.search-card-opd .btn-search:hover {
+    color: #1a9e3f;
+}
+
+.search-card-path .btn-search:hover {
+    color: #0d9bbf;
+}
+
+.search-card .btn-search i {
+    font-size: 0.9rem;
+}
+
+/* ── Loading spinner on button ── */
+.btn-search .btn-text {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-search.loading .btn-text {
+    display: none;
+}
+
+.btn-search .spinner {
+    display: none;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    animation: spin 0.65s linear infinite;
+    flex-shrink: 0;
+}
+
+/* Default spinner color = white (before hover turns bg white) */
+.btn-search .spinner {
+    border: 2px solid rgba(255, 255, 255, 0.35);
+    border-top-color: #fff;
+}
+
+/* When loading AND button bg is white → spinner must be colored */
+.search-card-all .btn-search.loading .spinner {
+    border-color: rgba(13, 110, 253, 0.25);
+    border-top-color: #0d6efd;
+}
+
+.search-card-opd .btn-search.loading .spinner {
+    border-color: rgba(26, 158, 63, 0.25);
+    border-top-color: #1a9e3f;
+}
+
+.search-card-path .btn-search.loading .spinner {
+    border-color: rgba(13, 155, 191, 0.25);
+    border-top-color: #0d9bbf;
+}
+
+/* When loading, force button to show white bg + colored spinner */
+.search-card-all .btn-search.loading {
+    background: #fff;
+    border-color: #fff;
+    color: #0d6efd;
+}
+
+.search-card-opd .btn-search.loading {
+    background: #fff;
+    border-color: #fff;
+    color: #1a9e3f;
+}
+
+.search-card-path .btn-search.loading {
+    background: #fff;
+    border-color: #fff;
+    color: #0d9bbf;
+}
+
+.btn-search.loading .spinner {
+    display: inline-block;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* ── Divider between cards (desktop) ── */
+.search-card-opd {
+    position: relative;
+}
+
+/* ══════════════════════════════
+   RESULTS SECTION
+══════════════════════════════ */
+.results-section {
+    padding: 10px 0 40px;
+}
+
+.results-section .result-heading {
+    font-size: 1.3rem;
+    font-weight: 800;
+    color: #0d6efd;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #e9f0ff;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.results-section .result-heading i {
+    font-size: 1rem;
+    opacity: 0.7;
+}
+
+/* Result Cards */
+#opdPathBothResultsShowIFsearchOPDshowOPDIFSearchPathShowPath .team-item,
+#globalResultsContainer .team-item {
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.1);
+    transition:
+        transform 0.3s ease,
+        box-shadow 0.3s ease;
+    background: #fff;
+}
+
+#opdPathBothResultsShowIFsearchOPDshowOPDIFSearchPathShowPath .team-item:hover,
+#globalResultsContainer .team-item:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 16px 40px rgba(13, 110, 253, 0.15);
+}
+
+/* ── No results message ── */
+.no-results-msg {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 50px 20px;
+    color: #999;
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.no-results-msg i {
+    font-size: 2.5rem;
+    display: block;
+    margin-bottom: 12px;
+    color: #ccc;
+}
+
+/* ══════════════════════════════
+   RESPONSIVE
+══════════════════════════════ */
+@media (max-width: 991px) {
+    .search-cards-row {
+        grid-template-columns: 1fr;
+        border-radius: 16px;
+    }
+
+    .search-card-opd {
+        border-left: none;
+        border-right: none;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .search-card {
+        padding: 28px 24px;
+    }
+
+    .search-banner-section {
+        margin-top: -40px;
+    }
+}
+
+@media (max-width: 576px) {
+    .search-banner-section {
+        margin-top: -20px;
+        padding: 0 10px;
+    }
+
+    .search-card {
+        padding: 22px 18px;
+    }
+
+    .search-card-header h3 {
+        font-size: 1rem;
+    }
+}
