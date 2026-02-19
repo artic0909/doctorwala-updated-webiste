@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Find Doctors | Doctorwala</title>
+    <title>Find Individual Doctors | Doctorwala</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
 
@@ -51,6 +51,7 @@
     <!-- Template Stylesheet -->
     <link href="{{asset('../css/style.css')}}" rel="stylesheet">
     <link href="{{asset('../css/cards-css.css')}}" rel="stylesheet">
+    <link href="{{asset('../css/doctor-search.css')}}" rel="stylesheet">
     <link href="{{asset('../css/partner-btn.css')}}" rel="stylesheet">
     <link href="{{asset('../responsive/index_responsive.css')}}" rel="stylesheet">
     <link href="{{asset('responsive/service_responsive.css')}}" rel="stylesheet">
@@ -205,15 +206,6 @@
     @endauth
 
 
-
-
-
-
-
-
-
-
-
     @auth
     <!-- User Profile & Password Edit Modal -->
     <div class="modal fade" id="userProfileModal" tabindex="-1" aria-labelledby="userProfileModalLabel"
@@ -360,14 +352,6 @@
     @endauth
 
 
-
-
-
-
-
-
-
-
     <!-- profile update success modal start -->
     <div class="modal fade" id="profileUpdateSuccessModal" tabindex="-1" aria-labelledby="profileUpdateSuccessModalLabel"
         aria-hidden="true">
@@ -401,7 +385,6 @@
         </div>
     </div>
     <!-- profile update Unsuccess modal end -->
-
 
     <!-- password update success modal start -->
     <div class="modal fade" id="passwordUpdateSuccessModal" tabindex="-1" aria-labelledby="passwordUpdateSuccessModalLabel"
@@ -437,14 +420,6 @@
     </div>
     <!-- password update Unsuccess modal end -->
 
-
-
-
-
-
-
-
-
     <!-- Hero Start -->
     <div class="container-fluid bg-primary py-5 hero-header mb-5">
         <div class="row py-3">
@@ -464,172 +439,242 @@
     </div>
     <!-- Hero End -->
 
-
-
-
-
-
-
-
-    <!-- Searchbar Start -->
-    <div class="container-fluid banner mb-5 mt-4 my-search-bar">
-        <div class="container">
-            <div class="row gx-2">
-
-
-
-
-
-
-                <div class="col-lg-12 wow zoomIn" data-wow-delay="0.3s">
-                    <div class="bg-primary my-search-bar2 d-flex flex-column p-5" style="height: 200px;">
-                        <h3 class="text-white mb-3">SORT RESULTS BY</h3>
-
-                        <form action="{{ route('doc.filter.search') }}" method="GET">
-                            <div class="row g-3">
-                                <!-- State Dropdown -->
-                                <div class="col-md-4">
-                                    <select name="state" class="form-select my-select bg-light border-0 mb-3" style="height: 40px;">
-                                        <option selected>Select State</option>
-                                        @foreach($states as $state)
-                                        <option style="text-transform: capitalize;" value="{{ $state }}">{{ $state }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-
-                                <!-- City Dropdown -->
-                                <div class="col-md-4">
-                                    <select name="city" class="form-select my-select bg-light border-0 mb-3" style="height: 40px;">
-                                        <option selected>Select City</option>
-                                        @foreach($cities as $city)
-                                        <option style="text-transform: capitalize;" value="{{ $city }}">{{ $city }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-
-                                <!-- Search Button -->
-                                <div class="col-md-4">
-                                    <button type="submit" class="btn btn-dark my-search-button">Search Doctor</button>
-                                </div>
-                            </div>
-                        </form>
+    @guest
+    <!-- Filter Bar Start -->
+    <div class="container doc-filter-section wow fadeInDown" data-wow-delay="0.1s">
+        <div class="doc-filter-card">
+            <div class="doc-filter-top">
+                <div class="doc-filter-top-icon">
+                    <i class="bi bi-person-heart-fill"></i>
+                </div>
+                <div>
+                    <h3>Sort Results By</h3>
+                    <p>Filter doctors by state and city</p>
+                </div>
+            </div>
+            <form action="{{ route('filter.search.doc') }}" method="GET">
+                <div class="row g-3 align-items-center">
+                    <div class="col-md-4">
+                        <div class="doc-filter-wrap">
+                            <i class="bi bi-geo-fill"></i>
+                            <select name="state" class="form-select">
+                                @foreach($states as $state)
+                                <option value="{{ $state }}">{{ $state }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="doc-filter-wrap">
+                            <i class="bi bi-building"></i>
+                            <select name="city" class="form-select">
+                                @foreach($cities as $city)
+                                <option value="{{ $city }}">{{ $city }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <button type="submit" class="doc-filter-btn">
+                            <i class="bi bi-search"></i> Search Doctor
+                        </button>
                     </div>
                 </div>
-
-
-
-
-
-
-
-            </div>
+            </form>
         </div>
     </div>
-    <!-- Searchbar End -->
+    <!-- Filter Bar End -->
+    @endguest
 
+    @auth
+    <!-- Filter Bar Start -->
+    <div class="container doc-filter-section wow fadeInDown" data-wow-delay="0.1s">
+        <div class="doc-filter-card">
+            <div class="doc-filter-top">
+                <div class="doc-filter-top-icon">
+                    <i class="bi bi-person-heart-fill"></i>
+                </div>
+                <div>
+                    <h3>Sort Results By</h3>
+                    <p>Filter doctors by state and city</p>
+                </div>
+            </div>
+            <form action="{{ route('doc.filter.search') }}" method="GET">
+                <div class="row g-3 align-items-center">
+                    <div class="col-md-4">
+                        <div class="doc-filter-wrap">
+                            <i class="bi bi-geo-fill"></i>
+                            <select name="state" class="form-select">
+                                @foreach($states as $state)
+                                <option value="{{ $state }}">{{ $state }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="doc-filter-wrap">
+                            <i class="bi bi-building"></i>
+                            <select name="city" class="form-select">
+                                @foreach($cities as $city)
+                                <option value="{{ $city }}">{{ $city }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <button type="submit" class="doc-filter-btn">
+                            <i class="bi bi-search"></i> Search Doctor
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <!-- Filter Bar End -->
+    @endauth
 
-
-
-
-    <!-- Doctors Cards Start -->
-    <div class="container-fluid py-5">
+    <!-- Doctor Cards Start -->
+    <div class="doc-listing-section">
         <div class="container">
-            <div class="row g-5">
 
-                @foreach ($docs as $doc)
-                <div class="col-lg-4 wow slideInUp" data-wow-delay="0.3s">
-                    <div class="team-item">
-                        <div class="position-relative rounded-top" style="z-index: 1;">
+            {{-- Results Count Bar --}}
+            @if($docs->count() > 0)
+            <div class="doc-results-bar wow fadeInUp" data-wow-delay="0.1s">
+                <h5>Showing <span>{{ $docs->firstItem() }}–{{ $docs->lastItem() }}</span> of <span>{{ $docs->total() }}</span> Doctors</h5>
+                <span class="doc-results-badge">Page {{ $docs->currentPage() }} of {{ $docs->lastPage() }}</span>
+            </div>
+
+            <div class="row g-4">
+                @foreach($docs as $doc)
+                <div class="col-lg-4 col-md-6 wow slideInUp" data-wow-delay="0.1s">
+                    <div class="doc-listing-card">
+
+                        <div class="doc-listing-img-wrap">
                             @if($doc->banner && $doc->banner->doctorbanner)
-                            <img class="img-fluid rounded-top w-100" src="{{ asset('storage/' . $doc->banner->doctorbanner) }}" alt="" style="border: 1px solid #ddd;">
+                            <img src="{{ asset('storage/' . $doc->banner->doctorbanner) }}" alt="{{ $doc->partner_doctor_name }}">
                             @else
-                            <img src="https://media.istockphoto.com/id/1222357475/vector/image-preview-icon-picture-placeholder-for-website-or-ui-ux-design-vector-illustration.jpg?s=612x612&w=0&k=20&c=KuCo-dRBYV7nz2gbk4J9w1WtTAgpTdznHu55W9FjimE=" class="card-img-top" alt="Default Image">
+                            <img src="https://media.istockphoto.com/id/1222357475/vector/image-preview-icon-picture-placeholder-for-website-or-ui-ux-design-vector-illustration.jpg?s=612x612&w=0&k=20&c=KuCo-dRBYV7nz2gbk4J9w1WtTAgpTdznHu55W9FjimE=" alt="Default">
                             @endif
-                            <div
-                                class="position-absolute top-100 start-50 translate-middle bg-light rounded p-2 d-flex">
-                                <a class="btn btn-primary btn-square m-1" href="#"><i
-                                        class="fab fa-twitter fw-normal"></i></a>
-                                <a class="btn btn-primary btn-square m-1" href="#"><i
-                                        class="fab fa-facebook-f fw-normal"></i></a>
-                                <a class="btn btn-primary btn-square m-1" href="#"><i
-                                        class="fa-solid fa-location-dot"></i></a>
-                                <a class="btn btn-primary btn-square m-1" href="#"><i
-                                        class="fab fa-instagram fw-normal"></i></a>
+                            <div class="img-overlay"></div>
+                            <span class="doc-listing-badge"><i class="bi bi-person-heart-fill me-1"></i>DOCTOR</span>
+                            <div class="doc-listing-social">
+                                <a href="#"><i class="fab fa-twitter"></i></a>
+                                <a href="#"><i class="fab fa-facebook-f"></i></a>
+                                <a href="#"><i class="fa-solid fa-location-dot"></i></a>
+                                <a href="#"><i class="fab fa-instagram"></i></a>
                             </div>
                         </div>
-                        <div class="team-text position-relative bg-light text-start rounded-bottom p-4 pt-5">
-                            <h4 class="mb-2"><a href="{{url('/dw/doctor/'.$doc->slug)}}"
-                                    style="text-decoration: none; text-transform: capitalize;" class="text-dark">{{$doc->partner_doctor_name}}</a></h4>
 
-
-                            <p class="text-primary mb-2"><a href="{{url('/dw/doctor/'.$doc->slug)}}"
-                                    style="text-decoration: none; text-transform: capitalize;"
-                                    class="text-primary">{{$doc->partner_doctor_address}}</a></p>
-
-
-
-                            <a href="{{url('/dw/doctor/'.$doc->slug)}}" class="btn btn-primary p-2 w-100"
-                                style="text-decoration: none;">OPEN NOW</a>
-
+                        @guest
+                        <div class="doc-listing-body">
+                            <a href="{{ url('/doctor/'.$doc->slug) }}" class="doc-listing-name">
+                                {{ $doc->partner_doctor_name }}
+                            </a>
+                            <div class="doc-listing-divider"></div>
+                            <a href="{{ url('/doctor/'.$doc->slug) }}" class="doc-listing-address">
+                                <i class="bi bi-geo-alt-fill"></i>
+                                <span>{{ $doc->partner_doctor_address }}</span>
+                            </a>
+                            <div class="doc-listing-footer">
+                                <a href="{{ url('/doctor/'.$doc->slug) }}" class="doc-open-btn">
+                                    <i class="bi bi-box-arrow-up-right"></i> Open Now
+                                </a>
+                            </div>
                         </div>
+                        @endguest
 
+                        @auth
+                        <div class="doc-listing-body">
+                            <a href="{{ url('/dw/doctor/'.$doc->slug) }}" class="doc-listing-name">
+                                {{ $doc->partner_doctor_name }}
+                            </a>
+                            <div class="doc-listing-divider"></div>
+                            <a href="{{ url('/dw/doctor/'.$doc->slug) }}" class="doc-listing-address">
+                                <i class="bi bi-geo-alt-fill"></i>
+                                <span>{{ $doc->partner_doctor_address }}</span>
+                            </a>
+                            <div class="doc-listing-footer">
+                                <a href="{{ url('/dw/doctor/'.$doc->slug) }}" class="doc-open-btn">
+                                    <i class="bi bi-box-arrow-up-right"></i> Open Now
+                                </a>
+                            </div>
+                        </div>
+                        @endauth
 
                     </div>
                 </div>
                 @endforeach
-
-
             </div>
+
+            @else
+            <div class="doc-no-results wow fadeIn">
+                <i class="bi bi-person-x"></i>
+                <p>No doctors found for the selected filters.<br>Try a different state or city.</p>
+            </div>
+            @endif
+
         </div>
     </div>
-    <!-- Doctors Cards End -->
+    <!-- Doctor Cards End -->
 
+    <!-- Pagination Start -->
+    @if($docs->lastPage() > 1)
+    <div class="doc-pagination-wrap wow fadeInUp" data-wow-delay="0.1s">
+        <ul class="doc-pagination">
 
+            {{-- Prev --}}
+            <li class="page-item prev-next {{ $docs->onFirstPage() ? 'disabled' : '' }}">
+                <a class="page-link" href="{{ $docs->onFirstPage() ? '#' : $docs->previousPageUrl() }}">
+                    <i class="bi bi-chevron-left"></i> Prev
+                </a>
+            </li>
 
+            @php
+            $current = $docs->currentPage();
+            $last = $docs->lastPage();
+            $window = 2;
+            @endphp
 
+            {{-- Page 1 always --}}
+            <li class="page-item {{ $current == 1 ? 'active' : '' }}">
+                <a class="page-link" href="{{ $docs->url(1) }}">1</a>
+            </li>
 
+            {{-- Left ellipsis --}}
+            @if($current > $window + 2)
+            <li class="page-item ellipsis"><span class="page-link">···</span></li>
+            @endif
 
-
-    <div class="d-flex justify-content-center">
-        <nav aria-label="Page navigation">
-            <ul class="pagination">
-                {{-- Previous Page Link --}}
-                @if ($docs->onFirstPage())
-                <li class="page-item disabled">
-                    <a class="page-link" href="#" tabindex="-1">Prev</a>
+            {{-- Middle window --}}
+            @for($i = max(2, $current - $window); $i <= min($last - 1, $current + $window); $i++)
+                <li class="page-item {{ $current == $i ? 'active' : '' }}">
+                <a class="page-link" href="{{ $docs->url($i) }}">{{ $i }}</a>
                 </li>
-                @else
-                <li class="page-item">
-                    <a class="page-link" href="{{ $docs->previousPageUrl() }}" tabindex="-1">Prev</a>
-                </li>
-                @endif
+                @endfor
 
-                {{-- Pagination Elements --}}
-                @foreach ($docs->links()->elements[0] as $page => $url)
-                @if ($page == $docs->currentPage())
-                <li class="page-item active">
-                    <a class="page-link" href="#">{{ $page }} <span class="sr-only">(current)</span></a>
-                </li>
-                @else
-                <li class="page-item">
-                    <a class="page-link" href="{{ $url }}">{{ $page }}</a>
-                </li>
-                @endif
-                @endforeach
+                {{-- Right ellipsis --}}
+                @if($current < $last - $window - 1)
+                    <li class="page-item ellipsis"><span class="page-link">···</span></li>
+                    @endif
 
-                {{-- Next Page Link --}}
-                @if ($docs->hasMorePages())
-                <li class="page-item">
-                    <a class="page-link" href="{{ $docs->nextPageUrl() }}">Next</a>
-                </li>
-                @else
-                <li class="page-item disabled">
-                    <a class="page-link" href="#">Next</a>
-                </li>
-                @endif
-            </ul>
-        </nav>
+                    {{-- Last page always --}}
+                    @if($last > 1)
+                    <li class="page-item {{ $current == $last ? 'active' : '' }}">
+                        <a class="page-link" href="{{ $docs->url($last) }}">{{ $last }}</a>
+                    </li>
+                    @endif
+
+                    {{-- Next --}}
+                    <li class="page-item prev-next {{ !$docs->hasMorePages() ? 'disabled' : '' }}">
+                        <a class="page-link" href="{{ $docs->hasMorePages() ? $docs->nextPageUrl() : '#' }}">
+                            Next <i class="bi bi-chevron-right"></i>
+                        </a>
+                    </li>
+
+        </ul>
     </div>
+    @endif
+    <!-- Pagination End -->
 
 
 

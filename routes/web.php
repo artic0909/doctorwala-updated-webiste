@@ -64,14 +64,17 @@ Route::get('/global-search', [FrontHomePageController::class, 'globalSearch'])->
 
 
 // Universal
+Route::get('/opd/search', [UserAllOPDHandleController::class, 'opdFilterSearch'])->name('filter.search');
 Route::get('/opd/{slug}', [UserAllOPDHandleController::class, 'singleOPDView'])
     ->name('opd.single')
     ->where('slug', '[a-z0-9]+(?:-[a-z0-9]+)*');
 
+Route::get('/pathology/search', [UserAllPathologyHandleController::class, 'pathFilterSearch'])->name('filter.search.path');
 Route::get('/pathology/{slug}', [UserAllPathologyHandleController::class, 'singlePathView'])
     ->name('pathology.single')
     ->where('slug', '[a-z0-9]+(?:-[a-z0-9]+)*');
 
+Route::get('dw/doctor/search', [UserAllDoctorHandleController::class, 'docFilterSearch'])->name('filter.search.doc');
 Route::get('/doctor/{slug}', [UserAllDoctorHandleController::class, 'singleDocView'])
     ->name('doctor.single')
     ->where('slug', '[a-z0-9]+(?:-[a-z0-9]+)*');
