@@ -13,6 +13,7 @@ use App\Http\Controllers\User\ProfileEditController;
 use App\Http\Controllers\User\UserAllDoctorHandleController;
 use App\Http\Controllers\User\UserAllOPDHandleController;
 use App\Http\Controllers\User\UserAllPathologyHandleController;
+use App\Http\Controllers\User\UserSearchHandleController as UserUserSearchHandleController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -105,6 +106,10 @@ Route::middleware(['auth:dwuser', 'verified'])->group(function () {
 
     Route::post('/dw/doctor/inquiry', [UserAllDoctorHandleController::class, 'patientInquiry'])->name('dw.doctor.inquiry.store');
     Route::post('/dw/doctor/rating', [UserAllDoctorHandleController::class, 'saveRating'])->name('dw.doctor.rating.save');
+
+
+    // Search result route
+    Route::get('/dw/search-result', [UserUserSearchHandleController::class, 'index'])->name('dw.search.result');
 
 
 

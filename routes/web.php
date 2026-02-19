@@ -12,6 +12,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\User\UserAllDoctorHandleController;
 use App\Http\Controllers\User\UserAllOPDHandleController;
 use App\Http\Controllers\User\UserAllPathologyHandleController;
+use App\Http\Controllers\User\UserSearchHandleController as UserUserSearchHandleController;
 use App\Http\Controllers\VisitorTrackController;
 use Illuminate\Support\Facades\Route;
 
@@ -84,5 +85,7 @@ Route::get('/opd', [UserAllOPDHandleController::class, 'index'])->name('opd');
 Route::get('/doctor', [UserAllDoctorHandleController::class, 'index'])->name('doctor');
 Route::get('/pathology', [UserAllPathologyHandleController::class, 'index'])->name('pathology');
 
+// Search result route
+Route::get('/search-result', [UserUserSearchHandleController::class, 'index'])->name('search.result');
 
 Route::post('/track-visitor', [VisitorTrackController::class, 'store'])->name('visitor.track');

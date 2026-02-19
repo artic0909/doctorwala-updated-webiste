@@ -42,6 +42,7 @@
 
     <!-- Search Area -->
     <link href="{{asset('./css/serach-banner.css')}}" rel="stylesheet">
+    <link href="{{asset('./css/float-btn.css')}}" rel="stylesheet">
 
     <link href="{{asset('./css/partner-btn.css')}}" rel="stylesheet">
     <link href="{{asset('./responsive/index_responsive.css')}}" rel="stylesheet">
@@ -534,6 +535,7 @@
     <!-- Carousel End -->
 
 
+    <!-- Search Banner -->
     <div class="container search-banner-section">
         <div class="search-cards-row">
 
@@ -618,7 +620,7 @@
         </div>
     </div>
 
-    {{-- Results --}}
+    <!-- {{-- Search Results --}} -->
     <div class="container results-section">
         <div id="opdPathBothResultsShowIFsearchOPDshowOPDIFSearchPathShowPath" class="row g-4">
         </div>
@@ -765,129 +767,129 @@
 
 
 
-<!-- Service Start -->
-<div class="service-section wow fadeInUp" data-wow-delay="0.1s">
-    <div class="container">
+    <!-- Service Start -->
+    <div class="service-section wow fadeInUp" data-wow-delay="0.1s">
+        <div class="container">
 
-        {{-- Row 1 --}}
-        <div class="row g-4 mb-0 align-items-stretch">
+            {{-- Row 1 --}}
+            <div class="row g-4 mb-0 align-items-stretch">
 
-            {{-- Before/After Image --}}
-            <div class="col-lg-5 wow zoomIn" data-wow-delay="0.3s">
-                <div class="service-img-container twentytwenty-container">
-                    <img class="position-absolute w-100 h-100" src="{{ asset('img/af.jpg') }}" style="object-fit: cover;">
-                    <img class="position-absolute w-100 h-100" src="{{ asset('img/be.jpg') }}" style="object-fit: cover;">
-                    <div class="img-badge-floating">
-                        <i class="bi bi-shield-check"></i> Trusted Healthcare
-                    </div>
-                </div>
-            </div>
-
-            {{-- Right: Heading + 2 Service Cards --}}
-            <div class="col-lg-7">
-                <div class="mb-4 wow fadeInUp" data-wow-delay="0.2s">
-                    <div class="section-label">Our Services</div>
-                    <h2 class="section-heading">
-                        We Offer The Best <span>Doctors, OPD</span><br>& Pathology Services
-                    </h2>
-                </div>
-
-                <div class="row g-4">
-                    <div class="col-md-6 wow zoomIn" data-wow-delay="0.4s">
-                        <div class="service-card">
-                            <div class="service-card-img-wrap">
-                                <img class="service-card-img" src="{{ asset('img/himatology.jpg') }}" alt="Hematology">
-                            </div>
-                            <div class="service-card-body">
-                                <div class="service-card-icon">
-                                    <i class="fa fa-droplet"></i>
-                                </div>
-                                <h5>Hematology Tests</h5>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6 wow zoomIn" data-wow-delay="0.5s">
-                        <div class="service-card">
-                            <div class="service-card-img-wrap">
-                                <img class="service-card-img" src="{{ asset('img/biochemic.jpg') }}" alt="Biochemistry">
-                            </div>
-                            <div class="service-card-body">
-                                <div class="service-card-icon">
-                                    <i class="fa fa-flask"></i>
-                                </div>
-                                <h5>Biochemistry Tests</h5>
-                            </div>
+                {{-- Before/After Image --}}
+                <div class="col-lg-5 wow zoomIn" data-wow-delay="0.3s">
+                    <div class="service-img-container twentytwenty-container">
+                        <img class="position-absolute w-100 h-100" src="{{ asset('img/af.jpg') }}" style="object-fit: cover;">
+                        <img class="position-absolute w-100 h-100" src="{{ asset('img/be.jpg') }}" style="object-fit: cover;">
+                        <div class="img-badge-floating">
+                            <i class="bi bi-shield-check"></i> Trusted Healthcare
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
 
-        {{-- Divider --}}
-        <div class="service-row-divider"></div>
+                {{-- Right: Heading + 2 Service Cards --}}
+                <div class="col-lg-7">
+                    <div class="mb-4 wow fadeInUp" data-wow-delay="0.2s">
+                        <div class="section-label">Our Services</div>
+                        <h2 class="section-heading">
+                            We Offer The Best <span>Doctors, OPD</span><br>& Pathology Services
+                        </h2>
+                    </div>
 
-        {{-- Row 2 --}}
-        <div class="row g-4 align-items-stretch wow fadeInUp" data-wow-delay="0.1s">
-
-            {{-- Left: 2 Service Cards --}}
-            <div class="col-lg-7">
-                <div class="row g-4">
-                    <div class="col-md-6 wow zoomIn" data-wow-delay="0.3s">
-                        <div class="service-card">
-                            <div class="service-card-img-wrap">
-                                <img class="service-card-img" src="{{ asset('img/microbiology.jpg') }}" alt="Microbiology">
-                            </div>
-                            <div class="service-card-body">
-                                <div class="service-card-icon">
-                                    <i class="fa fa-microscope"></i>
+                    <div class="row g-4">
+                        <div class="col-md-6 wow zoomIn" data-wow-delay="0.4s">
+                            <div class="service-card">
+                                <div class="service-card-img-wrap">
+                                    <img class="service-card-img" src="{{ asset('img/himatology.jpg') }}" alt="Hematology">
                                 </div>
-                                <h5>Microbiology Tests</h5>
+                                <div class="service-card-body">
+                                    <div class="service-card-icon">
+                                        <i class="fa fa-droplet"></i>
+                                    </div>
+                                    <h5>Hematology Tests</h5>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="col-md-6 wow zoomIn" data-wow-delay="0.4s">
-                        <div class="service-card">
-                            <div class="service-card-img-wrap">
-                                <img class="service-card-img" src="{{ asset('img/cytology.jpg') }}" alt="Cytology">
-                            </div>
-                            <div class="service-card-body">
-                                <div class="service-card-icon">
-                                    <i class="fa fa-dna"></i>
+                        <div class="col-md-6 wow zoomIn" data-wow-delay="0.5s">
+                            <div class="service-card">
+                                <div class="service-card-img-wrap">
+                                    <img class="service-card-img" src="{{ asset('img/biochemic.jpg') }}" alt="Biochemistry">
                                 </div>
-                                <h5>Cytology & More...</h5>
+                                <div class="service-card-body">
+                                    <div class="service-card-icon">
+                                        <i class="fa fa-flask"></i>
+                                    </div>
+                                    <h5>Biochemistry Tests</h5>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            {{-- Right: Offer Card --}}
-            <div class="col-lg-5 wow zoomIn" data-wow-delay="0.5s">
-                <div class="offer-card">
-                    <div class="offer-card-badge">
-                        <i class="fa fa-star"></i> What We Offer
-                    </div>
-                    <h3>Complete Healthcare at Your Fingertips</h3>
-                    <p>Our platform connects you with doctors across all specialties — cardiology, orthopedics, dermatology, gynecology, pediatrics, and more. Find the right care, fast.</p>
-                    <div class="offer-card-divider"></div>
-                    @foreach($aboutDetails as $aboutDetail)
-                    <div class="offer-card-phone">
-                        <div class="offer-card-phone-icon">
-                            <i class="fa fa-phone"></i>
-                        </div>
-                        <div class="offer-card-phone-text">
-                            <small>Call Us Anytime</small>
-                            <a href="tel:+91{{ $aboutDetail->number }}">+91-{{ $aboutDetail->number }}</a>
-                        </div>
-                    </div>
-                    @endforeach
-                </div>
-            </div>
+            {{-- Divider --}}
+            <div class="service-row-divider"></div>
 
+            {{-- Row 2 --}}
+            <div class="row g-4 align-items-stretch wow fadeInUp" data-wow-delay="0.1s">
+
+                {{-- Left: 2 Service Cards --}}
+                <div class="col-lg-7">
+                    <div class="row g-4">
+                        <div class="col-md-6 wow zoomIn" data-wow-delay="0.3s">
+                            <div class="service-card">
+                                <div class="service-card-img-wrap">
+                                    <img class="service-card-img" src="{{ asset('img/microbiology.jpg') }}" alt="Microbiology">
+                                </div>
+                                <div class="service-card-body">
+                                    <div class="service-card-icon">
+                                        <i class="fa fa-microscope"></i>
+                                    </div>
+                                    <h5>Microbiology Tests</h5>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 wow zoomIn" data-wow-delay="0.4s">
+                            <div class="service-card">
+                                <div class="service-card-img-wrap">
+                                    <img class="service-card-img" src="{{ asset('img/cytology.jpg') }}" alt="Cytology">
+                                </div>
+                                <div class="service-card-body">
+                                    <div class="service-card-icon">
+                                        <i class="fa fa-dna"></i>
+                                    </div>
+                                    <h5>Cytology & More...</h5>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- Right: Offer Card --}}
+                <div class="col-lg-5 wow zoomIn" data-wow-delay="0.5s">
+                    <div class="offer-card">
+                        <div class="offer-card-badge">
+                            <i class="fa fa-star"></i> What We Offer
+                        </div>
+                        <h3>Complete Healthcare at Your Fingertips</h3>
+                        <p>Our platform connects you with doctors across all specialties — cardiology, orthopedics, dermatology, gynecology, pediatrics, and more. Find the right care, fast.</p>
+                        <div class="offer-card-divider"></div>
+                        @foreach($aboutDetails as $aboutDetail)
+                        <div class="offer-card-phone">
+                            <div class="offer-card-phone-icon">
+                                <i class="fa fa-phone"></i>
+                            </div>
+                            <div class="offer-card-phone-text">
+                                <small>Call Us Anytime</small>
+                                <a href="tel:+91{{ $aboutDetail->number }}">+91-{{ $aboutDetail->number }}</a>
+                            </div>
+                        </div>
+                        @endforeach
+                    </div>
+                </div>
+
+            </div>
         </div>
     </div>
-</div>
-<!-- Service End -->
+    <!-- Service End -->
 
 
 
@@ -1194,8 +1196,128 @@
     <!-- Footer End -->
 
 
-    <!-- Back to Top -->
-    <a href="#" class="btn btn-lg btn-primary btn-lg-square rounded back-to-top"><i class="bi bi-arrow-up"></i></a>
+    <!-- Global Search Section========================================================================================= -->
+    <!-- ── Floating Search FAB ── -->
+    <button class="gs-fab" id="gsOpenBtn" title="Search Everything">
+        <i class="bi bi-search"></i>
+        <span class="gs-fab-ring"></span>
+    </button>
+
+    <!-- ── Global Search Modal Overlay ── -->
+    <div class="gs-overlay" id="gsOverlay">
+        <div class="gs-modal" id="gsModal" role="dialog" aria-modal="true" aria-label="Global Search">
+
+            <!-- Header -->
+            <div class="gs-modal-header">
+                <div class="gs-modal-icon">
+                    <i class="bi bi-search"></i>
+                </div>
+                <div class="gs-modal-title">
+                    <h4>Search Everything</h4>
+                    <p>Doctors · OPD Clinics · Pathology Labs</p>
+                </div>
+                <button class="gs-modal-close" id="gsCloseBtn" aria-label="Close">
+                    <i class="bi bi-x-lg"></i>
+                </button>
+            </div>
+
+            <!-- Search Form — submits to search-result page -->
+            @guest
+            <form action="{{ route('search.result') }}" method="GET" class="gs-form" id="gsForm">
+                <div class="gs-input-group">
+                    <i class="bi bi-search gs-input-icon"></i>
+                    <input
+                        type="text"
+                        name="query"
+                        id="gsInput"
+                        class="gs-input"
+                        placeholder="Type doctor name, clinic, test, city..."
+                        autocomplete="off"
+                        spellcheck="false"
+                        required />
+                    <button type="submit" class="gs-search-btn">
+                        <i class="bi bi-arrow-right-circle-fill"></i>
+                    </button>
+                </div>
+
+                <!-- Category chips -->
+                <div class="gs-chips-row">
+                    <span class="gs-chip-label">Filter:</span>
+                    <label class="gs-chip gs-chip-all active-chip">
+                        <input type="radio" name="category" value="all" checked hidden> All
+                    </label>
+                    <label class="gs-chip gs-chip-doc">
+                        <input type="radio" name="category" value="doctor" hidden>
+                        <i class="bi bi-person-heart-fill"></i> Doctors
+                    </label>
+                    <label class="gs-chip gs-chip-opd">
+                        <input type="radio" name="category" value="opd" hidden>
+                        <i class="bi bi-hospital-fill"></i> OPD
+                    </label>
+                    <label class="gs-chip gs-chip-path">
+                        <input type="radio" name="category" value="pathology" hidden>
+                        <i class="bi bi-flask-fill"></i> Pathology
+                    </label>
+                </div>
+            </form>
+            @endguest
+            @auth
+            <form action="{{ route('dw.search.result') }}" method="GET" class="gs-form" id="gsForm">
+                <div class="gs-input-group">
+                    <i class="bi bi-search gs-input-icon"></i>
+                    <input
+                        type="text"
+                        name="query"
+                        id="gsInput"
+                        class="gs-input"
+                        placeholder="Type doctor name, clinic, test, city..."
+                        autocomplete="off"
+                        spellcheck="false"
+                        required />
+                    <button type="submit" class="gs-search-btn">
+                        <i class="bi bi-arrow-right-circle-fill"></i>
+                    </button>
+                </div>
+
+                <!-- Category chips -->
+                <div class="gs-chips-row">
+                    <span class="gs-chip-label">Filter:</span>
+                    <label class="gs-chip gs-chip-all active-chip">
+                        <input type="radio" name="category" value="all" checked hidden> All
+                    </label>
+                    <label class="gs-chip gs-chip-doc">
+                        <input type="radio" name="category" value="doctor" hidden>
+                        <i class="bi bi-person-heart-fill"></i> Doctors
+                    </label>
+                    <label class="gs-chip gs-chip-opd">
+                        <input type="radio" name="category" value="opd" hidden>
+                        <i class="bi bi-hospital-fill"></i> OPD
+                    </label>
+                    <label class="gs-chip gs-chip-path">
+                        <input type="radio" name="category" value="pathology" hidden>
+                        <i class="bi bi-flask-fill"></i> Pathology
+                    </label>
+                </div>
+            </form>
+            @endauth
+
+            <!-- Quick tags -->
+            <div class="gs-quick-tags">
+                <span class="gs-quick-label">Popular:</span>
+                <button type="button" class="gs-quick-tag" data-val="Cardiologist">Cardiologist</button>
+                <button type="button" class="gs-quick-tag" data-val="Blood Test">Blood Test</button>
+                <button type="button" class="gs-quick-tag" data-val="Urine Test">Urine Test</button>
+                <button type="button" class="gs-quick-tag" data-val="Eye Specialist">Eye Specialist</button>
+                <button type="button" class="gs-quick-tag" data-val="X-Ray">X-Ray</button>
+                <button type="button" class="gs-quick-tag" data-val="Skin">Skin Doctor</button>
+            </div>
+
+            <!-- ESC hint -->
+            <p class="gs-esc-hint">Press <kbd>ESC</kbd> to close &nbsp;·&nbsp; <kbd>Enter</kbd> to search</p>
+
+        </div>
+    </div>
+    <!-- Global Search Section========================================================================================= -->
 
 
 
@@ -1279,6 +1401,7 @@
     <script src="{{asset('./js/doc-carousel-card.js')}}"></script>
 
     <script src="{{asset('./js/global-search.js')}}"></script>
+    <script src="{{asset('./js/float-btn.js')}}"></script>
 
 
     <script>
