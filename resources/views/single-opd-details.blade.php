@@ -57,6 +57,283 @@
 
 
     <style>
+        /* =============================================
+   TOPBAR — PREMIUM GREEN + WHITE EDITION
+   ============================================= */
+        .topbar {
+            display: none;
+            height: 44px;
+            position: relative;
+            overflow: hidden;
+            background: #fff;
+            border-bottom: 2px solid #e8f5e9;
+            box-shadow: 0 2px 16px rgba(22, 163, 74, 0.10);
+        }
+
+        @media (min-width: 992px) {
+            .topbar {
+                display: block;
+            }
+        }
+
+        /* Thin animated green top border */
+        .topbar::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg,
+                    #064e28, #16a34a, #4ade80, #bbf7d0,
+                    #4ade80, #16a34a, #064e28);
+            background-size: 300% 100%;
+            animation: borderFlow 5s linear infinite;
+            z-index: 10;
+        }
+
+        @keyframes borderFlow {
+            0% {
+                background-position: 0% 0;
+            }
+
+            100% {
+                background-position: 300% 0;
+            }
+        }
+
+        .topbar-inner {
+            position: relative;
+            z-index: 2;
+            max-width: 1320px;
+            margin: 0 auto;
+            padding: 0 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 100%;
+            gap: 0;
+        }
+
+        /* ---- LEFT BLOCK ---- */
+        .topbar-left {
+            display: flex;
+            align-items: center;
+            gap: 0;
+            flex: 1;
+            overflow: hidden;
+            height: 100%;
+        }
+
+        /* 24/7 pill - green filled */
+        .hours-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            background: linear-gradient(135deg, #16a34a, #15803d);
+            border-radius: 0 0 14px 0;
+            padding: 0 18px 0 0;
+            height: 100%;
+            padding-left: 0;
+            font-size: 0.73rem;
+            font-weight: 800;
+            color: #fff;
+            letter-spacing: 0.8px;
+            text-transform: uppercase;
+            white-space: nowrap;
+            flex-shrink: 0;
+            margin-right: 20px;
+            padding: 0 22px;
+            box-shadow: 4px 0 14px rgba(22, 163, 74, 0.2);
+            animation: slideFromLeft 0.5s cubic-bezier(.34, 1.56, .64, 1) both;
+            position: relative;
+        }
+
+        .hours-pill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: -10px;
+            width: 20px;
+            height: 100%;
+            background: linear-gradient(135deg, #16a34a, #15803d);
+            clip-path: polygon(0 0, 0 100%, 100% 100%);
+        }
+
+        @keyframes slideFromLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* Live pulsing dot */
+        .live-dot {
+            width: 8px;
+            height: 8px;
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .live-dot span {
+            display: block;
+            width: 8px;
+            height: 8px;
+            background: #bbf7d0;
+            border-radius: 50%;
+        }
+
+        .live-dot::after {
+            content: '';
+            position: absolute;
+            inset: -3px;
+            border: 1.5px solid rgba(187, 247, 208, 0.6);
+            border-radius: 50%;
+            animation: liveRing 1.8s ease-out infinite;
+        }
+
+        @keyframes liveRing {
+            0% {
+                opacity: 0.9;
+                transform: scale(0.5);
+            }
+
+            100% {
+                opacity: 0;
+                transform: scale(2);
+            }
+        }
+
+        /* Ticker */
+        .ticker-wrap {
+            flex: 1;
+            overflow: hidden;
+            min-width: 0;
+            mask-image: linear-gradient(90deg, transparent, black 5%, black 95%, transparent);
+            -webkit-mask-image: linear-gradient(90deg, transparent, black 5%, black 95%, transparent);
+        }
+
+        .ticker-track {
+            display: flex;
+            width: max-content;
+            gap: 50px;
+            animation: tick 24s linear infinite;
+        }
+
+        .ticker-track:hover {
+            animation-play-state: paused;
+        }
+
+        @keyframes tick {
+            from {
+                transform: translateX(0);
+            }
+
+            to {
+                transform: translateX(-50%);
+            }
+        }
+
+        .ticker-track .t-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: #166534;
+            white-space: nowrap;
+        }
+
+        .ticker-track .t-item i {
+            font-size: 0.7rem;
+            color: #22c55e;
+        }
+
+        .ticker-track .t-sep {
+            color: #86efac;
+            font-size: 0.9rem;
+        }
+
+        /* ---- RIGHT BLOCK ---- */
+        .topbar-right {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-shrink: 0;
+            height: 100%;
+        }
+
+        /* Contact chips - outlined green on white */
+        .c-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 16px 6px 7px;
+            border-radius: 30px;
+            background: #f0fdf4;
+            border: 1.5px solid #86efac;
+            text-decoration: none;
+            font-size: 0.76rem;
+            font-weight: 800;
+            color: #15803d;
+            white-space: nowrap;
+            transition: all 0.22s cubic-bezier(.34, 1.56, .64, 1);
+        }
+
+        .c-chip:nth-child(1) {
+            animation: slideFromRight 0.5s ease 0.1s both;
+        }
+
+        .c-chip:nth-child(2) {
+            animation: slideFromRight 0.5s ease 0.25s both;
+        }
+
+        @keyframes slideFromRight {
+            from {
+                opacity: 0;
+                transform: translateX(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .c-chip:hover {
+            background: linear-gradient(135deg, #16a34a, #15803d);
+            border-color: transparent;
+            color: #fff;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(22, 163, 74, 0.28);
+        }
+
+        .c-chip .c-ico {
+            width: 24px;
+            height: 24px;
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-size: 0.6rem;
+            color: #fff;
+            transition: transform 0.22s ease;
+            box-shadow: 0 2px 6px rgba(22, 163, 74, 0.3);
+        }
+
+        .c-chip:hover .c-ico {
+            background: rgba(255, 255, 255, 0.22);
+            transform: rotate(-10deg) scale(1.1);
+            box-shadow: none;
+        }
+
         .a-not {
             color: #6b6a75;
 
@@ -129,29 +406,62 @@
     <!-- Spinner End -->
 
 
-    <!-- Topbar Start -->
-    <div class="container-fluid bg-light ps-5 pe-0 d-none d-lg-block">
-        <div class="row gx-0">
-            <div class="col-md-6 text-center text-lg-start mb-2 mb-lg-0">
-                <div class="d-inline-flex align-items-center">
-                    <small class="py-2"><i class="far fa-clock text-primary me-2"></i>Opening Hours: Mon To Sun : 24/7 Available</small>
+
+    <!-- ====== TOPBAR ====== -->
+    <div class="topbar">
+        <div class="topbar-inner">
+
+            <!-- LEFT -->
+            <div class="topbar-left">
+                <div class="hours-pill">
+                    <span class="live-dot"><span></span></span>
+                    <i class="far fa-clock"></i>
+                    24/7 Open
+                </div>
+                <div class="ticker-wrap">
+                    <div class="ticker-track">
+                        <span class="t-item"><i class="fa fa-heart-pulse"></i> Expert doctors, trusted care</span>
+                        <span class="t-sep">✦</span>
+                        <span class="t-item"><i class="fa fa-calendar-check"></i> Easy online appointment booking</span>
+                        <span class="t-sep">✦</span>
+                        <span class="t-item"><i class="fa fa-stethoscope"></i> Quality healthcare for your family</span>
+                        <span class="t-sep">✦</span>
+                        <span class="t-item"><i class="fa fa-leaf"></i> Your health, our priority</span>
+                        <span class="t-sep">✦</span>
+                        <span class="t-item"><i class="fa fa-shield-halved"></i> Mon to Sun — always available</span>
+                        <span class="t-sep">✦</span>
+                        <!-- duplicate -->
+                        <span class="t-item"><i class="fa fa-heart-pulse"></i> Expert doctors, trusted care</span>
+                        <span class="t-sep">✦</span>
+                        <span class="t-item"><i class="fa fa-calendar-check"></i> Easy online appointment booking</span>
+                        <span class="t-sep">✦</span>
+                        <span class="t-item"><i class="fa fa-stethoscope"></i> Quality healthcare for your family</span>
+                        <span class="t-sep">✦</span>
+                        <span class="t-item"><i class="fa fa-leaf"></i> Your health, our priority</span>
+                        <span class="t-sep">✦</span>
+                        <span class="t-item"><i class="fa fa-shield-halved"></i> Mon to Sun — always available</span>
+                        <span class="t-sep">✦</span>
+                    </div>
                 </div>
             </div>
-            <div class="col-md-6 text-center text-lg-end">
-                <div class="position-relative d-inline-flex align-items-center bg-primary text-white top-shape px-5">
-                    @foreach($aboutDetails as $aboutDetail)
-                    <div class="me-3 pe-3 border-end py-2">
-                        <p class="m-0"><i class="fa fa-envelope-open me-2"></i><a href="mailto:{{$aboutDetail->email}}" class="text-white">{{$aboutDetail->email}}</a></p>
-                    </div>
-                    <div class="py-2">
-                        <p class="m-0"><i class="fa fa-phone me-2"></i><a href="tel:{{$aboutDetail->number}}" class="text-white">+91-{{$aboutDetail->number}}</a></p>
-                    </div>
-                    @endforeach
-                </div>
+
+            <!-- RIGHT -->
+            <div class="topbar-right">
+                @foreach($aboutDetails as $aboutDetail)
+                <a href="mailto:{{$aboutDetail->email}}" class="c-chip">
+                    <span class="c-ico"><i class="fa fa-envelope"></i></span>
+                    {{$aboutDetail->email}}
+                </a>
+                <a href="tel:{{$aboutDetail->number}}" class="c-chip">
+                    <span class="c-ico"><i class="fa fa-phone"></i></span>
+                    +91-{{$aboutDetail->number}}
+                </a>
+                @endforeach
             </div>
+
         </div>
     </div>
-    <!-- Topbar End -->
+    <!-- ====== TOPBAR ====== -->
 
 
 
@@ -1279,27 +1589,27 @@
                             <div class="col-6">
                                 <label for="user_name" class="form-label fw-bold"><span class="text-danger"><i
                                             class="fa fa-stethoscope" aria-hidden="true"></i></span> Your Name</label>
-                                            @auth
+                                @auth
                                 <input type="text" class="form-control border-0 bg-light px-4" value="{{ $user->user_name }}"
                                     name="user_name" id="user_name" style="height: 55px;" readonly>
-                                    @endauth
-                                    @guest
-                                    <input type="text" class="form-control border-0 bg-light px-4" value="Guest"
-                                        name="user_name" id="user_name" style="height: 55px;" readonly>
-                                    @endguest
+                                @endauth
+                                @guest
+                                <input type="text" class="form-control border-0 bg-light px-4" value="Guest"
+                                    name="user_name" id="user_name" style="height: 55px;" readonly>
+                                @endguest
                             </div>
 
                             <div class="col-6">
                                 <label for="user_email" class="form-label fw-bold"><span class="text-danger"><i
                                             class="fa fa-stethoscope" aria-hidden="true"></i></span> Your Email</label>
-                                            @auth
+                                @auth
                                 <input type="text" class="form-control border-0 bg-light px-4"
                                     value="{{ $user->user_email }}" name="user_email" id="user_email" style="height: 55px;">
-                                    @endauth
-                                    @guest
-                                    <input type="text" class="form-control border-0 bg-light px-4" value="Guest"
-                                        name="user_email" id="user_email" style="height: 55px;">
-                                    @endguest
+                                @endauth
+                                @guest
+                                <input type="text" class="form-control border-0 bg-light px-4" value="Guest"
+                                    name="user_email" id="user_email" style="height: 55px;">
+                                @endguest
                             </div>
 
                             <div class="col-12">
@@ -1483,7 +1793,7 @@
     <!-- Footer End -->
 
 
-        <!-- Global Search Section========================================================================================= -->
+    <!-- Global Search Section========================================================================================= -->
     <!-- ── Floating Search FAB ── -->
     <button class="gs-fab" id="gsOpenBtn" title="Search Everything">
         <i class="bi bi-search"></i>
@@ -1509,7 +1819,7 @@
             </div>
 
             <!-- Search Form — submits to search-result page -->
-                        @guest
+            @guest
             <form action="{{ route('search.result') }}" method="GET" class="gs-form" id="gsForm">
                 <div class="gs-input-group">
                     <i class="bi bi-search gs-input-icon"></i>
