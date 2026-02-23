@@ -1,6 +1,6 @@
 /* ── OPD Section Background ── */
 .bg-appointment {
-    background: linear-gradient(rgba(9, 30, 62, 0.644), rgba(9, 30, 62, 0.534)), url(../img/eyee.jpeg) center center no-repeat !important;
+    background: linear-gradient(rgba(9, 30, 62, 0), rgba(9, 30, 62, 0)), url(../img/opd.jpg) center center no-repeat !important;
     background-size: cover;
 }
 
@@ -19,7 +19,7 @@
     font-weight: 700;
     letter-spacing: 2.5px;
     text-transform: uppercase;
-    color: #fff;
+    color: #ffffff;
     margin-bottom: 10px;
 }
 

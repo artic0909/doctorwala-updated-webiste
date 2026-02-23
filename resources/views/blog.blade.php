@@ -646,7 +646,7 @@
                     <p>Doctors · OPD Clinics · Pathology Labs</p>
                 </div>
                 <button class="gs-modal-close" id="gsCloseBtn" aria-label="Close">
-                    <i class="bi bi-x-lg"></i>
+                    <i class="bi bi-x-lg">X</i>
                 </button>
             </div>
 

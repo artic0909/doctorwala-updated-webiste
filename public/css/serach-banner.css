@@ -3,7 +3,7 @@
 ══════════════════════════════ */
 .search-banner-section {
     position: relative;
-    margin-top: -80px;
+    margin-top: 10px;
     margin-bottom: 3rem;
     z-index: 10;
     padding: 0 15px;
@@ -355,13 +355,13 @@
     }
 
     .search-banner-section {
-        margin-top: -40px;
+        /* margin-top: -40px; */
     }
 }
 
 @media (max-width: 576px) {
     .search-banner-section {
-        margin-top: -20px;
+        /* margin-top: -20px; */
         padding: 0 10px;
     }
 

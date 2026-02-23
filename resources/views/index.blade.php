@@ -519,10 +519,8 @@
     <!-- password update Unsuccess modal end -->
 
 
-
-
     <!-- Carousel Start -->
-    <div class="container-fluid p-0">
+    <!-- <div class="container-fluid p-0">
         <div id="header-carousel" class="carousel slide carousel-fade" data-bs-ride="carousel">
 
 
@@ -564,23 +562,25 @@
                 <span class="visually-hidden">Next</span>
             </button>
         </div>
-    </div>
+    </div> -->
     <!-- Carousel End -->
+
+
 
 
     <!-- Search Banner -->
     <div class="container search-banner-section">
         <div class="search-cards-row">
 
-            {{-- Card 1: Search All --}}
+            <!-- {{-- Card 1: Search All --}} -->
             <div class="search-card search-card-all wow zoomIn" data-wow-delay="0.1s">
                 <div class="search-card-header">
                     <div class="search-card-icon">
                         <i class="fa fa-magnifying-glass"></i>
                     </div>
                     <div>
-                        <h3>Search For ALL</h3>
-                        <p>Doctors, OPD & Pathology</p>
+                        <h3>Search Your Direct to Doctor</h3>
+                        <p>Doctor's name, Address, OPD, Pathology & All</p>
                     </div>
                 </div>
                 <div class="search-input-wrap">
@@ -594,15 +594,15 @@
                 </button>
             </div>
 
-            {{-- Card 2: Search OPD --}}
+            <!-- {{-- Card 2: Search OPD --}} -->
             <div class="search-card search-card-opd wow zoomIn" data-wow-delay="0.2s">
                 <div class="search-card-header">
                     <div class="search-card-icon">
                         <i class="fa fa-hospital"></i>
                     </div>
                     <div>
-                        <h3>Search For OPD</h3>
-                        <p>Find by specialist type</p>
+                        <h3>Search Your OPD Doctor</h3>
+                        <p>Find by specialist and type</p>
                     </div>
                 </div>
                 <div class="search-input-wrap">
@@ -622,15 +622,15 @@
                 </button>
             </div>
 
-            {{-- Card 3: Search Pathology --}}
+            <!-- {{-- Card 3: Search Pathology --}} -->
             <div class="search-card search-card-path wow zoomIn" data-wow-delay="0.3s">
                 <div class="search-card-header">
                     <div class="search-card-icon">
                         <i class="fa fa-flask"></i>
                     </div>
                     <div>
-                        <h3>Search For Pathology</h3>
-                        <p>Find by test type</p>
+                        <h3>Search Your Test Pathology</h3>
+                        <p>Find by test type & name</p>
                     </div>
                 </div>
                 <div class="search-input-wrap">
@@ -666,65 +666,15 @@
 
 
 
-    <!-- About Start -->
-    @foreach($aboutDetails as $aboutDetail)
-    <div class="container-fluid py-5 wow fadeInUp" data-wow-delay="0.1s">
-        <div class="container">
-            <div class="row g-5">
-                <div class="col-lg-7">
-                    <div class="section-title mb-4">
-                        <h5 class="position-relative d-inline-block text-primary text-uppercase">Jio Ji Bharka</h5>
-                        <h1 class="display-5 mb-0">{{$aboutDetail->ab_title}}</h1>
-                    </div>
-                    <h4 class="text-body fst-italic mb-4">{{$aboutDetail->ab_b_txt}}</h4>
-                    <p class="mb-4">{{$aboutDetail->ab_desc}}</p>
-                    <div class="row g-3">
-                        <div class="col-sm-6 wow zoomIn" data-wow-delay="0.3s">
-                            <h5 class="mb-3"><i class="fa fa-check-circle text-primary me-3"></i>Find Best Doctors</h5>
-                            <h5 class="mb-3"><i class="fa fa-check-circle text-primary me-3"></i>Find Best Pathologists
-                            </h5>
-                            <h5 class="mb-3"><i class="fa fa-check-circle text-primary me-3"></i>Find Best Clinics</h5>
-                        </div>
-                        <div class="col-sm-6 wow zoomIn" data-wow-delay="0.6s">
-                            <h5 class="mb-3"><i class="fa fa-check-circle text-primary me-3"></i>Single Call</h5>
-                            <h5 class="mb-3"><i class="fa fa-check-circle text-primary me-3"></i>24/7 Opened</h5>
-                            <h5 class="mb-3"><i class="fa fa-check-circle text-primary me-3"></i>Fair Prices</h5>
-                        </div>
-                    </div>
-                    @guest
-                    <a href="/partner-register" class="btn btn-primary py-3 px-5 mt-4 wow zoomIn"
-                        data-wow-delay="0.6s">Join As Partners</a>
-                    @endguest
-
-                    @auth
-                    <a href="/dw/about" class="btn btn-primary py-3 px-5 mt-4 wow zoomIn"
-                        data-wow-delay="0.6s">About Doctorwala</a>
-                    @endauth
-                </div>
-                <div class="col-lg-5" style="min-height: 500px;">
-                    <div class="position-relative h-100">
-                        <img class="position-absolute w-100 h-100 rounded wow zoomIn" data-wow-delay="0.9s"
-                            src="{{ asset('storage/' . $aboutDetail->about_image) }}" style="object-fit: cover;">
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    @endforeach
-    <!-- About End -->
-
-
-
-
     <!-- OPD Cards Start -->
-    <div class="container-fluid bg-primary bg-appointment my-5 wow fadeInUp opd-section" data-wow-delay="0.1s">
+    <div class="container-fluid bg-primary bg-appointment my-2 wow fadeInUp opd-section" data-wow-delay="0.1s" style="margin-top: -30px;">
         <div class="container">
 
             <!-- Header + Buttons -->
             <div class="opd-controls">
                 <div>
                     <div class="section-badge">Available OPD</div>
-                    <h1>Take The Best Doctors For Best Treatments</h1>
+                    <h1>Display Your OPD / Clinics</h1>
                 </div>
                 <div class="opd-btn-group">
                     <button class="opd-btn btn-prev-opd" aria-label="Previous" id="opdBtnPrev">
@@ -797,6 +747,264 @@
         </div>
     </div>
     <!-- OPD Cards End -->
+
+
+    <!-- Pathology Cards Start -->
+    <div class="container-fluid bg-primary bg-appointment2 my-5 wow fadeInUp p-3 path-section" data-wow-delay="0.1s">
+        <div class="container">
+
+            <!-- Header + Buttons -->
+            <div class="path-controls">
+                <div>
+                    <div class="section-badge-path">Available Pathology</div>
+                    <h1>Display Your Test Pathology</h1>
+                </div>
+                <div class="path-btn-group">
+                    <button class="path-btn" id="pathBtnPrev" aria-label="Previous" id="pathBtnPrev">
+                        <i class="bi bi-arrow-left"></i>
+                    </button>
+                    <button class="path-btn" id="pathBtnNext" aria-label="Next" id="pathBtnNext">
+                        <i class="bi bi-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Cards -->
+            <div class="row overflow-hidden">
+                <div class="col-12">
+                    <div id="pathScrollWrapper" class="scrolling-wrapper-path" id="pathScrollWrapper">
+                        @foreach($paths as $path)
+                        <div class="path-card">
+
+                            <div class="path-card-img-wrap">
+                                @if($path->banner && $path->banner->pathologybanner)
+                                <img src="{{ asset('storage/' . $path->banner->pathologybanner) }}" alt="{{ $path->clinic_name }}">
+                                @else
+                                <img src="https://media.istockphoto.com/id/1222357475/vector/image-preview-icon-picture-placeholder-for-website-or-ui-ux-design-vector-illustration.jpg?s=612x612&w=0&k=20&c=KuCo-dRBYV7nz2gbk4J9w1WtTAgpTdznHu55W9FjimE=" alt="Default">
+                                @endif
+                                <span class="img-badge-path">Pathology</span>
+                            </div>
+
+                            <div class="path-card-body">
+                                @auth
+                                <a href="{{ url('/dw/pathology/'.$path->slug) }}">
+                                    @endauth
+                                    @guest
+                                    <a href="{{ url('/pathology/'.$path->slug) }}">
+                                        @endguest
+                                        <p class="path-card-title">{{ $path->clinic_name }}</p>
+                                        <div class="path-card-divider"></div>
+                                        <div class="path-meta-row">
+                                            <i class="bi bi-geo-alt-fill"></i>
+                                            <span>{{ $path->clinic_city }}, {{ $path->clinic_pincode }}</span>
+                                        </div>
+                                        <div class="path-meta-row">
+                                            <i class="bi bi-signpost-2-fill"></i>
+                                            <span>{{ $path->clinic_landmark }}</span>
+                                        </div>
+                                        <div class="path-card-footer-row">
+                                            <span class="path-view-link">
+                                                View Details <i class="bi bi-arrow-right"></i>
+                                            </span>
+                                        </div>
+                                    </a>
+                            </div>
+
+                        </div>
+                        @endforeach
+                    </div>
+                </div>
+            </div>
+
+            <!-- Scroll Progress -->
+            <div class="path-progress-bar">
+                <div class="path-progress-fill" id="pathProgressFill"></div>
+            </div>
+
+        </div>
+    </div>
+    <!-- Pathology Cards End -->
+
+
+    <!-- Doctors Cards Start -->
+    <div class="container-fluid bg-primary bg-appointment3 my-5 wow fadeInUp p-3 doc-section" data-wow-delay="0.1s">
+        <div class="container">
+
+            <!-- Header + Buttons -->
+            <div class="doc-controls">
+                <div>
+                    <div class="section-badge-doc">Available Doctors</div>
+                    <h1>Direct to Doctors</h1>
+                </div>
+                <div class="doc-btn-group">
+                    <button class="doc-btn" id="docBtnPrev" aria-label="Previous">
+                        <i class="bi bi-arrow-left"></i>
+                    </button>
+                    <button class="doc-btn" id="docBtnNext" aria-label="Next">
+                        <i class="bi bi-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Cards -->
+            <div class="row overflow-hidden">
+                <div class="col-12">
+                    <div id="docScrollWrapper" class="scrolling-wrapper-doc">
+                        @foreach($docs as $doc)
+                        <div class="doc-card">
+
+                            <!-- Image -->
+                            <div class="doc-card-img-wrap">
+                                @if($doc->banner && $doc->banner->doctorbanner)
+                                <img src="{{ asset('storage/' . $doc->banner->doctorbanner) }}" alt="{{ $doc->partner_doctor_name }}">
+                                @else
+                                <img src="https://media.istockphoto.com/id/1222357475/vector/image-preview-icon-picture-placeholder-for-website-or-ui-ux-design-vector-illustration.jpg?s=612x612&w=0&k=20&c=KuCo-dRBYV7nz2gbk4J9w1WtTAgpTdznHu55W9FjimE=" alt="Default">
+                                @endif
+                                <span class="img-badge-doc">Doctor</span>
+                            </div>
+
+                            <!-- Body -->
+                            <div class="doc-card-body">
+                                @auth
+                                <a href="{{ url('/dw/doctor/'.$doc->slug) }}">
+                                    @endauth
+                                    @guest
+                                    <a href="{{ url('/doctor/'.$doc->slug) }}">
+                                        @endguest
+
+                                        <p class="doc-card-title">{{ $doc->partner_doctor_name }}</p>
+                                        <div class="doc-card-divider"></div>
+
+                                        <div class="doc-meta-row">
+                                            <i class="bi bi-geo-alt-fill"></i>
+                                            <span>{{ $doc->partner_doctor_city }}, {{ $doc->partner_doctor_pincode }}</span>
+                                        </div>
+                                        <div class="doc-meta-row">
+                                            <i class="bi bi-signpost-2-fill"></i>
+                                            <span>{{ $doc->partner_doctor_landmark }}</span>
+                                        </div>
+
+                                        <div class="doc-card-footer-row">
+                                            <span class="doc-view-link">
+                                                View Details <i class="bi bi-arrow-right"></i>
+                                            </span>
+                                        </div>
+
+                                    </a>
+                            </div>
+
+                        </div>
+                        @endforeach
+                    </div>
+                </div>
+            </div>
+
+            <!-- Scroll Progress -->
+            <div class="doc-progress-bar">
+                <div class="doc-progress-fill" id="docProgressFill"></div>
+            </div>
+
+        </div>
+    </div>
+    <!-- Doctors Cards End -->
+
+
+
+
+    @guest
+    <!-- Join As Partner Start -->
+    <div class="container-fluid bg-offer my-4 py-4 wow fadeInUp" data-wow-delay="0.1s">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-9 wow zoomIn" data-wow-delay="0.6s">
+                    <div class="offer-text text-center rounded p-5">
+                        <h1 class="display-5 text-white off-texts">Partner with Doctorwala.info to expand your services nationwide</h1>
+                        <div class="d-flex g-3 flex-wrap justify-content-center ">
+                            <a href="/partner-register" class="btn btn-dark py-3 px-5 me-3 mb-2">Join As Partner(Clinics)</a>
+                            <a href="https://play.google.com/store/apps/details?id=com.doctorwala.dochealth" target="_blank" class="btn btn-light py-3 px-5 mb-2"><i class="fab fa-google-play me-2" style="font-size: 1.2rem;"></i>Download Doctorwala Mobile App</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Join As Partner End -->
+    @endguest
+
+    @auth
+    <!-- Join As Partner Start -->
+    <div class="container-fluid bg-offer my-4 py-4 wow fadeInUp" data-wow-delay="0.1s">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-9 wow zoomIn" data-wow-delay="0.6s">
+                    <div class="offer-text text-center rounded p-5">
+                        <h1 class="display-5 text-white off-texts">Learn About Our Privacy Policy or Download Our App</h1>
+                        <div class="d-flex g-3 flex-wrap justify-content-center ">
+                            <a href="/dw/privacy-policy" class="btn btn-dark py-3 px-5 me-3 mb-2">Privacy Policy</a>
+                            <a href="https://play.google.com/store/apps/details?id=com.doctorwala.dochealth" target="_blank" class="btn btn-light py-3 px-5 mb-2"><i class="fab fa-google-play me-2" style="font-size: 1.2rem;"></i>Download Doctorwala Mobile App</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Join As Partner End -->
+    @endauth
+
+
+
+
+    <!-- About Start -->
+    @foreach($aboutDetails as $aboutDetail)
+    <div class="container-fluid py-5 wow fadeInUp" data-wow-delay="0.1s">
+        <div class="container">
+            <div class="row g-5">
+                <div class="col-lg-7">
+                    <div class="section-title mb-4">
+                        <h5 class="position-relative d-inline-block text-primary text-uppercase">Jio Ji Bharka</h5>
+                        <h1 class="display-5 mb-0">{{$aboutDetail->ab_title}}</h1>
+                    </div>
+                    <h4 class="text-body fst-italic mb-4">{{$aboutDetail->ab_b_txt}}</h4>
+                    <p class="mb-4">{{$aboutDetail->ab_desc}}</p>
+                    <div class="row g-3">
+                        <div class="col-sm-6 wow zoomIn" data-wow-delay="0.3s">
+                            <h5 class="mb-3"><i class="fa fa-check-circle text-primary me-3"></i>Find Best Doctors</h5>
+                            <h5 class="mb-3"><i class="fa fa-check-circle text-primary me-3"></i>Find Best Pathologists
+                            </h5>
+                            <h5 class="mb-3"><i class="fa fa-check-circle text-primary me-3"></i>Find Best Clinics</h5>
+                        </div>
+                        <div class="col-sm-6 wow zoomIn" data-wow-delay="0.6s">
+                            <h5 class="mb-3"><i class="fa fa-check-circle text-primary me-3"></i>Single Call</h5>
+                            <h5 class="mb-3"><i class="fa fa-check-circle text-primary me-3"></i>24/7 Opened</h5>
+                            <h5 class="mb-3"><i class="fa fa-check-circle text-primary me-3"></i>Fair Prices</h5>
+                        </div>
+                    </div>
+                    @guest
+                    <a href="/partner-register" class="btn btn-primary py-3 px-5 mt-4 wow zoomIn"
+                        data-wow-delay="0.6s">Join As Partners</a>
+                    @endguest
+
+                    @auth
+                    <a href="/dw/about" class="btn btn-primary py-3 px-5 mt-4 wow zoomIn"
+                        data-wow-delay="0.6s">About Doctorwala</a>
+                    @endauth
+                </div>
+                <div class="col-lg-5" style="min-height: 500px;">
+                    <div class="position-relative h-100">
+                        <img class="position-absolute w-100 h-100 rounded wow zoomIn" data-wow-delay="0.9s"
+                            src="{{ asset('storage/' . $aboutDetail->about_image) }}" style="object-fit: cover;">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @endforeach
+    <!-- About End -->
+
+
+
+
+
 
 
 
@@ -926,207 +1134,15 @@
 
 
 
-    <!-- Pathology Cards Start -->
-    <div class="container-fluid bg-primary bg-appointment my-5 wow fadeInUp p-3 path-section" data-wow-delay="0.1s">
-        <div class="container">
-
-            <!-- Header + Buttons -->
-            <div class="path-controls">
-                <div>
-                    <div class="section-badge-path">Available Pathology</div>
-                    <h1>Get Accurate Pathology Tests for Reliable Results</h1>
-                </div>
-                <div class="path-btn-group">
-                    <button class="path-btn" id="pathBtnPrev" aria-label="Previous" id="pathBtnPrev">
-                        <i class="bi bi-arrow-left"></i>
-                    </button>
-                    <button class="path-btn" id="pathBtnNext" aria-label="Next" id="pathBtnNext">
-                        <i class="bi bi-arrow-right"></i>
-                    </button>
-                </div>
-            </div>
-
-            <!-- Cards -->
-            <div class="row overflow-hidden">
-                <div class="col-12">
-                    <div id="pathScrollWrapper" class="scrolling-wrapper-path" id="pathScrollWrapper">
-                        @foreach($paths as $path)
-                        <div class="path-card">
-
-                            <div class="path-card-img-wrap">
-                                @if($path->banner && $path->banner->pathologybanner)
-                                <img src="{{ asset('storage/' . $path->banner->pathologybanner) }}" alt="{{ $path->clinic_name }}">
-                                @else
-                                <img src="https://media.istockphoto.com/id/1222357475/vector/image-preview-icon-picture-placeholder-for-website-or-ui-ux-design-vector-illustration.jpg?s=612x612&w=0&k=20&c=KuCo-dRBYV7nz2gbk4J9w1WtTAgpTdznHu55W9FjimE=" alt="Default">
-                                @endif
-                                <span class="img-badge-path">Pathology</span>
-                            </div>
-
-                            <div class="path-card-body">
-                                @auth
-                                <a href="{{ url('/dw/pathology/'.$path->slug) }}">
-                                    @endauth
-                                    @guest
-                                    <a href="{{ url('/pathology/'.$path->slug) }}">
-                                        @endguest
-                                        <p class="path-card-title">{{ $path->clinic_name }}</p>
-                                        <div class="path-card-divider"></div>
-                                        <div class="path-meta-row">
-                                            <i class="bi bi-geo-alt-fill"></i>
-                                            <span>{{ $path->clinic_city }}, {{ $path->clinic_pincode }}</span>
-                                        </div>
-                                        <div class="path-meta-row">
-                                            <i class="bi bi-signpost-2-fill"></i>
-                                            <span>{{ $path->clinic_landmark }}</span>
-                                        </div>
-                                        <div class="path-card-footer-row">
-                                            <span class="path-view-link">
-                                                View Details <i class="bi bi-arrow-right"></i>
-                                            </span>
-                                        </div>
-                                    </a>
-                            </div>
-
-                        </div>
-                        @endforeach
-                    </div>
-                </div>
-            </div>
-
-            <!-- Scroll Progress -->
-            <div class="path-progress-bar">
-                <div class="path-progress-fill" id="pathProgressFill"></div>
-            </div>
-
-        </div>
-    </div>
-    <!-- Pathology Cards End -->
 
 
 
-    @guest
-    <!-- Join As Partner Start -->
-    <div class="container-fluid bg-offer my-4 py-4 wow fadeInUp" data-wow-delay="0.1s">
-        <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-lg-9 wow zoomIn" data-wow-delay="0.6s">
-                    <div class="offer-text text-center rounded p-5">
-                        <h1 class="display-5 text-white off-texts">Partner with Doctorwala.info to expand your services nationwide</h1>
-                        <div class="d-flex g-3 flex-wrap justify-content-center ">
-                            <a href="/partner-register" class="btn btn-dark py-3 px-5 me-3 mb-2">Join As Partner</a>
-                            <a href="https://play.google.com/store/apps/details?id=com.doctorwala.dochealth" target="_blank" class="btn btn-light py-3 px-5 mb-2"><i class="fab fa-google-play me-2" style="font-size: 1.2rem;"></i>User Download</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Join As Partner End -->
-    @endguest
-
-    @auth
-    <!-- Join As Partner Start -->
-    <div class="container-fluid bg-offer my-4 py-4 wow fadeInUp" data-wow-delay="0.1s">
-        <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-lg-9 wow zoomIn" data-wow-delay="0.6s">
-                    <div class="offer-text text-center rounded p-5">
-                        <h1 class="display-5 text-white off-texts">Learn About Our Privacy Policy or Download Our App</h1>
-                        <div class="d-flex g-3 flex-wrap justify-content-center ">
-                            <a href="/dw/privacy-policy" class="btn btn-dark py-3 px-5 me-3 mb-2">Privacy Policy</a>
-                            <a href="https://play.google.com/store/apps/details?id=com.doctorwala.dochealth" target="_blank" class="btn btn-light py-3 px-5 mb-2"><i class="fab fa-google-play me-2" style="font-size: 1.2rem;"></i>Download</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Join As Partner End -->
-    @endauth
 
 
 
-    <!-- Doctors Cards Start -->
-    <div class="container-fluid bg-primary bg-appointment my-5 wow fadeInUp p-3 doc-section" data-wow-delay="0.1s">
-        <div class="container">
 
-            <!-- Header + Buttons -->
-            <div class="doc-controls">
-                <div>
-                    <div class="section-badge-doc">Available Doctors</div>
-                    <h1>Take The Best Doctors For Best Treatments</h1>
-                </div>
-                <div class="doc-btn-group">
-                    <button class="doc-btn" id="docBtnPrev" aria-label="Previous">
-                        <i class="bi bi-arrow-left"></i>
-                    </button>
-                    <button class="doc-btn" id="docBtnNext" aria-label="Next">
-                        <i class="bi bi-arrow-right"></i>
-                    </button>
-                </div>
-            </div>
 
-            <!-- Cards -->
-            <div class="row overflow-hidden">
-                <div class="col-12">
-                    <div id="docScrollWrapper" class="scrolling-wrapper-doc">
-                        @foreach($docs as $doc)
-                        <div class="doc-card">
 
-                            <!-- Image -->
-                            <div class="doc-card-img-wrap">
-                                @if($doc->banner && $doc->banner->doctorbanner)
-                                <img src="{{ asset('storage/' . $doc->banner->doctorbanner) }}" alt="{{ $doc->partner_doctor_name }}">
-                                @else
-                                <img src="https://media.istockphoto.com/id/1222357475/vector/image-preview-icon-picture-placeholder-for-website-or-ui-ux-design-vector-illustration.jpg?s=612x612&w=0&k=20&c=KuCo-dRBYV7nz2gbk4J9w1WtTAgpTdznHu55W9FjimE=" alt="Default">
-                                @endif
-                                <span class="img-badge-doc">Doctor</span>
-                            </div>
-
-                            <!-- Body -->
-                            <div class="doc-card-body">
-                                @auth
-                                <a href="{{ url('/dw/doctor/'.$doc->slug) }}">
-                                    @endauth
-                                    @guest
-                                    <a href="{{ url('/doctor/'.$doc->slug) }}">
-                                        @endguest
-
-                                        <p class="doc-card-title">{{ $doc->partner_doctor_name }}</p>
-                                        <div class="doc-card-divider"></div>
-
-                                        <div class="doc-meta-row">
-                                            <i class="bi bi-geo-alt-fill"></i>
-                                            <span>{{ $doc->partner_doctor_city }}, {{ $doc->partner_doctor_pincode }}</span>
-                                        </div>
-                                        <div class="doc-meta-row">
-                                            <i class="bi bi-signpost-2-fill"></i>
-                                            <span>{{ $doc->partner_doctor_landmark }}</span>
-                                        </div>
-
-                                        <div class="doc-card-footer-row">
-                                            <span class="doc-view-link">
-                                                View Details <i class="bi bi-arrow-right"></i>
-                                            </span>
-                                        </div>
-
-                                    </a>
-                            </div>
-
-                        </div>
-                        @endforeach
-                    </div>
-                </div>
-            </div>
-
-            <!-- Scroll Progress -->
-            <div class="doc-progress-bar">
-                <div class="doc-progress-fill" id="docProgressFill"></div>
-            </div>
-
-        </div>
-    </div>
-    <!-- Doctors Cards End -->
 
 
 
@@ -1250,7 +1266,7 @@
                     <p>Doctors · OPD Clinics · Pathology Labs</p>
                 </div>
                 <button class="gs-modal-close" id="gsCloseBtn" aria-label="Close">
-                    <i class="bi bi-x-lg"></i>
+                    <i class="bi bi-x-lg">X</i>
                 </button>
             </div>
 
@@ -1348,6 +1364,11 @@
             <!-- ESC hint -->
             <p class="gs-esc-hint">Press <kbd>ESC</kbd> to close &nbsp;·&nbsp; <kbd>Enter</kbd> to search</p>
 
+
+            <!-- Branding logo -->
+            <div class="gs-brand-logo">
+                <img src="{{asset('../img/logoo.png')}}" alt="Logo" class="gs-brand-img">
+            </div>
         </div>
     </div>
     <!-- Global Search Section========================================================================================= -->
@@ -1678,6 +1699,12 @@
             ${msg}
         </div>`;
         };
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('gsOpenBtn').click();
+        });
     </script>
 
 </body>

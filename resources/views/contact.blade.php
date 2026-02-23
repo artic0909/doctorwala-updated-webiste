@@ -463,16 +463,12 @@
     <div class="container-fluid bg-primary py-5 hero-header mb-5">
         <div class="row py-3">
             <div class="col-12 text-center">
-                <h1 class="display-3 text-white animated zoomIn">Get In Touch</h1>
-                @guest
-                <a href="/" class="h4 text-white" style="text-decoration: underline;">Home</a>
-                @endguest
+                <h1 class="display-3 text-white animated zoomIn">Contact Us</h1>
 
-                @auth
-                <a href="/dw" class="h4 text-white" style="text-decoration: underline;">Home</a>
-                @endauth
+                <a href="#" class="h4 text-white" style="text-decoration: underline;">Submit a Ticket | FAQ | Help Center</a>
+
                 <i class="fa fa-plus text-dark px-2" style="font-size: 2rem; font-weight: 700;"></i>
-                <a href="" class="h4 text-white">Contact Us</a>
+                <a href="" class="h4 text-white">Send Us A Message</a>
             </div>
         </div>
     </div>
@@ -758,7 +754,7 @@
                     <p>Doctors · OPD Clinics · Pathology Labs</p>
                 </div>
                 <button class="gs-modal-close" id="gsCloseBtn" aria-label="Close">
-                    <i class="bi bi-x-lg"></i>
+                    <i class="bi bi-x-lg">X</i>
                 </button>
             </div>
 
@@ -991,6 +987,12 @@
                     city: city,
                 })
             });
+        });
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('gsOpenBtn').click();
         });
     </script>
 </body>

@@ -786,7 +786,7 @@
 
 
     <!-- Hero Start -->
-    <div class="container-fluid bg-primary py-5 hero-header mb-5">
+    <!-- <div class="container-fluid bg-primary py-5 hero-header mb-5">
         <div class="row py-3">
             <div class="col-12 text-center">
                 <h1 class="display-3 text-white animated zoomIn txt-cap">{{$opd->clinic_name}}</h1>
@@ -795,7 +795,7 @@
                 <a href="#" class="h4 text-white">Details</a>
             </div>
         </div>
-    </div>
+    </div> -->
     <!-- Hero End -->
 
 
@@ -1814,7 +1814,7 @@
                     <p>Doctors · OPD Clinics · Pathology Labs</p>
                 </div>
                 <button class="gs-modal-close" id="gsCloseBtn" aria-label="Close">
-                    <i class="bi bi-x-lg"></i>
+                    <i class="bi bi-x-lg">X</i>
                 </button>
             </div>
 

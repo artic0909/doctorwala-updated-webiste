@@ -1,4 +1,8 @@
 /* ── Pathology Section ── */
+.bg-appointment2 {
+    background: linear-gradient(rgba(10, 121, 121, 0.459), rgba(2, 9, 20, 0)), url(../img/pathology.jpg) center center no-repeat !important;
+    background-size: cover;
+}
 .path-section {
     position: relative;
     padding: 50px 0 60px;
