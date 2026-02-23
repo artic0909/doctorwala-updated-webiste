@@ -16,29 +16,29 @@
     <meta name="copyright" content="Doctorwala">
     <meta name="distribution" content="Global">
 
-    
+
     <!-- Favicon -->
     <link href="{{asset('fav5.png')}}" rel="icon">
-    
+
     <!-- Google Web Fonts -->
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link
-    href="https://fonts.googleapis.com/css2?family=Jost:wght@500;600;700&family=Open+Sans:wght@400;600&display=swap"
-    rel="stylesheet">
-    
+        href="https://fonts.googleapis.com/css2?family=Jost:wght@500;600;700&family=Open+Sans:wght@400;600&display=swap"
+        rel="stylesheet">
+
     <!-- Icon Font Stylesheet -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.0/css/all.min.css"
-    integrity="sha512-9xKTRVabjVeZmc+GUW8GgSmcREDunMM+Dt/GrzchfN8tkwHizc5RP4Ok/MXFFy5rIjJjzhndFScTceq5e6GvVQ=="
-    crossorigin="anonymous" referrerpolicy="no-referrer" />
-    
+        integrity="sha512-9xKTRVabjVeZmc+GUW8GgSmcREDunMM+Dt/GrzchfN8tkwHizc5RP4Ok/MXFFy5rIjJjzhndFScTceq5e6GvVQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+
     <!-- Libraries Stylesheet -->
     <link href="../lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
     <link href="../lib/animate/animate.min.css" rel="stylesheet">
     <link href="../lib/tempusdominus/css/tempusdominus-bootstrap-4.min.css" rel="stylesheet" />
     <link href="../lib/twentytwenty/twentytwenty.css" rel="stylesheet" />
-    
+
     <!-- Customized Bootstrap Stylesheet -->
     <link href="../css/bootstrap.min.css" rel="stylesheet">
     <link href="{{asset('./css/float-btn.css')}}" rel="stylesheet">
@@ -49,6 +49,7 @@
     <link href="../css/partner-btn.css" rel="stylesheet">
     <link href="../responsive/index_responsive.css" rel="stylesheet">
     <link href="../responsive/partner_responsive.css" rel="stylesheet">
+    <link href="{{asset('./css/topbar.css')}}" rel="stylesheet">
 
 
 
@@ -71,29 +72,61 @@
     <!-- Spinner End -->
 
 
-    <!-- Topbar Start -->
-    <div class="container-fluid bg-light ps-5 pe-0 d-none d-lg-block">
-        <div class="row gx-0">
-            <div class="col-md-6 text-center text-lg-start mb-2 mb-lg-0">
-                <div class="d-inline-flex align-items-center">
-                    <small class="py-2"><i class="far fa-clock text-primary me-2"></i>Opening Hours: Mon To Sun : 24/7 Available</small>
+    <!-- ====== TOPBAR ====== -->
+    <div class="topbar">
+        <div class="topbar-inner">
+
+            <!-- LEFT -->
+            <div class="topbar-left">
+                <div class="hours-pill">
+                    <span class="live-dot"><span></span></span>
+                    <i class="far fa-clock"></i>
+                    24/7 Open
+                </div>
+                <div class="ticker-wrap">
+                    <div class="ticker-track">
+                        <span class="t-item"><i class="fa fa-heart-pulse"></i> Expert doctors, trusted care</span>
+                        <span class="t-sep">✦</span>
+                        <span class="t-item"><i class="fa fa-calendar-check"></i> Easy online appointment booking</span>
+                        <span class="t-sep">✦</span>
+                        <span class="t-item"><i class="fa fa-stethoscope"></i> Quality healthcare for your family</span>
+                        <span class="t-sep">✦</span>
+                        <span class="t-item"><i class="fa fa-leaf"></i> Your health, our priority</span>
+                        <span class="t-sep">✦</span>
+                        <span class="t-item"><i class="fa fa-shield-halved"></i> Mon to Sun — always available</span>
+                        <span class="t-sep">✦</span>
+                        <!-- duplicate -->
+                        <span class="t-item"><i class="fa fa-heart-pulse"></i> Expert doctors, trusted care</span>
+                        <span class="t-sep">✦</span>
+                        <span class="t-item"><i class="fa fa-calendar-check"></i> Easy online appointment booking</span>
+                        <span class="t-sep">✦</span>
+                        <span class="t-item"><i class="fa fa-stethoscope"></i> Quality healthcare for your family</span>
+                        <span class="t-sep">✦</span>
+                        <span class="t-item"><i class="fa fa-leaf"></i> Your health, our priority</span>
+                        <span class="t-sep">✦</span>
+                        <span class="t-item"><i class="fa fa-shield-halved"></i> Mon to Sun — always available</span>
+                        <span class="t-sep">✦</span>
+                    </div>
                 </div>
             </div>
-            <div class="col-md-6 text-center text-lg-end">
-                <div class="position-relative d-inline-flex align-items-center bg-primary text-white top-shape px-5">
-                    @foreach($aboutDetails as $aboutDetail)
-                    <div class="me-3 pe-3 border-end py-2">
-                        <p class="m-0"><i class="fa fa-envelope-open me-2"></i><a href="mailto:{{$aboutDetail->email}}" class="text-white">{{$aboutDetail->email}}</a></p>
-                    </div>
-                    <div class="py-2">
-                        <p class="m-0"><i class="fa fa-phone me-2"></i><a href="tel:{{$aboutDetail->number}}" class="text-white">+91-{{$aboutDetail->number}}</a></p>
-                    </div>
-                    @endforeach
-                </div>
+
+            <!-- RIGHT -->
+            <div class="topbar-right">
+                @foreach($aboutDetails as $aboutDetail)
+                <a href="mailto:{{$aboutDetail->email}}" class="c-chip">
+                    <span class="c-ico"><i class="fa fa-envelope"></i></span>
+                    {{$aboutDetail->email}}
+                </a>
+                <a href="tel:{{$aboutDetail->number}}" class="c-chip">
+                    <span class="c-ico"><i class="fa fa-phone"></i></span>
+                    +91-{{$aboutDetail->number}}
+                </a>
+                @endforeach
             </div>
+
         </div>
     </div>
-    <!-- Topbar End -->
+    <!-- ====== TOPBAR ====== -->
 
 
 
@@ -406,7 +439,7 @@
     <!-- Footer End -->
 
 
-        <!-- Global Search Section========================================================================================= -->
+    <!-- Global Search Section========================================================================================= -->
     <!-- ── Floating Search FAB ── -->
     <button class="gs-fab" id="gsOpenBtn" title="Search Everything">
         <i class="bi bi-search"></i>
@@ -432,7 +465,7 @@
             </div>
 
             <!-- Search Form — submits to search-result page -->
-                        @guest
+            @guest
             <form action="{{ route('search.result') }}" method="GET" class="gs-form" id="gsForm">
                 <div class="gs-input-group">
                     <i class="bi bi-search gs-input-icon"></i>
@@ -583,7 +616,7 @@
 
 
 
-<script>
+    <script>
         document.addEventListener('DOMContentLoaded', async () => {
 
             // 1. Parse browser & OS from userAgent

@@ -7,7 +7,7 @@
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
     <meta content="privacy, policies, doctorwala, doctorwala.info, Information We Collect, Use of Information,Data Security,Links to Third-Party Websites,Children's Privacy,Changes to this Privacy Policy,Contact Us, Personal Information,Usage Data,Provide Services,Communication,Analytics and Improvements" name="keywords">
-    
+
     <meta content="We may collect personal information such as your name, email address, contact number, and other relevant information when you voluntarily provide it to us through forms or by contacting us, We may collect non-personal information about your interaction with our Website, such as your IP address, browser type, referring/exit pages, and the date and time of your visit. We may use cookies and similar technologies to collect this information, We may use the personal information you provide to us to provide and improve our services, such as facilitating appointments with doctors, displaying relevant search results, and delivering personalized content, We may use your contact information to communicate with you regarding your inquiries, appointments, service updates, and promotional offers. You may opt out of receiving promotional communications at any time, We may use the non-personal information and usage data to analyze trends, administer the Website, and improve our services, features, and user experience, We take reasonable precautions to protect the personal information we collect from unauthorized access, use, disclosure, or alteration. However, no method of transmission over the internet or electronic storage is completely secure. Therefore, we cannot guarantee absolute security of your personal information, Our Website may contain links to third-party websites or services. This Privacy Policy does not apply to those third-party websites. We recommend reviewing the privacy policies of those websites for information about their data collection, use, and disclosure practices, Our Website is not intended for children under the age of 13. We do not knowingly collect personal information from children under the age of 13. If you are a parent or guardian and believe that your child has provided us with personal information, please contact us, and we will promptly remove the information, We reserve the right to update or modify this Privacy Policy at any time. Any changes will be effective immediately upon posting the updated Privacy Policy on our Website. We encourage you to review this Privacy Policy periodically, If you have any questions, concerns, or requests regarding this Privacy Policy or our privacy practices, please contact us at info.doctorwala@gmail.com" name="description">
 
     <!-- Favicon -->
@@ -41,6 +41,7 @@
     <link href="{{asset('../css/cards-css.css')}}" rel="stylesheet">
     <link href="{{asset('../css/partner-btn.css')}}" rel="stylesheet">
     <link href="{{asset('../responsive/index_responsive.css')}}" rel="stylesheet">
+    <link href="{{asset('./css/topbar.css')}}" rel="stylesheet">
 
 
 </head>
@@ -62,42 +63,69 @@
     <!-- Spinner End -->
 
 
-    <!-- Topbar Start -->
-    <div class="container-fluid bg-light ps-5 pe-0 d-none d-lg-block">
-        <div class="row gx-0">
-            <div class="col-md-6 text-center text-lg-start mb-2 mb-lg-0">
-                <div class="d-inline-flex align-items-center">
-                    <small class="py-2"><i class="far fa-clock text-primary me-2"></i>Opening Hours: Mon To Sun : 24/7 Available</small>
+    <!-- ====== TOPBAR ====== -->
+    <div class="topbar">
+        <div class="topbar-inner">
+
+            <!-- LEFT -->
+            <div class="topbar-left">
+                <div class="hours-pill">
+                    <span class="live-dot"><span></span></span>
+                    <i class="far fa-clock"></i>
+                    24/7 Open
+                </div>
+                <div class="ticker-wrap">
+                    <div class="ticker-track">
+                        <span class="t-item"><i class="fa fa-heart-pulse"></i> Expert doctors, trusted care</span>
+                        <span class="t-sep">✦</span>
+                        <span class="t-item"><i class="fa fa-calendar-check"></i> Easy online appointment booking</span>
+                        <span class="t-sep">✦</span>
+                        <span class="t-item"><i class="fa fa-stethoscope"></i> Quality healthcare for your family</span>
+                        <span class="t-sep">✦</span>
+                        <span class="t-item"><i class="fa fa-leaf"></i> Your health, our priority</span>
+                        <span class="t-sep">✦</span>
+                        <span class="t-item"><i class="fa fa-shield-halved"></i> Mon to Sun — always available</span>
+                        <span class="t-sep">✦</span>
+                        <!-- duplicate -->
+                        <span class="t-item"><i class="fa fa-heart-pulse"></i> Expert doctors, trusted care</span>
+                        <span class="t-sep">✦</span>
+                        <span class="t-item"><i class="fa fa-calendar-check"></i> Easy online appointment booking</span>
+                        <span class="t-sep">✦</span>
+                        <span class="t-item"><i class="fa fa-stethoscope"></i> Quality healthcare for your family</span>
+                        <span class="t-sep">✦</span>
+                        <span class="t-item"><i class="fa fa-leaf"></i> Your health, our priority</span>
+                        <span class="t-sep">✦</span>
+                        <span class="t-item"><i class="fa fa-shield-halved"></i> Mon to Sun — always available</span>
+                        <span class="t-sep">✦</span>
+                    </div>
                 </div>
             </div>
-            <div class="col-md-6 text-center text-lg-end">
-                <div class="position-relative d-inline-flex align-items-center bg-primary text-white top-shape px-5">
-                    @foreach($aboutDetails as $aboutDetail)
-                    <div class="me-3 pe-3 border-end py-2">
-                        <p class="m-0"><i class="fa fa-envelope-open me-2"></i><a href="mailto:{{$aboutDetail->email}}" class="text-white">{{$aboutDetail->email}}</a></p>
-                    </div>
-                    <div class="py-2">
-                        <p class="m-0"><i class="fa fa-phone me-2"></i><a href="tel:{{$aboutDetail->number}}" class="text-white">+91-{{$aboutDetail->number}}</a></p>
-                    </div>
-                    @endforeach
-                </div>
+
+            <!-- RIGHT -->
+            <div class="topbar-right">
+                @foreach($aboutDetails as $aboutDetail)
+                <a href="mailto:{{$aboutDetail->email}}" class="c-chip">
+                    <span class="c-ico"><i class="fa fa-envelope"></i></span>
+                    {{$aboutDetail->email}}
+                </a>
+                <a href="tel:{{$aboutDetail->number}}" class="c-chip">
+                    <span class="c-ico"><i class="fa fa-phone"></i></span>
+                    +91-{{$aboutDetail->number}}
+                </a>
+                @endforeach
             </div>
+
         </div>
     </div>
-    <!-- Topbar End -->
+    <!-- ====== TOPBAR ====== -->
 
 
-
-
-
-
-
-
+    
     @guest
     <!-- Navbar Start -->
     <nav class="navbar navbar-expand-lg bg-white navbar-light shadow-sm px-5 py-3 py-lg-0">
         <a href="/" class="navbar-brand p-0">
-            
+
             <img class="m-0 nav-bar-logo" src="{{asset('img/logoo.png')}}" width="300" alt="DoctorWala">
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
@@ -142,7 +170,7 @@
     <!-- Navbar Start -->
     <nav class="navbar navbar-expand-lg bg-white navbar-light shadow-sm px-5 py-3 py-lg-0">
         <a href="/dw" class="navbar-brand p-0">
-            
+
             <img class="m-0 nav-bar-logo" src="{{asset('img/logoo.png')}}" width="300" alt="DoctorWala">
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
@@ -615,7 +643,7 @@
     <!-- Footer End -->
 
 
-        <!-- Global Search Section========================================================================================= -->
+    <!-- Global Search Section========================================================================================= -->
     <!-- ── Floating Search FAB ── -->
     <button class="gs-fab" id="gsOpenBtn" title="Search Everything">
         <i class="bi bi-search"></i>
@@ -641,7 +669,7 @@
             </div>
 
             <!-- Search Form — submits to search-result page -->
-                        @guest
+            @guest
             <form action="{{ route('search.result') }}" method="GET" class="gs-form" id="gsForm">
                 <div class="gs-input-group">
                     <i class="bi bi-search gs-input-icon"></i>

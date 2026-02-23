@@ -57,7 +57,7 @@
     <link href="{{asset('../css/partner-btn.css')}}" rel="stylesheet">
     <link href="{{asset('../responsive/index_responsive.css')}}" rel="stylesheet">
     <link href="{{asset('responsive/service_responsive.css')}}" rel="stylesheet">
-
+    <link href="{{asset('./css/topbar.css')}}" rel="stylesheet">
 
     <style>
         .my-search-bar {
@@ -90,36 +90,63 @@
     <!-- Spinner End -->
 
 
-    <!-- Topbar Start -->
-    <div class="container-fluid bg-light ps-5 pe-0 d-none d-lg-block">
-        <div class="row gx-0">
-            <div class="col-md-6 text-center text-lg-start mb-2 mb-lg-0">
-                <div class="d-inline-flex align-items-center">
-                    <small class="py-2"><i class="far fa-clock text-primary me-2"></i>Opening Hours: Mon To Sun : 24/7 Available</small>
+    <!-- ====== TOPBAR ====== -->
+    <div class="topbar">
+        <div class="topbar-inner">
+
+            <!-- LEFT -->
+            <div class="topbar-left">
+                <div class="hours-pill">
+                    <span class="live-dot"><span></span></span>
+                    <i class="far fa-clock"></i>
+                    24/7 Open
+                </div>
+                <div class="ticker-wrap">
+                    <div class="ticker-track">
+                        <span class="t-item"><i class="fa fa-heart-pulse"></i> Expert doctors, trusted care</span>
+                        <span class="t-sep">✦</span>
+                        <span class="t-item"><i class="fa fa-calendar-check"></i> Easy online appointment booking</span>
+                        <span class="t-sep">✦</span>
+                        <span class="t-item"><i class="fa fa-stethoscope"></i> Quality healthcare for your family</span>
+                        <span class="t-sep">✦</span>
+                        <span class="t-item"><i class="fa fa-leaf"></i> Your health, our priority</span>
+                        <span class="t-sep">✦</span>
+                        <span class="t-item"><i class="fa fa-shield-halved"></i> Mon to Sun — always available</span>
+                        <span class="t-sep">✦</span>
+                        <!-- duplicate -->
+                        <span class="t-item"><i class="fa fa-heart-pulse"></i> Expert doctors, trusted care</span>
+                        <span class="t-sep">✦</span>
+                        <span class="t-item"><i class="fa fa-calendar-check"></i> Easy online appointment booking</span>
+                        <span class="t-sep">✦</span>
+                        <span class="t-item"><i class="fa fa-stethoscope"></i> Quality healthcare for your family</span>
+                        <span class="t-sep">✦</span>
+                        <span class="t-item"><i class="fa fa-leaf"></i> Your health, our priority</span>
+                        <span class="t-sep">✦</span>
+                        <span class="t-item"><i class="fa fa-shield-halved"></i> Mon to Sun — always available</span>
+                        <span class="t-sep">✦</span>
+                    </div>
                 </div>
             </div>
-            <div class="col-md-6 text-center text-lg-end">
-                <div class="position-relative d-inline-flex align-items-center bg-primary text-white top-shape px-5">
-                    @foreach($aboutDetails as $aboutDetail)
-                    <div class="me-3 pe-3 border-end py-2">
-                        <p class="m-0"><i class="fa fa-envelope-open me-2"></i><a href="mailto:{{$aboutDetail->email}}" class="text-white">{{$aboutDetail->email}}</a></p>
-                    </div>
-                    <div class="py-2">
-                        <p class="m-0"><i class="fa fa-phone me-2"></i><a href="tel:{{$aboutDetail->number}}" class="text-white">+91-{{$aboutDetail->number}}</a></p>
-                    </div>
-                    @endforeach
-                </div>
+
+            <!-- RIGHT -->
+            <div class="topbar-right">
+                @foreach($aboutDetails as $aboutDetail)
+                <a href="mailto:{{$aboutDetail->email}}" class="c-chip">
+                    <span class="c-ico"><i class="fa fa-envelope"></i></span>
+                    {{$aboutDetail->email}}
+                </a>
+                <a href="tel:{{$aboutDetail->number}}" class="c-chip">
+                    <span class="c-ico"><i class="fa fa-phone"></i></span>
+                    +91-{{$aboutDetail->number}}
+                </a>
+                @endforeach
             </div>
+
         </div>
     </div>
-    <!-- Topbar End -->
+    <!-- ====== TOPBAR ====== -->
 
-
-
-
-
-
-
+    
     @guest
     <!-- Navbar Start -->
     <nav class="navbar navbar-expand-lg bg-white navbar-light shadow-sm px-5 py-3 py-lg-0">
@@ -658,26 +685,26 @@
                 <li class="page-item {{ $current == $i ? 'active' : '' }}">
                 <a class="page-link" href="{{ $paths->url($i) }}">{{ $i }}</a>
                 </li>
-            @endfor
+                @endfor
 
-            {{-- Right ellipsis --}}
-            @if($current < $last - $window - 1)
-            <li class="page-item ellipsis"><span class="page-link">···</span></li>
-            @endif
+                {{-- Right ellipsis --}}
+                @if($current < $last - $window - 1)
+                    <li class="page-item ellipsis"><span class="page-link">···</span></li>
+                    @endif
 
-            {{-- Last page always --}}
-            @if($last > 1)
-            <li class="page-item {{ $current == $last ? 'active' : '' }}">
-                <a class="page-link" href="{{ $paths->url($last) }}">{{ $last }}</a>
-            </li>
-            @endif
+                    {{-- Last page always --}}
+                    @if($last > 1)
+                    <li class="page-item {{ $current == $last ? 'active' : '' }}">
+                        <a class="page-link" href="{{ $paths->url($last) }}">{{ $last }}</a>
+                    </li>
+                    @endif
 
-            {{-- Next --}}
-            <li class="page-item prev-next {{ !$paths->hasMorePages() ? 'disabled' : '' }}">
-                <a class="page-link" href="{{ $paths->hasMorePages() ? $paths->nextPageUrl() : '#' }}">
-                    Next <i class="bi bi-chevron-right"></i>
-                </a>
-            </li>
+                    {{-- Next --}}
+                    <li class="page-item prev-next {{ !$paths->hasMorePages() ? 'disabled' : '' }}">
+                        <a class="page-link" href="{{ $paths->hasMorePages() ? $paths->nextPageUrl() : '#' }}">
+                            Next <i class="bi bi-chevron-right"></i>
+                        </a>
+                    </li>
 
         </ul>
     </div>
@@ -771,7 +798,7 @@
     <!-- Footer End -->
 
 
-        <!-- Global Search Section========================================================================================= -->
+    <!-- Global Search Section========================================================================================= -->
     <!-- ── Floating Search FAB ── -->
     <button class="gs-fab" id="gsOpenBtn" title="Search Everything">
         <i class="bi bi-search"></i>
@@ -797,7 +824,7 @@
             </div>
 
             <!-- Search Form — submits to search-result page -->
-                        @guest
+            @guest
             <form action="{{ route('search.result') }}" method="GET" class="gs-form" id="gsForm">
                 <div class="gs-input-group">
                     <i class="bi bi-search gs-input-icon"></i>

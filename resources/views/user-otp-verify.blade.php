@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Home Page | Doctorwala</title>
+    <title>Verify Your OTP | Doctorwala</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="Free HTML Templates" name="keywords">
     <meta content="Free HTML Templates" name="description">

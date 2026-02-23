@@ -744,7 +744,7 @@
     <!-- Footer End -->
 
 
-        <!-- Global Search Section========================================================================================= -->
+    <!-- Global Search Section========================================================================================= -->
     <!-- ── Floating Search FAB ── -->
     <button class="gs-fab" id="gsOpenBtn" title="Search Everything">
         <i class="bi bi-search"></i>
@@ -770,7 +770,7 @@
             </div>
 
             <!-- Search Form — submits to search-result page -->
-                        @guest
+            @guest
             <form action="{{ route('search.result') }}" method="GET" class="gs-form" id="gsForm">
                 <div class="gs-input-group">
                     <i class="bi bi-search gs-input-icon"></i>
