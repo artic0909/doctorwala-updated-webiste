@@ -750,8 +750,8 @@
                     <i class="bi bi-search"></i>
                 </div>
                 <div class="gs-modal-title">
-                    <h4>Search Everything</h4>
-                    <p>Doctors · OPD Clinics · Pathology Labs</p>
+                    <h4>Search Your Nearby Doctors</h4>
+                    <p>Doctor's name · Clinic's Name · Using Location</p>
                 </div>
                 <button class="gs-modal-close" id="gsCloseBtn" aria-label="Close">
                     <i class="bi bi-x-lg">X</i>
@@ -785,15 +785,15 @@
                     </label>
                     <label class="gs-chip gs-chip-doc">
                         <input type="radio" name="category" value="doctor" hidden>
-                        <i class="bi bi-person-heart-fill"></i> Doctors
+                        <i class="bi bi-person-heart-fill"></i> Direct to Doctors
                     </label>
                     <label class="gs-chip gs-chip-opd">
                         <input type="radio" name="category" value="opd" hidden>
-                        <i class="bi bi-hospital-fill"></i> OPD
+                        <i class="bi bi-hospital-fill"></i> OPD Doctors
                     </label>
                     <label class="gs-chip gs-chip-path">
                         <input type="radio" name="category" value="pathology" hidden>
-                        <i class="bi bi-flask-fill"></i> Pathology
+                        <i class="bi bi-flask-fill"></i> Test Pathology
                     </label>
                 </div>
             </form>
@@ -847,11 +847,23 @@
                 <button type="button" class="gs-quick-tag" data-val="Eye Specialist">Eye Specialist</button>
                 <button type="button" class="gs-quick-tag" data-val="X-Ray">X-Ray</button>
                 <button type="button" class="gs-quick-tag" data-val="Skin">Skin Doctor</button>
+                <button type="button" class="gs-quick-tag" data-val="Dentist">Dentist</button>
+                <button type="button" class="gs-quick-tag" data-val="Orthopedic">Orthopedic</button>
+                <button type="button" class="gs-quick-tag" data-val="Pediatrician">Pediatrician</button>
+                <button type="button" class="gs-quick-tag" data-val="General Physician">General Physician</button>
+                <button type="button" class="gs-quick-tag" data-val="General Surgeon">General Surgeon</button>
+                <button type="button" class="gs-quick-tag" data-val="Gynecologist">Gynecologist</button>
+                
             </div>
 
             <!-- ESC hint -->
             <p class="gs-esc-hint">Press <kbd>ESC</kbd> to close &nbsp;·&nbsp; <kbd>Enter</kbd> to search</p>
 
+
+            <!-- Branding logo -->
+            <div class="gs-brand-logo">
+                <img src="{{asset('../img/logoo.png')}}" alt="Logo" class="gs-brand-img">
+            </div>
         </div>
     </div>
     <!-- Global Search Section========================================================================================= -->
