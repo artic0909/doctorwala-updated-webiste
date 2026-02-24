@@ -607,7 +607,7 @@
                                 <a href="#"><i class="fab fa-twitter"></i></a>
                                 <a href="#"><i class="fab fa-facebook-f"></i></a>
                                 <a href="{{$opd->clinic_google_map_link}}" target="_blank"><i class="fa-solid fa-location-dot"></i></a>
-                                <a href="#"><i class="fab fa-instagram"></i></a>
+                                <a href="tel:{{ $opd->clinic_mobile_number }}"><i class="fa-solid fa-phone"></i></a>
                             </div>
                         </div>
 

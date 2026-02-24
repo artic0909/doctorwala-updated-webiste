@@ -989,8 +989,8 @@
                                 <div class="doc-listing-social">
                                     <a href="#"><i class="fab fa-twitter"></i></a>
                                     <a href="#"><i class="fab fa-facebook-f"></i></a>
-                                    <a href="#"><i class="fa-solid fa-location-dot"></i></a>
-                                    <a href="#"><i class="fab fa-instagram"></i></a>
+                                    <a href="{{$doc->partner_doctor_google_map_link}}" target="_blank"><i class="fa-solid fa-location-dot"></i></a>
+                                    <a href="tel:{{$doc->partner_doctor_mobile}}"><i class="fa-solid fa-phone"></i></a>
                                 </div>
                             </div>
                             @guest
@@ -1197,8 +1197,8 @@
                                 <div class="opd-listing-social">
                                     <a href="#"><i class="fab fa-twitter"></i></a>
                                     <a href="#"><i class="fab fa-facebook-f"></i></a>
-                                    <a href="#"><i class="fa-solid fa-location-dot"></i></a>
-                                    <a href="#"><i class="fab fa-instagram"></i></a>
+                                    <a href="{{$opd->clinic_google_map_link}}" target="_blank"><i class="fa-solid fa-location-dot"></i></a>
+                                    <a href="tel:{{ $opd->clinic_mobile_number }}"><i class="fa-solid fa-phone"></i></a>
                                 </div>
                             </div>
 
@@ -1306,8 +1306,8 @@
                                 <div class="path-listing-social">
                                     <a href="#"><i class="fab fa-twitter"></i></a>
                                     <a href="#"><i class="fab fa-facebook-f"></i></a>
-                                    <a href="#"><i class="fa-solid fa-location-dot"></i></a>
-                                    <a href="#"><i class="fab fa-instagram"></i></a>
+                                    <a href="{{$path->clinic_google_map_link}}" target="_blank"><i class="fa-solid fa-location-dot"></i></a>
+                                    <a href="tel:{{$path->clinic_mobile_number}}"><i class="fab fa-instagram"></i></a>
                                 </div>
                             </div>
                             @guest
