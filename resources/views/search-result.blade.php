@@ -485,7 +485,7 @@
     </div>
     <!-- ====== TOPBAR ====== -->
 
-    
+
     @guest
     <!-- Navbar Start -->
     <nav class="navbar navbar-expand-lg bg-white navbar-light shadow-sm px-5 py-3 py-lg-0">
@@ -998,10 +998,83 @@
                                 <a href="{{ url('/doctor/'.$doc->slug) }}" class="doc-listing-name">{{ $doc->partner_doctor_name }}</a>
                                 <div class="doc-listing-divider"></div>
                                 <a href="{{ url('/doctor/'.$doc->slug) }}" class="doc-listing-address">
-                                    <i class="bi bi-geo-alt-fill"></i><span>{{ $doc->partner_doctor_address }}</span>
+                                    <i class="bi bi-geo-alt-fill"></i>
+                                    <span style="text-transform: capitalize;">{{ $doc->partner_doctor_city }}, {{ $doc->partner_doctor_state}}, {{ $doc->partner_doctor_pincode }}</span>
                                 </a>
+                                <a href="{{ url('/doctor/'.$doc->slug) }}" class="doc-listing-address">
+                                    <i class="fa-solid fa-stethoscope"></i>
+                                    <span style="color: black; font-size: 0.8rem; font-weight: 600;">{{$doc->partner_doctor_specialist}}</span>
+                                </a>
+
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">#</th>
+                                            <th scope="col">Day</th>
+                                            <th scope="col">Time</th>
+                                            <th scope="col">Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @if(!empty($doc->visit_day_time) && is_array($doc->visit_day_time))
+
+                                        @php
+                                        $limitedVisits = array_slice($doc->visit_day_time, 0, 3);
+                                        $totalVisits = count($doc->visit_day_time);
+                                        @endphp
+
+                                        {{-- First 3 rows --}}
+                                        @foreach($limitedVisits as $index => $visit)
+                                        <tr>
+                                            <th scope="row">{{ $index + 1 }}</th>
+
+                                            <td>{{ $visit['day'] ?? 'N/A' }}</td>
+
+                                            <td>
+                                                @if(!empty($visit['start_time']) && !empty($visit['end_time']))
+                                                {{ \Carbon\Carbon::parse($visit['start_time'])->format('h:i A') }}
+                                                -
+                                                {{ \Carbon\Carbon::parse($visit['end_time'])->format('h:i A') }}
+                                                @else
+                                                No time available
+                                                @endif
+                                            </td>
+
+                                            <td>
+                                                @if($doc->status == 'Available')
+                                                <span class="badge bg-success">{{ $doc->status }}</span>
+                                                @elseif($doc->status == 'Unavailable')
+                                                <span class="badge bg-danger">{{ $doc->status }}</span>
+                                                @else
+                                                <span class="badge bg-secondary">{{ $doc->status }}</span>
+                                                @endif
+                                            </td>
+                                        </tr>
+                                        @endforeach
+
+                                        {{-- 4th row message --}}
+                                        @if($totalVisits > 3)
+                                        <tr>
+                                            <td colspan="4" class="text-center text-primary fw-semibold">
+                                                <a href="{{ url('/doctor/'.$doc->slug) }}">Continue to see full times & days →</a>
+                                            </td>
+                                        </tr>
+                                        @endif
+
+                                        @else
+                                        <tr class="text-muted">
+                                            <td colspan="4">No data found</td>
+                                        </tr>
+                                        @endif
+                                    </tbody>
+
+
+                                </table>
+
                                 <div class="doc-listing-footer">
-                                    <a href="{{ url('/doctor/'.$doc->slug) }}" class="doc-open-btn"><i class="bi bi-box-arrow-up-right"></i> Open Now</a>
+                                    <a href="{{ url('/doctor/'.$doc->slug) }}" class="doc-open-btn">
+                                        <i class="bi bi-box-arrow-up-right"></i> Continue
+                                    </a>
                                 </div>
                             </div>
                             @endguest
@@ -1010,10 +1083,84 @@
                                 <a href="{{ url('/dw/doctor/'.$doc->slug) }}" class="doc-listing-name">{{ $doc->partner_doctor_name }}</a>
                                 <div class="doc-listing-divider"></div>
                                 <a href="{{ url('/dw/doctor/'.$doc->slug) }}" class="doc-listing-address">
-                                    <i class="bi bi-geo-alt-fill"></i><span>{{ $doc->partner_doctor_address }}</span>
+                                    <i class="bi bi-geo-alt-fill"></i>
+                                    <span style="text-transform: capitalize;">{{ $doc->partner_doctor_city }}, {{ $doc->partner_doctor_state}}, {{ $doc->partner_doctor_pincode }}</span>
                                 </a>
+                                <a href="{{ url('/dw/doctor/'.$doc->slug) }}" class="doc-listing-address">
+                                    <i class="fa-solid fa-stethoscope"></i>
+                                    <span style="color: black; font-size: 0.8rem; font-weight: 600;">{{$doc->partner_doctor_specialist}}</span>
+                                </a>
+
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">#</th>
+                                            <th scope="col">Day</th>
+                                            <th scope="col">Time</th>
+                                            <th scope="col">Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @if(!empty($doc->visit_day_time) && is_array($doc->visit_day_time))
+
+                                        @php
+                                        $limitedVisits = array_slice($doc->visit_day_time, 0, 3);
+                                        $totalVisits = count($doc->visit_day_time);
+                                        @endphp
+
+                                        {{-- First 3 rows --}}
+                                        @foreach($limitedVisits as $index => $visit)
+                                        <tr>
+                                            <th scope="row">{{ $index + 1 }}</th>
+
+                                            <td>{{ $visit['day'] ?? 'N/A' }}</td>
+
+                                            <td>
+                                                @if(!empty($visit['start_time']) && !empty($visit['end_time']))
+                                                {{ \Carbon\Carbon::parse($visit['start_time'])->format('h:i A') }}
+                                                -
+                                                {{ \Carbon\Carbon::parse($visit['end_time'])->format('h:i A') }}
+                                                @else
+                                                No time available
+                                                @endif
+                                            </td>
+
+                                            <td>
+                                                @if($doc->status == 'Available')
+                                                <span class="badge bg-success">{{ $doc->status }}</span>
+                                                @elseif($doc->status == 'Unavailable')
+                                                <span class="badge bg-danger">{{ $doc->status }}</span>
+                                                @else
+                                                <span class="badge bg-secondary">{{ $doc->status }}</span>
+                                                @endif
+                                            </td>
+                                        </tr>
+                                        @endforeach
+
+                                        {{-- 4th row message --}}
+                                        @if($totalVisits > 3)
+                                        <tr>
+                                            <td colspan="4" class="text-center text-primary fw-semibold">
+                                                <a href="{{ url('/dw/doctor/'.$doc->slug) }}">Continue to see full times & days →</a>
+                                            </td>
+                                        </tr>
+                                        @endif
+
+                                        @else
+                                        <tr class="text-muted">
+                                            <td colspan="4">No data found</td>
+                                        </tr>
+                                        @endif
+                                    </tbody>
+
+
+                                </table>
+
+
                                 <div class="doc-listing-footer">
-                                    <a href="{{ url('/dw/doctor/'.$doc->slug) }}" class="doc-open-btn"><i class="bi bi-box-arrow-up-right"></i> Open Now</a>
+                                    <a href="{{ url('/dw/doctor/'.$doc->slug) }}" class="doc-open-btn">
+                                        <i class="bi bi-box-arrow-up-right"></i> Continue
+                                    </a>
                                 </div>
                             </div>
                             @endauth
@@ -1054,27 +1201,75 @@
                                     <a href="#"><i class="fab fa-instagram"></i></a>
                                 </div>
                             </div>
+
                             @guest
                             <div class="opd-listing-body">
-                                <a href="{{ url('/opd/'.$opd->slug) }}" class="opd-listing-name">{{ $opd->clinic_name }}</a>
+                                <a href="{{ url('/opd/'.$opd->slug) }}" class="opd-listing-name">
+                                    {{ $opd->clinic_name }}
+                                </a>
                                 <div class="opd-listing-divider"></div>
                                 <a href="{{ url('/opd/'.$opd->slug) }}" class="opd-listing-address">
-                                    <i class="bi bi-geo-alt-fill"></i><span>{{ $opd->clinic_address }}</span>
+                                    <i class="bi bi-geo-alt-fill"></i>
+                                    <span style="text-transform: capitalize;">{{ $opd->clinic_city }}, {{ $opd->clinic_state }}, {{ $opd->clinic_pincode }}</span>
                                 </a>
+                            </div>
+                            @endguest
+
+                            @auth
+                            <div class="opd-listing-body">
+                                <a href="{{ url('/dw/opd/'.$opd->slug) }}" class="opd-listing-name">
+                                    {{ $opd->clinic_name }}
+                                </a>
+                                <div class="opd-listing-divider"></div>
+                                <a href="{{ url('/dw/opd/'.$opd->slug) }}" class="opd-listing-address">
+                                    <i class="bi bi-geo-alt-fill"></i>
+                                    <span style="text-transform: capitalize;">{{ $opd->clinic_city }}, {{ $opd->clinic_state }}, {{ $opd->clinic_pincode }}</span>
+                                </a>
+                            </div>
+                            @endauth
+
+                            <div class="opd-listing-body">
+
+                                @if($opd->doctors && $opd->doctors->count())
+
+                                <ul style="margin:0; padding-left:18px; list-style:disc;">
+                                    @foreach($opd->doctors->shuffle()->take(4) as $doctor)
+                                    <li style="border-bottom:1px solid #07a1cf; padding:6px 0; color:black;">
+                                        <strong>{{ $doctor->doctor_name }}</strong>
+                                        <span style="color:#0D6EFD;">
+                                            ({{ $doctor->doctor_specialist }})
+                                        </span>
+                                    </li>
+                                    @endforeach
+                                </ul>
+
+                                <small style="display:block; margin-top:8px; color:#6c757d;">
+                                    Click <strong style="color:black;">"Continue"</strong> to see all doctors
+                                </small>
+
+                                @else
+                                <p>No Doctors Listed Yet</p>
+                                @endif
+
+                            </div>
+
+
+                            @guest
+                            <div class="opd-listing-body">
                                 <div class="opd-listing-footer">
-                                    <a href="{{ url('/opd/'.$opd->slug) }}" class="opd-open-btn"><i class="bi bi-box-arrow-up-right"></i> Open Now</a>
+                                    <a href="{{ url('/opd/'.$opd->slug) }}" class="opd-open-btn">
+                                        <i class="bi bi-box-arrow-up-right"></i> Continue
+                                    </a>
                                 </div>
                             </div>
                             @endguest
+
                             @auth
                             <div class="opd-listing-body">
-                                <a href="{{ url('/dw/opd/'.$opd->slug) }}" class="opd-listing-name">{{ $opd->clinic_name }}</a>
-                                <div class="opd-listing-divider"></div>
-                                <a href="{{ url('/dw/opd/'.$opd->slug) }}" class="opd-listing-address">
-                                    <i class="bi bi-geo-alt-fill"></i><span>{{ $opd->clinic_address }}</span>
-                                </a>
                                 <div class="opd-listing-footer">
-                                    <a href="{{ url('/dw/opd/'.$opd->slug) }}" class="opd-open-btn"><i class="bi bi-box-arrow-up-right"></i> Open Now</a>
+                                    <a href="{{ url('/dw/opd/'.$opd->slug) }}" class="opd-open-btn">
+                                        <i class="bi bi-box-arrow-up-right"></i> Continue
+                                    </a>
                                 </div>
                             </div>
                             @endauth
@@ -1117,25 +1312,72 @@
                             </div>
                             @guest
                             <div class="path-listing-body">
-                                <a href="{{ url('/pathology/'.$path->slug) }}" class="path-listing-name">{{ $path->clinic_name }}</a>
+                                <a href="{{ url('/pathology/'.$path->slug) }}" class="path-listing-name">
+                                    {{ $path->clinic_name }}
+                                </a>
                                 <div class="path-listing-divider"></div>
                                 <a href="{{ url('/pathology/'.$path->slug) }}" class="path-listing-address">
-                                    <i class="bi bi-geo-alt-fill"></i><span>{{ $path->clinic_address }}</span>
+                                    <i class="bi bi-geo-alt-fill"></i>
+                                    <span style="text-transform: capitalize;">{{ $path->clinic_city }}, {{ $path->clinic_state }}, {{ $path->clinic_pincode }}</span>
                                 </a>
+                            </div>
+                            @endguest
+
+                            @auth
+                            <div class="path-listing-body">
+                                <a href="{{ url('/dw/pathology/'.$path->slug) }}" class="path-listing-name">
+                                    {{ $path->clinic_name }}
+                                </a>
+                                <div class="path-listing-divider"></div>
+                                <a href="{{ url('/dw/pathology/'.$path->slug) }}" class="path-listing-address">
+                                    <i class="bi bi-geo-alt-fill"></i>
+                                    <span style="text-transform: capitalize;">{{ $path->clinic_city }}, {{ $path->clinic_state }}, {{ $path->clinic_pincode }}</span>
+                                </a>
+                            </div>
+                            @endauth
+
+
+                            <div class="path-listing-body">
+                                @if($path->tests && $path->tests->count())
+
+                                <ul style="margin:0; padding-left:18px; list-style:disc;">
+                                    @foreach($path->tests->shuffle()->take(4) as $test)
+                                    <li style="border-bottom:1px solid #07a1cf; padding:6px 0; color:black;">
+                                        <strong>{{ $test->test_name }}</strong>
+                                        <span style="color:#0D6EFD;">
+                                            ({{ $test->test_type }})
+                                        </span>
+                                    </li>
+                                    @endforeach
+                                </ul>
+
+                                <small style="display:block; margin-top:8px; color:#6c757d;">
+                                    Click <strong style="color:black;">"Continue"</strong> to see all tests
+                                </small>
+
+                                @else
+                                <p>No Tests Listed Yet</p>
+                                @endif
+                            </div>
+
+
+                            @guest
+                            <div class="path-listing-body">
                                 <div class="path-listing-footer">
-                                    <a href="{{ url('/pathology/'.$path->slug) }}" class="path-open-btn"><i class="bi bi-box-arrow-up-right"></i> Open Now</a>
+                                    <a href="{{ url('/pathology/'.$path->slug) }}" class="path-open-btn">
+                                        <i class="bi bi-box-arrow-up-right"></i> Continue
+                                    </a>
                                 </div>
                             </div>
                             @endguest
+
+
                             @auth
                             <div class="path-listing-body">
-                                <a href="{{ url('/dw/pathology/'.$path->slug) }}" class="path-listing-name">{{ $path->clinic_name }}</a>
-                                <div class="path-listing-divider"></div>
-                                <a href="{{ url('/dw/pathology/'.$path->slug) }}" class="path-listing-address">
-                                    <i class="bi bi-geo-alt-fill"></i><span>{{ $path->clinic_address }}</span>
-                                </a>
                                 <div class="path-listing-footer">
-                                    <a href="{{ url('/dw/pathology/'.$path->slug) }}" class="path-open-btn"><i class="bi bi-box-arrow-up-right"></i> Open Now</a>
+                                    <a href="{{ url('/dw/pathology/'.$path->slug) }}" class="path-open-btn">
+                                        <i class="bi bi-box-arrow-up-right"></i> Continue
+                                    </a>
                                 </div>
                             </div>
                             @endauth
@@ -1355,7 +1597,7 @@
                 <button type="button" class="gs-quick-tag" data-val="General Physician">General Physician</button>
                 <button type="button" class="gs-quick-tag" data-val="General Surgeon">General Surgeon</button>
                 <button type="button" class="gs-quick-tag" data-val="Gynecologist">Gynecologist</button>
-                
+
             </div>
 
             <!-- ESC hint -->

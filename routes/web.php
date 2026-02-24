@@ -75,7 +75,7 @@ Route::get('/pathology/{slug}', [UserAllPathologyHandleController::class, 'singl
     ->name('pathology.single')
     ->where('slug', '[a-z0-9]+(?:-[a-z0-9]+)*');
 
-Route::get('dw/doctor/search', [UserAllDoctorHandleController::class, 'docFilterSearch'])->name('filter.search.doc');
+Route::get('/doctor/search', [UserAllDoctorHandleController::class, 'docFilterSearch'])->name('filter.search.doc');
 Route::get('/doctor/{slug}', [UserAllDoctorHandleController::class, 'singleDocView'])
     ->name('doctor.single')
     ->where('slug', '[a-z0-9]+(?:-[a-z0-9]+)*');

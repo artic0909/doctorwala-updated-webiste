@@ -42,8 +42,8 @@ class UserSearchHandleController extends Controller
                           ->orWhere('clinic_landmark',          'like', "%{$query}%")
                           ->orWhere('clinic_contact_person_name','like', "%{$query}%");
                     })
-                    ->with('banner')
-                    ->get(['id','clinic_name','clinic_address','slug','currently_loggedin_partner_id']);
+                    ->with(['banner', 'doctors'])
+                    ->get(['id','clinic_name','clinic_address','clinic_pincode', 'clinic_state', 'clinic_city','slug','currently_loggedin_partner_id']);
 
                 // OPD via specialist match
                 $opdPartnerIds = PartnerAllOPDDoctorModel::where('doctor_specialist', 'like', "%{$query}%")
@@ -51,8 +51,8 @@ class UserSearchHandleController extends Controller
 
                 $bySpecialistOPD = PartnerOPDContactModel::whereIn('currently_loggedin_partner_id', $opdPartnerIds)
                     ->where('status', 'active')
-                    ->with('banner')
-                    ->get(['id','clinic_name','clinic_address','slug','currently_loggedin_partner_id']);
+                    ->with(['banner', 'doctors'])
+                    ->get(['id','clinic_name','clinic_address','clinic_pincode', 'clinic_state', 'clinic_city','slug','currently_loggedin_partner_id']);
 
                 // Merge + deduplicate by id
                 $opds = $directOPD->merge($bySpecialistOPD)->unique('id')->values();
@@ -71,8 +71,8 @@ class UserSearchHandleController extends Controller
                           ->orWhere('clinic_landmark',          'like', "%{$query}%")
                           ->orWhere('clinic_contact_person_name','like', "%{$query}%");
                     })
-                    ->with('banner')
-                    ->get(['id','clinic_name','clinic_address','slug','currently_loggedin_partner_id']);
+                    ->with(['banner', 'tests'])
+                    ->get(['id','clinic_name','clinic_address','clinic_pincode', 'clinic_state', 'clinic_city','slug','currently_loggedin_partner_id']);
 
                 // Pathology via test_type match
                 $pathPartnerIds = PartnerAllPathologyTestModel::where('test_type', 'like', "%{$query}%")
@@ -80,8 +80,8 @@ class UserSearchHandleController extends Controller
 
                 $byTestPath = PartnerPathologyContactModel::whereIn('currently_loggedin_partner_id', $pathPartnerIds)
                     ->where('status', 'active')
-                    ->with('banner')
-                    ->get(['id','clinic_name','clinic_address','slug','currently_loggedin_partner_id']);
+                    ->with(['banner', 'tests'])
+                    ->get(['id','clinic_name','clinic_address','clinic_pincode', 'clinic_state', 'clinic_city','slug','currently_loggedin_partner_id']);
 
                 $paths = $directPath->merge($byTestPath)->unique('id')->values();
             }
@@ -100,7 +100,7 @@ class UserSearchHandleController extends Controller
                           ->orWhere('partner_doctor_landmark',   'like', "%{$query}%");
                     })
                     ->with('banner')
-                    ->get(['id','partner_doctor_name','partner_doctor_address','slug','currently_loggedin_partner_id']);
+                    ->get(['id','partner_doctor_name','partner_doctor_specialist','partner_doctor_address','partner_doctor_city', 'partner_doctor_state', 'partner_doctor_pincode','slug','currently_loggedin_partner_id','status', 'visit_day_time']);
             }
         }
 
