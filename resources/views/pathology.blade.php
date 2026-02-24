@@ -146,7 +146,7 @@
     </div>
     <!-- ====== TOPBAR ====== -->
 
-    
+
     @guest
     <!-- Navbar Start -->
     <nav class="navbar navbar-expand-lg bg-white navbar-light shadow-sm px-5 py-3 py-lg-0">
@@ -568,6 +568,9 @@
     <!-- Filter Bar End -->
     @endauth
 
+
+
+
     <!-- Pathology Cards Start -->
     <div class="path-listing-section">
         <div class="container">
@@ -595,10 +598,11 @@
                             <div class="path-listing-social">
                                 <a href="#"><i class="fab fa-twitter"></i></a>
                                 <a href="#"><i class="fab fa-facebook-f"></i></a>
-                                <a href="#"><i class="fa-solid fa-location-dot"></i></a>
+                                <a href="{{$path->clinic_google_map_link}}" target="_blank"><i class="fa-solid fa-location-dot"></i></a>
                                 <a href="#"><i class="fab fa-instagram"></i></a>
                             </div>
                         </div>
+
 
                         @guest
                         <div class="path-listing-body">
@@ -608,13 +612,8 @@
                             <div class="path-listing-divider"></div>
                             <a href="{{ url('/pathology/'.$path->slug) }}" class="path-listing-address">
                                 <i class="bi bi-geo-alt-fill"></i>
-                                <span>{{ $path->clinic_address }}</span>
+                                <span style="text-transform: capitalize;">{{ $path->clinic_city }}, {{ $path->clinic_state }}, {{ $path->clinic_pincode }}</span>
                             </a>
-                            <div class="path-listing-footer">
-                                <a href="{{ url('/pathology/'.$path->slug) }}" class="path-open-btn">
-                                    <i class="bi bi-box-arrow-up-right"></i> Open Now
-                                </a>
-                            </div>
                         </div>
                         @endguest
 
@@ -626,11 +625,52 @@
                             <div class="path-listing-divider"></div>
                             <a href="{{ url('/dw/pathology/'.$path->slug) }}" class="path-listing-address">
                                 <i class="bi bi-geo-alt-fill"></i>
-                                <span>{{ $path->clinic_address }}</span>
+                                <span style="text-transform: capitalize;">{{ $path->clinic_city }}, {{ $path->clinic_state }}, {{ $path->clinic_pincode }}</span>
                             </a>
+                        </div>
+                        @endauth
+
+
+                        <div class="path-listing-body">
+                            @if($path->tests && $path->tests->count())
+
+                            <ul style="margin:0; padding-left:18px; list-style:disc;">
+                                @foreach($path->tests->shuffle()->take(4) as $test)
+                                <li style="border-bottom:1px solid #07a1cf; padding:6px 0; color:black;">
+                                    <strong>{{ $test->test_name }}</strong>
+                                    <span style="color:#0D6EFD;">
+                                        ({{ $test->test_type }})
+                                    </span>
+                                </li>
+                                @endforeach
+                            </ul>
+
+                            <small style="display:block; margin-top:8px; color:#6c757d;">
+                                Click <strong style="color:black;">"Continue"</strong> to see all tests
+                            </small>
+
+                            @else
+                            <p>No Tests Listed Yet</p>
+                            @endif
+                        </div>
+
+
+                        @guest
+                        <div class="path-listing-body">
+                            <div class="path-listing-footer">
+                                <a href="{{ url('/pathology/'.$path->slug) }}" class="path-open-btn">
+                                    <i class="bi bi-box-arrow-up-right"></i> Continue
+                                </a>
+                            </div>
+                        </div>
+                        @endguest
+
+
+                        @auth
+                        <div class="path-listing-body">
                             <div class="path-listing-footer">
                                 <a href="{{ url('/dw/pathology/'.$path->slug) }}" class="path-open-btn">
-                                    <i class="bi bi-box-arrow-up-right"></i> Open Now
+                                    <i class="bi bi-box-arrow-up-right"></i> Continue
                                 </a>
                             </div>
                         </div>
@@ -651,6 +691,12 @@
         </div>
     </div>
     <!-- Pathology Cards End -->
+
+
+
+
+
+
 
     <!-- Pagination Start -->
     @if($paths->lastPage() > 1)
@@ -918,7 +964,7 @@
                 <button type="button" class="gs-quick-tag" data-val="General Physician">General Physician</button>
                 <button type="button" class="gs-quick-tag" data-val="General Surgeon">General Surgeon</button>
                 <button type="button" class="gs-quick-tag" data-val="Gynecologist">Gynecologist</button>
-                
+
             </div>
 
             <!-- ESC hint -->

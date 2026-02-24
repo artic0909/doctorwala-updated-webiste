@@ -127,7 +127,30 @@
 
 
     <!-- Favicon -->
+    <style>
+        .doctor-item {
+            border-bottom: 1px solid #07a1cf;
+            padding: 6px 0;
+            color: black;
+        }
 
+        .doctor-name,
+        .doctor-specialist {
+            white-space: nowrap;
+            /* Force single line */
+            overflow: hidden;
+            /* Hide extra text */
+            text-overflow: ellipsis;
+            /* Add ... */
+            width: 100%;
+            display: block;
+        }
+
+        .doctor-specialist {
+            color: #0D6EFD;
+            font-size: 0.85rem;
+        }
+    </style>
 
 </head>
 
@@ -569,11 +592,12 @@
 
 
     <!-- Search Banner -->
+    @guest
     <div class="container search-banner-section">
         <div class="search-cards-row">
 
             <!-- {{-- Card 1: Search All --}} -->
-            <div class="search-card search-card-all wow zoomIn" data-wow-delay="0.1s">
+            <form action="{{ route('search.result') }}" method="GET" class="search-card search-card-all wow zoomIn" data-wow-delay="0.1s">
                 <div class="search-card-header">
                     <div class="search-card-icon">
                         <i class="fa fa-magnifying-glass"></i>
@@ -583,19 +607,23 @@
                         <p>Doctor's name, Address, OPD, Pathology & All</p>
                     </div>
                 </div>
+
+                <input type="hidden" name="category" value="all">
+
                 <div class="search-input-wrap">
                     <i class="fa fa-search"></i>
-                    <input type="text" id="globalSearchInput" class="form-control"
+                    <input type="text" name="query" class="form-control"
                         placeholder="Search for Doctor / Path / OPD">
                 </div>
-                <button id="globalSearchButton" class="btn btn-search">
-                    <span class="spinner"></span>
-                    <span class="btn-text"><i class="fa fa-search"></i> Search Now</span>
+
+                <button type="submit" class="btn btn-search">
+                    <i class="fa fa-search"></i> Search Now
                 </button>
-            </div>
+
+            </form>
 
             <!-- {{-- Card 2: Search OPD --}} -->
-            <div class="search-card search-card-opd wow zoomIn" data-wow-delay="0.2s">
+            <form action="{{ route('search.result') }}" method="GET" class="search-card search-card-opd wow zoomIn" data-wow-delay="0.2s">
                 <div class="search-card-header">
                     <div class="search-card-icon">
                         <i class="fa fa-hospital"></i>
@@ -607,10 +635,12 @@
                 </div>
                 <div class="search-input-wrap">
                     <i class="fa fa-stethoscope"></i>
-                    <select id="specialistDropdown" class="form-select">
-                        <option selected>Select Specialist</option>
+                    <input type="hidden" name="category" value="opd">
+
+                    <select name="query" class="form-select">
+                        <option selected disabled>Select Specialist</option>
                         @foreach($specialists as $specialist)
-                        <option style="text-transform: capitalize;" value="{{ $specialist }}">
+                        <option value="{{ $specialist }}">
                             {{ ucfirst($specialist) }}
                         </option>
                         @endforeach
@@ -620,10 +650,10 @@
                     <span class="spinner"></span>
                     <span class="btn-text"><i class="fa fa-user-doctor"></i> Search OPD</span>
                 </button>
-            </div>
+            </form>
 
             <!-- {{-- Card 3: Search Pathology --}} -->
-            <div class="search-card search-card-path wow zoomIn" data-wow-delay="0.3s">
+            <form action="{{ route('search.result') }}" method="GET" class="search-card search-card-path wow zoomIn" data-wow-delay="0.3s">
                 <div class="search-card-header">
                     <div class="search-card-icon">
                         <i class="fa fa-flask"></i>
@@ -635,10 +665,12 @@
                 </div>
                 <div class="search-input-wrap">
                     <i class="fa fa-syringe"></i>
-                    <select id="pathologyDropdown" class="form-select">
-                        <option selected>Select Type</option>
+                    <input type="hidden" name="category" value="pathology">
+
+                    <select name="query" class="form-select">
+                        <option selected disabled>Select Type</option>
                         @foreach($types as $type)
-                        <option style="text-transform: capitalize;" value="{{ $type }}">
+                        <option value="{{ $type }}">
                             {{ ucfirst($type) }}
                         </option>
                         @endforeach
@@ -648,21 +680,106 @@
                     <span class="spinner"></span>
                     <span class="btn-text"><i class="fa fa-syringe"></i> Search Pathology</span>
                 </button>
-            </div>
+            </form>
 
         </div>
     </div>
+    @endguest
 
-    <!-- {{-- Search Results --}} -->
-    <div class="container results-section">
-        <div id="opdPathBothResultsShowIFsearchOPDshowOPDIFSearchPathShowPath" class="row g-4">
+    @auth
+    <div class="container search-banner-section">
+        <div class="search-cards-row">
+
+            <!-- {{-- Card 1: Search All --}} -->
+            <form action="{{ route('dw.search.result') }}" method="GET" class="search-card search-card-all wow zoomIn" data-wow-delay="0.1s">
+                <div class="search-card-header">
+                    <div class="search-card-icon">
+                        <i class="fa fa-magnifying-glass"></i>
+                    </div>
+                    <div>
+                        <h3>Search Your Direct to Doctor</h3>
+                        <p>Doctor's name, Address, OPD, Pathology & All</p>
+                    </div>
+                </div>
+
+                <input type="hidden" name="category" value="all">
+
+                <div class="search-input-wrap">
+                    <i class="fa fa-search"></i>
+                    <input type="text" name="query" class="form-control"
+                        placeholder="Search for Doctor / Path / OPD">
+                </div>
+
+                <button type="submit" class="btn btn-search">
+                    <i class="fa fa-search"></i> Search Now
+                </button>
+
+            </form>
+
+            <!-- {{-- Card 2: Search OPD --}} -->
+            <form action="{{ route('dw.search.result') }}" method="GET" class="search-card search-card-opd wow zoomIn" data-wow-delay="0.2s">
+                <div class="search-card-header">
+                    <div class="search-card-icon">
+                        <i class="fa fa-hospital"></i>
+                    </div>
+                    <div>
+                        <h3>Search Your OPD Doctor</h3>
+                        <p>Find by specialist and type</p>
+                    </div>
+                </div>
+                <div class="search-input-wrap">
+                    <i class="fa fa-stethoscope"></i>
+                    <input type="hidden" name="category" value="opd">
+
+                    <select name="query" class="form-select">
+                        <option selected disabled>Select Specialist</option>
+                        @foreach($specialists as $specialist)
+                        <option value="{{ $specialist }}">
+                            {{ ucfirst($specialist) }}
+                        </option>
+                        @endforeach
+                    </select>
+                </div>
+                <button id="searchOpdButton" class="btn btn-search">
+                    <span class="spinner"></span>
+                    <span class="btn-text"><i class="fa fa-user-doctor"></i> Search OPD</span>
+                </button>
+            </form>
+
+            <!-- {{-- Card 3: Search Pathology --}} -->
+            <form action="{{ route('dw.search.result') }}" method="GET" class="search-card search-card-path wow zoomIn" data-wow-delay="0.3s">
+                <div class="search-card-header">
+                    <div class="search-card-icon">
+                        <i class="fa fa-flask"></i>
+                    </div>
+                    <div>
+                        <h3>Search Your Test Pathology</h3>
+                        <p>Find by test type & name</p>
+                    </div>
+                </div>
+                <div class="search-input-wrap">
+                    <i class="fa fa-syringe"></i>
+                    <input type="hidden" name="category" value="pathology">
+
+                    <select name="query" class="form-select">
+                        <option selected disabled>Select Type</option>
+                        @foreach($types as $type)
+                        <option value="{{ $type }}">
+                            {{ ucfirst($type) }}
+                        </option>
+                        @endforeach
+                    </select>
+                </div>
+                <button id="searchPathologyButton" class="btn btn-search">
+                    <span class="spinner"></span>
+                    <span class="btn-text"><i class="fa fa-syringe"></i> Search Pathology</span>
+                </button>
+            </form>
+
         </div>
     </div>
-
-    <div class="container results-section">
-        <div id="globalResultsContainer" class="row g-4">
-        </div>
-    </div>
+    @endauth
+    <!-- Search Banner End -->
 
 
 
@@ -717,20 +834,36 @@
 
                                         <div class="opd-meta-row">
                                             <i class="bi bi-geo-alt-fill"></i>
-                                            <span>{{ $opd->clinic_city }}, {{ $opd->clinic_pincode }}</span>
-                                        </div>
-                                        <div class="opd-meta-row">
-                                            <i class="bi bi-signpost-2-fill"></i>
-                                            <span>{{ $opd->clinic_landmark }}</span>
+                                            <span>{{ $opd->clinic_city }}, {{ $opd->clinic_state }}, {{ $opd->clinic_pincode }}</span>
                                         </div>
 
-                                        <div class="opd-card-footer-row">
-                                            <span class="opd-view-link">
-                                                View Details <i class="bi bi-arrow-right"></i>
-                                            </span>
+                                        <div class="opd-meta-row">
+                                            @if($opd->doctors && $opd->doctors->count())
+
+                                            <ul style="margin:0; padding-left:18px; list-style:disc;">
+                                                @foreach($opd->doctors->shuffle()->take(3) as $doctor)
+                                                <li class="doctor-item">
+                                                    <div class="doctor-name">
+                                                        {{ $doctor->doctor_name }}
+                                                    </div>
+                                                    <div class="doctor-specialist">
+                                                        {{ $doctor->doctor_specialist }}
+                                                    </div>
+                                                </li>
+                                                @endforeach
+                                            </ul>
+                                            @else
+                                            <p>No Doctors Listed Yet</p>
+                                            @endif
+                                        </div>
+
+                                        <div class="opd-meta-row">
+                                            <i class="bi bi-cursor-fill"></i>
+                                            <span>Click to view all doctors</span>
                                         </div>
 
                                     </a>
+                                </a>
                             </div>
 
                         </div>
@@ -796,16 +929,31 @@
                                         <div class="path-card-divider"></div>
                                         <div class="path-meta-row">
                                             <i class="bi bi-geo-alt-fill"></i>
-                                            <span>{{ $path->clinic_city }}, {{ $path->clinic_pincode }}</span>
+                                            <span>{{ $path->clinic_city }}, {{ $path->clinic_state }}, {{ $path->clinic_pincode }}</span>
+                                        </div>
+
+                                        <div class="apth-meta-row">
+                                            @if($path->tests && $path->tests->count())
+
+                                            <ul style="margin:0; padding-left:18px; list-style:disc;">
+                                                @foreach($path->tests->shuffle()->take(3) as $test)
+                                                <li class="doctor-item">
+                                                    <div class="doctor-name">
+                                                        {{ $test->test_name }}
+                                                    </div>
+                                                    <div class="doctor-specialist">
+                                                        {{ $test->test_type }}
+                                                    </div>
+                                                </li>
+                                                @endforeach
+                                            </ul>
+                                            @else
+                                            <p>No Tests Listed Yet</p>
+                                            @endif
                                         </div>
                                         <div class="path-meta-row">
-                                            <i class="bi bi-signpost-2-fill"></i>
-                                            <span>{{ $path->clinic_landmark }}</span>
-                                        </div>
-                                        <div class="path-card-footer-row">
-                                            <span class="path-view-link">
-                                                View Details <i class="bi bi-arrow-right"></i>
-                                            </span>
+                                            <i class="bi bi-cursor-fill"></i>
+                                            <span>Click to view all test pathology</span>
                                         </div>
                                     </a>
                             </div>
@@ -875,20 +1023,66 @@
                                         <p class="doc-card-title">{{ $doc->partner_doctor_name }}</p>
                                         <div class="doc-card-divider"></div>
 
-                                        <div class="doc-meta-row">
+                                        <a href="{{ url('/doctor/'.$doc->slug) }}" class="doc-listing-address">
                                             <i class="bi bi-geo-alt-fill"></i>
-                                            <span>{{ $doc->partner_doctor_city }}, {{ $doc->partner_doctor_pincode }}</span>
-                                        </div>
-                                        <div class="doc-meta-row">
-                                            <i class="bi bi-signpost-2-fill"></i>
-                                            <span>{{ $doc->partner_doctor_landmark }}</span>
-                                        </div>
+                                            <span style="text-transform: capitalize;">{{ $doc->partner_doctor_city }}, {{ $doc->partner_doctor_state}}, {{ $doc->partner_doctor_pincode }}</span>
+                                        </a>
+                                        <a href="{{ url('/doctor/'.$doc->slug) }}" class="doc-listing-address">
+                                            <i class="fa-solid fa-stethoscope"></i>
+                                            <span style="color: black; font-size: 0.8rem; font-weight: 600;">{{$doc->partner_doctor_specialist}}</span>
+                                        </a>
 
-                                        <div class="doc-card-footer-row">
-                                            <span class="doc-view-link">
-                                                View Details <i class="bi bi-arrow-right"></i>
-                                            </span>
-                                        </div>
+                                        <table class="table" style="font-size: 0.7rem;">
+                                            <thead>
+                                                <tr>
+                                                    <th scope="col">Day</th>
+                                                    <th scope="col">Time</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @if(!empty($doc->visit_day_time) && is_array($doc->visit_day_time))
+
+                                                @php
+                                                $limitedVisits = array_slice($doc->visit_day_time, 0, 3);
+                                                $totalVisits = count($doc->visit_day_time);
+                                                @endphp
+
+                                                {{-- First 3 rows --}}
+                                                @foreach($limitedVisits as $index => $visit)
+                                                <tr>
+
+                                                    <td>{{ $visit['day'] ?? 'N/A' }}</td>
+
+                                                    <td>
+                                                        @if(!empty($visit['start_time']) && !empty($visit['end_time']))
+                                                        {{ \Carbon\Carbon::parse($visit['start_time'])->format('h:i A') }}
+                                                        -
+                                                        {{ \Carbon\Carbon::parse($visit['end_time'])->format('h:i A') }}
+                                                        @else
+                                                        No time available
+                                                        @endif
+                                                    </td>
+                                                </tr>
+                                                @endforeach
+
+                                                {{-- 4th row message --}}
+                                                @if($totalVisits > 3)
+                                                <tr>
+                                                    <td colspan="4" class="text-center text-primary fw-semibold">
+                                                        <a href="{{ url('/doctor/'.$doc->slug) }}">Click to see full timings →</a>
+                                                    </td>
+                                                </tr>
+                                                @endif
+
+                                                @else
+                                                <tr class="text-muted">
+                                                    <td colspan="4">No data found</td>
+                                                </tr>
+                                                @endif
+                                            </tbody>
+
+
+                                        </table>
 
                                     </a>
                             </div>
@@ -1365,7 +1559,7 @@
                 <button type="button" class="gs-quick-tag" data-val="General Physician">General Physician</button>
                 <button type="button" class="gs-quick-tag" data-val="General Surgeon">General Surgeon</button>
                 <button type="button" class="gs-quick-tag" data-val="Gynecologist">Gynecologist</button>
-                
+
             </div>
 
             <!-- ESC hint -->
@@ -1463,176 +1657,6 @@
 
     <script src="{{asset('./js/global-search.js')}}"></script>
     <script src="{{asset('./js/float-btn.js')}}"></script>
-
-
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const specialistDropdown = document.querySelector('#specialistDropdown');
-            const pathologyDropdown = document.querySelector('#pathologyDropdown');
-            const searchOpdButton = document.querySelector('#searchOpdButton');
-            const searchPathologyButton = document.querySelector('#searchPathologyButton');
-            const resultsContainer = document.querySelector('#opdPathBothResultsShowIFsearchOPDshowOPDIFSearchPathShowPath');
-            const globalContainer = document.querySelector('#globalResultsContainer');
-
-            // OPD & Pathology cards (slug-based URL)
-            const renderResults = (results, type) => {
-                results.forEach(item => {
-                    const imageUrl = item.banner && (type === 'OPD' ? item.banner.opdbanner : item.banner.pathologybanner) ?
-                        `/storage/${type === 'OPD' ? item.banner.opdbanner : item.banner.pathologybanner}` :
-                        'https://media.istockphoto.com/id/1222357475/vector/image-preview-icon-picture-placeholder-for-website-or-ui-ux-design-vector-illustration.jpg?s=612x612&w=0&k=20&c=KuCo-dRBYV7nz2gbk4J9w1WtTAgpTdznHu55W9FjimE=';
-
-                    const name = item.clinic_name;
-                    const address = item.clinic_address;
-                    const detailUrl = type === 'OPD' ?
-                        `/opd/${item.slug}` // slug
-                        :
-                        `/pathology/${item.slug}`; // slug
-
-                    resultsContainer.innerHTML += `
-                <div class="col-lg-4 wow slideInUp" data-wow-delay="0.3s">
-                    <div class="team-item">
-                        <div class="position-relative rounded-top" style="z-index: 1;">
-                            <img class="img-fluid rounded-top w-100" src="${imageUrl}" alt="" style="border: 1px solid #ddd;">
-                            <div class="position-absolute top-100 start-50 translate-middle bg-light rounded p-2 d-flex">
-                                <a class="btn btn-primary btn-square m-1" href="#"><i class="fab fa-twitter fw-normal"></i></a>
-                                <a class="btn btn-primary btn-square m-1" href="#"><i class="fab fa-facebook-f fw-normal"></i></a>
-                                <a class="btn btn-primary btn-square m-1" href="#"><i class="fa-solid fa-location-dot"></i></a>
-                                <a class="btn btn-primary btn-square m-1" href="#"><i class="fab fa-instagram fw-normal"></i></a>
-                            </div>
-                        </div>
-                        <div class="team-text position-relative bg-light text-start rounded-bottom p-4 pt-5">
-                            <h4 class="mb-2">
-                                <a href="${detailUrl}" style="text-decoration: none; text-transform: capitalize;" class="text-dark">${name}</a>
-                            </h4>
-                            <p class="text-primary mb-2">
-                                <a href="${detailUrl}" style="text-decoration: none; text-transform: capitalize;" class="text-primary">${address}</a>
-                            </p>
-                            <a href="${detailUrl}" class="btn btn-primary p-2 w-100">OPEN NOW</a>
-                        </div>
-                    </div>
-                </div>`;
-                });
-            };
-
-            // Doctor cards (slug-based URL)
-            const renderDoctorResults = (results, container) => {
-                results.forEach(item => {
-                    const imageUrl = item.banner && item.banner.doctorbanner ?
-                        `/storage/${item.banner.doctorbanner}` :
-                        'https://media.istockphoto.com/id/1222357475/vector/image-preview-icon-picture-placeholder-for-website-or-ui-ux-design-vector-illustration.jpg?s=612x612&w=0&k=20&c=KuCo-dRBYV7nz2gbk4J9w1WtTAgpTdznHu55W9FjimE=';
-
-                    const name = item.partner_doctor_name;
-                    const address = item.partner_doctor_address;
-                    const detailUrl = `/doctor/${item.slug}`; // slug
-
-                    container.innerHTML += `
-                <div class="col-lg-4 wow slideInUp" data-wow-delay="0.3s">
-                    <div class="team-item">
-                        <div class="position-relative rounded-top" style="z-index: 1;">
-                            <img class="img-fluid rounded-top w-100" src="${imageUrl}" alt="" style="border: 1px solid #ddd;">
-                            <div class="position-absolute top-100 start-50 translate-middle bg-light rounded p-2 d-flex">
-                                <a class="btn btn-primary btn-square m-1" href="#"><i class="fab fa-twitter fw-normal"></i></a>
-                                <a class="btn btn-primary btn-square m-1" href="#"><i class="fab fa-facebook-f fw-normal"></i></a>
-                                <a class="btn btn-primary btn-square m-1" href="#"><i class="fa-solid fa-location-dot"></i></a>
-                                <a class="btn btn-primary btn-square m-1" href="#"><i class="fab fa-instagram fw-normal"></i></a>
-                            </div>
-                        </div>
-                        <div class="team-text position-relative bg-light text-start rounded-bottom p-4 pt-5">
-                            <h4 class="mb-2">
-                                <a href="${detailUrl}" style="text-decoration: none; text-transform: capitalize;" class="text-dark">${name}</a>
-                            </h4>
-                            <p class="text-primary mb-2">
-                                <a href="${detailUrl}" style="text-decoration: none; text-transform: capitalize;" class="text-primary">${address}</a>
-                            </p>
-                            <a href="${detailUrl}" class="btn btn-primary p-2 w-100">OPEN NOW</a>
-                        </div>
-                    </div>
-                </div>`;
-                });
-            };
-
-            // Search OPD by specialist
-            searchOpdButton.addEventListener('click', function(e) {
-                e.preventDefault();
-                const selectedSpecialist = specialistDropdown.value;
-
-                if (selectedSpecialist && selectedSpecialist !== 'Select Specialist') {
-                    fetch(`{{ route('opd.search.doctor.specialist') }}?search=${encodeURIComponent(selectedSpecialist)}`)
-                        .then(res => res.json())
-                        .then(data => {
-                            resultsContainer.innerHTML = '';
-                            if (data.opd_results.length > 0) {
-                                renderResults(data.opd_results, 'OPD');
-                            } else {
-                                resultsContainer.innerHTML = '<p>No OPD results found for the selected specialist.</p>';
-                            }
-                        })
-                        .catch(error => console.error('Error:', error));
-                } else {
-                    alert('Please select a valid specialist.');
-                }
-            });
-
-            // Search Pathology by test type
-            searchPathologyButton.addEventListener('click', function(e) {
-                e.preventDefault();
-                const selectedType = pathologyDropdown.value;
-
-                if (selectedType && selectedType !== 'Select Type') {
-                    fetch(`{{ route('opd.search.doctor.specialist') }}?search=${encodeURIComponent(selectedType)}`)
-                        .then(res => res.json())
-                        .then(data => {
-                            resultsContainer.innerHTML = '';
-                            if (data.pathology_results.length > 0) {
-                                renderResults(data.pathology_results, 'Pathology');
-                            } else {
-                                resultsContainer.innerHTML = '<p>No Pathology results found for the selected type.</p>';
-                            }
-                        })
-                        .catch(error => console.error('Error:', error));
-                } else {
-                    alert('Please select a valid type.');
-                }
-            });
-
-            // Global search (if you have a global search input)
-            const globalSearchInput = document.querySelector('#globalSearchInput');
-            const globalSearchButton = document.querySelector('#globalSearchButton');
-
-            if (globalSearchButton) {
-                globalSearchButton.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const searchTerm = globalSearchInput.value.trim();
-
-                    if (searchTerm) {
-                        fetch(`{{ route('global.search') }}?search=${encodeURIComponent(searchTerm)}`)
-                            .then(res => res.json())
-                            .then(data => {
-                                globalContainer.innerHTML = '';
-
-                                const allOPD = [...data.opd_results, ...data.opd_results_by_ids];
-                                const allPath = [...data.pathology_results, ...data.pathology_results_by_ids];
-
-                                // Deduplicate by id
-                                const uniqueOPD = allOPD.filter((v, i, a) => a.findIndex(t => t.id === v.id) === i);
-                                const uniquePath = allPath.filter((v, i, a) => a.findIndex(t => t.id === v.id) === i);
-
-                                if (uniqueOPD.length) renderResults(uniqueOPD, 'OPD'); // slug
-                                if (uniquePath.length) renderResults(uniquePath, 'Pathology'); // slug
-                                if (data.doctor_results.length) renderDoctorResults(data.doctor_results, globalContainer); // slug
-
-                                if (!uniqueOPD.length && !uniquePath.length && !data.doctor_results.length) {
-                                    globalContainer.innerHTML = '<p>No results found.</p>';
-                                }
-                            })
-                            .catch(error => console.error('Error:', error));
-                    } else {
-                        alert('Please enter a search term.');
-                    }
-                });
-            }
-        });
-    </script>
 
 
 

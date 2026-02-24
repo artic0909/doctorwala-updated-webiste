@@ -27,7 +27,7 @@ class UserAllPathologyHandleController extends Controller
 
         $cities = PartnerPathologyContactModel::distinct()->pluck('clinic_city')->toArray();
 
-        $paths = PartnerPathologyContactModel::with('banner')
+        $paths = PartnerPathologyContactModel::with(['banner', 'tests'])
             ->where('status', 'active')
             ->paginate(12);
 

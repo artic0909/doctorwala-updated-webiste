@@ -38,6 +38,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.0/css/all.min.css"
         integrity="sha512-9xKTRVabjVeZmc+GUW8GgSmcREDunMM+Dt/GrzchfN8tkwHizc5RP4Ok/MXFFy5rIjJjzhndFScTceq5e6GvVQ=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
     <!-- Libraries Stylesheet -->
     <link href="{{asset('../lib/owlcarousel/assets/owl.carousel.min.css')}}" rel="stylesheet">
@@ -607,11 +608,81 @@
                             <div class="doc-listing-divider"></div>
                             <a href="{{ url('/doctor/'.$doc->slug) }}" class="doc-listing-address">
                                 <i class="bi bi-geo-alt-fill"></i>
-                                <span>{{ $doc->partner_doctor_address }}</span>
+                                <span style="text-transform: capitalize;">{{ $doc->partner_doctor_city }}, {{ $doc->partner_doctor_state}}, {{ $doc->partner_doctor_pincode }}</span>
                             </a>
+                            <a href="{{ url('/doctor/'.$doc->slug) }}" class="doc-listing-address">
+                                <i class="fa-solid fa-stethoscope"></i>
+                                <span style="color: black; font-size: 0.8rem; font-weight: 600;">{{$doc->partner_doctor_specialist}}</span>
+                            </a>
+
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Day</th>
+                                        <th scope="col">Time</th>
+                                        <th scope="col">Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if(!empty($doc->visit_day_time) && is_array($doc->visit_day_time))
+
+                                    @php
+                                    $limitedVisits = array_slice($doc->visit_day_time, 0, 3);
+                                    $totalVisits = count($doc->visit_day_time);
+                                    @endphp
+
+                                    {{-- First 3 rows --}}
+                                    @foreach($limitedVisits as $index => $visit)
+                                    <tr>
+                                        <th scope="row">{{ $index + 1 }}</th>
+
+                                        <td>{{ $visit['day'] ?? 'N/A' }}</td>
+
+                                        <td>
+                                            @if(!empty($visit['start_time']) && !empty($visit['end_time']))
+                                            {{ \Carbon\Carbon::parse($visit['start_time'])->format('h:i A') }}
+                                            -
+                                            {{ \Carbon\Carbon::parse($visit['end_time'])->format('h:i A') }}
+                                            @else
+                                            No time available
+                                            @endif
+                                        </td>
+
+                                        <td>
+                                            @if($doc->status == 'Available')
+                                            <span class="badge bg-success">{{ $doc->status }}</span>
+                                            @elseif($doc->status == 'Unavailable')
+                                            <span class="badge bg-danger">{{ $doc->status }}</span>
+                                            @else
+                                            <span class="badge bg-secondary">{{ $doc->status }}</span>
+                                            @endif
+                                        </td>
+                                    </tr>
+                                    @endforeach
+
+                                    {{-- 4th row message --}}
+                                    @if($totalVisits > 3)
+                                    <tr>
+                                        <td colspan="4" class="text-center text-primary fw-semibold">
+                                            <a href="{{ url('/doctor/'.$doc->slug) }}">Continue to see full times & days →</a>
+                                        </td>
+                                    </tr>
+                                    @endif
+
+                                    @else
+                                    <tr class="text-muted">
+                                        <td colspan="4">No data found</td>
+                                    </tr>
+                                    @endif
+                                </tbody>
+
+
+                            </table>
+
                             <div class="doc-listing-footer">
                                 <a href="{{ url('/doctor/'.$doc->slug) }}" class="doc-open-btn">
-                                    <i class="bi bi-box-arrow-up-right"></i> Open Now
+                                    <i class="bi bi-box-arrow-up-right"></i> Continue
                                 </a>
                             </div>
                         </div>
@@ -625,11 +696,82 @@
                             <div class="doc-listing-divider"></div>
                             <a href="{{ url('/dw/doctor/'.$doc->slug) }}" class="doc-listing-address">
                                 <i class="bi bi-geo-alt-fill"></i>
-                                <span>{{ $doc->partner_doctor_address }}</span>
+                                <span style="text-transform: capitalize;">{{ $doc->partner_doctor_city }}, {{ $doc->partner_doctor_state}}, {{ $doc->partner_doctor_pincode }}</span>
                             </a>
+                            <a href="{{ url('/dw/doctor/'.$doc->slug) }}" class="doc-listing-address">
+                                <i class="fa-solid fa-stethoscope"></i>
+                                <span style="color: black; font-size: 0.8rem; font-weight: 600;">{{$doc->partner_doctor_specialist}}</span>
+                            </a>
+
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Day</th>
+                                        <th scope="col">Time</th>
+                                        <th scope="col">Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if(!empty($doc->visit_day_time) && is_array($doc->visit_day_time))
+
+                                    @php
+                                    $limitedVisits = array_slice($doc->visit_day_time, 0, 3);
+                                    $totalVisits = count($doc->visit_day_time);
+                                    @endphp
+
+                                    {{-- First 3 rows --}}
+                                    @foreach($limitedVisits as $index => $visit)
+                                    <tr>
+                                        <th scope="row">{{ $index + 1 }}</th>
+
+                                        <td>{{ $visit['day'] ?? 'N/A' }}</td>
+
+                                        <td>
+                                            @if(!empty($visit['start_time']) && !empty($visit['end_time']))
+                                            {{ \Carbon\Carbon::parse($visit['start_time'])->format('h:i A') }}
+                                            -
+                                            {{ \Carbon\Carbon::parse($visit['end_time'])->format('h:i A') }}
+                                            @else
+                                            No time available
+                                            @endif
+                                        </td>
+
+                                        <td>
+                                            @if($doc->status == 'Available')
+                                            <span class="badge bg-success">{{ $doc->status }}</span>
+                                            @elseif($doc->status == 'Unavailable')
+                                            <span class="badge bg-danger">{{ $doc->status }}</span>
+                                            @else
+                                            <span class="badge bg-secondary">{{ $doc->status }}</span>
+                                            @endif
+                                        </td>
+                                    </tr>
+                                    @endforeach
+
+                                    {{-- 4th row message --}}
+                                    @if($totalVisits > 3)
+                                    <tr>
+                                        <td colspan="4" class="text-center text-primary fw-semibold">
+                                            <a href="{{ url('/dw/doctor/'.$doc->slug) }}">Continue to see full times & days →</a>
+                                        </td>
+                                    </tr>
+                                    @endif
+
+                                    @else
+                                    <tr class="text-muted">
+                                        <td colspan="4">No data found</td>
+                                    </tr>
+                                    @endif
+                                </tbody>
+
+
+                            </table>
+
+
                             <div class="doc-listing-footer">
                                 <a href="{{ url('/dw/doctor/'.$doc->slug) }}" class="doc-open-btn">
-                                    <i class="bi bi-box-arrow-up-right"></i> Open Now
+                                    <i class="bi bi-box-arrow-up-right"></i> Continue
                                 </a>
                             </div>
                         </div>
@@ -923,7 +1065,7 @@
                 <button type="button" class="gs-quick-tag" data-val="General Physician">General Physician</button>
                 <button type="button" class="gs-quick-tag" data-val="General Surgeon">General Surgeon</button>
                 <button type="button" class="gs-quick-tag" data-val="Gynecologist">Gynecologist</button>
-                
+
             </div>
 
             <!-- ESC hint -->

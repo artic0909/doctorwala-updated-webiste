@@ -150,15 +150,6 @@
     <!-- ====== TOPBAR ====== -->
 
 
-
-
-
-
-
-
-
-
-
     @guest
     <!-- Navbar Start -->
     <nav class="navbar navbar-expand-lg bg-white navbar-light shadow-sm px-5 py-3 py-lg-0">
@@ -245,11 +236,6 @@
     </nav>
     <!-- Navbar End -->
     @endauth
-
-
-
-
-
 
 
     @auth
@@ -396,10 +382,6 @@
         </div>
     </div>
     @endauth
-
-
-
-
 
 
 
@@ -592,6 +574,11 @@
     <!-- Filter Bar End -->
     @endauth
 
+
+
+
+
+
     <!-- OPD Cards Start -->
     <div class="opd-listing-section">
         <div class="container">
@@ -619,7 +606,7 @@
                             <div class="opd-listing-social">
                                 <a href="#"><i class="fab fa-twitter"></i></a>
                                 <a href="#"><i class="fab fa-facebook-f"></i></a>
-                                <a href="#"><i class="fa-solid fa-location-dot"></i></a>
+                                <a href="{{$opd->clinic_google_map_link}}" target="_blank"><i class="fa-solid fa-location-dot"></i></a>
                                 <a href="#"><i class="fab fa-instagram"></i></a>
                             </div>
                         </div>
@@ -633,13 +620,8 @@
                             <div class="opd-listing-divider"></div>
                             <a href="{{ url('/opd/'.$opd->slug) }}" class="opd-listing-address">
                                 <i class="bi bi-geo-alt-fill"></i>
-                                <span>{{ $opd->clinic_address }}</span>
+                                <span style="text-transform: capitalize;">{{ $opd->clinic_city }}, {{ $opd->clinic_state }}, {{ $opd->clinic_pincode }}</span>
                             </a>
-                            <div class="opd-listing-footer">
-                                <a href="{{ url('/opd/'.$opd->slug) }}" class="opd-open-btn">
-                                    <i class="bi bi-box-arrow-up-right"></i> Open Now
-                                </a>
-                            </div>
                         </div>
                         @endguest
 
@@ -651,11 +633,52 @@
                             <div class="opd-listing-divider"></div>
                             <a href="{{ url('/dw/opd/'.$opd->slug) }}" class="opd-listing-address">
                                 <i class="bi bi-geo-alt-fill"></i>
-                                <span>{{ $opd->clinic_address }}</span>
+                                <span style="text-transform: capitalize;">{{ $opd->clinic_city }}, {{ $opd->clinic_state }}, {{ $opd->clinic_pincode }}</span>
                             </a>
+                        </div>
+                        @endauth
+
+                        <div class="opd-listing-body">
+
+                            @if($opd->doctors && $opd->doctors->count())
+
+                            <ul style="margin:0; padding-left:18px; list-style:disc;">
+                                @foreach($opd->doctors->shuffle()->take(4) as $doctor)
+                                <li style="border-bottom:1px solid #07a1cf; padding:6px 0; color:black;">
+                                    <strong>{{ $doctor->doctor_name }}</strong>
+                                    <span style="color:#0D6EFD;">
+                                        ({{ $doctor->doctor_specialist }})
+                                    </span>
+                                </li>
+                                @endforeach
+                            </ul>
+
+                            <small style="display:block; margin-top:8px; color:#6c757d;">
+                                Click <strong style="color:black;">"Continue"</strong> to see all doctors
+                            </small>
+
+                            @else
+                            <p>No Doctors Listed Yet</p>
+                            @endif
+
+                        </div>
+
+
+                        @guest
+                        <div class="opd-listing-body">
+                            <div class="opd-listing-footer">
+                                <a href="{{ url('/opd/'.$opd->slug) }}" class="opd-open-btn">
+                                    <i class="bi bi-box-arrow-up-right"></i> Continue
+                                </a>
+                            </div>
+                        </div>
+                        @endguest
+
+                        @auth
+                        <div class="opd-listing-body">
                             <div class="opd-listing-footer">
                                 <a href="{{ url('/dw/opd/'.$opd->slug) }}" class="opd-open-btn">
-                                    <i class="bi bi-box-arrow-up-right"></i> Open Now
+                                    <i class="bi bi-box-arrow-up-right"></i> Continue
                                 </a>
                             </div>
                         </div>
@@ -676,6 +699,12 @@
         </div>
     </div>
     <!-- OPD Cards End -->
+
+
+
+
+
+
 
     <!-- Pagination Start -->
     @if($opds->lastPage() > 1)
@@ -939,7 +968,7 @@
                 <button type="button" class="gs-quick-tag" data-val="General Physician">General Physician</button>
                 <button type="button" class="gs-quick-tag" data-val="General Surgeon">General Surgeon</button>
                 <button type="button" class="gs-quick-tag" data-val="Gynecologist">Gynecologist</button>
-                
+
             </div>
 
             <!-- ESC hint -->

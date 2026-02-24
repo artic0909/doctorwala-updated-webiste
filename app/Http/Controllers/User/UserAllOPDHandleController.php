@@ -28,7 +28,7 @@ class UserAllOPDHandleController extends Controller
 
         $cities = PartnerOPDContactModel::distinct()->pluck('clinic_city')->toArray();
 
-        $opds = PartnerOPDContactModel::with('banner')
+        $opds = PartnerOPDContactModel::with(['banner', 'doctors'])
             ->where('status', 'active')
             ->paginate(12);
 

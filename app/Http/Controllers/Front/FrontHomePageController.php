@@ -27,9 +27,9 @@ class FrontHomePageController extends Controller
         $specialists = PartnerAllOPDDoctorModel::distinct()->pluck('doctor_specialist');
         $types = PartnerAllPathologyTestModel::distinct()->pluck('test_type');
 
-        $opds = PartnerOPDContactModel::with('banner')->latest()->take(50)->get()->random(15);
-        $paths = PartnerPathologyContactModel::with('banner')->latest()->take(50)->get()->random(15);
-        $docs = PartnerDoctorContactModel::with('banner')->latest()->take(50)->get()->random(15);
+        $opds = PartnerOPDContactModel::with(['banner', 'doctors'])->take(5)->get();
+        $paths = PartnerPathologyContactModel::with('banner')->take(5)->get();
+        $docs = PartnerDoctorContactModel::with('banner')->take(5)->get();
 
         $testi = PartnerFeedback::get();
 
