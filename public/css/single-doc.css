@@ -241,7 +241,8 @@ a {
     box-shadow: 0 3px 12px rgba(225, 29, 72, 0.38);
 }
 .btn-book:hover {
-    background: var(--rose-d);
+    background: #dd2413;
+    color: white;
     transform: translateY(-1px);
 }
 .btn-call {
@@ -250,6 +251,7 @@ a {
     box-shadow: 0 3px 12px rgba(13, 148, 136, 0.32);
 }
 .btn-call:hover {
+    color: white;
     background: var(--teal-d);
     transform: translateY(-1px);
 }
@@ -260,6 +262,7 @@ a {
 }
 .btn-ghost:hover {
     background: rgba(255, 255, 255, 0.18);
+    color: white;
     transform: translateY(-1px);
 }
 
