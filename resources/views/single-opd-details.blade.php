@@ -45,6 +45,8 @@
     <!-- Customized Bootstrap Stylesheet -->
     <link href="{{asset('../css/bootstrap.min.css')}}" rel="stylesheet">
     <link href="{{asset('./css/float-btn.css')}}" rel="stylesheet">
+    <link href="{{asset('./css/topbar.css')}}" rel="stylesheet">
+    <link href="{{asset('./css/single-opd.css')}}" rel="stylesheet">
 
     <!-- Template Stylesheet -->
     <link href="{{asset('../css/style.css')}}" rel="stylesheet">
@@ -57,334 +59,7 @@
 
 
     <style>
-        /* =============================================
-   TOPBAR — PREMIUM GREEN + WHITE EDITION
-   ============================================= */
-        .topbar {
-            display: none;
-            height: 44px;
-            position: relative;
-            overflow: hidden;
-            background: #fff;
-            border-bottom: 2px solid #e8f5e9;
-            box-shadow: 0 2px 16px rgba(22, 163, 74, 0.10);
-        }
 
-        @media (min-width: 992px) {
-            .topbar {
-                display: block;
-            }
-        }
-
-        /* Thin animated green top border */
-        .topbar::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 3px;
-            background: linear-gradient(90deg,
-                    #064e28, #16a34a, #4ade80, #bbf7d0,
-                    #4ade80, #16a34a, #064e28);
-            background-size: 300% 100%;
-            animation: borderFlow 5s linear infinite;
-            z-index: 10;
-        }
-
-        @keyframes borderFlow {
-            0% {
-                background-position: 0% 0;
-            }
-
-            100% {
-                background-position: 300% 0;
-            }
-        }
-
-        .topbar-inner {
-            position: relative;
-            z-index: 2;
-            max-width: 1320px;
-            margin: 0 auto;
-            padding: 0 24px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            height: 100%;
-            gap: 0;
-        }
-
-        /* ---- LEFT BLOCK ---- */
-        .topbar-left {
-            display: flex;
-            align-items: center;
-            gap: 0;
-            flex: 1;
-            overflow: hidden;
-            height: 100%;
-        }
-
-        /* 24/7 pill - green filled */
-        .hours-pill {
-            display: inline-flex;
-            align-items: center;
-            gap: 7px;
-            background: linear-gradient(135deg, #16a34a, #15803d);
-            border-radius: 0 0 14px 0;
-            padding: 0 18px 0 0;
-            height: 100%;
-            padding-left: 0;
-            font-size: 0.73rem;
-            font-weight: 800;
-            color: #fff;
-            letter-spacing: 0.8px;
-            text-transform: uppercase;
-            white-space: nowrap;
-            flex-shrink: 0;
-            margin-right: 20px;
-            padding: 0 22px;
-            box-shadow: 4px 0 14px rgba(22, 163, 74, 0.2);
-            animation: slideFromLeft 0.5s cubic-bezier(.34, 1.56, .64, 1) both;
-            position: relative;
-        }
-
-        .hours-pill::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            right: -10px;
-            width: 20px;
-            height: 100%;
-            background: linear-gradient(135deg, #16a34a, #15803d);
-            clip-path: polygon(0 0, 0 100%, 100% 100%);
-        }
-
-        @keyframes slideFromLeft {
-            from {
-                opacity: 0;
-                transform: translateX(-30px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-
-        /* Live pulsing dot */
-        .live-dot {
-            width: 8px;
-            height: 8px;
-            position: relative;
-            flex-shrink: 0;
-        }
-
-        .live-dot span {
-            display: block;
-            width: 8px;
-            height: 8px;
-            background: #bbf7d0;
-            border-radius: 50%;
-        }
-
-        .live-dot::after {
-            content: '';
-            position: absolute;
-            inset: -3px;
-            border: 1.5px solid rgba(187, 247, 208, 0.6);
-            border-radius: 50%;
-            animation: liveRing 1.8s ease-out infinite;
-        }
-
-        @keyframes liveRing {
-            0% {
-                opacity: 0.9;
-                transform: scale(0.5);
-            }
-
-            100% {
-                opacity: 0;
-                transform: scale(2);
-            }
-        }
-
-        /* Ticker */
-        .ticker-wrap {
-            flex: 1;
-            overflow: hidden;
-            min-width: 0;
-            mask-image: linear-gradient(90deg, transparent, black 5%, black 95%, transparent);
-            -webkit-mask-image: linear-gradient(90deg, transparent, black 5%, black 95%, transparent);
-        }
-
-        .ticker-track {
-            display: flex;
-            width: max-content;
-            gap: 50px;
-            animation: tick 24s linear infinite;
-        }
-
-        .ticker-track:hover {
-            animation-play-state: paused;
-        }
-
-        @keyframes tick {
-            from {
-                transform: translateX(0);
-            }
-
-            to {
-                transform: translateX(-50%);
-            }
-        }
-
-        .ticker-track .t-item {
-            display: inline-flex;
-            align-items: center;
-            gap: 7px;
-            font-size: 0.78rem;
-            font-weight: 700;
-            color: #166534;
-            white-space: nowrap;
-        }
-
-        .ticker-track .t-item i {
-            font-size: 0.7rem;
-            color: #22c55e;
-        }
-
-        .ticker-track .t-sep {
-            color: #86efac;
-            font-size: 0.9rem;
-        }
-
-        /* ---- RIGHT BLOCK ---- */
-        .topbar-right {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            flex-shrink: 0;
-            height: 100%;
-        }
-
-        /* Contact chips - outlined green on white */
-        .c-chip {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 6px 16px 6px 7px;
-            border-radius: 30px;
-            background: #f0fdf4;
-            border: 1.5px solid #86efac;
-            text-decoration: none;
-            font-size: 0.76rem;
-            font-weight: 800;
-            color: #15803d;
-            white-space: nowrap;
-            transition: all 0.22s cubic-bezier(.34, 1.56, .64, 1);
-        }
-
-        .c-chip:nth-child(1) {
-            animation: slideFromRight 0.5s ease 0.1s both;
-        }
-
-        .c-chip:nth-child(2) {
-            animation: slideFromRight 0.5s ease 0.25s both;
-        }
-
-        @keyframes slideFromRight {
-            from {
-                opacity: 0;
-                transform: translateX(20px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-
-        .c-chip:hover {
-            background: linear-gradient(135deg, #16a34a, #15803d);
-            border-color: transparent;
-            color: #fff;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 18px rgba(22, 163, 74, 0.28);
-        }
-
-        .c-chip .c-ico {
-            width: 24px;
-            height: 24px;
-            background: linear-gradient(135deg, #22c55e, #16a34a);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-            font-size: 0.6rem;
-            color: #fff;
-            transition: transform 0.22s ease;
-            box-shadow: 0 2px 6px rgba(22, 163, 74, 0.3);
-        }
-
-        .c-chip:hover .c-ico {
-            background: rgba(255, 255, 255, 0.22);
-            transform: rotate(-10deg) scale(1.1);
-            box-shadow: none;
-        }
-
-        .a-not {
-            color: #6b6a75;
-
-            &:hover {
-                color: red;
-            }
-        }
-
-        .btn-primaryy {
-            background: linear-gradient(135deg, #3bc7fe, #006eff);
-            color: white;
-            border: none;
-            transition: all 100ms ease-in;
-
-            &:hover {
-                color: white;
-                scale: 1.05;
-            }
-        }
-
-        .rating-a {
-            img {
-                transition: all 150ms ease-in-out;
-            }
-
-            &:hover {
-                img {
-                    scale: 1.3;
-                }
-            }
-
-        }
-
-        .txt-cap {
-            text-transform: capitalize !important;
-        }
-
-
-        @media (max-width:496px) {
-            .d-texts {
-                font-size: 0.82rem !important;
-
-                img {
-                    width: 20px;
-                }
-            }
-        }
-
-        .rating-a.selected img {
-            scale: 1.1;
-        }
     </style>
 
 </head>
@@ -781,925 +456,551 @@
     <!-- password update Unsuccess modal end -->
 
 
-
-
-
-
-    <!-- Hero Start -->
-    <!-- <div class="container-fluid bg-primary py-5 hero-header mb-5">
-        <div class="row py-3">
-            <div class="col-12 text-center">
-                <h1 class="display-3 text-white animated zoomIn txt-cap">{{$opd->clinic_name}}</h1>
-                <a href="/dw" class="h4 text-white" style="text-decoration: underline;">Home</a>
-                <i class="fa fa-plus text-dark px-2" style="font-size: 2rem; font-weight: 700;"></i>
-                <a href="#" class="h4 text-white">Details</a>
+    {{-- ══ COMPACT HERO STRIP ══════════════════════════════════════ --}}
+    <div class="hero-strip">
+        <div class="hero-inner">
+            @guest
+            <div class="bc">
+                <a href="/">Home</a><span>›</span>
+                <a href="/opd">OPD</a><span>›</span>
+                <span>{{ $opd->clinic_name }}</span>
             </div>
-        </div>
-    </div> -->
-    <!-- Hero End -->
-
-
-
-
-
-
-
-
-
-
-
-
-    <!-- Details Start -->
-    <div class="container-fluid py-5">
-        <div class="container">
-            <div class="row g-5">
-
-                <div class="col-lg-4">
-                    <div class="team-item">
-                        <div class="position-relative rounded-top" style="z-index: 1;">
-                            @if($opd->banner && $opd->banner->opdbanner)
-                            <img class="img-fluid rounded-top w-100" src="{{ asset('storage/' . $opd->banner->opdbanner) }}" alt="">
-                            @else
-                            <img src="https://media.istockphoto.com/id/1222357475/vector/image-preview-icon-picture-placeholder-for-website-or-ui-ux-design-vector-illustration.jpg?s=612x612&w=0&k=20&c=KuCo-dRBYV7nz2gbk4J9w1WtTAgpTdznHu55W9FjimE=" class="card-img-top" alt="Default Image">
-                            @endif
-                            <div
-                                class="position-absolute top-100 start-50 translate-middle bg-light rounded p-2 d-flex">
-                                <img src="{{asset('img/logo.png')}}" width="80" alt="">
-                            </div>
-                        </div>
-                        <div class="team-text position-relative bg-light text-center rounded-bottom p-4 pt-5">
-                            <h4 class="mb-2">Doctorwala.info</h4>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-lg-8">
-                    <div class="section-title bg-light rounded h-100 p-5">
-                        <h5 class="position-relative d-inline-block text-primary text-uppercase">jio ji bharka</h5>
-                        <h2 class="display-6 mb-4 txt-cap">{{$opd->clinic_name}}</h2>
-
-
-                        <div class="d-details">
-                            <p class="location_d d-texts txt-cap">
-                                <strong><i class="fa fa-map-marker-alt me-2"></i>Address: {{$opd->clinic_address}}</strong>
-                            </p>
-
-                            <p class="landmark_d d-texts txt-cap">
-                                <strong><i class="fa fa-map-pin me-2"></i>Landmark: {{$opd->clinic_landmark}}</strong>
-                            </p>
-
-                            <p class="landmark_d d-texts txt-cap">
-                                <strong><i class="fa fa-globe me-2"></i>State/City: {{$opd->clinic_state}}-{{$opd->clinic_city}}</strong>
-                            </p>
-
-                            <p class="contact_d d-texts">
-                                <strong><i class="fa fa-phone me-2"></i>Phone: +91-<a href="tel:{{$opd->clinic_mobile_number}}" class="a-not">{{$opd->clinic_mobile_number}}</a></strong>
-                            </p>
-
-                            <p class="email_d d-texts">
-                                <strong><i class="fa fa-envelope me-2"></i>Email: <a href="mailto:{{$opd->clinic_email}}" class="a-not">{{$opd->clinic_email}}</a></strong>
-                            </p>
-
-
-                            <p class="contact_person_d d-texts txt-cap">
-                                <strong><i class="fa fa-user me-2"></i>Contact Person: {{$opd->clinic_contact_person_name}}</strong>
-                            </p>
-
-
-
-
-                        </div>
-
-
-
-
-
-
-
-                        <div class="d-buttons mt-5">
-                            <a href="" data-bs-toggle="modal" data-bs-target="#myInquirySendModal{{$opd->id}}"
-                                class="btn btn-dark btn-darkk py-md-3 px-md-5 me-3 mb-2 animated slideInLeft">Book Appointment</a>
-
-                            <a href="{{$opd->clinic_google_map_link}}" target="_blank" class="btn btn-secondary py-md-3 px-md-5 me-3 mb-2 animated slideInRight">See
-                                Location</a>
-
-                            <a href="" data-bs-toggle="modal" data-bs-target="#myFeedBackModal{{$opd->id}}"
-                                class="btn btn-primary py-md-3 px-md-5 mb-2 animated slideInRight">Feedback</a>
-                        </div>
-
-
-
-
-                    </div>
-                </div>
-
-
-
+            @endguest
+            @auth
+            <div class="bc">
+                <a href="/dw">Home</a><span>›</span>
+                <a href="/dw/opd">OPD</a><span>›</span>
+                <span>{{ $opd->clinic_name }}</span>
             </div>
-        </div>
-    </div>
-    <!-- Details End -->
-
-
-
-
-
-
-
-
-
-
-    <!-- Tab bar Start -->
-    <div class="d_tab_bar">
-        <div class="container">
-            <div class="row">
-
-
-
-
-
-                <!-- Nav tabs -->
-                <div class="col-md-12 bg-primaryy p-3 mb-5 my-tab-lists">
-
-                    <!-- Nav tabs -->
-                    <ul class="nav nav-tabs nav-tabs-justified d-flex justify-content-between TABLIST row" id="myTab"
-                        role="tablist" style="border: none;">
-                        <li class="nav-item col-md-2 text-center">
-                            <a class="nav-link text-dark bg-white active" id="opd-tab" data-toggle="tab" href="#opd"
-                                role="tab" aria-controls="opd" aria-selected="true" style="font-weight: 900;">OPD</a>
-                        </li>
-
-
-
-
-                        <li class="nav-item col-md-2 text-center">
-                            <a class="nav-link text-dark bg-white" id="service-tab" data-toggle="tab" href="#service"
-                                role="tab" aria-controls="service" aria-selected="false"
-                                style="font-weight: 900;">Service
-                                Lists</a>
-                        </li>
-
-                        <li class="nav-item col-md-2 text-center">
-                            <a class="nav-link text-dark bg-white" id="photos-tab" data-toggle="tab" href="#photos"
-                                role="tab" aria-controls="photos" aria-selected="false"
-                                style="font-weight: 900;">Photos</a>
-                        </li>
-
-                        <li class="nav-item col-md-2 text-center">
-                            <a class="nav-link text-dark bg-white" id="about-tab" data-toggle="tab" href="#about"
-                                role="tab" aria-controls="about" aria-selected="false"
-                                style="font-weight: 900;">About</a>
-                        </li>
-                    </ul>
-
-                </div>
-
-
-
-
-
-
-                <!-- Tab panes for OPD -->
-                <div class="tab-content p-0" id="myTabContent">
-
-
-
-                    <!-- OPD Tab -->
-                    <div class="tab-pane fade show active" id="opd" role="tabpanel" aria-labelledby="opd-tab">
-
-
-
-
-                        <div class="section-title bg-light rounded h-100 p-5">
-                            <h5 class="position-relative d-inline-block text-primary text-uppercase">opd details</h5>
-
-
-
-                            <div class="pricing pricing-palden">
-
-                                @if($doctors->isEmpty())
-
-                                <div class="alert alert-primary w-100 mt-2 text-center mx-4">
-                                    No doctors found. Please try again later.
-                                </div>
-
-                                @else
-
-                                @foreach($doctors as $doctor)
-                                <div class="pricing-item features-item ja-animate mx-4"
-                                    data-animation="move-from-bottom" data-delay="item-0" style="min-height: 497px;">
-                                    <div class="pricing-deco">
-                                        <svg class="pricing-deco-img" enable-background="new 0 0 300 100" height="100px"
-                                            id="Layer_1" preserveAspectRatio="none" version="1.1" viewBox="0 0 300 100"
-                                            width="300px" x="0px" xml:space="preserve" y="0px">
-                                            <path class="deco-layer deco-layer--1"
-                                                d="M30.913,43.944c0,0,42.911-34.464,87.51-14.191c77.31,35.14,113.304-1.952,146.638-4.729c48.654-4.056,69.94,16.218,69.94,16.218v54.396H30.913V43.944z"
-                                                fill="#FFFFFF" opacity="0.6"></path>
-                                            <path class="deco-layer deco-layer--2"
-                                                d="M-35.667,44.628c0,0,42.91-34.463,87.51-14.191c77.31,35.141,113.304-1.952,146.639-4.729c48.653-4.055,69.939,16.218,69.939,16.218v54.396H-35.667V44.628z"
-                                                fill="#FFFFFF" opacity="0.6"></path>
-                                            <path class="deco-layer deco-layer--3"
-                                                d="M43.415,98.342c0,0,48.283-68.927,109.133-68.927c65.886,0,97.983,67.914,97.983,67.914v3.716H42.401L43.415,98.342z"
-                                                fill="#FFFFFF" opacity="0.7"></path>
-                                            <path class="deco-layer deco-layer--4"
-                                                d="M-34.667,62.998c0,0,56-45.667,120.316-27.839C167.484,57.842,197,41.332,232.286,30.428c53.07-16.399,104.047,36.903,104.047,36.903l1.333,36.667l-372-2.954L-34.667,62.998z"
-                                                fill="#FFFFFF"></path>
-                                        </svg>
-
-
-                                        <div class="pricing-price">
-                                            <img src="{{asset('img/doctor.png')}}" width="80" alt=""
-                                                style="filter: drop-shadow(1px 1px 1px rgba(0, 0, 0, 0.411));">
-                                        </div>
-                                        <h3 class="pricing-title">{{$doctor->doctor_designation}}. {{$doctor->doctor_name}}</h3>
-                                    </div>
-                                    <p>
-                                    <ul class="list-group list-group-flush text-start" style="margin-top: -60px;">
-                                        <!-- <li class="list-group-item"><strong style="text-transform: capitalize;">Designation : {{$doctor->doctor_designation}}</strong></li> -->
-                                        <li class="list-group-item"><strong style="text-transform: capitalize;" class="d-flex align-items-center gap-2"><img src="{{asset('img/surgeon.png')}}" alt="" width="26"> {{$doctor->doctor_specialist}}</strong></li>
-                                        <li class="list-group-item"><strong class="d-flex align-items-center gap-2"><img src="{{asset('img/pay.png')}}" alt="" width="26"> ₹ {{$doctor->doctor_fees}}</strong></li>
-                                        @if($doctor->doctor_more)
-                                        <li class="list-group-item"><strong class="d-flex align-items-start gap-2"><img src="{{asset('img/ad.png')}}" alt="" width="26"> {{$doctor->doctor_more}}</strong></li>
-                                        @endif
-                                    </ul>
-                                    </p>
-                                    <div class="p-4">
-                                        <a href="" data-bs-toggle="modal" data-bs-target="#myOPDViewModal{{$doctor->id}}"
-                                            class="btn btn-primaryy w-100">View Details</a>
-                                    </div>
-                                </div>
-                                @endforeach
-                                @endif
-                            </div>
-
-
-                        </div>
-
-                    </div>
-
-
-
-                </div>
-
-
-
-
-
-                <!-- Tab panes for Service Lists -->
-                <div class="tab-content p-0 mt-4" id="myTabContent">
-
-
-
-                    <!-- Service Tab -->
-                    <div class="tab-pane fade show active" id="service" role="tabpanel" aria-labelledby="service-tab">
-
-
-
-
-                        <div class="section-title bg-light rounded h-100 p-5">
-                            <h5 class="position-relative d-inline-block text-dark text-uppercase">Service Lists
-                            </h5>
-
-
-
-                            <ul class="service-lists" style="list-style: number;">
-
-
-                                @if($services->isEmpty())
-                                <div class="alert alert-primary w-100 mt-2 text-center mx-4">
-                                    No Service Lists found. Please try again later.
-                                </div>
-                                @else
-                                @foreach($services as $service)
-                                @if(!empty($service->service_lists) && is_array($service->service_lists))
-                                @foreach($service->service_lists as $list)
-                                <li>
-                                    <p class="fs-8 fw-bold"><i class="fa fa-stethoscope"></i>
-                                        <span class="text-primary text-capitalize">{{ $list }}</span>
-                                    </p>
-                                </li>
-                                @endforeach
-                                @else
-                                <li>
-                                    <p class="fs-8 fw-bold text-muted">No services available for this entry.</p>
-                                </li>
-                                @endif
-                                @endforeach
-                                @endif
-
-
-
-                            </ul>
-
-
-
-
-                        </div>
-                    </div>
-                </div>
-
-
-
-
-                <!-- Tab panes for Photos -->
-                <div class="tab-content p-0 mt-4" id="myTabContent">
-
-
-
-                    <!-- Photos Tab -->
-                    <div class="tab-pane fade show active" id="photos" role="tabpanel" aria-labelledby="photos-tab">
-
-
-
-
-                        <div class="section-title bg-light rounded h-100 p-5">
-                            <h5 class="position-relative d-inline-block text-dark text-uppercase">Photos
-                            </h5>
-
-
-
-                            <div
-                                class="clinic_photos mt-4 d-flex gap-4 flex-wrap justify-content-start align-items-center">
-
-                                @if($photos->isEmpty())
-                                <div class="alert alert-primary w-100 mt-2 text-center mx-4">
-                                    No photos found. Please try again later.
-                                </div>
-                                @else
-                                @foreach($photos as $photo)
-                                @php
-
-                                $decodedImages = is_string($photo->images) ? json_decode($photo->images, true) : $photo->images;
-                                @endphp
-
-                                @if(!empty($decodedImages) && is_array($decodedImages))
-                                @foreach($decodedImages as $key => $item)
-                                <!-- Trigger for Modal -->
-                                <a href="#" data-bs-toggle="modal" data-bs-target="#photoModal{{ $photo->id }}{{ $key }}">
-                                    <img src="{{ asset('storage/' . $item) }}" width="160" alt="Photo">
-                                </a>
-
-                                <!-- Dynamic Modal -->
-                                <div class="modal fade" id="photoModal{{ $photo->id }}{{ $key }}" tabindex="-1"
-                                    aria-labelledby="photoModalLabel{{ $photo->id }}{{ $key }}" aria-hidden="true">
-                                    <div class="modal-dialog modal-dialog-centered">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title" id="photoModalLabel{{ $photo->id }}{{ $key }}">
-                                                    Photo View
-                                                </h5>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                            </div>
-                                            <div class="modal-body">
-                                                <img src="{{ asset('storage/' . $item) }}" width="100%" alt="Photo">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                @endforeach
-                                @else
-                                <p>No images available for this entry.</p>
-                                @endif
-                                @endforeach
-                                @endif
-
-
-
-                            </div>
-
-
-
-
-                        </div>
-
-
-
-                    </div>
-                </div>
-
-
-
-
-                <!-- Tab panes for About -->
-                <div class="tab-content p-0 mt-4" id="myTabContent">
-
-
-
-                    <!-- About Tab -->
-                    <div class="tab-pane fade show active" id="about" role="tabpanel" aria-labelledby="about-tab">
-
-
-
-
-                        <div class="section-title bg-light rounded h-100 p-5">
-                            <h5 class="position-relative d-inline-block text-primary text-uppercase">About Clinic
-                            </h5>
-
-                            @if($aboutClinics->isEmpty())
-
-                            <div class="alert alert-primary w-100 mt-2 text-center mx-4">
-                                No About Details found. Please try again later.
-                            </div>
-
-                            @else
-
-                            @foreach($aboutClinics as $ac)
-                            <div class="about_clinic">
-                                <p class="p-3 bg-white" style="text-align: justify;">
-                                    {{$ac->about_details}}
-                                </p>
-                            </div>
-
-
-
-                            <h5 class="position-relative d-inline-block text-primary text-uppercase mt-3">Mission
-                            </h5>
-
-
-
-                            <div class="about_clinic">
-                                <p class="p-3 bg-white" style="text-align: justify;">
-                                    {{$ac->mission_details}}
-                                </p>
-                            </div>
-
-
-
-
-
-                            <h5 class="position-relative d-inline-block text-primary text-uppercase mt-3">Vision
-                            </h5>
-
-
-
-                            <div class="about_clinic">
-                                <p class="p-3 bg-white" style="text-align: justify;">
-                                    {{$ac->vision_details}}
-                                </p>
-                            </div>
-                            @endforeach
-                            @endif
-
-
-                        </div>
-
-
-
-
-
-                    </div>
-                </div>
-
-
-
-
-
-
-
-
-            </div>
-
-
-            <br><br><br><br><br>
-        </div>
-    </div>
-    <!-- Tab bar End -->
-
-
-
-
-
-
-
-
-
-
-
-    <!-- opd view modal -->
-    @foreach($doctors as $doctor)
-    <div class="modal fade" id="myOPDViewModal{{$doctor->id}}" tabindex="-1" aria-labelledby="myOPDViewModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h2 class="modal-title text-primary txt-cap" id="exampleModalLabel"><img src="{{asset('img/doctor.png')}}" width="40"
-                            alt=""> {{$doctor->doctor_designation}}. {{$doctor->doctor_name}}</h2>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body" style="color:#051225;">
-                    <p class="sp" style="text-transform: capitalize;"><strong>Specialization: </strong>{{$doctor->doctor_specialist}}</p>
-                    <p class="fees"><strong>Fees: </strong>₹ {{$doctor->doctor_fees}}</p>
-
-                    @if($doctor->doctor_more)
-                    <p class="more"><strong>About: </strong>{{$doctor->doctor_more}}</p>
+            @endauth
+
+            <div class="clinic-row">
+                {{-- Clinic thumb --}}
+                <div class="clinic-thumb">
+                    @if($opd->banner && $opd->banner->opdbanner)
+                    <img src="{{ asset('storage/' . $opd->banner->opdbanner) }}" alt="{{ $opd->clinic_name }}">
+                    @else
+                    <img src="https://media.istockphoto.com/id/1222357475/vector/image-preview-icon-picture-placeholder-for-website-or-ui-ux-design-vector-illustration.jpg?s=612x612&w=0&k=20&c=KuCo-dRBYV7nz2gbk4J9w1WtTAgpTdznHu55W9FjimE=" alt="">
                     @endif
+                </div>
 
+                {{-- Info --}}
+                <div class="clinic-info">
+                    <div class="clinic-tag">✦ Jio Ji Bharka · Doctorwala.info</div>
+                    <div class="clinic-name">{{ $opd->clinic_name }}</div>
+                    <div class="clinic-meta-row">
+                        <span>
+                            <i class="fa fa-map-marker-alt"></i>
+                            {{ $opd->clinic_address }}{{ $opd->clinic_landmark ? ', '.$opd->clinic_landmark : '' }} — {{ $opd->clinic_state }}, {{ $opd->clinic_city }}
+                        </span>
+                        <span>
+                            <i class="fa fa-phone"></i>
+                            <a href="tel:{{ $opd->clinic_mobile_number }}">+91-{{ $opd->clinic_mobile_number }}</a>
+                        </span>
+                        @if($opd->clinic_email)
+                        <span>
+                            <i class="fa fa-envelope"></i>
+                            <a href="mailto:{{ $opd->clinic_email }}">{{ $opd->clinic_email }}</a>
+                        </span>
+                        @endif
+                        @if($opd->clinic_contact_person_name)
+                        <span><i class="fa fa-user"></i> {{ $opd->clinic_contact_person_name }}</span>
+                        @endif
+                    </div>
+                </div>
 
-                    <div class="time">
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th scope="col">#</th>
-                                    <th scope="col">Day</th>
-                                    <th scope="col">Time</th>
-                                    <th scope="col">Status</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @if(!empty($doctor->visit_day_time) && is_array($doctor->visit_day_time))
-                                @foreach($doctor->visit_day_time as $visit)
-                                <tr>
-                                    <th scope="row">1</th>
-                                    <td>{{ $visit['day'] }}</td>
-                                    <td>
-                                        @if(!empty($visit['start_time']) || !empty($visit['end_time']))
-                                        {{ \Carbon\Carbon::parse($visit['start_time'])->format('h:i A') }} -
-                                        {{ !empty($visit['end_time']) ? \Carbon\Carbon::parse($visit['end_time'])->format('h:i A') : 'Not Set' }}
-                                        @else
-                                        No time available
-                                        @endif
-                                    </td>
-                                    <td>
-                                        @if($doctor->status == 'Available')
-                                        <span class="badge bg-success">{{ $doctor->status }}</span>
-                                        @elseif($doctor->status == 'Unavailable')
-                                        <span class="badge bg-danger">{{ $doctor->status }}</span>
-                                        @else
-                                        <span class="badge bg-secondary">{{ $doctor->status }}</span> <!-- Default for other statuses -->
-                                        @endif
-                                    </td>
-                                </tr>
-                                @endforeach
-                                @else
-                                <tr class="text-muted">
-                                    <td colspan="3">No data found</td>
-                                </tr>
-                                @endif
+                {{-- Action buttons --}}
+                <div class="clinic-actions">
+                    <button class="btn btn-book" onclick="openM('inquiryModal{{ $opd->id }}')">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                            <rect x="3" y="4" width="18" height="18" rx="2" />
+                            <line x1="16" y1="2" x2="16" y2="6" />
+                            <line x1="8" y1="2" x2="8" y2="6" />
+                            <line x1="3" y1="10" x2="21" y2="10" />
+                        </svg>
+                        Book
+                    </button>
+                    <a href="tel:{{ $opd->clinic_mobile_number }}" class="btn btn-call">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                            <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 10.8a19.79 19.79 0 01-3.07-8.67A2 2 0 012 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.92z" />
+                        </svg>
+                        Call
+                    </a>
+                    @if($opd->clinic_google_map_link)
+                    <a href="{{ $opd->clinic_google_map_link }}" target="_blank" class="btn btn-ghost">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polygon points="3 11 22 2 13 21 11 13 3 11" />
+                        </svg>
+                        Map
+                    </a>
+                    @endif
+                    <button class="btn btn-ghost" onclick="openM('feedbackModal{{ $opd->id }}')">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" />
+                        </svg>
+                        Feedback
+                    </button>
+                </div>
+            </div>
+        </div>
 
+        <svg class="hero-wave" viewBox="0 0 1440 32" xmlns="http://www.w3.org/2000/svg">
+            <path d="M0,16 C360,32 720,0 1080,20 C1260,28 1360,14 1440,16 L1440,32 H0Z" fill="#edf6fb" />
+        </svg>
+    </div>
 
-                            </tbody>
-                        </table>
+    {{-- ══ TABS ════════════════════════════════════════════════════ --}}
+    <div class="tabs-wrap">
+        <div class="tabs-scroll">
+            <button class="tab-btn active" data-tab="opd">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
+                </svg>
+                OPD
+                @if(!$doctors->isEmpty())
+                <span class="tab-pill">{{ $doctors->count() }}</span>
+                @endif
+            </button>
+            <button class="tab-btn" data-tab="services">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10" />
+                    <line x1="12" y1="8" x2="12" y2="16" />
+                    <line x1="8" y1="12" x2="16" y2="12" />
+                </svg>
+                Services
+            </button>
+            <button class="tab-btn" data-tab="photos">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="3" width="18" height="18" rx="2" />
+                    <circle cx="8.5" cy="8.5" r="1.5" />
+                    <polyline points="21 15 16 10 5 21" />
+                </svg>
+                Photos
+            </button>
+            <button class="tab-btn" data-tab="about">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10" />
+                    <line x1="12" y1="16" x2="12" y2="12" />
+                    <line x1="12" y1="8" x2="12.01" y2="8" />
+                </svg>
+                About
+            </button>
+        </div>
+    </div>
+
+    {{-- ══ CONTENT ═════════════════════════════════════════════════ --}}
+    <div class="content">
+
+        {{-- ── OPD TAB ────────────────────────────────────────── --}}
+        <div class="tab-panel active" id="tab-opd">
+            <div class="sec-label">OPD Details</div>
+
+            @if($doctors->isEmpty())
+            <div class="empty">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" />
+                    <circle cx="9" cy="7" r="4" />
+                </svg>
+                <p>No doctors found. Please try again later.</p>
+            </div>
+            @else
+            <div class="doc-list">
+                @foreach($doctors as $doctor)
+                <div class="doc-card" id="dc-{{ $doctor->id }}">
+
+                    {{-- Always-visible top bar — click to expand --}}
+                    <div class="doc-top" onclick="toggleDoc('dc-{{ $doctor->id }}')">
+                        <div class="doc-avatar">
+                            <img src="{{ asset('img/doctor.png') }}" alt="Dr">
+                        </div>
+
+                        <div class="doc-head">
+                            <div class="doc-name">{{ $doctor->doctor_designation }}. {{ $doctor->doctor_name }}</div>
+                            <div class="doc-chips">
+                                <span class="chip chip-spec">
+                                    <svg style="width:10px;height:10px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
+                                    </svg>
+                                    {{ $doctor->doctor_specialist }}
+                                </span>
+                                <span class="chip chip-fee">₹ {{ $doctor->doctor_fees }}</span>
+                                @php
+                                $statusChip = 'chip-stat-def';
+                                if($doctor->status == 'Available') $statusChip = 'chip-stat-ok';
+                                elseif($doctor->status == 'Unavailable') $statusChip = 'chip-stat-no';
+                                @endphp
+                                <span class="chip {{ $statusChip }}">
+                                    <span style="width:5px;height:5px;border-radius:50%;background:currentColor;display:inline-block"></span>
+                                    {{ $doctor->status ?? 'Status N/A' }}
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="doc-toggle">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                <polyline points="6 9 12 15 18 9" />
+                            </svg>
+                        </div>
                     </div>
 
+                    {{-- Expandable body — schedule + info + actions --}}
+                    <div class="doc-body">
+                        <div class="doc-body-inner">
 
+                            {{-- Schedule --}}
+                            <div class="schedule-wrap">
+                                <div class="schedule-label">📅 Weekly Schedule</div>
+                                @if(!empty($doctor->visit_day_time) && is_array($doctor->visit_day_time))
+                                <table class="sch-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Day</th>
+                                            <th>From</th>
+                                            <th>To</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach($doctor->visit_day_time as $visit)
+                                        <tr>
+                                            <td><strong style="color:var(--navy)">{{ $visit['day'] }}</strong></td>
+                                            <td>
+                                                @if(!empty($visit['start_time']))
+                                                {{ \Carbon\Carbon::parse($visit['start_time'])->format('h:i A') }}
+                                                @else
+                                                <span style="color:var(--muted)">—</span>
+                                                @endif
+                                            </td>
+                                            <td>
+                                                @if(!empty($visit['end_time']))
+                                                {{ \Carbon\Carbon::parse($visit['end_time'])->format('h:i A') }}
+                                                @else
+                                                <span style="color:var(--muted)">—</span>
+                                                @endif
+                                            </td>
+                                        </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                                @else
+                                <p style="color:var(--muted);font-size:13px;padding:8px 0">No schedule available.</p>
+                                @endif
+                            </div>
 
-                    <button type="button" class="btn btn-primaryy w-100" data-bs-dismiss="modal">Close It</button>
+                            {{-- Info + actions --}}
+                            <div class="doc-aside">
+                                <div class="doc-info-block">
+                                    <div class="dib-label">Specialization</div>
+                                    <div class="dib-val"><strong>{{ $doctor->doctor_specialist }}</strong></div>
+                                </div>
+                                <div class="doc-info-block">
+                                    <div class="dib-label">Qualification</div>
+                                    <div class="dib-val">{{ $doctor->doctor_more }}</div>
+                                </div>
+                                <div class="doc-info-block">
+                                    <div class="dib-label">Consultation Fee</div>
+                                    <div class="dib-val" style="color:var(--teal);font-size:16px">₹ {{ $doctor->doctor_fees }}</div>
+                                </div>
+                                @if($doctor->doctor_more)
+                                <div class="doc-info-block">
+                                    <div class="dib-label">About / Qualifications</div>
+                                    <div class="dib-val dib-val--note">{{ $doctor->doctor_more }}</div>
+                                </div>
+                                @endif
 
+                                <div class="doc-btns">
+                                    <button class="btn-appt" onclick="openM('inquiryModal{{ $opd->id }}')">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                            <rect x="3" y="4" width="18" height="18" rx="2" />
+                                            <line x1="16" y1="2" x2="16" y2="6" />
+                                            <line x1="8" y1="2" x2="8" y2="6" />
+                                            <line x1="3" y1="10" x2="21" y2="10" />
+                                        </svg>
+                                        Book Appointment
+                                    </button>
+                                    <a href="tel:{{ $opd->clinic_mobile_number }}" class="btn-appt-call">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                            <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 10.8a19.79 19.79 0 01-3.07-8.67A2 2 0 012 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.92z" />
+                                        </svg>
+                                        Call Clinic
+                                    </a>
+                                </div>
+                            </div>
 
+                        </div>
+                    </div>
+                </div>
+                @endforeach
+            </div>
+            @endif
+        </div>
 
+        {{-- ── SERVICES TAB ────────────────────────────────────── --}}
+        <div class="tab-panel" id="tab-services">
+            <div class="sec-label">Service Lists</div>
+            @if($services->isEmpty())
+            <div class="empty">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2" />
+                </svg>
+                <p>No services found. Please try again later.</p>
+            </div>
+            @else
+            <div class="svc-grid">
+                @foreach($services as $service)
+                @if(!empty($service->service_lists) && is_array($service->service_lists))
+                @foreach($service->service_lists as $list)
+                <div class="svc-item">
+                    <div class="svc-dot"></div>{{ $list }}
+                </div>
+                @endforeach
+                @endif
+                @endforeach
+            </div>
+            @endif
+        </div>
+
+        {{-- ── PHOTOS TAB ──────────────────────────────────────── --}}
+        <div class="tab-panel" id="tab-photos">
+            <div class="sec-label">Clinic Photos</div>
+            @if($photos->isEmpty())
+            <div class="empty">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <rect x="3" y="3" width="18" height="18" rx="2" />
+                    <circle cx="8.5" cy="8.5" r="1.5" />
+                </svg>
+                <p>No photos found. Please try again later.</p>
+            </div>
+            @else
+            <div class="photo-grid">
+                @foreach($photos as $photo)
+                @php $imgs = is_string($photo->images) ? json_decode($photo->images, true) : $photo->images; @endphp
+                @if(!empty($imgs) && is_array($imgs))
+                @foreach($imgs as $item)
+                <div class="photo-item" onclick="openPhoto('{{ asset('storage/' . $item) }}')">
+                    <img src="{{ asset('storage/' . $item) }}" alt="Photo">
+                    <div class="photo-over">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7" />
+                        </svg>
+                    </div>
+                </div>
+                @endforeach
+                @endif
+                @endforeach
+            </div>
+            @endif
+        </div>
+
+        {{-- ── ABOUT TAB ───────────────────────────────────────── --}}
+        <div class="tab-panel" id="tab-about">
+            <div class="sec-label">About Clinic</div>
+            @if($aboutClinics->isEmpty())
+            <div class="empty">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <circle cx="12" cy="12" r="10" />
+                    <line x1="12" y1="16" x2="12" y2="12" />
+                </svg>
+                <p>No About Details found. Please try again later.</p>
+            </div>
+            @else
+            @foreach($aboutClinics as $ac)
+            <div class="about-list">
+                <div class="about-block">
+                    <span class="ab-tag">About Us</span>
+                    <h3>Our Story</h3>
+                    <p>{{ $ac->about_details }}</p>
+                </div>
+                <div class="about-block about-block--teal">
+                    <span class="ab-tag ab-tag--teal">Mission</span>
+                    <h3>Our Mission</h3>
+                    <p>{{ $ac->mission_details }}</p>
+                </div>
+                <div class="about-block about-block--red">
+                    <span class="ab-tag ab-tag--red">Vision</span>
+                    <h3>Our Vision</h3>
+                    <p>{{ $ac->vision_details }}</p>
                 </div>
             </div>
+            @endforeach
+            @endif
         </div>
-    </div>
-    @endforeach
 
+    </div>{{-- /content --}}
 
+    {{-- ══ MODALS ══════════════════════════════════════════════════ --}}
 
-
-
-
-    <!-- inquiry send modal -->
-    <div class="modal fade" id="myInquirySendModal{{$opd->id}}" tabindex="-1" aria-labelledby="myInquirySendModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-
-                    <h3 class="text-center mb-2 text-primary">Fill this form and get best deals from Doctorwala </h3>
-
-                    <form action="{{route('dw.opd.inquiry.store')}}" method="POST" enctype="multipart/form-data">
-                        @csrf
-
-                        <div class="row g-3">
-
-
-                            <div class="col-12" style="display: none;">
-                                <label for="currently_loggedin_partner_id" class="form-label fw-bold"><span class="text-danger"><i
-                                            class="fa fa-stethoscope" aria-hidden="true"></i></span> Partner ID</label>
-                                <input type="text" class="form-control border-0 bg-light px-4" id="currently_loggedin_partner_id"
-                                    name="currently_loggedin_partner_id" value="{{ $opd->currently_loggedin_partner_id}}" style="height: 55px;" readonly>
+    {{-- Book Appointment --}}
+    <div class="modal-ov" id="inquiryModal{{ $opd->id }}">
+        <div class="modal-box">
+            <div class="mhead">
+                <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="4" width="18" height="18" rx="2" />
+                        <line x1="16" y1="2" x2="16" y2="6" />
+                        <line x1="8" y1="2" x2="8" y2="6" />
+                        <line x1="3" y1="10" x2="21" y2="10" />
+                    </svg>Book Appointment</h3>
+                <button class="mclose" onclick="closeM('inquiryModal{{ $opd->id }}')">&times;</button>
+            </div>
+            <div class="mbody">
+                <form action="{{ route('dw.opd.inquiry.store') }}" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    <input type="hidden" name="currently_loggedin_partner_id" value="{{ $opd->currently_loggedin_partner_id }}">
+                    <input type="hidden" name="clinic_type" value="OPD">
+                    <div class="fg">
+                        <div class="fgrp"><label class="flbl">Clinic</label><input class="fc" name="clinic_name" value="{{ $opd->clinic_name }}" readonly></div>
+                        <div class="fr">
+                            <div class="fgrp"><label class="flbl">Name</label>
+                                @auth<input class="fc" name="user_name" value="{{ $user->user_name }}" readonly>@endauth
+                                @guest<input class="fc" name="user_name" value="Guest" readonly>@endguest
                             </div>
-
-                            <div class="col-12" style="display: none;">
-                                <label for="clinic_type" class="form-label fw-bold"><span class="text-danger"><i
-                                            class="fa fa-stethoscope" aria-hidden="true"></i></span> Clinic Type</label>
-                                <input type="text" class="form-control border-0 bg-light px-4" id="clinic_type"
-                                    name="clinic_type" value="OPD" style="height: 55px;" readonly>
-                            </div>
-
-
-                            <div class="col-12 mt-2">
-                                <label for="clinic_name" class="form-label fw-bold"><span class="text-danger"><i
-                                            class="fa fa-stethoscope" aria-hidden="true"></i></span> Inquiry
-                                    About</label>
-                                <input type="text" class="form-control border-0 bg-light px-4" id="clinic_name"
-                                    name="clinic_name" value="{{ $opd->clinic_name}}" style="height: 55px;" readonly>
-                            </div>
-
-
-                            <div class="col-6">
-                                <label for="user_name" class="form-label fw-bold"><span class="text-danger"><i
-                                            class="fa fa-stethoscope" aria-hidden="true"></i></span> Your Name</label>
-                                @auth
-                                <input type="text" class="form-control border-0 bg-light px-4" value="{{ $user->user_name }}"
-                                    name="user_name" id="user_name" style="height: 55px;" readonly>
-                                @endauth
-                                @guest
-                                <input type="text" class="form-control border-0 bg-light px-4" value="Guest"
-                                    name="user_name" id="user_name" style="height: 55px;" readonly>
-                                @endguest
-                            </div>
-
-                            <div class="col-6">
-                                <label for="user_mobile" class="form-label fw-bold"><span class="text-danger"><i
-                                            class="fa fa-stethoscope" aria-hidden="true"></i></span> Your Mobile</label>
-                                @auth
-                                <input type="text" class="form-control border-0 bg-light px-4" value="{{ $user->user_mobile }}"
-                                    name="user_mobile" id="user_mobile" style="height: 55px;">
-                                @endauth
-                                @guest
-                                <input type="text" class="form-control border-0 bg-light px-4" placeholder="Mobile"
-                                    name="user_mobile" id="user_mobile" style="height: 55px;" required>
-                                @endguest
-                            </div>
-
-                            <div class="col-12">
-                                <label for="user_email" class="form-label fw-bold"><span class="text-danger"><i
-                                            class="fa fa-stethoscope" aria-hidden="true"></i></span> Your Email</label>
-                                @auth
-                                <input type="text" class="form-control border-0 bg-light px-4"
-                                    value="{{ $user->user_email }}" name="user_email" id="user_email" style="height: 55px;" readonly>
-                                @endauth
-                                @guest
-                                <input type="text" class="form-control border-0 bg-light px-4" value=""
-                                    name="user_email" id="user_email" style="height: 55px;" placeholder="Email" required>
-                                @endguest
-                            </div>
-
-
-                            <div class="col-12">
-                                <label for="user_inquiry" class="form-label fw-bold"><span class="text-danger"><i
-                                            class="fa fa-stethoscope" aria-hidden="true"></i></span> Your
-                                    Inquiry</label>
-                                <textarea class="form-control border-0 bg-light px-4 py-3" rows="5"
-                                    placeholder="Message" name="user_inquiry" id="user_inquiry" required></textarea>
-                            </div>
-                            <div class="col-12">
-                                <button class="btn btn-primary w-100 py-3" type="submit">Book Appointment</button>
+                            <div class="fgrp"><label class="flbl">Mobile *</label>
+                                @auth<input class="fc" name="user_mobile" type="tel" value="{{ $user->user_mobile }}">@endauth
+                                @guest<input class="fc" name="user_mobile" type="tel" placeholder="Mobile number" required>@endguest
                             </div>
                         </div>
-                    </form>
-
-                </div>
+                        <div class="fgrp"><label class="flbl">Email</label>
+                            @auth<input class="fc" name="user_email" type="email" value="{{ $user->user_email }}" readonly>@endauth
+                            @guest<input class="fc" name="user_email" type="email" placeholder="Email address" required>@endguest
+                        </div>
+                        <div class="fgrp"><label class="flbl">Message *</label>
+                            <textarea class="fc" name="user_inquiry" rows="3" placeholder="Describe your concern..." required></textarea>
+                        </div>
+                        <button type="submit" class="btn-sub btn-sub-red">Book Appointment</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
 
-
-    @if(session('success'))
-    <script>
-        const successModal = new bootstrap.Modal(document.getElementById('inqurySendSuccessModal'));
-        successModal.show();
-    </script>
-    @endif
-
-    @if(session('error'))
-    <script>
-        const errorModal = new bootstrap.Modal(document.getElementById('inqurySendUnsuccessModal'));
-        errorModal.show();
-    </script>
-    @endif
-
-    @if(session('success') || session('error'))
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const modalId = "{{ session('success') ? 'inqurySendSuccessModal' : 'inqurySendUnsuccessModal' }}";
-            const modal = new bootstrap.Modal(document.getElementById(modalId));
-            modal.show();
-        });
-    </script>
-    @endif
-
-    <!-- inqury send success modal start -->
-    <div class="modal fade" id="inqurySendSuccessModal" tabindex="-1" aria-labelledby="inqurySendSuccessModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-body d-flex flex-column align-middle justify-center align-items-center">
-                    <h2 class="modal-title" id="profileUpdateSuccessModalLabel"><span class="text-primary">+</span> SUCCESS <span class="text-primary">+</span></h2>
-                    @auth
-                    <h2 class="text-primary text-center">Hello {{ $user->user_name }}, Your Inquiry Is Sent Successfully</h2>
-                    @endauth
-                    @guest
-                    <h2 class="text-primary text-center">Hello Guest User, Your Inquiry Is Sent Successfully</h2>
-                    @endguest
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn p-2 btn-primary w-100" data-bs-dismiss="modal">CLOSE</button>
-                </div>
+    {{-- Feedback --}}
+    <div class="modal-ov" id="feedbackModal{{ $opd->id }}">
+        <div class="modal-box">
+            <div class="mhead">
+                <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" />
+                    </svg>Your Feedback</h3>
+                <button class="mclose" onclick="closeM('feedbackModal{{ $opd->id }}')">&times;</button>
             </div>
-        </div>
-    </div>
-    <!-- inqury send success modal end -->
-
-    <!-- inqury send Unsuccess modal start -->
-    <div class="modal fade" id="inqurySendUnsuccessModal" tabindex="-1" aria-labelledby="inqurySendUnsuccessModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-body d-flex flex-column align-middle justify-center align-items-center">
-                    <h3 class="modal-title" id="profileUpdateSuccessModalLabel"><span class="text-primary">+</span> ERROR <span class="text-primary">+</span></h3>
-                    @auth
-                    <h4 class="text-danger text-center">Hello {{ $user->user_name }}, Your Inquiry Is Not Sent !!</h4>
-                    @endauth
-                    @guest
-                    <h4 class="text-danger text-center">Hello Guest User, Your Inquiry Is Not Sent !!</h4>
-                    @endguest
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn p-2 btn-primary w-100" data-bs-dismiss="modal">CLOSE</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- inqury send Unsuccess modal end -->
-
-
-
-
-
-
-
-
-
-
-    <!-- feedback send modal -->
-    <div class="modal fade" id="myFeedBackModal{{ $opd->id }}" tabindex="-1" aria-labelledby="myFeedBackModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-
-                    <h3 class="text-center mb-2 text-primary">Give Your Valuable Feedback </h3>
-
-                    <form class="mt-3" action="{{ route('dw.opd.rating.save') }}" method="POST" enctype="multipart/form-data">
-                        @csrf
-
-                        <p class="ratings d-flex  gap-3 mt-3 align-items-center flex-wrap" style="list-style-type: none;">
-                            <span><strong><i class="fa-solid fa-stethoscope text-danger me-2"></i>Rating :</strong></span>
-                            <a href="javascript:void(0);" class="rating-a" data-rating="1"><img src="{{asset('img/1.png')}}" width="35" alt="1"></a>
-                            <a href="javascript:void(0);" class="rating-a" data-rating="2"><img src="{{asset('img/2.png')}}" width="35" alt="2"></a>
-                            <a href="javascript:void(0);" class="rating-a" data-rating="3"><img src="{{asset('img/3.png')}}" width="35" alt="3"></a>
-                            <a href="javascript:void(0);" class="rating-a" data-rating="4"><img src="{{asset('img/5.png')}}" width="35" alt="4"></a>
-                            <a href="javascript:void(0);" class="rating-a" data-rating="5"><img src="{{asset('img/4.png')}}" width="35" alt="5"></a>
-                        </p>
-
-                        <input type="hidden" id="rating" name="rating" value="0" required>
-                        <p><i class="fa fa-star text-warning" aria-hidden="true"></i> Your Rating is: <b><span id="user-rating" class="text-danger">0</span> out of 5</b></p>
-
-
-                        <div class="row g-3">
-
-                            <div class="col-12" style="display: none;">
-                                <label for="currently_loggedin_partner_id" class="form-label fw-bold"><span class="text-danger"><i
-                                            class="fa fa-stethoscope" aria-hidden="true"></i></span> Partner ID</label>
-                                <input type="text" class="form-control border-0 bg-light px-4" id="currently_loggedin_partner_id"
-                                    name="currently_loggedin_partner_id" value="{{ $opd->currently_loggedin_partner_id}}" style="height: 55px;" readonly>
+            <div class="mbody">
+                <form action="{{ route('dw.opd.rating.save') }}" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    <input type="hidden" name="currently_loggedin_partner_id" value="{{ $opd->currently_loggedin_partner_id }}">
+                    <input type="hidden" name="clinic_type" value="OPD">
+                    <input type="hidden" name="clinic_name" value="{{ $opd->clinic_name }}">
+                    <div class="fg">
+                        <div>
+                            <div class="flbl" style="margin-bottom:6px">Rate your experience</div>
+                            <div class="rat-row">
+                                @for($i=1;$i<=5;$i++)
+                                    <a href="javascript:void(0);" class="rat-a" data-r="{{ $i }}">
+                                    <img src="{{ asset('img/'.$i.'.png') }}" alt="{{ $i }}">
+                                    </a>
+                                    @endfor
                             </div>
-
-                            <div class="col-12" style="display: none;">
-                                <label for="clinic_type" class="form-label fw-bold"><span class="text-danger"><i
-                                            class="fa fa-stethoscope" aria-hidden="true"></i></span> Clinic Type</label>
-                                <input type="text" class="form-control border-0 bg-light px-4" id="clinic_type"
-                                    name="clinic_type" value="OPD" style="height: 55px;" readonly>
+                            <input type="hidden" id="feedRating" name="rating" value="0">
+                            <div class="rat-txt">Selected: <strong><span id="ratingDisplay">0</span>/5</strong></div>
+                        </div>
+                        <div class="fr">
+                            <div class="fgrp"><label class="flbl">Name</label>
+                                @auth<input class="fc" name="user_name" value="{{ $user->user_name }}" readonly>@endauth
+                                @guest<input class="fc" name="user_name" value="Guest" readonly>@endguest
                             </div>
-
-
-                            <div class="col-12 mt-2" style="display: none;">
-                                <label for="clinic_name" class="form-label fw-bold"><span class="text-danger"><i
-                                            class="fa fa-stethoscope" aria-hidden="true"></i></span> Inquiry
-                                    About</label>
-                                <input type="text" class="form-control border-0 bg-light px-4" id="clinic_name"
-                                    name="clinic_name" value="{{ $opd->clinic_name}}" style="height: 55px;" readonly>
-                            </div>
-
-                            <div class="col-6">
-                                <label for="user_name" class="form-label fw-bold"><span class="text-danger"><i
-                                            class="fa fa-stethoscope" aria-hidden="true"></i></span> Your Name</label>
-                                @auth
-                                <input type="text" class="form-control border-0 bg-light px-4" value="{{ $user->user_name }}"
-                                    name="user_name" id="user_name" style="height: 55px;" readonly>
-                                @endauth
-                                @guest
-                                <input type="text" class="form-control border-0 bg-light px-4" value="Guest"
-                                    name="user_name" id="user_name" style="height: 55px;" readonly>
-                                @endguest
-                            </div>
-
-                            <div class="col-6">
-                                <label for="user_email" class="form-label fw-bold"><span class="text-danger"><i
-                                            class="fa fa-stethoscope" aria-hidden="true"></i></span> Your Email</label>
-                                @auth
-                                <input type="text" class="form-control border-0 bg-light px-4"
-                                    value="{{ $user->user_email }}" name="user_email" id="user_email" style="height: 55px;">
-                                @endauth
-                                @guest
-                                <input type="text" class="form-control border-0 bg-light px-4" value="Guest"
-                                    name="user_email" id="user_email" style="height: 55px;">
-                                @endguest
-                            </div>
-
-                            <div class="col-12">
-                                <label for="feedback" class="form-label fw-bold"><span class="text-danger"><i
-                                            class="fa fa-stethoscope" aria-hidden="true"></i></span> Your
-                                    Feedback</label>
-                                <textarea class="form-control border-0 bg-light px-4 py-3" rows="5"
-                                    placeholder="Feedback" name="feedback" id="feedback" required></textarea>
-                            </div>
-
-
-                            <div class="col-12">
-                                <button class="btn btn-primary w-100 py-3" type="submit">Send Feedback</button>
+                            <div class="fgrp"><label class="flbl">Email</label>
+                                @auth<input class="fc" name="user_email" value="{{ $user->user_email }}">@endauth
+                                @guest<input class="fc" name="user_email" placeholder="Your email">@endguest
                             </div>
                         </div>
-                    </form>
+                        <div class="fgrp"><label class="flbl">Feedback *</label>
+                            <textarea class="fc" name="feedback" rows="3" placeholder="Share your experience..." required></textarea>
+                        </div>
+                        <button type="submit" class="btn-sub btn-sub-teal">Send Feedback</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 
+    {{-- Photo Viewer --}}
+    <div class="modal-ov" id="photoViewer">
+        <div class="modal-box">
+            <div class="mhead">
+                <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="3" width="18" height="18" rx="2" />
+                    </svg>Photo</h3>
+                <button class="mclose" onclick="closeM('photoViewer')">&times;</button>
+            </div>
+            <div class="mbody"><img id="pvImg" class="pv-img" src="" alt="Photo"></div>
+        </div>
+    </div>
+
+    {{-- Result modals --}}
+    <div class="modal-ov" id="inqurySendSuccessModal">
+        <div class="modal-box">
+            <div class="mbody">
+                <div class="res-wrap">
+                    <div class="res-icon res-ok"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="3">
+                            <polyline points="20 6 9 17 4 12" />
+                        </svg></div>
+                    <h3>Appointment Booked!</h3>
+                    <p>
+                        @auth Hello {{ $user->user_name }}, your inquiry was sent successfully! @endauth
+                        @guest Your inquiry was sent successfully! @endguest
+                    </p>
+                    <button class="btn-sub btn-sub-teal" onclick="closeM('inqurySendSuccessModal')">Close</button>
                 </div>
             </div>
         </div>
     </div>
 
-
-
-    @if(session('successFeed'))
-    <script>
-        const successModalFeed = new bootstrap.Modal(document.getElementById('feedSendSuccessModal'));
-        successModal.show();
-    </script>
-    @endif
-
-    @if(session('errorFeed'))
-    <script>
-        const errorModalFeed = new bootstrap.Modal(document.getElementById('feedSendUnsuccessModal'));
-        errorModal.show();
-    </script>
-    @endif
-
-    @if(session('successFeed') || session('errorFeed'))
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const modalId = "{{ session('successFeed') ? 'feedSendSuccessModal' : 'feedSendUnsuccessModal' }}";
-            const modal = new bootstrap.Modal(document.getElementById(modalId));
-            modal.show();
-        });
-    </script>
-    @endif
-
-    <!-- feed send success modal start -->
-    <div class="modal fade" id="feedSendSuccessModal" tabindex="-1" aria-labelledby="feedSendSuccessModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-body d-flex flex-column align-middle justify-center align-items-center">
-                    <h2 class="modal-title" id="profileUpdateSuccessModalLabel"><span class="text-primary">+</span> SUCCESS <span class="text-primary">+</span></h2>
-                    @auth
-                    <h2 class="text-primary text-center">Hello {{ $user->user_name }}, Thanks for Your Feedback</h2>
-                    @endauth
-                    @guest
-                    <h2 class="text-primary text-center">Hello Guest User, Thanks for Your Feedback</h2>
-                    @endguest
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn p-2 btn-primary w-100" data-bs-dismiss="modal">CLOSE</button>
+    <div class="modal-ov" id="inqurySendUnsuccessModal">
+        <div class="modal-box">
+            <div class="mbody">
+                <div class="res-wrap">
+                    <div class="res-icon res-err"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="3">
+                            <line x1="18" y1="6" x2="6" y2="18" />
+                            <line x1="6" y1="6" x2="18" y2="18" />
+                        </svg></div>
+                    <h3>Oops! Something went wrong.</h3>
+                    <p>Your inquiry could not be sent. Please try again.</p>
+                    <button class="btn-sub btn-sub-red" onclick="closeM('inqurySendUnsuccessModal')">Close</button>
                 </div>
             </div>
         </div>
     </div>
-    <!-- feed send success modal end -->
 
-    <!-- feed send Unsuccess modal start -->
-    <div class="modal fade" id="feedSendUnsuccessModal" tabindex="-1" aria-labelledby="feedSendUnsuccessModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-body d-flex flex-column align-middle justify-center align-items-center">
-                    <h3 class="modal-title" id="profileUpdateSuccessModalLabel"><span class="text-primary">+</span> ERROR <span class="text-primary">+</span></h3>
-                    @auth
-                    <h4 class="text-danger text-center">Hello {{ $user->user_name }}, There was an error in sending your feedback, Please try again!</h4>
-                    @endauth
-                    @guest
-                    <h4 class="text-danger text-center">Hello Guest User, There was an error in sending your feedback, Please try again!</h4>
-                    @endguest
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn p-2 btn-primary w-100" data-bs-dismiss="modal">CLOSE</button>
+    <div class="modal-ov" id="feedSendSuccessModal">
+        <div class="modal-box">
+            <div class="mbody">
+                <div class="res-wrap">
+                    <div class="res-icon res-ok"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="3">
+                            <polyline points="20 6 9 17 4 12" />
+                        </svg></div>
+                    <h3>Thank You!</h3>
+                    <p>
+                        @auth Hello {{ $user->user_name }}, thanks for your feedback! @endauth
+                        @guest Thanks for your feedback! @endguest
+                    </p>
+                    <button class="btn-sub btn-sub-teal" onclick="closeM('feedSendSuccessModal')">Close</button>
                 </div>
             </div>
         </div>
     </div>
-    <!-- feed send Unsuccess modal end -->
 
+    <div class="modal-ov" id="feedSendUnsuccessModal">
+        <div class="modal-box">
+            <div class="mbody">
+                <div class="res-wrap">
+                    <div class="res-icon res-err"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="3">
+                            <line x1="18" y1="6" x2="6" y2="18" />
+                            <line x1="6" y1="6" x2="18" y2="18" />
+                        </svg></div>
+                    <h3>Error Sending Feedback</h3>
+                    <p>There was a problem. Please try again later.</p>
+                    <button class="btn-sub btn-sub-red" onclick="closeM('feedSendUnsuccessModal')">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
 
 
@@ -1913,7 +1214,6 @@
                 <button type="button" class="gs-quick-tag" data-val="General Physician">General Physician</button>
                 <button type="button" class="gs-quick-tag" data-val="General Surgeon">General Surgeon</button>
                 <button type="button" class="gs-quick-tag" data-val="Gynecologist">Gynecologist</button>
-                
             </div>
 
             <!-- ESC hint -->
@@ -1931,15 +1231,6 @@
 
 
 
-    <!-- PARTNER REGISTER BUTTON -->
-    @guest
-    <a href="/partner-register" class="btn btn-lg btn-dark2 btn-lg-square rounded partner-login">
-        <i class="fa fa-plus" aria-hidden="true"></i>
-        <span class="showing-text"> Partner Register</span>
-    </a>
-    @endguest
-    @auth
-    @endauth
 
 
 
@@ -1961,7 +1252,7 @@
     <script src="{{asset('../lib/twentytwenty/jquery.event.move.js')}}"></script>
     <script src="{{asset('../lib/twentytwenty/jquery.twentytwenty.js')}}"></script>
 
-
+    <script src="{{asset('./js/float-btn.js')}}"></script>
     <script src="{{asset('../js/main.js')}}"></script>
 
 
@@ -2038,7 +1329,84 @@
             });
         });
     </script>
-    <script src="{{asset('./js/float-btn.js')}}"></script>
+
+    <!-- {{-- ══ JS ═══════════════════════════════════════════════════════ --}} -->
+    <script>
+        // Doctor accordion — expand inline
+        function toggleDoc(id) {
+            const card = document.getElementById(id);
+            const isOpen = card.classList.contains('open');
+            // Close all others
+            document.querySelectorAll('.doc-card.open').forEach(c => c.classList.remove('open'));
+            if (!isOpen) card.classList.add('open');
+        }
+
+        // Tabs
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+                btn.classList.add('active');
+                document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+            });
+        });
+
+        // Modals
+        function openM(id) {
+            const e = document.getElementById(id);
+            if (e) {
+                e.classList.add('open');
+                document.body.style.overflow = 'hidden';
+            }
+        }
+
+        function closeM(id) {
+            const e = document.getElementById(id);
+            if (e) {
+                e.classList.remove('open');
+                document.body.style.overflow = '';
+            }
+        }
+        document.querySelectorAll('.modal-ov').forEach(el => {
+            el.addEventListener('click', e => {
+                if (e.target === el) closeM(el.id);
+            });
+        });
+        document.addEventListener('keydown', e => {
+            if (e.key === 'Escape') document.querySelectorAll('.modal-ov.open').forEach(m => closeM(m.id));
+        });
+
+        // Photo viewer
+        function openPhoto(src) {
+            document.getElementById('pvImg').src = src;
+            openM('photoViewer');
+        }
+
+        // Rating
+        document.querySelectorAll('.rat-a').forEach(a => {
+            a.addEventListener('click', () => {
+                const v = parseInt(a.dataset.r);
+                document.getElementById('feedRating').value = v;
+                document.getElementById('ratingDisplay').textContent = v;
+                document.querySelectorAll('.rat-a').forEach(r => r.classList.toggle('on', parseInt(r.dataset.r) <= v));
+            });
+        });
+
+        // Session flashes
+        @if(session('success'))
+        document.addEventListener('DOMContentLoaded', () => openM('inqurySendSuccessModal'));
+        @endif
+        @if(session('error'))
+        document.addEventListener('DOMContentLoaded', () => openM('inqurySendUnsuccessModal'));
+        @endif
+        @if(session('successFeed'))
+        document.addEventListener('DOMContentLoaded', () => openM('feedSendSuccessModal'));
+        @endif
+        @if(session('errorFeed'))
+        document.addEventListener('DOMContentLoaded', () => openM('feedSendUnsuccessModal'));
+        @endif
+    </script>
+
 </body>
 
 </html>

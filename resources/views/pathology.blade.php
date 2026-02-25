@@ -599,7 +599,7 @@
                                 <a href="#"><i class="fab fa-twitter"></i></a>
                                 <a href="#"><i class="fab fa-facebook-f"></i></a>
                                 <a href="{{$path->clinic_google_map_link}}" target="_blank"><i class="fa-solid fa-location-dot"></i></a>
-                                <a href="tel:{{ $opd->clinic_mobile_number }}"><i class="fa-solid fa-phone"></i></a>
+                                <a href="tel:{{ $path->clinic_mobile_number }}"><i class="fa-solid fa-phone"></i></a>
                             </div>
                         </div>
 

@@ -65,6 +65,8 @@
     <link href="{{asset('../responsive/service_responsive.css')}}" rel="stylesheet">
     <link href="{{asset('../responsive/allopdpathdoc_responsive.css')}}" rel="stylesheet">
     <link href="{{asset('./css/topbar.css')}}" rel="stylesheet">
+    <link href="{{asset('./css/topbar.css')}}" rel="stylesheet">
+    <link href="{{asset('./css/single-doc.css')}}" rel="stylesheet">
 
 
     <style>
@@ -177,7 +179,7 @@
         </div>
     </div>
     <!-- ====== TOPBAR ====== -->
-     
+
 
     @guest
     <!-- Navbar Start -->
@@ -500,807 +502,634 @@
 
 
 
+    {{-- ══ HERO ════════════════════════════════════════════════════ --}}
+    <div class="hero">
+        <div class="hero-inner">
+            @guest
+            <div class="bc">
+                <a href="/">Home</a><span>›</span>
+                <a href="/doctor">Doctors</a><span>›</span>
+                <span>{{ $doc->partner_doctor_name }}</span>
+            </div>
+            @endguest
+             @auth
+             <div class="bc">
+                <a href="/dw">Home</a><span>›</span>
+                <a href="/dw/doctor">Doctors</a><span>›</span>
+                <span>{{ $doc->partner_doctor_name }}</span>
+            </div>
+             @endauth
 
+            <div class="hero-row">
+                {{-- Avatar --}}
+                <div class="hero-avatar">
+                    @if($doc->banner && $doc->banner->doctorbanner)
+                    <img class="full" src="{{ asset('storage/' . $doc->banner->doctorbanner) }}" alt="{{ $doc->partner_doctor_name }}">
+                    @else
+                    <img src="{{ asset('img/doctor.png') }}" alt="Doctor">
+                    @endif
+                </div>
 
-    <!-- Hero Start -->
-    <!-- <div class="container-fluid bg-primary py-5 hero-header mb-5">
-        <div class="row py-3">
-            <div class="col-12 text-center">
-                <h1 class="display-3 text-white animated zoomIn txt-cap">{{$doc->partner_doctor_name}}</h1>
-                <a href="/dw" class="h4 text-white" style="text-decoration: underline;">Home</a>
-                <i class="fa fa-plus text-dark px-2" style="font-size: 2rem; font-weight: 700;"></i>
-                <a href="" class="h4 text-white">Details</a>
+                {{-- Info --}}
+                <div>
+                    <div class="hero-tag">✦ Jio Ji Bharka · Doctorwala.info</div>
+                    <div class="hero-name">{{ $doc->partner_doctor_designation }} {{ $doc->partner_doctor_name }}</div>
+                    <div>
+                        <span class="hero-spec">
+                            <svg style="width:10px;height:10px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
+                            </svg>
+                            {{ $doc->partner_doctor_specialist }}
+                        </span>
+                        <span class="hero-fee">
+
+                            ₹ {{ $doc->partner_doctor_fees }} Consultation
+                        </span>
+                    </div>
+                    <div class="hero-meta">
+                        <span>
+                            <i class="fa fa-map-marker-alt"></i>
+                            {{ $doc->partner_doctor_address }}{{ $doc->partner_doctor_landmark ? ', ' . $doc->partner_doctor_landmark : '' }} — {{ $doc->partner_doctor_state }}, {{ $doc->partner_doctor_city }}
+                        </span>
+                        <span>
+                            <i class="fa fa-phone"></i>
+                            <a href="tel:{{ $doc->partner_doctor_mobile }}">+91-{{ $doc->partner_doctor_mobile }}</a>
+                        </span>
+                        @if($doc->partner_doctor_email)
+                        <span>
+                            <i class="fa fa-envelope"></i>
+                            <a href="mailto:{{ $doc->partner_doctor_email }}">{{ $doc->partner_doctor_email }}</a>
+                        </span>
+                        @endif
+                    </div>
+                </div>
+
+                {{-- Buttons --}}
+                <div class="hero-actions">
+                    <button class="btn btn-book" onclick="openM('inquiryModal{{ $doc->id }}')">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                            <rect x="3" y="4" width="18" height="18" rx="2" />
+                            <line x1="16" y1="2" x2="16" y2="6" />
+                            <line x1="8" y1="2" x2="8" y2="6" />
+                            <line x1="3" y1="10" x2="21" y2="10" />
+                        </svg>
+                        Book
+                    </button>
+                    <a href="tel:{{ $doc->partner_doctor_mobile }}" class="btn btn-call">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                            <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 10.8a19.79 19.79 0 01-3.07-8.67A2 2 0 012 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.92z" />
+                        </svg>
+                        Call
+                    </a>
+                    @if($doc->partner_doctor_google_map_link)
+                    <a href="{{ $doc->partner_doctor_google_map_link }}" target="_blank" class="btn btn-ghost">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polygon points="3 11 22 2 13 21 11 13 3 11" />
+                        </svg>
+                        Map
+                    </a>
+                    @endif
+                    <button class="btn btn-ghost" onclick="openM('feedbackModal{{ $doc->id }}')">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" />
+                        </svg>
+                        Feedback
+                    </button>
+                </div>
             </div>
         </div>
-    </div> -->
-    <!-- Hero End -->
 
+        <svg class="hero-wave" viewBox="0 0 1440 32" xmlns="http://www.w3.org/2000/svg">
+            <path d="M0,16 C360,32 720,0 1080,20 C1260,28 1360,14 1440,16 L1440,32 H0Z" fill="#faf9ff" />
+        </svg>
+    </div>
 
-
-
-
-
-
-
-
-
-
-
-    <!-- Details Start -->
-    <div class="container-fluid py-5">
-        <div class="container">
-            <div class="row g-5">
-
-                <div class="col-lg-4">
-                    <div class="team-item">
-                        <div class="position-relative rounded-top" style="z-index: 1;">
-                            @if($doc->banner && $doc->banner->doctorbanner)
-                            <img class="img-fluid rounded-top w-100" src="{{ asset('storage/' . $doc->banner->doctorbanner) }}" alt="">
-                            @else
-                            <img src="https://media.istockphoto.com/id/1222357475/vector/image-preview-icon-picture-placeholder-for-website-or-ui-ux-design-vector-illustration.jpg?s=612x612&w=0&k=20&c=KuCo-dRBYV7nz2gbk4J9w1WtTAgpTdznHu55W9FjimE=" class="card-img-top" alt="Default Image">
-                            @endif
-                            <div
-                                class="position-absolute top-100 start-50 translate-middle bg-light rounded p-2 d-flex">
-                                <img src="{{asset('img/logo.png')}}" width="80" alt="">
-                            </div>
-                        </div>
-                        <div class="team-text position-relative bg-light text-center rounded-bottom p-4 pt-5">
-                            <h4 class="mb-2">Doctorwala.info</h4>
-                        </div>
-                    </div>
+    {{-- ══ QUICK INFO BAR ══════════════════════════════════════════ --}}
+    <div class="info-bar">
+        <div class="info-bar-inner">
+            <div class="ibar-chip">
+                <div class="ibar-icon ibar-icon--pur">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
+                    </svg>
                 </div>
-
-                <div class="col-lg-8">
-                    <div class="section-title bg-light rounded h-100 p-5">
-                        <h5 class="position-relative d-inline-block text-primary text-uppercase">jio ji bharka</h5>
-                        <h2 class="display-6 mb-4 txt-cap" style="font-size: 1.8rem;">
-                            <p class="m-0">{{$doc->partner_doctor_name}}</p>
-                            <p class="m-0">Specialist: {{$doc->partner_doctor_specialist}}</p>
-                        </h2>
-
-
-                        <div class="d-details">
-                            <p class="location_d d-texts txt-cap">
-                                <strong><i class="fa fa-map-marker-alt me-2"></i>Address: {{$doc->partner_doctor_address}}</strong>
-                            </p>
-
-                            <p class="landmark_d d-texts txt-cap">
-                                <strong><i class="fa fa-map-pin me-2"></i>Landmark: {{$doc->partner_doctor_landmark}}</strong>
-                            </p>
-
-                            <p class="landmark_d d-texts txt-cap">
-                                <strong><i class="fa fa-globe me-2"></i>State/City: {{$doc->partner_doctor_state}}-{{$doc->partner_doctor_city}}</strong>
-                            </p>
-
-                            <p class="contact_d d-texts">
-                                <strong><i class="fa fa-phone me-2"></i>Phone: +91-{{$doc->partner_doctor_mobile}}</strong>
-                            </p>
-
-                            <p class="email_d d-texts">
-                                <strong><i class="fa fa-envelope me-2"></i>Email: {{$doc->partner_doctor_email}}</strong>
-                            </p>
-
-
-                            <p class="contact_person_d d-texts txt-cap">
-                                <strong><i class="fa fa-user me-2"></i>Doctor Name: {{$doc->partner_doctor_name}}</strong>
-                            </p>
-
-                        </div>
-
-
-
-
-
-
-
-                        <div class="d-buttons mt-5">
-                            <a href="" data-bs-toggle="modal" data-bs-target="#myInquirySendModal{{$doc->id}}"
-                                class="btn btn-dark btn-darkk py-md-3 px-md-5 me-3 mb-2 animated slideInLeft">Book Appointment</a>
-
-                            <a href="{{$doc->partner_doctor_google_map_link}}" target="_blank" class="btn btn-secondary py-md-3 px-md-5 me-3 mb-2 animated slideInRight">See
-                                Location</a>
-
-                            <a href="" data-bs-toggle="modal" data-bs-target="#myDoctorViewModal{{$doc->id}}"
-                                class="btn btn-primary py-md-3 px-md-5 me-3 mb-2 animated slideInRight">Day & Time</a>
-
-
-                            <a href="" data-bs-toggle="modal" data-bs-target="#myFeedBackModal{{$doc->id}}"
-                                class="btn btn-secondary py-md-3 px-md-5 mb-2 animated slideInRight"><i class="fa fa-star" aria-hidden="true"></i></a>
-                        </div>
-
-
-                    </div>
+                <div>
+                    <div class="ibar-lbl">Specialist</div>
+                    <div class="ibar-val">{{ $doc->partner_doctor_specialist }}</div>
                 </div>
+            </div>
 
+            <div class="ibar-chip">
+                <div class="ibar-icon ibar-icon--amb">
+                    ₹
+                </div>
+                <div>
+                    <div class="ibar-lbl">Consult Fee</div>
+                    <div class="ibar-val ibar-val--amb">₹ {{ $doc->partner_doctor_fees }}</div>
+                </div>
+            </div>
 
+            <div class="ibar-chip">
+                <div class="ibar-icon ibar-icon--rose">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" />
+                        <circle cx="12" cy="7" r="4" />
+                    </svg>
+                </div>
+                <div>
+                    <div class="ibar-lbl">Designation</div>
+                    <div class="ibar-val">{{ $doc->partner_doctor_designation }}</div>
+                </div>
+            </div>
 
+            <div class="ibar-chip">
+                <div class="ibar-icon ibar-icon--teal">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10" />
+                        <path d="M12 8v4l3 3" />
+                    </svg>
+                </div>
+                <div>
+                    <div class="ibar-lbl">Status</div>
+                    @if($doc->status == 'Available')
+                    <div class="ibar-val ibar-val--ok">● Available</div>
+                    @elseif($doc->status == 'Unavailable')
+                    <div class="ibar-val ibar-val--no">● Unavailable</div>
+                    @else
+                    <div class="ibar-val" style="color:var(--muted)">● {{ $doc->status ?? 'N/A' }}</div>
+                    @endif
+                </div>
             </div>
         </div>
     </div>
-    <!-- Details End -->
 
-
-
-
-
-
-
-
-
-
-    <!-- Tab bar Start -->
-    <div class="d_tab_bar">
-        <div class="container">
-            <div class="row">
-
-
-
-                <!-- Tab panes for Photos -->
-                <div class="tab-content p-0 mt-4" id="myTabContent">
-
-
-
-                    <!-- Photos Tab -->
-                    <div class="tab-pane fade show active" id="photos" role="tabpanel" aria-labelledby="photos-tab">
-
-
-
-
-                        <div class="section-title bg-light rounded h-100 p-5">
-                            <h5 class="position-relative d-inline-block text-dark text-uppercase">Photos
-                            </h5>
-
-
-
-                            <div
-                                class="clinic_photos mt-4 d-flex gap-4 flex-wrap justify-content-start align-items-center">
-
-                                @if($photos->isEmpty())
-                                <div class="alert alert-primary w-100 mt-2 text-center mx-4">
-                                    No photos found. Please try again later.
-                                </div>
-                                @else
-                                @foreach($photos as $photo)
-                                @php
-
-                                $decodedImages = is_string($photo->images) ? json_decode($photo->images, true) : $photo->images;
-                                @endphp
-
-                                @if(!empty($decodedImages) && is_array($decodedImages))
-                                @foreach($decodedImages as $key => $item)
-                                <!-- Trigger for Modal -->
-                                <a href="#" data-bs-toggle="modal" data-bs-target="#photoModal{{ $photo->id }}{{ $key }}">
-                                    <img src="{{ asset('storage/' . $item) }}" width="160" alt="Photo">
-                                </a>
-
-                                <!-- Dynamic Modal -->
-                                <div class="modal fade" id="photoModal{{ $photo->id }}{{ $key }}" tabindex="-1"
-                                    aria-labelledby="photoModalLabel{{ $photo->id }}{{ $key }}" aria-hidden="true">
-                                    <div class="modal-dialog modal-dialog-centered">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title" id="photoModalLabel{{ $photo->id }}{{ $key }}">
-                                                    Photo View
-                                                </h5>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                            </div>
-                                            <div class="modal-body">
-                                                <img src="{{ asset('storage/' . $item) }}" width="100%" alt="Photo">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                @endforeach
-                                @else
-                                <p>No images available for this entry.</p>
-                                @endif
-                                @endforeach
-                                @endif
-
-
-
-                            </div>
-
-
-
-
-                        </div>
-
-
-
-                    </div>
-                </div>
-
-
-
-                <!-- Tab panes for Service Lists -->
-                <div class="tab-content p-0 mt-4" id="myTabContent">
-
-
-
-                    <!-- Service Tab -->
-                    <div class="tab-pane fade show active" id="service" role="tabpanel" aria-labelledby="service-tab">
-
-
-
-
-                        <div class="section-title bg-light rounded h-100 p-5">
-                            <h5 class="position-relative d-inline-block text-dark text-uppercase">Service Lists
-                            </h5>
-
-
-
-                            <ul class="service-lists" style="list-style: number;">
-
-
-                                @if($services->isEmpty())
-                                <div class="alert alert-primary w-100 mt-2 text-center mx-4">
-                                    No Service Lists found. Please try again later.
-                                </div>
-                                @else
-                                @foreach($services as $service)
-                                @if(!empty($service->service_lists) && is_array($service->service_lists))
-                                @foreach($service->service_lists as $list)
-                                <li>
-                                    <p class="fs-8 fw-bold"><i class="fa fa-stethoscope"></i>
-                                        <span class="text-primary text-capitalize">{{ $list }}</span>
-                                    </p>
-                                </li>
-                                @endforeach
-                                @else
-                                <li>
-                                    <p class="fs-8 fw-bold text-muted">No services available for this entry.</p>
-                                </li>
-                                @endif
-                                @endforeach
-                                @endif
-
-
-
-                            </ul>
-
-
-
-
-                        </div>
-                    </div>
-                </div>
-
-
-
-                <!-- Tab panes for About -->
-                <div class="tab-content p-0 mt-4" id="myTabContent">
-
-
-
-                    <!-- Pathology Tab -->
-                    <div class="tab-pane fade show active" id="about" role="tabpanel" aria-labelledby="about-tab">
-
-
-
-
-                        <div class="section-title bg-light rounded h-100 p-5">
-                            <h5 class="position-relative d-inline-block text-primary text-uppercase">About Clinic
-                            </h5>
-
-                            @if($aboutClinics->isEmpty())
-
-                            <div class="alert alert-primary w-100 mt-2 text-center mx-4">
-                                No About Details found. Please try again later.
-                            </div>
-
-                            @else
-
-                            @foreach($aboutClinics as $ac)
-                            <div class="about_clinic">
-                                <p class="p-3 bg-white" style="text-align: justify;">
-                                    {{$ac->about_details}}
-                                </p>
-                            </div>
-
-
-
-                            <h5 class="position-relative d-inline-block text-primary text-uppercase mt-3">Mission
-                            </h5>
-
-
-
-                            <div class="about_clinic">
-                                <p class="p-3 bg-white" style="text-align: justify;">
-                                    {{$ac->mission_details}}
-                                </p>
-                            </div>
-
-
-
-
-
-                            <h5 class="position-relative d-inline-block text-primary text-uppercase mt-3">Vision
-                            </h5>
-
-
-
-                            <div class="about_clinic">
-                                <p class="p-3 bg-white" style="text-align: justify;">
-                                    {{$ac->vision_details}}
-                                </p>
-                            </div>
-                            @endforeach
-                            @endif
-
-
-                        </div>
-
-
-
-
-
-                    </div>
-                </div>
-
-
-
-
-
-
-
-
-            </div>
-
-
-            <br><br><br><br><br>
+    {{-- ══ TABS ════════════════════════════════════════════════════ --}}
+    <div class="tabs-wrap">
+        <div class="tabs-scroll">
+            <button class="tab-btn active" data-tab="schedule">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="4" width="18" height="18" rx="2" />
+                    <line x1="16" y1="2" x2="16" y2="6" />
+                    <line x1="8" y1="2" x2="8" y2="6" />
+                    <line x1="3" y1="10" x2="21" y2="10" />
+                </svg>
+                Schedule & Info
+            </button>
+            <button class="tab-btn" data-tab="photos">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="3" width="18" height="18" rx="2" />
+                    <circle cx="8.5" cy="8.5" r="1.5" />
+                    <polyline points="21 15 16 10 5 21" />
+                </svg>
+                Photos
+            </button>
+            <button class="tab-btn" data-tab="services">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10" />
+                    <line x1="12" y1="8" x2="12" y2="16" />
+                    <line x1="8" y1="12" x2="16" y2="12" />
+                </svg>
+                Services
+            </button>
+            <button class="tab-btn" data-tab="about">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10" />
+                    <line x1="12" y1="16" x2="12" y2="12" />
+                    <line x1="12" y1="8" x2="12.01" y2="8" />
+                </svg>
+                About
+            </button>
         </div>
     </div>
-    <!-- Tab bar End -->
 
+    {{-- ══ CONTENT ═════════════════════════════════════════════════ --}}
+    <div class="content">
 
+        {{-- ── SCHEDULE TAB ────────────────────────────────────── --}}
+        <div class="tab-panel active" id="tab-schedule">
+            <div class="sec-label">Visit Schedule & Details</div>
 
-
-
-
-
-
-
-
-
-    <!-- doctor view modal -->
-    <div class="modal fade" id="myDoctorViewModal{{$doc->id}}" tabindex="-1" aria-labelledby="myDoctorViewModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h2 class="modal-title text-primary txt-cap" id="exampleModalLabel"><img src="{{ asset('img/doctor.png') }}" width="40"
-                            alt=""> {{$doc->partner_doctor_designation}} {{$doc->partner_doctor_name}}</h2>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <div class="sched-card">
+                {{-- Header --}}
+                <div class="sched-head">
+                    <div class="sched-head-avatar">
+                        <img src="{{ asset('img/doctor.png') }}" alt="Doctor">
+                    </div>
+                    <div>
+                        <div class="sched-head-name">{{ $doc->partner_doctor_designation }} {{ $doc->partner_doctor_name }}</div>
+                        <div class="sched-head-sub">{{ $doc->partner_doctor_specialist }} · ₹ {{ $doc->partner_doctor_fees }}</div>
+                    </div>
                 </div>
-                <div class="modal-body">
-                    <p class="sp txt-cap"><strong class="d-flex align-items-center gap-2"><img src="{{asset('img/surgeon.png')}}" alt="" width="27"> Specialization: {{$doc->partner_doctor_specialist}}</strong></p>
-                    <p class="fees"><strong class="d-flex align-items-center gap-2"><img src="{{asset('img/pay.png')}}" alt="" width="27"> Fees: ₹ {{$doc->partner_doctor_fees}}</strong></p>
 
+                {{-- Body --}}
+                <div class="sched-body">
 
-                    <div class="time">
-                        <table class="table">
+                    {{-- Schedule table --}}
+                    <div class="sched-table-wrap">
+                        <div class="sched-tbl-label">📅 Weekly Visit Schedule</div>
+                        @if(!empty($doc->visit_day_time) && is_array($doc->visit_day_time))
+                        <table class="sched-tbl">
                             <thead>
                                 <tr>
-                                    <th scope="col">#</th>
-                                    <th scope="col">Day</th>
-                                    <th scope="col">Time</th>
-                                    <th scope="col">Status</th>
+                                    <th>#</th>
+                                    <th>Day</th>
+                                    <th>From</th>
+                                    <th>To</th>
+                                    <th>Status</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @if(!empty($doc->visit_day_time) && is_array($doc->visit_day_time))
-                                @foreach($doc->visit_day_time as $index => $visit)
+                                @foreach($doc->visit_day_time as $i => $visit)
                                 <tr>
-                                    <!-- Row number -->
-                                    <th scope="row">{{ $index + 1 }}</th>
-
-                                    <!-- Day -->
-                                    <td>{{ $visit['day'] ?? 'N/A' }}</td>
-
-                                    <!-- Start and End Time -->
+                                    <td>{{ $i + 1 }}</td>
+                                    <td><strong style="color:var(--navy)">{{ $visit['day'] ?? 'N/A' }}</strong></td>
                                     <td>
-                                        @if(!empty($visit['start_time']) && !empty($visit['end_time']))
-                                        {{ \Carbon\Carbon::parse($visit['start_time'])->format('h:i A') }} - {{ \Carbon\Carbon::parse($visit['end_time'])->format('h:i A') }}
+                                        @if(!empty($visit['start_time']))
+                                        {{ \Carbon\Carbon::parse($visit['start_time'])->format('h:i A') }}
                                         @else
-                                        No time available
+                                        <span style="color:var(--muted)">—</span>
                                         @endif
                                     </td>
-
-                                    <!-- Status -->
+                                    <td>
+                                        @if(!empty($visit['end_time']))
+                                        {{ \Carbon\Carbon::parse($visit['end_time'])->format('h:i A') }}
+                                        @else
+                                        <span style="color:var(--muted)">—</span>
+                                        @endif
+                                    </td>
                                     <td>
                                         @if($doc->status == 'Available')
-                                        <span class="badge bg-success">{{ $doc->status }}</span>
+                                        <span class="sbadge sbadge-ok">Available</span>
                                         @elseif($doc->status == 'Unavailable')
-                                        <span class="badge bg-danger">{{ $doc->status }}</span>
+                                        <span class="sbadge sbadge-no">Unavailable</span>
                                         @else
-                                        <span class="badge bg-secondary">{{ $doc->status }}</span> <!-- Default for other statuses -->
+                                        <span class="sbadge sbadge-def">{{ $doc->status ?? 'N/A' }}</span>
                                         @endif
                                     </td>
                                 </tr>
                                 @endforeach
-                                @else
-                                <!-- No data found -->
-                                <tr class="text-muted">
-                                    <td colspan="4">No data found</td>
-                                </tr>
-                                @endif
                             </tbody>
-
-
                         </table>
+                        @else
+                        <p style="color:var(--muted);font-size:13px;padding:8px 0">No schedule available.</p>
+                        @endif
                     </div>
 
-
-
-                    <button type="button" class="btn btn-primary w-100" data-bs-dismiss="modal">CLOSE IT</button>
-
-
-
-                </div>
-            </div>
-        </div>
-    </div>
-
-
-
-    <!-- inquiry send modal -->
-    <div class="modal fade" id="myInquirySendModal{{$doc->id}}" tabindex="-1" aria-labelledby="myInquirySendModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-
-                    <h3 class="text-center mb-2 text-primary">Fill this form and get best deals from Doctorwala </h3>
-
-                    <form action="{{route('dw.doctor.inquiry.store')}}" method="POST" enctype="multipart/form-data">
-                        @csrf
-
-                        <div class="row g-3">
-
-
-                            <div class="col-12" style="display: none;">
-                                <label for="currently_loggedin_partner_id" class="form-label fw-bold"><span class="text-danger"><i
-                                            class="fa fa-stethoscope" aria-hidden="true"></i></span> Partner ID</label>
-                                <input type="text" class="form-control border-0 bg-light px-4" id="currently_loggedin_partner_id"
-                                    name="currently_loggedin_partner_id" value="{{ $doc->currently_loggedin_partner_id}}" style="height: 55px;" readonly>
-                            </div>
-
-                            <div class="col-12" style="display: none;">
-                                <label for="clinic_type" class="form-label fw-bold"><span class="text-danger"><i
-                                            class="fa fa-stethoscope" aria-hidden="true"></i></span> Clinic Type</label>
-                                <input type="text" class="form-control border-0 bg-light px-4" id="clinic_type"
-                                    name="clinic_type" value="Doctor" style="height: 55px;" readonly>
-                            </div>
-
-
-                            <div class="col-12 mt-2">
-                                <label for="clinic_name" class="form-label fw-bold"><span class="text-danger"><i
-                                            class="fa fa-stethoscope" aria-hidden="true"></i></span> Inquiry
-                                    About</label>
-                                <input type="text" class="form-control border-0 bg-light px-4" id="clinic_name"
-                                    name="clinic_name" value="{{ $doc->partner_doctor_name}}" style="height: 55px;" readonly>
-                            </div>
-
-
-                            <div class="col-6">
-                                <label for="user_name" class="form-label fw-bold"><span class="text-danger"><i
-                                            class="fa fa-stethoscope" aria-hidden="true"></i></span> Your Name</label>
-                                @auth
-                                <input type="text" class="form-control border-0 bg-light px-4" value="{{ $user->user_name }}"
-                                    name="user_name" id="user_name" style="height: 55px;" readonly>
-                                @endauth
-                                @guest
-                                <input type="text" class="form-control border-0 bg-light px-4" value="" name="user_name" id="user_name" style="height: 55px;" required>
-                                @endguest
-                            </div>
-
-                            <div class="col-6">
-                                <label for="user_mobile" class="form-label fw-bold"><span class="text-danger"><i
-                                            class="fa fa-stethoscope" aria-hidden="true"></i></span> Your Mobile</label>
-                                @auth
-                                <input type="text" class="form-control border-0 bg-light px-4" value="{{ $user->user_mobile }}"
-                                    name="user_mobile" id="user_mobile" style="height: 55px;" readonly>
-                                @endauth
-                                @guest
-                                <input type="text" class="form-control border-0 bg-light px-4" value="" name="user_mobile" id="user_mobile" style="height: 55px;" required>
-                                @endguest
-                            </div>
-
-                            <div class="col-12">
-                                <label for="user_email" class="form-label fw-bold"><span class="text-danger"><i
-                                            class="fa fa-stethoscope" aria-hidden="true"></i></span> Your Email</label>
-                                @auth
-                                <input type="text" class="form-control border-0 bg-light px-4"
-                                    value="{{ $user->user_email }}" name="user_email" id="user_email" style="height: 55px;" readonly>
-                                @endauth
-                                @guest
-                                <input type="text" class="form-control border-0 bg-light px-4" value="" name="user_email" id="user_email" style="height: 55px;" required>
-                                @endguest
-                            </div>
-
-
-                            <div class="col-12">
-                                <label for="user_inquiry" class="form-label fw-bold"><span class="text-danger"><i
-                                            class="fa fa-stethoscope" aria-hidden="true"></i></span> Your
-                                    Inquiry</label>
-                                <textarea class="form-control border-0 bg-light px-4 py-3" rows="5"
-                                    placeholder="Message" name="user_inquiry" id="user_inquiry" required></textarea>
-                            </div>
-                            <div class="col-12">
-                                <button class="btn btn-primary w-100 py-3" type="submit">Book Appointment</button>
+                    {{-- Info + actions --}}
+                    <div class="sched-aside">
+                        <div class="sa-block">
+                            <div class="sa-lbl">Specialization</div>
+                            <div class="sa-val">{{ $doc->partner_doctor_specialist }}</div>
+                        </div>
+                        <div class="sa-block">
+                            <div class="sa-lbl">Designation</div>
+                            <div class="sa-val">{{ $doc->partner_doctor_designation }}</div>
+                        </div>
+                        <div class="sa-block">
+                            <div class="sa-lbl">Consultation Fee</div>
+                            <div class="sa-val sa-val--fee">₹ {{ $doc->partner_doctor_fees }}</div>
+                        </div>
+                        <div class="sa-block">
+                            <div class="sa-lbl">Address</div>
+                            <div class="sa-val sa-val--sm">
+                                {{ $doc->partner_doctor_address }}{{ $doc->partner_doctor_landmark ? ', ' . $doc->partner_doctor_landmark : '' }},
+                                {{ $doc->partner_doctor_city }}, {{ $doc->partner_doctor_state }}
                             </div>
                         </div>
-                    </form>
+
+                        <div class="sa-btns">
+                            <button class="abtn abtn-rose" onclick="openM('inquiryModal{{ $doc->id }}')">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                    <rect x="3" y="4" width="18" height="18" rx="2" />
+                                    <line x1="16" y1="2" x2="16" y2="6" />
+                                    <line x1="8" y1="2" x2="8" y2="6" />
+                                    <line x1="3" y1="10" x2="21" y2="10" />
+                                </svg>
+                                Book Appointment
+                            </button>
+                            <a href="tel:{{ $doc->partner_doctor_mobile }}" class="abtn abtn-call">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                    <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 10.8a19.79 19.79 0 01-3.07-8.67A2 2 0 012 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.92z" />
+                                </svg>
+                                Call Doctor
+                            </a>
+                        </div>
+                    </div>
 
                 </div>
             </div>
         </div>
-    </div>
 
-
-    @if(session('success'))
-    <script>
-        const successModal = new bootstrap.Modal(document.getElementById('inqurySendSuccessModal'));
-        successModal.show();
-    </script>
-    @endif
-
-    @if(session('error'))
-    <script>
-        const errorModal = new bootstrap.Modal(document.getElementById('inqurySendUnsuccessModal'));
-        errorModal.show();
-    </script>
-    @endif
-
-    @if(session('success') || session('error'))
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const modalId = "{{ session('success') ? 'inqurySendSuccessModal' : 'inqurySendUnsuccessModal' }}";
-            const modal = new bootstrap.Modal(document.getElementById(modalId));
-            modal.show();
-        });
-    </script>
-    @endif
-
-    <!-- inqury send success modal start -->
-    <div class="modal fade" id="inqurySendSuccessModal" tabindex="-1" aria-labelledby="inqurySendSuccessModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-body d-flex flex-column align-middle justify-center align-items-center">
-                    <h2 class="modal-title" id="profileUpdateSuccessModalLabel"><span class="text-primary">+</span> SUCCESS <span class="text-primary">+</span></h2>
-                    @auth
-                    <h2 class="text-primary text-center">Hello {{ $user->user_name }}, Your Inquiry Is Sent Successfully</h2>
-                    @endauth
-                    @guest
-                    <h2 class="text-primary text-center">Hello Guest User, Your Inquiry Is Sent Successfully</h2>
-                    @endguest
+        {{-- ── PHOTOS TAB ──────────────────────────────────────── --}}
+        <div class="tab-panel" id="tab-photos">
+            <div class="sec-label">Photos</div>
+            @if($photos->isEmpty())
+            <div class="empty">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <rect x="3" y="3" width="18" height="18" rx="2" />
+                    <circle cx="8.5" cy="8.5" r="1.5" />
+                </svg>
+                <p>No photos found. Please try again later.</p>
+            </div>
+            @else
+            <div class="photo-grid">
+                @foreach($photos as $photo)
+                @php $imgs = is_string($photo->images) ? json_decode($photo->images, true) : $photo->images; @endphp
+                @if(!empty($imgs) && is_array($imgs))
+                @foreach($imgs as $item)
+                <div class="photo-item" onclick="openPhoto('{{ asset('storage/' . $item) }}')">
+                    <img src="{{ asset('storage/' . $item) }}" alt="Photo">
+                    <div class="photo-over">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7" />
+                        </svg>
+                    </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn p-2 btn-primary w-100" data-bs-dismiss="modal">CLOSE</button>
+                @endforeach
+                @else
+                <p style="color:var(--muted)">No images for this entry.</p>
+                @endif
+                @endforeach
+            </div>
+            @endif
+        </div>
+
+        {{-- ── SERVICES TAB ────────────────────────────────────── --}}
+        <div class="tab-panel" id="tab-services">
+            <div class="sec-label">Service Lists</div>
+            @if($services->isEmpty())
+            <div class="empty">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2" />
+                </svg>
+                <p>No Service Lists found. Please try again later.</p>
+            </div>
+            @else
+            <div class="svc-grid">
+                @foreach($services as $service)
+                @if(!empty($service->service_lists) && is_array($service->service_lists))
+                @foreach($service->service_lists as $list)
+                <div class="svc-item">
+                    <div class="svc-dot"></div>{{ $list }}
+                </div>
+                @endforeach
+                @else
+                <div class="svc-item" style="color:var(--muted)">No services for this entry.</div>
+                @endif
+                @endforeach
+            </div>
+            @endif
+        </div>
+
+        {{-- ── ABOUT TAB ───────────────────────────────────────── --}}
+        <div class="tab-panel" id="tab-about">
+            <div class="sec-label">About Doctor</div>
+            @if($aboutClinics->isEmpty())
+            <div class="empty">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <circle cx="12" cy="12" r="10" />
+                    <line x1="12" y1="16" x2="12" y2="12" />
+                </svg>
+                <p>No About Details found. Please try again later.</p>
+            </div>
+            @else
+            @foreach($aboutClinics as $ac)
+            <div class="about-list">
+                <div class="about-block">
+                    <span class="ab-tag">About</span>
+                    <h3>About the Doctor</h3>
+                    <p>{{ $ac->about_details }}</p>
+                </div>
+                <div class="about-block about-block--amb">
+                    <span class="ab-tag ab-tag--amb">Mission</span>
+                    <h3>Mission</h3>
+                    <p>{{ $ac->mission_details }}</p>
+                </div>
+                <div class="about-block about-block--rose">
+                    <span class="ab-tag ab-tag--rose">Vision</span>
+                    <h3>Vision</h3>
+                    <p>{{ $ac->vision_details }}</p>
                 </div>
             </div>
+            @endforeach
+            @endif
         </div>
-    </div>
-    <!-- inqury send success modal end -->
 
-    <!-- inqury send Unsuccess modal start -->
-    <div class="modal fade" id="inqurySendUnsuccessModal" tabindex="-1" aria-labelledby="inqurySendUnsuccessModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-body d-flex flex-column align-middle justify-center align-items-center">
-                    <h3 class="modal-title" id="profileUpdateSuccessModalLabel"><span class="text-primary">+</span> ERROR <span class="text-primary">+</span></h3>
-                    @auth
-                    <h4 class="text-danger text-center">Hello {{ $user->user_name }}, Your Inquiry Is Not Sent !!</h4>
-                    @endauth
-                    @guest
-                    <h4 class="text-danger text-center">Hello Guest User, Your Inquiry Is Not Sent !!</h4>
-                    @endguest
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn p-2 btn-primary w-100" data-bs-dismiss="modal">CLOSE</button>
-                </div>
+    </div>{{-- /content --}}
+
+    {{-- ══ MODALS ══════════════════════════════════════════════════ --}}
+
+    {{-- Book Appointment --}}
+    <div class="modal-ov" id="inquiryModal{{ $doc->id }}">
+        <div class="modal-box">
+            <div class="mhead">
+                <h3>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="4" width="18" height="18" rx="2" />
+                        <line x1="16" y1="2" x2="16" y2="6" />
+                        <line x1="8" y1="2" x2="8" y2="6" />
+                        <line x1="3" y1="10" x2="21" y2="10" />
+                    </svg>
+                    Book Appointment
+                </h3>
+                <button class="mclose" onclick="closeM('inquiryModal{{ $doc->id }}')">&times;</button>
             </div>
-        </div>
-    </div>
-    <!-- inqury send Unsuccess modal end -->
-
-
-
-
-
-
-
-
-
-
-    <!-- feedback send modal -->
-    <div class="modal fade" id="myFeedBackModal{{ $doc->id }}" tabindex="-1" aria-labelledby="myFeedBackModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-
-                    <h3 class="text-center mb-2 text-primary">Give Your Valuable Feedback </h3>
-
-                    <form class="mt-3" action="{{ route('dw.doctor.rating.save') }}" method="POST" enctype="multipart/form-data">
-                        @csrf
-
-                        <p class="ratings d-flex  gap-3 mt-3 align-items-center flex-wrap" style="list-style-type: none;">
-                            <span><strong><i class="fa-solid fa-stethoscope text-danger me-2"></i>Rating :</strong></span>
-                            <a href="javascript:void(0);" class="rating-a" data-rating="1"><img src="{{asset('img/1.png')}}" width="35" alt="1"></a>
-                            <a href="javascript:void(0);" class="rating-a" data-rating="2"><img src="{{asset('img/2.png')}}" width="35" alt="2"></a>
-                            <a href="javascript:void(0);" class="rating-a" data-rating="3"><img src="{{asset('img/3.png')}}" width="35" alt="3"></a>
-                            <a href="javascript:void(0);" class="rating-a" data-rating="4"><img src="{{asset('img/5.png')}}" width="35" alt="4"></a>
-                            <a href="javascript:void(0);" class="rating-a" data-rating="5"><img src="{{asset('img/4.png')}}" width="35" alt="5"></a>
-                        </p>
-
-                        <input type="hidden" id="rating" name="rating" value="0" required>
-                        <p><i class="fa fa-star text-warning" aria-hidden="true"></i> Your Rating is: <b><span id="user-rating" class="text-danger">0</span> out of 5</b></p>
-
-
-                        <div class="row g-3">
-
-                            <div class="col-12" style="display: none;">
-                                <label for="currently_loggedin_partner_id" class="form-label fw-bold"><span class="text-danger"><i
-                                            class="fa fa-stethoscope" aria-hidden="true"></i></span> Partner ID</label>
-                                <input type="text" class="form-control border-0 bg-light px-4" id="currently_loggedin_partner_id"
-                                    name="currently_loggedin_partner_id" value="{{ $doc->currently_loggedin_partner_id}}" style="height: 55px;" readonly>
-                            </div>
-
-                            <div class="col-12" style="display: none;">
-                                <label for="clinic_type" class="form-label fw-bold"><span class="text-danger"><i
-                                            class="fa fa-stethoscope" aria-hidden="true"></i></span> Clinic Type</label>
-                                <input type="text" class="form-control border-0 bg-light px-4" id="clinic_type"
-                                    name="clinic_type" value="Doctor" style="height: 55px;" readonly>
-                            </div>
-
-
-                            <div class="col-12 mt-2" style="display: none;">
-                                <label for="clinic_name" class="form-label fw-bold"><span class="text-danger"><i
-                                            class="fa fa-stethoscope" aria-hidden="true"></i></span> Inquiry
-                                    About</label>
-                                <input type="text" class="form-control border-0 bg-light px-4" id="clinic_name"
-                                    name="clinic_name" value="{{ $doc->partner_doctor_name}}" style="height: 55px;" readonly>
-                            </div>
-
-                            <div class="col-6">
-                                <label for="user_name" class="form-label fw-bold"><span class="text-danger"><i
-                                            class="fa fa-stethoscope" aria-hidden="true"></i></span> Your Name</label>
+            <div class="mbody">
+                <form action="{{ route('dw.doctor.inquiry.store') }}" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    <input type="hidden" name="currently_loggedin_partner_id" value="{{ $doc->currently_loggedin_partner_id }}">
+                    <input type="hidden" name="clinic_type" value="Doctor">
+                    <div class="fg">
+                        <div class="fgrp">
+                            <label class="flbl">Inquiry About</label>
+                            <input class="fc" name="clinic_name" value="{{ $doc->partner_doctor_name }}" readonly>
+                        </div>
+                        <div class="fr">
+                            <div class="fgrp">
+                                <label class="flbl">Your Name</label>
                                 @auth
-                                <input type="text" class="form-control border-0 bg-light px-4" value="{{ $user->user_name }}"
-                                    name="user_name" id="user_name" style="height: 55px;" readonly>
+                                <input class="fc" name="user_name" value="{{ $user->user_name }}" readonly>
                                 @endauth
                                 @guest
-                                <input type="text" class="form-control border-0 bg-light px-4" value="Guest" name="user_name" id="user_name" style="height: 55px;">
+                                <input class="fc" name="user_name" placeholder="Your name" required>
                                 @endguest
                             </div>
-
-                            <div class="col-6">
-                                <label for="user_email" class="form-label fw-bold"><span class="text-danger"><i
-                                            class="fa fa-stethoscope" aria-hidden="true"></i></span> Your Email</label>
+                            <div class="fgrp">
+                                <label class="flbl">Mobile *</label>
                                 @auth
-                                <input type="text" class="form-control border-0 bg-light px-4"
-                                    value="{{ $user->user_email }}" name="user_email" id="user_email" style="height: 55px;" readonly>
+                                <input class="fc" name="user_mobile" type="tel" value="{{ $user->user_mobile }}">
                                 @endauth
                                 @guest
-                                <input type="text" class="form-control border-0 bg-light px-4" value="Guest" name="user_email" id="user_email" style="height: 55px;">
+                                <input class="fc" name="user_mobile" type="tel" placeholder="Mobile number" required>
                                 @endguest
-                            </div>
-
-                            <div class="col-12">
-                                <label for="feedback" class="form-label fw-bold"><span class="text-danger"><i
-                                            class="fa fa-stethoscope" aria-hidden="true"></i></span> Your
-                                    Feedback</label>
-                                <textarea class="form-control border-0 bg-light px-4 py-3" rows="5"
-                                    placeholder="Feedback" name="feedback" id="feedback" required></textarea>
-                            </div>
-
-
-                            <div class="col-12">
-                                <button class="btn btn-primary w-100 py-3" type="submit">Send Feedback</button>
                             </div>
                         </div>
-                    </form>
+                        <div class="fgrp">
+                            <label class="flbl">Email</label>
+                            @auth
+                            <input class="fc" name="user_email" type="email" value="{{ $user->user_email }}" readonly>
+                            @endauth
+                            @guest
+                            <input class="fc" name="user_email" type="email" placeholder="Email address" required>
+                            @endguest
+                        </div>
+                        <div class="fgrp">
+                            <label class="flbl">Your Message *</label>
+                            <textarea class="fc" name="user_inquiry" rows="3" placeholder="Describe your concern..." required></textarea>
+                        </div>
+                        <button type="submit" class="btn-sub btn-sub-rose">Book Appointment</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 
+    {{-- Feedback --}}
+    <div class="modal-ov" id="feedbackModal{{ $doc->id }}">
+        <div class="modal-box">
+            <div class="mhead">
+                <h3>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" />
+                    </svg>
+                    Your Feedback
+                </h3>
+                <button class="mclose" onclick="closeM('feedbackModal{{ $doc->id }}')">&times;</button>
+            </div>
+            <div class="mbody">
+                <form action="{{ route('dw.doctor.rating.save') }}" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    <input type="hidden" name="currently_loggedin_partner_id" value="{{ $doc->currently_loggedin_partner_id }}">
+                    <input type="hidden" name="clinic_type" value="Doctor">
+                    <input type="hidden" name="clinic_name" value="{{ $doc->partner_doctor_name }}">
+                    <div class="fg">
+                        <div>
+                            <div class="flbl" style="margin-bottom:6px">Rate your experience</div>
+                            <div class="rat-row">
+                                @for($i=1;$i<=5;$i++)
+                                    <a href="javascript:void(0);" class="rat-a" data-r="{{ $i }}">
+                                    <img src="{{ asset('img/'.$i.'.png') }}" alt="{{ $i }}">
+                                    </a>
+                                    @endfor
+                            </div>
+                            <input type="hidden" id="feedRating" name="rating" value="0">
+                            <div class="rat-txt">Selected: <strong><span id="ratingDisplay">0</span>/5</strong></div>
+                        </div>
+                        <div class="fr">
+                            <div class="fgrp">
+                                <label class="flbl">Name</label>
+                                @auth
+                                <input class="fc" name="user_name" value="{{ $user->user_name }}" readonly>
+                                @endauth
+                                @guest
+                                <input class="fc" name="user_name" value="Guest" readonly>
+                                @endguest
+                            </div>
+                            <div class="fgrp">
+                                <label class="flbl">Email</label>
+                                @auth
+                                <input class="fc" name="user_email" value="{{ $user->user_email }}">
+                                @endauth
+                                @guest
+                                <input class="fc" name="user_email" placeholder="Your email">
+                                @endguest
+                            </div>
+                        </div>
+                        <div class="fgrp">
+                            <label class="flbl">Feedback *</label>
+                            <textarea class="fc" name="feedback" rows="3" placeholder="Share your experience with this doctor..." required></textarea>
+                        </div>
+                        <button type="submit" class="btn-sub btn-sub-pur">Send Feedback</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    {{-- Photo Viewer --}}
+    <div class="modal-ov" id="photoViewer">
+        <div class="modal-box">
+            <div class="mhead">
+                <h3>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="3" width="18" height="18" rx="2" />
+                    </svg>
+                    Photo
+                </h3>
+                <button class="mclose" onclick="closeM('photoViewer')">&times;</button>
+            </div>
+            <div class="mbody"><img id="pvImg" class="pv-img" src="" alt="Photo"></div>
+        </div>
+    </div>
+
+    {{-- Result Modals --}}
+    <div class="modal-ov" id="inqurySendSuccessModal">
+        <div class="modal-box">
+            <div class="mbody">
+                <div class="res-wrap">
+                    <div class="res-icon res-ok"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="3">
+                            <polyline points="20 6 9 17 4 12" />
+                        </svg></div>
+                    <h3>Appointment Booked!</h3>
+                    <p>
+                        @auth Hello {{ $user->user_name }}, your inquiry was sent successfully! @endauth
+                        @guest Your inquiry was sent successfully! @endguest
+                    </p>
+                    <button class="btn-sub btn-sub-teal" onclick="closeM('inqurySendSuccessModal')">Close</button>
                 </div>
             </div>
         </div>
     </div>
 
-
-
-    @if(session('successFeed'))
-    <script>
-        const successModalFeed = new bootstrap.Modal(document.getElementById('feedSendSuccessModal'));
-        successModal.show();
-    </script>
-    @endif
-
-    @if(session('errorFeed'))
-    <script>
-        const errorModalFeed = new bootstrap.Modal(document.getElementById('feedSendUnsuccessModal'));
-        errorModal.show();
-    </script>
-    @endif
-
-    @if(session('successFeed') || session('errorFeed'))
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const modalId = "{{ session('successFeed') ? 'feedSendSuccessModal' : 'feedSendUnsuccessModal' }}";
-            const modal = new bootstrap.Modal(document.getElementById(modalId));
-            modal.show();
-        });
-    </script>
-    @endif
-
-    <!-- feed send success modal start -->
-    <div class="modal fade" id="feedSendSuccessModal" tabindex="-1" aria-labelledby="feedSendSuccessModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-body d-flex flex-column align-middle justify-center align-items-center">
-                    <h2 class="modal-title" id="profileUpdateSuccessModalLabel"><span class="text-primary">+</span> SUCCESS <span class="text-primary">+</span></h2>
-                    @auth
-                    <h2 class="text-primary text-center">Hello {{ $user->user_name }}, Thanks for Your Feedback</h2>
-                    @endauth
-                    @guest
-                    <h2 class="text-primary text-center">Hello Guest User, Thanks for Your Feedback</h2>
-                    @endguest
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn p-2 btn-primary w-100" data-bs-dismiss="modal">CLOSE</button>
+    <div class="modal-ov" id="inqurySendUnsuccessModal">
+        <div class="modal-box">
+            <div class="mbody">
+                <div class="res-wrap">
+                    <div class="res-icon res-err"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="3">
+                            <line x1="18" y1="6" x2="6" y2="18" />
+                            <line x1="6" y1="6" x2="18" y2="18" />
+                        </svg></div>
+                    <h3>Oops! Something went wrong.</h3>
+                    <p>Your inquiry could not be sent. Please try again.</p>
+                    <button class="btn-sub btn-sub-rose" onclick="closeM('inqurySendUnsuccessModal')">Close</button>
                 </div>
             </div>
         </div>
     </div>
-    <!-- feed send success modal end -->
 
-    <!-- feed send Unsuccess modal start -->
-    <div class="modal fade" id="feedSendUnsuccessModal" tabindex="-1" aria-labelledby="feedSendUnsuccessModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-body d-flex flex-column align-middle justify-center align-items-center">
-                    <h3 class="modal-title" id="profileUpdateSuccessModalLabel"><span class="text-primary">+</span> ERROR <span class="text-primary">+</span></h3>
-                    @auth
-                    <h4 class="text-danger text-center">Hello {{ $user->user_name }}, There was an error in sending your feedback, Please try again!</h4>
-                    @endauth
-                    @guest
-                    <h4 class="text-danger text-center">Hello Guest User, There was an error in sending your feedback, Please try again!</h4>
-                    @endguest
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn p-2 btn-primary w-100" data-bs-dismiss="modal">CLOSE</button>
+    <div class="modal-ov" id="feedSendSuccessModal">
+        <div class="modal-box">
+            <div class="mbody">
+                <div class="res-wrap">
+                    <div class="res-icon res-ok"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="3">
+                            <polyline points="20 6 9 17 4 12" />
+                        </svg></div>
+                    <h3>Thank You!</h3>
+                    <p>
+                        @auth Hello {{ $user->user_name }}, thanks for your feedback! @endauth
+                        @guest Thanks for your feedback! @endguest
+                    </p>
+                    <button class="btn-sub btn-sub-teal" onclick="closeM('feedSendSuccessModal')">Close</button>
                 </div>
             </div>
         </div>
     </div>
-    <!-- feed send Unsuccess modal end -->
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    <div class="modal-ov" id="feedSendUnsuccessModal">
+        <div class="modal-box">
+            <div class="mbody">
+                <div class="res-wrap">
+                    <div class="res-icon res-err"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="3">
+                            <line x1="18" y1="6" x2="6" y2="18" />
+                            <line x1="6" y1="6" x2="18" y2="18" />
+                        </svg></div>
+                    <h3>Error Sending Feedback</h3>
+                    <p>There was a problem. Please try again later.</p>
+                    <button class="btn-sub btn-sub-rose" onclick="closeM('feedSendUnsuccessModal')">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
 
 
@@ -1497,7 +1326,7 @@
                 <button type="button" class="gs-quick-tag" data-val="General Physician">General Physician</button>
                 <button type="button" class="gs-quick-tag" data-val="General Surgeon">General Surgeon</button>
                 <button type="button" class="gs-quick-tag" data-val="Gynecologist">Gynecologist</button>
-                
+
             </div>
 
             <!-- ESC hint -->
@@ -1559,6 +1388,7 @@
     <script src="{{asset('../lib/twentytwenty/jquery.twentytwenty.js')}}"></script>
 
     <script src="{{asset('../js/main.js')}}"></script>
+    <script src="{{asset('./js/float-btn.js')}}"></script>
 
 
     <script>
@@ -1635,7 +1465,73 @@
         });
     </script>
 
-    <script src="{{asset('./js/float-btn.js')}}"></script>
+    {{-- ══ JS ════════════════════════════════════════════════════════ --}}
+    <script>
+        // Tabs
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+                btn.classList.add('active');
+                document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+            });
+        });
+
+        // Modals
+        function openM(id) {
+            const e = document.getElementById(id);
+            if (e) {
+                e.classList.add('open');
+                document.body.style.overflow = 'hidden';
+            }
+        }
+
+        function closeM(id) {
+            const e = document.getElementById(id);
+            if (e) {
+                e.classList.remove('open');
+                document.body.style.overflow = '';
+            }
+        }
+        document.querySelectorAll('.modal-ov').forEach(el => {
+            el.addEventListener('click', e => {
+                if (e.target === el) closeM(el.id);
+            });
+        });
+        document.addEventListener('keydown', e => {
+            if (e.key === 'Escape') document.querySelectorAll('.modal-ov.open').forEach(m => closeM(m.id));
+        });
+
+        // Photo viewer
+        function openPhoto(src) {
+            document.getElementById('pvImg').src = src;
+            openM('photoViewer');
+        }
+
+        // Rating
+        document.querySelectorAll('.rat-a').forEach(a => {
+            a.addEventListener('click', () => {
+                const v = parseInt(a.dataset.r);
+                document.getElementById('feedRating').value = v;
+                document.getElementById('ratingDisplay').textContent = v;
+                document.querySelectorAll('.rat-a').forEach(r => r.classList.toggle('on', parseInt(r.dataset.r) <= v));
+            });
+        });
+
+        // Session flashes
+        @if(session('success'))
+        document.addEventListener('DOMContentLoaded', () => openM('inqurySendSuccessModal'));
+        @endif
+        @if(session('error'))
+        document.addEventListener('DOMContentLoaded', () => openM('inqurySendUnsuccessModal'));
+        @endif
+        @if(session('successFeed'))
+        document.addEventListener('DOMContentLoaded', () => openM('feedSendSuccessModal'));
+        @endif
+        @if(session('errorFeed'))
+        document.addEventListener('DOMContentLoaded', () => openM('feedSendUnsuccessModal'));
+        @endif
+    </script>
 </body>
 
 </html>
