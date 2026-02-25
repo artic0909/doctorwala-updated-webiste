@@ -1,56 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
+@extends('frontend.layout.app')
+
+@section('title', 'Doctorwala | Your Medical Ecosystem')
+
+@section('content')
 
 <head>
-    <meta charset="utf-8">
-    <title>Doctorwala | Your Medical Ecosystem</title>
-    <meta content="width=device-width, initial-scale=1.0" name="viewport">
-
-    <link href="{{asset('fav5.png')}}" rel="icon">
-
-    <!-- Google Web Fonts -->
-    <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link
-        href="https://fonts.googleapis.com/css2?family=Jost:wght@500;600;700&family=Open+Sans:wght@400;600&display=swap"
-        rel="stylesheet">
-
-    <!-- Icon Font Stylesheet -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.0/css/all.min.css"
-        integrity="sha512-9xKTRVabjVeZmc+GUW8GgSmcREDunMM+Dt/GrzchfN8tkwHizc5RP4Ok/MXFFy5rIjJjzhndFScTceq5e6GvVQ=="
-        crossorigin="anonymous" referrerpolicy="no-referrer" />
-
-    <!-- Libraries Stylesheet -->
-    <link href="{{asset('./lib/owlcarousel/assets/owl.carousel.min.css')}}" rel="stylesheet">
-    <link href="{{asset('./lib/animate/animate.min.css')}}" rel="stylesheet">
-    <link href="{{asset('./lib/tempusdominus/css/tempusdominus-bootstrap-4.min.css')}}" rel="stylesheet" />
-    <link href="{{asset('./lib/twentytwenty/twentytwenty.css')}}" rel="stylesheet" />
-
-    <!-- Customized Bootstrap Stylesheet -->
-    <link href="{{asset('./css/bootstrap.min.css')}}" rel="stylesheet">
-
-    <!-- Template Stylesheet -->
-    <link href="{{asset('./css/style.css')}}" rel="stylesheet">
-    <link href="{{asset('./css/cards-css.css')}}" rel="stylesheet">
-    <link href="{{asset('./css/service.css')}}" rel="stylesheet">
-
-    <!-- Carousels -->
-    <link href="{{asset('./css/opd-carousel-card.css')}}" rel="stylesheet">
-    <link href="{{asset('./css/path-carousel-card.css')}}" rel="stylesheet">
-    <link href="{{asset('./css/doc-carousel-card.css')}}" rel="stylesheet">
-
-    <!-- Search Area -->
-    <link href="{{asset('./css/serach-banner.css')}}" rel="stylesheet">
-    <link href="{{asset('./css/float-btn.css')}}" rel="stylesheet">
-
-    <link href="{{asset('./css/partner-btn.css')}}" rel="stylesheet">
-    <link href="{{asset('./responsive/index_responsive.css')}}" rel="stylesheet">
-    <link href="{{asset('./responsive/service_responsive.css')}}" rel="stylesheet">
-    <link href="{{asset('./css/topbar.css')}}" rel="stylesheet">
-
-
-
 
     <!-- SEO Meta Tags -->
     <meta name="description" content="Search for doctors, specialists, and pathology types. Find the best healthcare options tailored to your needs.">
@@ -154,1590 +108,787 @@
 
 </head>
 
-<body>
-    <!-- Spinner Start -->
-    <div id="spinner"
-        class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
-        <div class="spinner-grow text-primary m-1" role="status">
-            <span class="sr-only">Loading...</span>
-        </div>
-        <div class="spinner-grow text-dark m-1" role="status">
-            <span class="sr-only">Loading...</span>
-        </div>
-        <div class="spinner-grow text-secondary m-1" role="status">
-            <span class="sr-only">Loading...</span>
-        </div>
+
+
+
+
+<!-- Search Banner -->
+@guest
+<div class="container search-banner-section">
+    <div class="search-cards-row">
+
+        <!-- {{-- Card 1: Search All --}} -->
+        <form action="{{ route('search.result') }}" method="GET" class="search-card search-card-all wow zoomIn" data-wow-delay="0.1s">
+            <div class="search-card-header">
+                <div class="search-card-icon">
+                    <i class="fa fa-magnifying-glass"></i>
+                </div>
+                <div>
+                    <h3>Search Your Direct to Doctor</h3>
+                    <p>Doctor's name, Address, OPD, Pathology & All</p>
+                </div>
+            </div>
+
+            <input type="hidden" name="category" value="all">
+
+            <div class="search-input-wrap">
+                <i class="fa fa-search"></i>
+                <input type="text" name="query" class="form-control"
+                    placeholder="Search for Doctor / Path / OPD">
+            </div>
+
+            <button type="submit" class="btn btn-search">
+                <i class="fa fa-search"></i> Search Now
+            </button>
+
+        </form>
+
+        <!-- {{-- Card 2: Search OPD --}} -->
+        <form action="{{ route('search.result') }}" method="GET" class="search-card search-card-opd wow zoomIn" data-wow-delay="0.2s">
+            <div class="search-card-header">
+                <div class="search-card-icon">
+                    <i class="fa fa-hospital"></i>
+                </div>
+                <div>
+                    <h3>Search Your OPD Doctor</h3>
+                    <p>Find by specialist and type</p>
+                </div>
+            </div>
+            <div class="search-input-wrap">
+                <i class="fa fa-stethoscope"></i>
+                <input type="hidden" name="category" value="opd">
+
+                <select name="query" class="form-select">
+                    <option selected disabled>Select Specialist</option>
+                    @foreach($specialists as $specialist)
+                    <option value="{{ $specialist }}">
+                        {{ ucfirst($specialist) }}
+                    </option>
+                    @endforeach
+                </select>
+            </div>
+            <button id="searchOpdButton" class="btn btn-search">
+                <span class="spinner"></span>
+                <span class="btn-text"><i class="fa fa-user-doctor"></i> Search OPD</span>
+            </button>
+        </form>
+
+        <!-- {{-- Card 3: Search Pathology --}} -->
+        <form action="{{ route('search.result') }}" method="GET" class="search-card search-card-path wow zoomIn" data-wow-delay="0.3s">
+            <div class="search-card-header">
+                <div class="search-card-icon">
+                    <i class="fa fa-flask"></i>
+                </div>
+                <div>
+                    <h3>Search Your Test Pathology</h3>
+                    <p>Find by test type & name</p>
+                </div>
+            </div>
+            <div class="search-input-wrap">
+                <i class="fa fa-syringe"></i>
+                <input type="hidden" name="category" value="pathology">
+
+                <select name="query" class="form-select">
+                    <option selected disabled>Select Type</option>
+                    @foreach($types as $type)
+                    <option value="{{ $type }}">
+                        {{ ucfirst($type) }}
+                    </option>
+                    @endforeach
+                </select>
+            </div>
+            <button id="searchPathologyButton" class="btn btn-search">
+                <span class="spinner"></span>
+                <span class="btn-text"><i class="fa fa-syringe"></i> Search Pathology</span>
+            </button>
+        </form>
+
     </div>
-    <!-- Spinner End -->
+</div>
+@endguest
 
+@auth
+<div class="container search-banner-section">
+    <div class="search-cards-row">
 
-
-
-
-    <!-- ====== TOPBAR ====== -->
-    <div class="topbar">
-        <div class="topbar-inner">
-
-            <!-- LEFT -->
-            <div class="topbar-left">
-                <div class="hours-pill">
-                    <span class="live-dot"><span></span></span>
-                    <i class="far fa-clock"></i>
-                    24/7 Open
+        <!-- {{-- Card 1: Search All --}} -->
+        <form action="{{ route('dw.search.result') }}" method="GET" class="search-card search-card-all wow zoomIn" data-wow-delay="0.1s">
+            <div class="search-card-header">
+                <div class="search-card-icon">
+                    <i class="fa fa-magnifying-glass"></i>
                 </div>
-                <div class="ticker-wrap">
-                    <div class="ticker-track">
-                        <span class="t-item"><i class="fa fa-heart-pulse"></i> Expert doctors, trusted care</span>
-                        <span class="t-sep">✦</span>
-                        <span class="t-item"><i class="fa fa-calendar-check"></i> Easy online appointment booking</span>
-                        <span class="t-sep">✦</span>
-                        <span class="t-item"><i class="fa fa-stethoscope"></i> Quality healthcare for your family</span>
-                        <span class="t-sep">✦</span>
-                        <span class="t-item"><i class="fa fa-leaf"></i> Your health, our priority</span>
-                        <span class="t-sep">✦</span>
-                        <span class="t-item"><i class="fa fa-shield-halved"></i> Mon to Sun — always available</span>
-                        <span class="t-sep">✦</span>
-                        <!-- duplicate -->
-                        <span class="t-item"><i class="fa fa-heart-pulse"></i> Expert doctors, trusted care</span>
-                        <span class="t-sep">✦</span>
-                        <span class="t-item"><i class="fa fa-calendar-check"></i> Easy online appointment booking</span>
-                        <span class="t-sep">✦</span>
-                        <span class="t-item"><i class="fa fa-stethoscope"></i> Quality healthcare for your family</span>
-                        <span class="t-sep">✦</span>
-                        <span class="t-item"><i class="fa fa-leaf"></i> Your health, our priority</span>
-                        <span class="t-sep">✦</span>
-                        <span class="t-item"><i class="fa fa-shield-halved"></i> Mon to Sun — always available</span>
-                        <span class="t-sep">✦</span>
-                    </div>
+                <div>
+                    <h3>Search Your Direct to Doctor</h3>
+                    <p>Doctor's name, Address, OPD, Pathology & All</p>
                 </div>
             </div>
 
-            <!-- RIGHT -->
-            <div class="topbar-right">
-                @foreach($aboutDetails as $aboutDetail)
-                <a href="mailto:{{$aboutDetail->email}}" class="c-chip">
-                    <span class="c-ico"><i class="fa fa-envelope"></i></span>
-                    {{$aboutDetail->email}}
-                </a>
-                <a href="tel:{{$aboutDetail->number}}" class="c-chip">
-                    <span class="c-ico"><i class="fa fa-phone"></i></span>
-                    +91-{{$aboutDetail->number}}
-                </a>
-                @endforeach
+            <input type="hidden" name="category" value="all">
+
+            <div class="search-input-wrap">
+                <i class="fa fa-search"></i>
+                <input type="text" name="query" class="form-control"
+                    placeholder="Search for Doctor / Path / OPD">
             </div>
 
-        </div>
+            <button type="submit" class="btn btn-search">
+                <i class="fa fa-search"></i> Search Now
+            </button>
+
+        </form>
+
+        <!-- {{-- Card 2: Search OPD --}} -->
+        <form action="{{ route('dw.search.result') }}" method="GET" class="search-card search-card-opd wow zoomIn" data-wow-delay="0.2s">
+            <div class="search-card-header">
+                <div class="search-card-icon">
+                    <i class="fa fa-hospital"></i>
+                </div>
+                <div>
+                    <h3>Search Your OPD Doctor</h3>
+                    <p>Find by specialist and type</p>
+                </div>
+            </div>
+            <div class="search-input-wrap">
+                <i class="fa fa-stethoscope"></i>
+                <input type="hidden" name="category" value="opd">
+
+                <select name="query" class="form-select">
+                    <option selected disabled>Select Specialist</option>
+                    @foreach($specialists as $specialist)
+                    <option value="{{ $specialist }}">
+                        {{ ucfirst($specialist) }}
+                    </option>
+                    @endforeach
+                </select>
+            </div>
+            <button id="searchOpdButton" class="btn btn-search">
+                <span class="spinner"></span>
+                <span class="btn-text"><i class="fa fa-user-doctor"></i> Search OPD</span>
+            </button>
+        </form>
+
+        <!-- {{-- Card 3: Search Pathology --}} -->
+        <form action="{{ route('dw.search.result') }}" method="GET" class="search-card search-card-path wow zoomIn" data-wow-delay="0.3s">
+            <div class="search-card-header">
+                <div class="search-card-icon">
+                    <i class="fa fa-flask"></i>
+                </div>
+                <div>
+                    <h3>Search Your Test Pathology</h3>
+                    <p>Find by test type & name</p>
+                </div>
+            </div>
+            <div class="search-input-wrap">
+                <i class="fa fa-syringe"></i>
+                <input type="hidden" name="category" value="pathology">
+
+                <select name="query" class="form-select">
+                    <option selected disabled>Select Type</option>
+                    @foreach($types as $type)
+                    <option value="{{ $type }}">
+                        {{ ucfirst($type) }}
+                    </option>
+                    @endforeach
+                </select>
+            </div>
+            <button id="searchPathologyButton" class="btn btn-search">
+                <span class="spinner"></span>
+                <span class="btn-text"><i class="fa fa-syringe"></i> Search Pathology</span>
+            </button>
+        </form>
+
     </div>
-    <!-- ====== TOPBAR ====== -->
+</div>
+@endauth
+<!-- Search Banner End -->
 
 
 
-    @guest
-    <!-- Navbar Start -->
-    <nav class="navbar navbar-expand-lg bg-white navbar-light shadow-sm px-5 py-3 py-lg-0">
-        <a href="/" class="navbar-brand p-0">
-            <img class="m-0 nav-bar-logo" src="{{asset('img/logoo.png')}}" width="300" alt="DoctorWala">
-        </a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarCollapse">
-            <div class="navbar-nav ms-auto py-0">
-                <a href="/" class="nav-item nav-link active">Home</a>
-                <a href="/about" class="nav-item nav-link ">About</a>
-                <div class="nav-item dropdown">
-                    <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Search</a>
-                    <div class="dropdown-menu m-0">
-                        <a href="/opd" class="dropdown-item">OPD Details</a>
-                        <a href="/doctor" class="dropdown-item">Doctor Details</a>
-                        <a href="/pathology" class="dropdown-item">Pathology Details</a>
-                        <!-- <a href="/coupons" class="dropdown-item">Coupon Details </a> -->
-                    </div>
-                </div>
-                <a href="/blog" class="nav-item nav-link">Blogs</a>
+<!-- OPD Cards Start -->
+<div class="container-fluid bg-primary bg-appointment my-2 wow fadeInUp opd-section" data-wow-delay="0.1s" style="margin-top: -30px;">
+    <div class="container">
 
-                <a href="/contact" class="nav-item nav-link">Contact</a>
-                <a href="/privacy-policy" class="nav-item nav-link">Privacy Policy</a>
+        <!-- Header + Buttons -->
+        <div class="opd-controls">
+            <div>
+                <div class="section-badge">Available OPD</div>
+                <h1>Display Your OPD / Clinics</h1>
             </div>
-            <!-- <button type="button" class="btn text-dark" data-bs-toggle="modal" data-bs-target="#searchModal"><i
-                    class="fa fa-search"></i></button> -->
-
-
-            <a href="/dw/user-auth" class="btn btn-primary py-2 px-4 ms-3">Login</a>
-
-
-
-            <!-- <a href="" data-bs-toggle="modal" data-bs-target="#userProfileModal" class="btn btn-primary ms-3"><i
-                    class="fa fa-user" aria-hidden="true"></i></a> -->
-
-        </div>
-    </nav>
-    <!-- Navbar End -->
-    @endguest
-
-
-    @auth
-    <!-- Navbar Start -->
-    <nav class="navbar navbar-expand-lg bg-white navbar-light shadow-sm px-5 py-3 py-lg-0">
-        <a href="/dw" class="navbar-brand p-0">
-            <img class="m-0 nav-bar-logo" src="{{asset('img/logoo.png')}}" width="300" alt="DoctorWala">
-        </a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarCollapse">
-            <div class="navbar-nav ms-auto py-0">
-                <a href="" class="nav-item nav-link active">Home</a>
-                <a href="/dw/about" class="nav-item nav-link ">About</a>
-                <div class="nav-item dropdown">
-                    <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Search</a>
-                    <div class="dropdown-menu m-0">
-                        <a href="/dw/opd" class="dropdown-item">OPD Details</a>
-                        <a href="/dw/doctor" class="dropdown-item">Doctor Details</a>
-                        <a href="/dw/pathology" class="dropdown-item">Pathology Details</a>
-                        <!-- <a href="/dw/coupons" class="dropdown-item">Coupon Details </a> -->
-                    </div>
-                </div>
-                <a href="/dw/blog" class="nav-item nav-link">Blogs</a>
-
-                <a href="/dw/contact" class="nav-item nav-link">Contact</a>
-                <a href="/dw/privacy-policy" class="nav-item nav-link">Privacy Policy</a>
+            <div class="opd-btn-group">
+                <button class="opd-btn btn-prev-opd" aria-label="Previous" id="opdBtnPrev">
+                    <i class="bi bi-arrow-left"></i>
+                </button>
+                <button class="opd-btn btn-next-opd" aria-label="Next" id="opdBtnNext">
+                    <i class="bi bi-arrow-right"></i>
+                </button>
             </div>
-            <!-- <button type="button" class="btn text-dark" data-bs-toggle="modal" data-bs-target="#searchModal"><i
-                    class="fa fa-search"></i></button> -->
-
-
-            <!-- <a href="/dw/user-auth" class="btn btn-primary py-2 px-4 ms-3">Login</a> -->
-
-
-
-            <a href="" data-bs-toggle="modal" data-bs-target="#userProfileModal" class="btn btn-primary ms-3"><i
-                    class="fa fa-user" aria-hidden="true"></i></a>
-
         </div>
-    </nav>
-    <!-- Navbar End -->
-    @endauth
 
+        <!-- Cards -->
+        <div class="row overflow-hidden">
+            <div class="col-12">
+                <div class="scrolling-wrapper-opd" id="opdScrollWrapper">
+                    @foreach($opds as $opd)
+                    <div class="opd-card">
 
-
-
-    @auth
-    <!-- User Profile & Password Edit Modal -->
-    <div class="modal fade" id="userProfileModal" tabindex="-1" aria-labelledby="userProfileModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-body position-relative">
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-
-
-
-                    <form class="text-center" method="POST" action="{{ route('user.profile.update') }}">
-                        @csrf
-                        <h4 class="modal-title" id="userProfileModalLabel">User Profile</h4>
-                        <p class="mb-4">Update your profile details</p>
-                        <div class="row">
-
-
-                            <div class="col-md-12">
-                                <div class="form-floating mb-3">
-                                    <input type="text" class="form-control" id="user_name" name="user_name"
-                                        value="{{ $user->user_name }}">
-                                    <label for="user_name">Name</label>
-                                </div>
-                            </div>
-
-
-
-                            <div class="col-md-12">
-                                <div class="form-floating mb-3">
-                                    <input type="email" class="form-control" id="user_email" name="user_email"
-                                        value="{{ $user->user_email }}">
-                                    <label for="user_email">Email</label>
-                                </div>
-                            </div>
-
-                            <div class="col-md-6">
-                                <div class="form-floating mb-3">
-                                    <input type="number" class="form-control" id="user_mobile" name="user_mobile"
-                                        value="{{ $user->user_mobile }}">
-                                    <label for="user_mobile">Mobile</label>
-                                </div>
-                            </div>
-
-                            <div class="col-md-6">
-                                <div class="form-floating mb-3">
-                                    <input type="text" class="form-control" id="user_city" name="user_city"
-                                        value="{{ $user->user_city }}">
-                                    <label for="user_city">City</label>
-                                </div>
-                            </div>
-
-
-
-                            <div class="col-md-12">
-                                <div class="form-floating mb-3">
-                                    <button type="submit" class="btn btn-primary py-3 col-md-12">Update Profile</button>
-                                </div>
-                            </div>
-
-
-
+                        <!-- Image -->
+                        <div class="opd-card-img-wrap">
+                            @if($opd->banner && $opd->banner->opdbanner)
+                            <img src="{{ asset('storage/' . $opd->banner->opdbanner) }}" alt="{{ $opd->clinic_name }}">
+                            @else
+                            <img src="https://media.istockphoto.com/id/1222357475/vector/image-preview-icon-picture-placeholder-for-website-or-ui-ux-design-vector-illustration.jpg?s=612x612&w=0&k=20&c=KuCo-dRBYV7nz2gbk4J9w1WtTAgpTdznHu55W9FjimE=" alt="Default">
+                            @endif
+                            <span class="img-badge">OPD</span>
                         </div>
-                    </form>
 
-
-
-                    <form class="text-center form password-update" method="POST" action="{{ route('user.password.update') }}">
-                        @csrf
-                        <h4 class="modal-title" id="userProfileModalLabel">Security Privacy</h4>
-                        <p class="mb-4">Update your account password</p>
-                        <div class="row">
-
-
-                            <div class="col-md-12">
-                                <div class="form-floating mb-3">
-                                    <input type="password" class="form-control" id="user_old_password"
-                                        value="*************">
-                                    <label for="user_old_password">Existing Password</label>
-                                </div>
-                            </div>
-
-
-
-                            <div class="col-md-12">
-                                <div class="form-floating mb-3">
-                                    <input type="text" class="form-control" id="user_password"
-                                        name="user_password" placeholder="New Password">
-                                    <label for="user_password">New Password</label>
-                                </div>
-                            </div>
-
-
-
-                            <div class="col-md-12">
-                                <div class="form-floating mb-3">
-                                    <input type="text" class="form-control" id="confirm_password" name="confirm_password" placeholder="Confirm Password">
-                                    <label for="user_password">Confirm Password</label>
-                                </div>
-                            </div>
-
-
-
-
-
-
-
-                            <div class="col-md-12">
-                                <div class="form-floating mb-3">
-                                    <button type="submit" class="btn btn-primary py-3 col-md-12">Save Changes</button>
-                                </div>
-                            </div>
-
-
-
-                        </div>
-                    </form>
-
-
-                    <div class="col-md-12">
-                        <div class="form-floating mb-3">
-                            <form method="POST" action="{{ route('user.logout') }}">
-                                @csrf
-                                <a class="btn btn-danger py-3 col-md-12" :href="route('user.logout')"
-                                    onclick="event.preventDefault();
-                                                this.closest('form').submit();">
-                                    Logout
-                                </a>
-                            </form>
-
-                        </div>
-                    </div>
-
-
-
-
-
-
-                </div>
-
-            </div>
-        </div>
-    </div>
-    @endauth
-
-
-
-
-
-
-    <!-- profile update success modal start -->
-    <div class="modal fade" id="profileUpdateSuccessModal" tabindex="-1" aria-labelledby="profileUpdateSuccessModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-body d-flex flex-column align-middle justify-center align-items-center">
-                    <h2 class="modal-title" id="profileUpdateSuccessModalLabel"><span class="text-primary">+</span> SUCCESS <span class="text-primary">+</span></h2>
-                    <h2 class="text-primary">Profile Updated Successfully</h2>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn p-2 btn-primary w-100" data-bs-dismiss="modal">CLOSE</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- profile update success modal end -->
-
-    <!-- profile update Unsuccess modal start -->
-    <div class="modal fade" id="profileUpdateUnsuccessModal" tabindex="-1" aria-labelledby="profileUpdateUnsuccessModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-body d-flex flex-column align-middle justify-center align-items-center">
-                    <h3 class="modal-title" id="profileUpdateSuccessModalLabel"><span class="text-primary">+</span> ERROR <span class="text-primary">+</span></h3>
-                    <h4 class="text-danger">Profile Is Not Updated</h4>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn p-2 btn-primary w-100" data-bs-dismiss="modal">CLOSE</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- profile update Unsuccess modal end -->
-
-
-    <!-- password update success modal start -->
-    <div class="modal fade" id="passwordUpdateSuccessModal" tabindex="-1" aria-labelledby="passwordUpdateSuccessModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-body d-flex flex-column align-middle justify-center align-items-center">
-                    <h3 class="modal-title" id="profileUpdateSuccessModalLabel"><span class="text-primary">+</span> SUCCESS <span class="text-primary">+</span></h3>
-                    <h4 class="text-primary">Password Updated Successfully</h4>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn p-2 btn-primary w-100" data-bs-dismiss="modal">CLOSE</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- password update success modal end -->
-
-    <!-- password update Unsuccess modal start -->
-    <div class="modal fade" id="passwordUpdateUnsuccessModal" tabindex="-1" aria-labelledby="passwordUpdateUnsuccessModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-body d-flex flex-column align-middle justify-center align-items-center">
-                    <h3 class="modal-title" id="profileUpdateSuccessModalLabel"><span class="text-primary">+</span> ERROR <span class="text-primary">+</span></h3>
-                    <h4 class="text-danger">Password Is Not Updated</h4>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn p-2 btn-primary w-100" data-bs-dismiss="modal">CLOSE</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- password update Unsuccess modal end -->
-
-
-    <!-- Carousel Start -->
-    <!-- <div class="container-fluid p-0">
-        <div id="header-carousel" class="carousel slide carousel-fade" data-bs-ride="carousel">
-
-
-            <div class="carousel-inner">
-
-
-                @foreach($homeBanners as $key => $banner)
-                <div class="carousel-item {{ $key === 0 ? 'active' : '' }}">
-                    <img class="w-100" src="{{ asset('storage/' . $banner->banner_image) }}" alt="Image">
-                    <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
-                        <div class="p-3" style="max-width: 900px;">
-                            <h5 class="text-white text-uppercase mb-3 animated slideInDown">{{ $banner->title }}</h5>
-                            <h1 class="display-1 text-white mb-md-4 animated zoomIn">{{$banner->desc}}</h1>
-
-                            @guest
-                            <a href="https://play.google.com/store/apps/details?id=com.doctorwala.dochealth" target="_blank" class="btn btn-dark py-md-3 px-md-5 me-3 animated slideInLeft"><i class="fab fa-google-play me-2"></i>Download</a>
-                            <a href="/contact" class="btn btn-secondary py-md-3 px-md-5 animated slideInRight">Contact Us</a>
-                            @endguest
-
+                        <!-- Body -->
+                        <div class="opd-card-body">
                             @auth
-                            <a href="https://play.google.com/store/apps/details?id=com.doctorwala.dochealth" target="_blank" class="btn btn-dark py-md-3 px-md-5 me-3 animated slideInLeft"><i class="fab fa-google-play me-2"></i>Download</a>
-                            <a href="/dw/contact" class="btn btn-secondary py-md-3 px-md-5 animated slideInRight">Contact Us</a>
-                            @endauth
-                        </div>
-                    </div>
-                </div>
-                @endforeach
+                            <a href="{{ url('/dw/opd/'.$opd->slug) }}">
+                                @endauth
+                                @guest
+                                <a href="{{ url('/opd/'.$opd->slug) }}">
+                                    @endguest
 
+                                    <p class="opd-card-title">{{ $opd->clinic_name }}</p>
+                                    <div class="opd-card-divider"></div>
 
-            </div>
+                                    <div class="opd-meta-row">
+                                        <i class="bi bi-geo-alt-fill"></i>
+                                        <span>{{ $opd->clinic_city }}, {{ $opd->clinic_state }}, {{ $opd->clinic_pincode }}</span>
+                                    </div>
 
+                                    <div class="opd-meta-row">
+                                        @if($opd->doctors && $opd->doctors->count())
 
-            <button class="carousel-control-prev" type="button" data-bs-target="#header-carousel" data-bs-slide="prev">
-                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Previous</span>
-            </button>
-            <button class="carousel-control-next" type="button" data-bs-target="#header-carousel" data-bs-slide="next">
-                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Next</span>
-            </button>
-        </div>
-    </div> -->
-    <!-- Carousel End -->
+                                        <ul style="margin:0; padding-left:18px; list-style:disc;">
+                                            @foreach($opd->doctors->shuffle()->take(3) as $doctor)
+                                            <li class="doctor-item">
+                                                <div class="doctor-name">
+                                                    {{ $doctor->doctor_name }}
+                                                </div>
+                                                <div class="doctor-specialist">
+                                                    {{ $doctor->doctor_specialist }}
+                                                </div>
+                                            </li>
+                                            @endforeach
+                                        </ul>
+                                        @else
+                                        <p>No Doctors Listed Yet</p>
+                                        @endif
+                                    </div>
 
+                                    <div class="opd-meta-row">
+                                        <i class="bi bi-cursor-fill"></i>
+                                        <span>Click to view all doctors</span>
+                                    </div>
 
-
-
-    <!-- Search Banner -->
-    @guest
-    <div class="container search-banner-section">
-        <div class="search-cards-row">
-
-            <!-- {{-- Card 1: Search All --}} -->
-            <form action="{{ route('search.result') }}" method="GET" class="search-card search-card-all wow zoomIn" data-wow-delay="0.1s">
-                <div class="search-card-header">
-                    <div class="search-card-icon">
-                        <i class="fa fa-magnifying-glass"></i>
-                    </div>
-                    <div>
-                        <h3>Search Your Direct to Doctor</h3>
-                        <p>Doctor's name, Address, OPD, Pathology & All</p>
-                    </div>
-                </div>
-
-                <input type="hidden" name="category" value="all">
-
-                <div class="search-input-wrap">
-                    <i class="fa fa-search"></i>
-                    <input type="text" name="query" class="form-control"
-                        placeholder="Search for Doctor / Path / OPD">
-                </div>
-
-                <button type="submit" class="btn btn-search">
-                    <i class="fa fa-search"></i> Search Now
-                </button>
-
-            </form>
-
-            <!-- {{-- Card 2: Search OPD --}} -->
-            <form action="{{ route('search.result') }}" method="GET" class="search-card search-card-opd wow zoomIn" data-wow-delay="0.2s">
-                <div class="search-card-header">
-                    <div class="search-card-icon">
-                        <i class="fa fa-hospital"></i>
-                    </div>
-                    <div>
-                        <h3>Search Your OPD Doctor</h3>
-                        <p>Find by specialist and type</p>
-                    </div>
-                </div>
-                <div class="search-input-wrap">
-                    <i class="fa fa-stethoscope"></i>
-                    <input type="hidden" name="category" value="opd">
-
-                    <select name="query" class="form-select">
-                        <option selected disabled>Select Specialist</option>
-                        @foreach($specialists as $specialist)
-                        <option value="{{ $specialist }}">
-                            {{ ucfirst($specialist) }}
-                        </option>
-                        @endforeach
-                    </select>
-                </div>
-                <button id="searchOpdButton" class="btn btn-search">
-                    <span class="spinner"></span>
-                    <span class="btn-text"><i class="fa fa-user-doctor"></i> Search OPD</span>
-                </button>
-            </form>
-
-            <!-- {{-- Card 3: Search Pathology --}} -->
-            <form action="{{ route('search.result') }}" method="GET" class="search-card search-card-path wow zoomIn" data-wow-delay="0.3s">
-                <div class="search-card-header">
-                    <div class="search-card-icon">
-                        <i class="fa fa-flask"></i>
-                    </div>
-                    <div>
-                        <h3>Search Your Test Pathology</h3>
-                        <p>Find by test type & name</p>
-                    </div>
-                </div>
-                <div class="search-input-wrap">
-                    <i class="fa fa-syringe"></i>
-                    <input type="hidden" name="category" value="pathology">
-
-                    <select name="query" class="form-select">
-                        <option selected disabled>Select Type</option>
-                        @foreach($types as $type)
-                        <option value="{{ $type }}">
-                            {{ ucfirst($type) }}
-                        </option>
-                        @endforeach
-                    </select>
-                </div>
-                <button id="searchPathologyButton" class="btn btn-search">
-                    <span class="spinner"></span>
-                    <span class="btn-text"><i class="fa fa-syringe"></i> Search Pathology</span>
-                </button>
-            </form>
-
-        </div>
-    </div>
-    @endguest
-
-    @auth
-    <div class="container search-banner-section">
-        <div class="search-cards-row">
-
-            <!-- {{-- Card 1: Search All --}} -->
-            <form action="{{ route('dw.search.result') }}" method="GET" class="search-card search-card-all wow zoomIn" data-wow-delay="0.1s">
-                <div class="search-card-header">
-                    <div class="search-card-icon">
-                        <i class="fa fa-magnifying-glass"></i>
-                    </div>
-                    <div>
-                        <h3>Search Your Direct to Doctor</h3>
-                        <p>Doctor's name, Address, OPD, Pathology & All</p>
-                    </div>
-                </div>
-
-                <input type="hidden" name="category" value="all">
-
-                <div class="search-input-wrap">
-                    <i class="fa fa-search"></i>
-                    <input type="text" name="query" class="form-control"
-                        placeholder="Search for Doctor / Path / OPD">
-                </div>
-
-                <button type="submit" class="btn btn-search">
-                    <i class="fa fa-search"></i> Search Now
-                </button>
-
-            </form>
-
-            <!-- {{-- Card 2: Search OPD --}} -->
-            <form action="{{ route('dw.search.result') }}" method="GET" class="search-card search-card-opd wow zoomIn" data-wow-delay="0.2s">
-                <div class="search-card-header">
-                    <div class="search-card-icon">
-                        <i class="fa fa-hospital"></i>
-                    </div>
-                    <div>
-                        <h3>Search Your OPD Doctor</h3>
-                        <p>Find by specialist and type</p>
-                    </div>
-                </div>
-                <div class="search-input-wrap">
-                    <i class="fa fa-stethoscope"></i>
-                    <input type="hidden" name="category" value="opd">
-
-                    <select name="query" class="form-select">
-                        <option selected disabled>Select Specialist</option>
-                        @foreach($specialists as $specialist)
-                        <option value="{{ $specialist }}">
-                            {{ ucfirst($specialist) }}
-                        </option>
-                        @endforeach
-                    </select>
-                </div>
-                <button id="searchOpdButton" class="btn btn-search">
-                    <span class="spinner"></span>
-                    <span class="btn-text"><i class="fa fa-user-doctor"></i> Search OPD</span>
-                </button>
-            </form>
-
-            <!-- {{-- Card 3: Search Pathology --}} -->
-            <form action="{{ route('dw.search.result') }}" method="GET" class="search-card search-card-path wow zoomIn" data-wow-delay="0.3s">
-                <div class="search-card-header">
-                    <div class="search-card-icon">
-                        <i class="fa fa-flask"></i>
-                    </div>
-                    <div>
-                        <h3>Search Your Test Pathology</h3>
-                        <p>Find by test type & name</p>
-                    </div>
-                </div>
-                <div class="search-input-wrap">
-                    <i class="fa fa-syringe"></i>
-                    <input type="hidden" name="category" value="pathology">
-
-                    <select name="query" class="form-select">
-                        <option selected disabled>Select Type</option>
-                        @foreach($types as $type)
-                        <option value="{{ $type }}">
-                            {{ ucfirst($type) }}
-                        </option>
-                        @endforeach
-                    </select>
-                </div>
-                <button id="searchPathologyButton" class="btn btn-search">
-                    <span class="spinner"></span>
-                    <span class="btn-text"><i class="fa fa-syringe"></i> Search Pathology</span>
-                </button>
-            </form>
-
-        </div>
-    </div>
-    @endauth
-    <!-- Search Banner End -->
-
-
-
-    <!-- OPD Cards Start -->
-    <div class="container-fluid bg-primary bg-appointment my-2 wow fadeInUp opd-section" data-wow-delay="0.1s" style="margin-top: -30px;">
-        <div class="container">
-
-            <!-- Header + Buttons -->
-            <div class="opd-controls">
-                <div>
-                    <div class="section-badge">Available OPD</div>
-                    <h1>Display Your OPD / Clinics</h1>
-                </div>
-                <div class="opd-btn-group">
-                    <button class="opd-btn btn-prev-opd" aria-label="Previous" id="opdBtnPrev">
-                        <i class="bi bi-arrow-left"></i>
-                    </button>
-                    <button class="opd-btn btn-next-opd" aria-label="Next" id="opdBtnNext">
-                        <i class="bi bi-arrow-right"></i>
-                    </button>
-                </div>
-            </div>
-
-            <!-- Cards -->
-            <div class="row overflow-hidden">
-                <div class="col-12">
-                    <div class="scrolling-wrapper-opd" id="opdScrollWrapper">
-                        @foreach($opds as $opd)
-                        <div class="opd-card">
-
-                            <!-- Image -->
-                            <div class="opd-card-img-wrap">
-                                @if($opd->banner && $opd->banner->opdbanner)
-                                <img src="{{ asset('storage/' . $opd->banner->opdbanner) }}" alt="{{ $opd->clinic_name }}">
-                                @else
-                                <img src="https://media.istockphoto.com/id/1222357475/vector/image-preview-icon-picture-placeholder-for-website-or-ui-ux-design-vector-illustration.jpg?s=612x612&w=0&k=20&c=KuCo-dRBYV7nz2gbk4J9w1WtTAgpTdznHu55W9FjimE=" alt="Default">
-                                @endif
-                                <span class="img-badge">OPD</span>
-                            </div>
-
-                            <!-- Body -->
-                            <div class="opd-card-body">
-                                @auth
-                                <a href="{{ url('/dw/opd/'.$opd->slug) }}">
-                                    @endauth
-                                    @guest
-                                    <a href="{{ url('/opd/'.$opd->slug) }}">
-                                        @endguest
-
-                                        <p class="opd-card-title">{{ $opd->clinic_name }}</p>
-                                        <div class="opd-card-divider"></div>
-
-                                        <div class="opd-meta-row">
-                                            <i class="bi bi-geo-alt-fill"></i>
-                                            <span>{{ $opd->clinic_city }}, {{ $opd->clinic_state }}, {{ $opd->clinic_pincode }}</span>
-                                        </div>
-
-                                        <div class="opd-meta-row">
-                                            @if($opd->doctors && $opd->doctors->count())
-
-                                            <ul style="margin:0; padding-left:18px; list-style:disc;">
-                                                @foreach($opd->doctors->shuffle()->take(3) as $doctor)
-                                                <li class="doctor-item">
-                                                    <div class="doctor-name">
-                                                        {{ $doctor->doctor_name }}
-                                                    </div>
-                                                    <div class="doctor-specialist">
-                                                        {{ $doctor->doctor_specialist }}
-                                                    </div>
-                                                </li>
-                                                @endforeach
-                                            </ul>
-                                            @else
-                                            <p>No Doctors Listed Yet</p>
-                                            @endif
-                                        </div>
-
-                                        <div class="opd-meta-row">
-                                            <i class="bi bi-cursor-fill"></i>
-                                            <span>Click to view all doctors</span>
-                                        </div>
-
-                                    </a>
                                 </a>
-                            </div>
-
+                            </a>
                         </div>
-                        @endforeach
+
                     </div>
-                </div>
-            </div>
-
-            <!-- Scroll Progress -->
-            <div class="opd-progress-bar">
-                <div class="opd-progress-fill" id="opdProgressFill"></div>
-            </div>
-
-        </div>
-    </div>
-    <!-- OPD Cards End -->
-
-
-    <!-- Pathology Cards Start -->
-    <div class="container-fluid bg-primary bg-appointment2 my-5 wow fadeInUp p-3 path-section" data-wow-delay="0.1s">
-        <div class="container">
-
-            <!-- Header + Buttons -->
-            <div class="path-controls">
-                <div>
-                    <div class="section-badge-path">Available Pathology</div>
-                    <h1>Display Your Test Pathology</h1>
-                </div>
-                <div class="path-btn-group">
-                    <button class="path-btn" id="pathBtnPrev" aria-label="Previous" id="pathBtnPrev">
-                        <i class="bi bi-arrow-left"></i>
-                    </button>
-                    <button class="path-btn" id="pathBtnNext" aria-label="Next" id="pathBtnNext">
-                        <i class="bi bi-arrow-right"></i>
-                    </button>
-                </div>
-            </div>
-
-            <!-- Cards -->
-            <div class="row overflow-hidden">
-                <div class="col-12">
-                    <div id="pathScrollWrapper" class="scrolling-wrapper-path" id="pathScrollWrapper">
-                        @foreach($paths as $path)
-                        <div class="path-card">
-
-                            <div class="path-card-img-wrap">
-                                @if($path->banner && $path->banner->pathologybanner)
-                                <img src="{{ asset('storage/' . $path->banner->pathologybanner) }}" alt="{{ $path->clinic_name }}">
-                                @else
-                                <img src="https://media.istockphoto.com/id/1222357475/vector/image-preview-icon-picture-placeholder-for-website-or-ui-ux-design-vector-illustration.jpg?s=612x612&w=0&k=20&c=KuCo-dRBYV7nz2gbk4J9w1WtTAgpTdznHu55W9FjimE=" alt="Default">
-                                @endif
-                                <span class="img-badge-path">Pathology</span>
-                            </div>
-
-                            <div class="path-card-body">
-                                @auth
-                                <a href="{{ url('/dw/pathology/'.$path->slug) }}">
-                                    @endauth
-                                    @guest
-                                    <a href="{{ url('/pathology/'.$path->slug) }}">
-                                        @endguest
-                                        <p class="path-card-title">{{ $path->clinic_name }}</p>
-                                        <div class="path-card-divider"></div>
-                                        <div class="path-meta-row">
-                                            <i class="bi bi-geo-alt-fill"></i>
-                                            <span>{{ $path->clinic_city }}, {{ $path->clinic_state }}, {{ $path->clinic_pincode }}</span>
-                                        </div>
-
-                                        <div class="apth-meta-row">
-                                            @if($path->tests && $path->tests->count())
-
-                                            <ul style="margin:0; padding-left:18px; list-style:disc;">
-                                                @foreach($path->tests->shuffle()->take(3) as $test)
-                                                <li class="doctor-item">
-                                                    <div class="doctor-name">
-                                                        {{ $test->test_name }}
-                                                    </div>
-                                                    <div class="doctor-specialist">
-                                                        {{ $test->test_type }}
-                                                    </div>
-                                                </li>
-                                                @endforeach
-                                            </ul>
-                                            @else
-                                            <p>No Tests Listed Yet</p>
-                                            @endif
-                                        </div>
-                                        <div class="path-meta-row">
-                                            <i class="bi bi-cursor-fill"></i>
-                                            <span>Click to view all test pathology</span>
-                                        </div>
-                                    </a>
-                            </div>
-
-                        </div>
-                        @endforeach
-                    </div>
-                </div>
-            </div>
-
-            <!-- Scroll Progress -->
-            <div class="path-progress-bar">
-                <div class="path-progress-fill" id="pathProgressFill"></div>
-            </div>
-
-        </div>
-    </div>
-    <!-- Pathology Cards End -->
-
-
-    <!-- Doctors Cards Start -->
-    <div class="container-fluid bg-primary bg-appointment3 my-5 wow fadeInUp p-3 doc-section" data-wow-delay="0.1s">
-        <div class="container">
-
-            <!-- Header + Buttons -->
-            <div class="doc-controls">
-                <div>
-                    <div class="section-badge-doc">Available Doctors</div>
-                    <h1>Direct to Doctors</h1>
-                </div>
-                <div class="doc-btn-group">
-                    <button class="doc-btn" id="docBtnPrev" aria-label="Previous">
-                        <i class="bi bi-arrow-left"></i>
-                    </button>
-                    <button class="doc-btn" id="docBtnNext" aria-label="Next">
-                        <i class="bi bi-arrow-right"></i>
-                    </button>
-                </div>
-            </div>
-
-            <!-- Cards -->
-            <div class="row overflow-hidden">
-                <div class="col-12">
-                    <div id="docScrollWrapper" class="scrolling-wrapper-doc">
-                        @foreach($docs as $doc)
-                        <div class="doc-card">
-
-                            <!-- Image -->
-                            <div class="doc-card-img-wrap">
-                                @if($doc->banner && $doc->banner->doctorbanner)
-                                <img src="{{ asset('storage/' . $doc->banner->doctorbanner) }}" alt="{{ $doc->partner_doctor_name }}">
-                                @else
-                                <img src="https://media.istockphoto.com/id/1222357475/vector/image-preview-icon-picture-placeholder-for-website-or-ui-ux-design-vector-illustration.jpg?s=612x612&w=0&k=20&c=KuCo-dRBYV7nz2gbk4J9w1WtTAgpTdznHu55W9FjimE=" alt="Default">
-                                @endif
-                                <span class="img-badge-doc">Doctor</span>
-                            </div>
-
-                            <!-- Body -->
-                            <div class="doc-card-body">
-                                @auth
-                                <a href="{{ url('/dw/doctor/'.$doc->slug) }}">
-                                    @endauth
-                                    @guest
-                                    <a href="{{ url('/doctor/'.$doc->slug) }}">
-                                        @endguest
-
-                                        <p class="doc-card-title">{{ $doc->partner_doctor_name }}</p>
-                                        <div class="doc-card-divider"></div>
-
-                                        <a href="{{ url('/doctor/'.$doc->slug) }}" class="doc-listing-address">
-                                            <i class="bi bi-geo-alt-fill"></i>
-                                            <span style="text-transform: capitalize;">{{ $doc->partner_doctor_city }}, {{ $doc->partner_doctor_state}}, {{ $doc->partner_doctor_pincode }}</span>
-                                        </a>
-                                        <a href="{{ url('/doctor/'.$doc->slug) }}" class="doc-listing-address">
-                                            <i class="fa-solid fa-stethoscope"></i>
-                                            <span style="color: black; font-size: 0.8rem; font-weight: 600;">{{$doc->partner_doctor_specialist}}</span>
-                                        </a>
-
-                                        <table class="table" style="font-size: 0.7rem;">
-                                            <thead>
-                                                <tr>
-                                                    <th scope="col">Day</th>
-                                                    <th scope="col">Time</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                @if(!empty($doc->visit_day_time) && is_array($doc->visit_day_time))
-
-                                                @php
-                                                $limitedVisits = array_slice($doc->visit_day_time, 0, 3);
-                                                $totalVisits = count($doc->visit_day_time);
-                                                @endphp
-
-                                                {{-- First 3 rows --}}
-                                                @foreach($limitedVisits as $index => $visit)
-                                                <tr>
-
-                                                    <td>{{ $visit['day'] ?? 'N/A' }}</td>
-
-                                                    <td>
-                                                        @if(!empty($visit['start_time']) && !empty($visit['end_time']))
-                                                        {{ \Carbon\Carbon::parse($visit['start_time'])->format('h:i A') }}
-                                                        -
-                                                        {{ \Carbon\Carbon::parse($visit['end_time'])->format('h:i A') }}
-                                                        @else
-                                                        No time available
-                                                        @endif
-                                                    </td>
-                                                </tr>
-                                                @endforeach
-
-                                                {{-- 4th row message --}}
-                                                @if($totalVisits > 3)
-                                                <tr>
-                                                    <td colspan="4" class="text-center text-primary fw-semibold">
-                                                        <a href="{{ url('/doctor/'.$doc->slug) }}">Click to see full timings →</a>
-                                                    </td>
-                                                </tr>
-                                                @endif
-
-                                                @else
-                                                <tr class="text-muted">
-                                                    <td colspan="4">No data found</td>
-                                                </tr>
-                                                @endif
-                                            </tbody>
-
-
-                                        </table>
-
-                                    </a>
-                            </div>
-
-                        </div>
-                        @endforeach
-                    </div>
-                </div>
-            </div>
-
-            <!-- Scroll Progress -->
-            <div class="doc-progress-bar">
-                <div class="doc-progress-fill" id="docProgressFill"></div>
-            </div>
-
-        </div>
-    </div>
-    <!-- Doctors Cards End -->
-
-
-
-
-    @guest
-    <!-- Join As Partner Start -->
-    <div class="container-fluid bg-offer my-4 py-4 wow fadeInUp" data-wow-delay="0.1s">
-        <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-lg-9 wow zoomIn" data-wow-delay="0.6s">
-                    <div class="offer-text text-center rounded p-5">
-                        <h1 class="display-5 text-white off-texts">Partner with Doctorwala.info to expand your services nationwide</h1>
-                        <div class="d-flex g-3 flex-wrap justify-content-center ">
-                            <a href="/partner-register" class="btn btn-dark py-3 px-5 me-3 mb-2">Join As Partner(Clinics)</a>
-                            <a href="https://play.google.com/store/apps/details?id=com.doctorwala.dochealth" target="_blank" class="btn btn-light py-3 px-5 mb-2"><i class="fab fa-google-play me-2" style="font-size: 1.2rem;"></i>Download Doctorwala Mobile App</a>
-                        </div>
-                    </div>
+                    @endforeach
                 </div>
             </div>
         </div>
-    </div>
-    <!-- Join As Partner End -->
-    @endguest
 
-    @auth
-    <!-- Join As Partner Start -->
-    <div class="container-fluid bg-offer my-4 py-4 wow fadeInUp" data-wow-delay="0.1s">
-        <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-lg-9 wow zoomIn" data-wow-delay="0.6s">
-                    <div class="offer-text text-center rounded p-5">
-                        <h1 class="display-5 text-white off-texts">Learn About Our Privacy Policy or Download Our App</h1>
-                        <div class="d-flex g-3 flex-wrap justify-content-center ">
-                            <a href="/dw/privacy-policy" class="btn btn-dark py-3 px-5 me-3 mb-2">Privacy Policy</a>
-                            <a href="https://play.google.com/store/apps/details?id=com.doctorwala.dochealth" target="_blank" class="btn btn-light py-3 px-5 mb-2"><i class="fab fa-google-play me-2" style="font-size: 1.2rem;"></i>Download Doctorwala Mobile App</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <!-- Scroll Progress -->
+        <div class="opd-progress-bar">
+            <div class="opd-progress-fill" id="opdProgressFill"></div>
         </div>
+
     </div>
-    <!-- Join As Partner End -->
-    @endauth
+</div>
+<!-- OPD Cards End -->
 
 
+<!-- Pathology Cards Start -->
+<div class="container-fluid bg-primary bg-appointment2 my-5 wow fadeInUp p-3 path-section" data-wow-delay="0.1s">
+    <div class="container">
 
-
-    <!-- About Start -->
-    @foreach($aboutDetails as $aboutDetail)
-    <div class="container-fluid py-5 wow fadeInUp" data-wow-delay="0.1s">
-        <div class="container">
-            <div class="row g-5">
-                <div class="col-lg-7">
-                    <div class="section-title mb-4">
-                        <h5 class="position-relative d-inline-block text-primary text-uppercase">Jio Ji Bharka</h5>
-                        <h1 class="display-5 mb-0">{{$aboutDetail->ab_title}}</h1>
-                    </div>
-                    <h4 class="text-body fst-italic mb-4">{{$aboutDetail->ab_b_txt}}</h4>
-                    <p class="mb-4">{{$aboutDetail->ab_desc}}</p>
-                    <div class="row g-3">
-                        <div class="col-sm-6 wow zoomIn" data-wow-delay="0.3s">
-                            <h5 class="mb-3"><i class="fa fa-check-circle text-primary me-3"></i>Find Best Doctors</h5>
-                            <h5 class="mb-3"><i class="fa fa-check-circle text-primary me-3"></i>Find Best Pathologists
-                            </h5>
-                            <h5 class="mb-3"><i class="fa fa-check-circle text-primary me-3"></i>Find Best Clinics</h5>
-                        </div>
-                        <div class="col-sm-6 wow zoomIn" data-wow-delay="0.6s">
-                            <h5 class="mb-3"><i class="fa fa-check-circle text-primary me-3"></i>Single Call</h5>
-                            <h5 class="mb-3"><i class="fa fa-check-circle text-primary me-3"></i>24/7 Opened</h5>
-                            <h5 class="mb-3"><i class="fa fa-check-circle text-primary me-3"></i>Fair Prices</h5>
-                        </div>
-                    </div>
-                    @guest
-                    <a href="/partner-register" class="btn btn-primary py-3 px-5 mt-4 wow zoomIn"
-                        data-wow-delay="0.6s">Join As Partners</a>
-                    @endguest
-
-                    @auth
-                    <a href="/dw/about" class="btn btn-primary py-3 px-5 mt-4 wow zoomIn"
-                        data-wow-delay="0.6s">About Doctorwala</a>
-                    @endauth
-                </div>
-                <div class="col-lg-5" style="min-height: 500px;">
-                    <div class="position-relative h-100">
-                        <img class="position-absolute w-100 h-100 rounded wow zoomIn" data-wow-delay="0.9s"
-                            src="{{ asset('storage/' . $aboutDetail->about_image) }}" style="object-fit: cover;">
-                    </div>
-                </div>
+        <!-- Header + Buttons -->
+        <div class="path-controls">
+            <div>
+                <div class="section-badge-path">Available Pathology</div>
+                <h1>Display Your Test Pathology</h1>
             </div>
-        </div>
-    </div>
-    @endforeach
-    <!-- About End -->
-
-
-
-
-
-
-
-
-    <!-- Service Start -->
-    <div class="service-section wow fadeInUp" data-wow-delay="0.1s">
-        <div class="container">
-
-            {{-- Row 1 --}}
-            <div class="row g-4 mb-0 align-items-stretch">
-
-                {{-- Before/After Image --}}
-                <div class="col-lg-5 wow zoomIn" data-wow-delay="0.3s">
-                    <div class="service-img-container twentytwenty-container">
-                        <img class="position-absolute w-100 h-100" src="{{ asset('img/af.jpg') }}" style="object-fit: cover;">
-                        <img class="position-absolute w-100 h-100" src="{{ asset('img/be.jpg') }}" style="object-fit: cover;">
-                        <div class="img-badge-floating">
-                            <i class="bi bi-shield-check"></i> Trusted Healthcare
-                        </div>
-                    </div>
-                </div>
-
-                {{-- Right: Heading + 2 Service Cards --}}
-                <div class="col-lg-7">
-                    <div class="mb-4 wow fadeInUp" data-wow-delay="0.2s">
-                        <div class="section-label">Our Services</div>
-                        <h2 class="section-heading">
-                            We Offer The Best <span>Doctors, OPD</span><br>& Pathology Services
-                        </h2>
-                    </div>
-
-                    <div class="row g-4">
-                        <div class="col-md-6 wow zoomIn" data-wow-delay="0.4s">
-                            <div class="service-card">
-                                <div class="service-card-img-wrap">
-                                    <img class="service-card-img" src="{{ asset('img/himatology.jpg') }}" alt="Hematology">
-                                </div>
-                                <div class="service-card-body">
-                                    <div class="service-card-icon">
-                                        <i class="fa fa-droplet"></i>
-                                    </div>
-                                    <h5>Hematology Tests</h5>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6 wow zoomIn" data-wow-delay="0.5s">
-                            <div class="service-card">
-                                <div class="service-card-img-wrap">
-                                    <img class="service-card-img" src="{{ asset('img/biochemic.jpg') }}" alt="Biochemistry">
-                                </div>
-                                <div class="service-card-body">
-                                    <div class="service-card-icon">
-                                        <i class="fa fa-flask"></i>
-                                    </div>
-                                    <h5>Biochemistry Tests</h5>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            {{-- Divider --}}
-            <div class="service-row-divider"></div>
-
-            {{-- Row 2 --}}
-            <div class="row g-4 align-items-stretch wow fadeInUp" data-wow-delay="0.1s">
-
-                {{-- Left: 2 Service Cards --}}
-                <div class="col-lg-7">
-                    <div class="row g-4">
-                        <div class="col-md-6 wow zoomIn" data-wow-delay="0.3s">
-                            <div class="service-card">
-                                <div class="service-card-img-wrap">
-                                    <img class="service-card-img" src="{{ asset('img/microbiology.jpg') }}" alt="Microbiology">
-                                </div>
-                                <div class="service-card-body">
-                                    <div class="service-card-icon">
-                                        <i class="fa fa-microscope"></i>
-                                    </div>
-                                    <h5>Microbiology Tests</h5>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6 wow zoomIn" data-wow-delay="0.4s">
-                            <div class="service-card">
-                                <div class="service-card-img-wrap">
-                                    <img class="service-card-img" src="{{ asset('img/cytology.jpg') }}" alt="Cytology">
-                                </div>
-                                <div class="service-card-body">
-                                    <div class="service-card-icon">
-                                        <i class="fa fa-dna"></i>
-                                    </div>
-                                    <h5>Cytology & More...</h5>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                {{-- Right: Offer Card --}}
-                <div class="col-lg-5 wow zoomIn" data-wow-delay="0.5s">
-                    <div class="offer-card">
-                        <div class="offer-card-badge">
-                            <i class="fa fa-star"></i> What We Offer
-                        </div>
-                        <h3>Complete Healthcare at Your Fingertips</h3>
-                        <p>Our platform connects you with doctors across all specialties — cardiology, orthopedics, dermatology, gynecology, pediatrics, and more. Find the right care, fast.</p>
-                        <div class="offer-card-divider"></div>
-                        @foreach($aboutDetails as $aboutDetail)
-                        <div class="offer-card-phone">
-                            <div class="offer-card-phone-icon">
-                                <i class="fa fa-phone"></i>
-                            </div>
-                            <div class="offer-card-phone-text">
-                                <small>Call Us Anytime</small>
-                                <a href="tel:+91{{ $aboutDetail->number }}">+91-{{ $aboutDetail->number }}</a>
-                            </div>
-                        </div>
-                        @endforeach
-                    </div>
-                </div>
-
-            </div>
-        </div>
-    </div>
-    <!-- Service End -->
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    <!-- Testimonial Start -->
-    <div class="container-fluid bg-primary bg-testimonial py-5 wow fadeInUp" data-wow-delay="0.1s">
-        <div class="container py-5">
-            <div class="row justify-content-center">
-                <div class="col-lg-7">
-                    <div class="owl-carousel testimonial-carousel rounded p-5 wow zoomIn" data-wow-delay="0.6s">
-
-                        @foreach($testi as $t)
-                        <div class="testimonial-item text-center text-white">
-                            <img class="img-fluid mx-auto rounded mb-4 testi-logo" src="{{asset('img/testilogo.png')}}" alt="">
-
-                            <p class="testi-text"
-                                style="color: white; opacity: 1; font-weight: 700; font-size: 1.3rem;">
-
-                                <i class="fa-solid fa-2x fa-quote-left"></i>&nbsp;{{$t->feedback}}&nbsp;
-                                <i class="fa-solid fa-2x fa-quote-right"></i>
-                            </p>
-                            <hr class="mx-auto w-25">
-                            <h4 class="text-white mb-0 testi-text">{{$t->user_name}}</h4>
-                        </div>
-                        @endforeach
-
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Testimonial End -->
-
-
-    <!-- marquee text start -->
-    <marquee id="marqueeText"
-        style="background: #051225; color: white; padding: 10px; position: fixed; bottom: 0; width: 100%; z-index: 1000;">
-        Welcome to <b>Doctorwala.info</b> !! In addition
-        to doctors, we also connect you with pathologists and OPDs. If you require diagnostic services or need to visit
-        an OPD for consultation, DoctorWala.info is your go-to platform. We collaborate with trusted pathologists and
-        OPDs to ensure that you receive accurate and timely medical tests and consultations. for more information feel
-        free to call us or write us directly at <b>info.doctorwala@gmail.com</b>
-    </marquee>
-    <!-- marquee text end -->
-
-
-    <!-- Footer Start -->
-    <div class="container-fluid text-light py-4 footer-content"
-        style="background: #051225; position: relative; z-index: 1001;">
-        <div class="">
-            <div class="footer-content-inner">
-
-                <div class="text-center text-md-start">
-                    <p class="mb-md-0">&copy; <a class="text-white border-bottom"
-                            href="https://play.google.com/store/apps/details?id=com.doctorwala.dochealth" target="_blank">DoctorWala.info</a>. All
-                        Rights Reserved.</p>
-                </div>
-
-                <!-- <div class="col-md-6 text-center text-md-end">
-                    <p class="mb-0">Designed by <a class="text-white border-bottom" href="https://htmlcodex.com">HTML
-                            Codex</a><br>
-                        Distributed by <a class="text-white border-bottom" href="https://themewagon.com">ThemeWagon</a>
-                    </p>
-                </div> -->
-
-                <div class="">
-                    <div class="d-flex">
-                        <a class="btn btn-lg btn-dark btn-lg-square rounded me-2 btn-footer" href="#"><i
-                                class="fab fa-twitter fw-normal"></i></a>
-                        <a class="btn btn-lg btn-dark btn-lg-square rounded me-2 btn-footer" href="#"><i
-                                class="fab fa-facebook-f fw-normal"></i></a>
-                        <a class="btn btn-lg btn-dark btn-lg-square rounded me-2 btn-footer" href="#"><i
-                                class="fab fa-linkedin-in fw-normal"></i></a>
-                        <a class="btn btn-lg btn-dark btn-lg-square rounded btn-footer" href="#"><i
-                                class="fab fa-instagram fw-normal"></i></a>
-                    </div>
-                </div>
-
-
-                <div class="login-partner">
-                    @guest
-                    <a href="/partner-login" class="btn btn-dark btn-lg rounded me-2">Login As Partner</a>
-                    @endguest
-
-                    @auth
-                    <form method="POST" action="{{ route('user.logout') }}">
-                        @csrf
-                        <a class="btn btn-dark btn-lg rounded me-2" :href="route('user.logout')"
-                            onclick="event.preventDefault();
-                                                this.closest('form').submit();">
-                            Logout
-                        </a>
-                    </form>
-                    @endauth
-                </div>
-
-
-            </div>
-        </div>
-    </div>
-    <!-- Footer End -->
-
-
-    <!-- Global Search Section========================================================================================= -->
-    <!-- ── Floating Search FAB ── -->
-    <button class="gs-fab" id="gsOpenBtn" title="Search Everything">
-        <i class="bi bi-search"></i>
-        <span class="gs-fab-ring"></span>
-    </button>
-
-    <!-- ── Global Search Modal Overlay ── -->
-    <div class="gs-overlay" id="gsOverlay">
-        <div class="gs-modal" id="gsModal" role="dialog" aria-modal="true" aria-label="Global Search">
-
-            <!-- Header -->
-            <div class="gs-modal-header">
-                <div class="gs-modal-icon">
-                    <i class="bi bi-search"></i>
-                </div>
-                <div class="gs-modal-title">
-                    <h4>Search Your Nearby Doctors</h4>
-                    <p>Doctor's name · Clinic's Name · Using Location</p>
-                </div>
-                <button class="gs-modal-close" id="gsCloseBtn" aria-label="Close">
-                    <i class="bi bi-x-lg">X</i>
+            <div class="path-btn-group">
+                <button class="path-btn" id="pathBtnPrev" aria-label="Previous" id="pathBtnPrev">
+                    <i class="bi bi-arrow-left"></i>
+                </button>
+                <button class="path-btn" id="pathBtnNext" aria-label="Next" id="pathBtnNext">
+                    <i class="bi bi-arrow-right"></i>
                 </button>
             </div>
+        </div>
 
-            <!-- Search Form — submits to search-result page -->
-            @guest
-            <form action="{{ route('search.result') }}" method="GET" class="gs-form" id="gsForm">
-                <div class="gs-input-group">
-                    <i class="bi bi-search gs-input-icon"></i>
-                    <input
-                        type="text"
-                        name="query"
-                        id="gsInput"
-                        class="gs-input"
-                        placeholder="Type doctor name, clinic, test, city..."
-                        autocomplete="off"
-                        spellcheck="false"
-                        required />
-                    <button type="submit" class="gs-search-btn">
-                        <i class="bi bi-arrow-right-circle-fill"></i>
-                    </button>
+        <!-- Cards -->
+        <div class="row overflow-hidden">
+            <div class="col-12">
+                <div id="pathScrollWrapper" class="scrolling-wrapper-path" id="pathScrollWrapper">
+                    @foreach($paths as $path)
+                    <div class="path-card">
+
+                        <div class="path-card-img-wrap">
+                            @if($path->banner && $path->banner->pathologybanner)
+                            <img src="{{ asset('storage/' . $path->banner->pathologybanner) }}" alt="{{ $path->clinic_name }}">
+                            @else
+                            <img src="https://media.istockphoto.com/id/1222357475/vector/image-preview-icon-picture-placeholder-for-website-or-ui-ux-design-vector-illustration.jpg?s=612x612&w=0&k=20&c=KuCo-dRBYV7nz2gbk4J9w1WtTAgpTdznHu55W9FjimE=" alt="Default">
+                            @endif
+                            <span class="img-badge-path">Pathology</span>
+                        </div>
+
+                        <div class="path-card-body">
+                            @auth
+                            <a href="{{ url('/dw/pathology/'.$path->slug) }}">
+                                @endauth
+                                @guest
+                                <a href="{{ url('/pathology/'.$path->slug) }}">
+                                    @endguest
+                                    <p class="path-card-title">{{ $path->clinic_name }}</p>
+                                    <div class="path-card-divider"></div>
+                                    <div class="path-meta-row">
+                                        <i class="bi bi-geo-alt-fill"></i>
+                                        <span>{{ $path->clinic_city }}, {{ $path->clinic_state }}, {{ $path->clinic_pincode }}</span>
+                                    </div>
+
+                                    <div class="path-meta-row">
+                                        @if($path->tests && $path->tests->count())
+
+                                        <ul style="margin:0; padding-left:18px; list-style:disc;">
+                                            @foreach($path->tests->shuffle()->take(3) as $test)
+                                            <li class="doctor-item">
+                                                <div class="doctor-name">
+                                                    {{ $test->test_name }}
+                                                </div>
+                                                <div class="doctor-specialist">
+                                                    {{ $test->test_type }}
+                                                </div>
+                                            </li>
+                                            @endforeach
+                                        </ul>
+                                        @else
+                                        <p>No Tests Listed Yet</p>
+                                        @endif
+                                    </div>
+                                    <div class="path-meta-row">
+                                        <i class="bi bi-cursor-fill"></i>
+                                        <span>Click to view all test pathology</span>
+                                    </div>
+                                </a>
+                        </div>
+
+                    </div>
+                    @endforeach
                 </div>
-
-                <!-- Category chips -->
-                <div class="gs-chips-row">
-                    <span class="gs-chip-label">Filter:</span>
-                    <label class="gs-chip gs-chip-all active-chip">
-                        <input type="radio" name="category" value="all" checked hidden> All
-                    </label>
-                    <label class="gs-chip gs-chip-doc">
-                        <input type="radio" name="category" value="doctor" hidden>
-                        <i class="bi bi-person-heart-fill"></i> Direct to Doctors
-                    </label>
-                    <label class="gs-chip gs-chip-opd">
-                        <input type="radio" name="category" value="opd" hidden>
-                        <i class="bi bi-hospital-fill"></i> OPD Doctors
-                    </label>
-                    <label class="gs-chip gs-chip-path">
-                        <input type="radio" name="category" value="pathology" hidden>
-                        <i class="bi bi-flask-fill"></i> Test Pathology
-                    </label>
-                </div>
-            </form>
-            @endguest
-            @auth
-            <form action="{{ route('dw.search.result') }}" method="GET" class="gs-form" id="gsForm">
-                <div class="gs-input-group">
-                    <i class="bi bi-search gs-input-icon"></i>
-                    <input
-                        type="text"
-                        name="query"
-                        id="gsInput"
-                        class="gs-input"
-                        placeholder="Type doctor name, clinic, test, city..."
-                        autocomplete="off"
-                        spellcheck="false"
-                        required />
-                    <button type="submit" class="gs-search-btn">
-                        <i class="bi bi-arrow-right-circle-fill"></i>
-                    </button>
-                </div>
-
-                <!-- Category chips -->
-                <div class="gs-chips-row">
-                    <span class="gs-chip-label">Filter:</span>
-                    <label class="gs-chip gs-chip-all active-chip">
-                        <input type="radio" name="category" value="all" checked hidden> All
-                    </label>
-                    <label class="gs-chip gs-chip-doc">
-                        <input type="radio" name="category" value="doctor" hidden>
-                        <i class="bi bi-person-heart-fill"></i> Doctors
-                    </label>
-                    <label class="gs-chip gs-chip-opd">
-                        <input type="radio" name="category" value="opd" hidden>
-                        <i class="bi bi-hospital-fill"></i> OPD
-                    </label>
-                    <label class="gs-chip gs-chip-path">
-                        <input type="radio" name="category" value="pathology" hidden>
-                        <i class="bi bi-flask-fill"></i> Pathology
-                    </label>
-                </div>
-            </form>
-            @endauth
-
-            <!-- Quick tags -->
-            <div class="gs-quick-tags">
-                <span class="gs-quick-label">Popular:</span>
-                <button type="button" class="gs-quick-tag" data-val="Cardiologist">Cardiologist</button>
-                <button type="button" class="gs-quick-tag" data-val="Blood Test">Blood Test</button>
-                <button type="button" class="gs-quick-tag" data-val="Urine Test">Urine Test</button>
-                <button type="button" class="gs-quick-tag" data-val="Eye Specialist">Eye Specialist</button>
-                <button type="button" class="gs-quick-tag" data-val="X-Ray">X-Ray</button>
-                <button type="button" class="gs-quick-tag" data-val="Skin">Skin Doctor</button>
-                <button type="button" class="gs-quick-tag" data-val="Dentist">Dentist</button>
-                <button type="button" class="gs-quick-tag" data-val="Orthopedic">Orthopedic</button>
-                <button type="button" class="gs-quick-tag" data-val="Pediatrician">Pediatrician</button>
-                <button type="button" class="gs-quick-tag" data-val="General Physician">General Physician</button>
-                <button type="button" class="gs-quick-tag" data-val="General Surgeon">General Surgeon</button>
-                <button type="button" class="gs-quick-tag" data-val="Gynecologist">Gynecologist</button>
-
             </div>
+        </div>
 
-            <!-- ESC hint -->
-            <p class="gs-esc-hint">Press <kbd>ESC</kbd> to close &nbsp;·&nbsp; <kbd>Enter</kbd> to search</p>
+        <!-- Scroll Progress -->
+        <div class="path-progress-bar">
+            <div class="path-progress-fill" id="pathProgressFill"></div>
+        </div>
+
+    </div>
+</div>
+<!-- Pathology Cards End -->
 
 
-            <!-- Branding logo -->
-            <div class="gs-brand-logo">
-                <img src="{{asset('../img/logoo.png')}}" alt="Logo" class="gs-brand-img">
+<!-- Doctors Cards Start -->
+<div class="container-fluid bg-primary bg-appointment3 my-5 wow fadeInUp p-3 doc-section" data-wow-delay="0.1s">
+    <div class="container">
+
+        <!-- Header + Buttons -->
+        <div class="doc-controls">
+            <div>
+                <div class="section-badge-doc">Available Doctors</div>
+                <h1>Direct to Doctors</h1>
+            </div>
+            <div class="doc-btn-group">
+                <button class="doc-btn" id="docBtnPrev" aria-label="Previous">
+                    <i class="bi bi-arrow-left"></i>
+                </button>
+                <button class="doc-btn" id="docBtnNext" aria-label="Next">
+                    <i class="bi bi-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Cards -->
+        <div class="row overflow-hidden">
+            <div class="col-12">
+                <div id="docScrollWrapper" class="scrolling-wrapper-doc">
+                    @foreach($docs as $doc)
+                    <div class="doc-card">
+
+                        <!-- Image -->
+                        <div class="doc-card-img-wrap">
+                            @if($doc->banner && $doc->banner->doctorbanner)
+                            <img src="{{ asset('storage/' . $doc->banner->doctorbanner) }}" alt="{{ $doc->partner_doctor_name }}">
+                            @else
+                            <img src="https://media.istockphoto.com/id/1222357475/vector/image-preview-icon-picture-placeholder-for-website-or-ui-ux-design-vector-illustration.jpg?s=612x612&w=0&k=20&c=KuCo-dRBYV7nz2gbk4J9w1WtTAgpTdznHu55W9FjimE=" alt="Default">
+                            @endif
+                            <span class="img-badge-doc">Doctor</span>
+                        </div>
+
+                        <!-- Body -->
+                        <div class="doc-card-body">
+                            @auth
+                            <a href="{{ url('/dw/doctor/'.$doc->slug) }}">
+                                @endauth
+                                @guest
+                                <a href="{{ url('/doctor/'.$doc->slug) }}">
+                                    @endguest
+
+                                    <p class="doc-card-title">{{ $doc->partner_doctor_name }}</p>
+                                    <div class="doc-card-divider"></div>
+
+                                    <a href="{{ url('/doctor/'.$doc->slug) }}" class="doc-listing-address">
+                                        <i class="bi bi-geo-alt-fill"></i>
+                                        <span style="text-transform: capitalize; color:#0D6EFD; font-size: 0.8rem;">{{ $doc->partner_doctor_city }}, {{ $doc->partner_doctor_state}}, {{ $doc->partner_doctor_pincode }}</span>
+                                    </a>
+                                    <a href="{{ url('/doctor/'.$doc->slug) }}" class="doc-listing-address">
+                                        <i class="fa-solid fa-stethoscope"></i>
+                                        <span style="color: black; font-size: 0.8rem; font-weight: 600;">{{$doc->partner_doctor_specialist}}</span>
+                                    </a>
+
+                                    <table class="table" style="font-size: 0.7rem;">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">Day</th>
+                                                <th scope="col">Time</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @if(!empty($doc->visit_day_time) && is_array($doc->visit_day_time))
+
+                                            @php
+                                            $limitedVisits = array_slice($doc->visit_day_time, 0, 3);
+                                            $totalVisits = count($doc->visit_day_time);
+                                            @endphp
+
+                                            {{-- First 3 rows --}}
+                                            @foreach($limitedVisits as $index => $visit)
+                                            <tr>
+
+                                                <td>{{ $visit['day'] ?? 'N/A' }}</td>
+
+                                                <td>
+                                                    @if(!empty($visit['start_time']) && !empty($visit['end_time']))
+                                                    {{ \Carbon\Carbon::parse($visit['start_time'])->format('h:i A') }}
+                                                    -
+                                                    {{ \Carbon\Carbon::parse($visit['end_time'])->format('h:i A') }}
+                                                    @else
+                                                    No time available
+                                                    @endif
+                                                </td>
+                                            </tr>
+                                            @endforeach
+
+                                            {{-- 4th row message --}}
+                                            @if($totalVisits > 3)
+                                            <tr>
+                                                <td colspan="4" class="text-center text-primary fw-semibold">
+                                                    <a href="{{ url('/doctor/'.$doc->slug) }}">Click to see full timings →</a>
+                                                </td>
+                                            </tr>
+                                            @endif
+
+                                            @else
+                                            <tr class="text-muted">
+                                                <td colspan="4">No data found</td>
+                                            </tr>
+                                            @endif
+                                        </tbody>
+
+
+                                    </table>
+
+                                </a>
+                        </div>
+
+                    </div>
+                    @endforeach
+                </div>
+            </div>
+        </div>
+
+        <!-- Scroll Progress -->
+        <div class="doc-progress-bar">
+            <div class="doc-progress-fill" id="docProgressFill"></div>
+        </div>
+
+    </div>
+</div>
+<!-- Doctors Cards End -->
+
+
+
+
+@guest
+<!-- Join As Partner Start -->
+<div class="container-fluid bg-offer my-4 py-4 wow fadeInUp" data-wow-delay="0.1s">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-9 wow zoomIn" data-wow-delay="0.6s">
+                <div class="offer-text text-center rounded p-5">
+                    <h1 class="display-5 text-white off-texts">Partner with Doctorwala.info to expand your services nationwide</h1>
+                    <div class="d-flex g-3 flex-wrap justify-content-center ">
+                        <a href="/partner-register" class="btn btn-dark py-3 px-5 me-3 mb-2">Join As Partner(Clinics)</a>
+                        <a href="https://play.google.com/store/apps/details?id=com.doctorwala.dochealth" target="_blank" class="btn btn-light py-3 px-5 mb-2"><i class="fab fa-google-play me-2" style="font-size: 1.2rem;"></i>Download Doctorwala Mobile App</a>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-    <!-- Global Search Section========================================================================================= -->
+</div>
+<!-- Join As Partner End -->
+@endguest
+
+@auth
+<!-- Join As Partner Start -->
+<div class="container-fluid bg-offer my-4 py-4 wow fadeInUp" data-wow-delay="0.1s">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-9 wow zoomIn" data-wow-delay="0.6s">
+                <div class="offer-text text-center rounded p-5">
+                    <h1 class="display-5 text-white off-texts">Learn About Our Privacy Policy or Download Our App</h1>
+                    <div class="d-flex g-3 flex-wrap justify-content-center ">
+                        <a href="/dw/privacy-policy" class="btn btn-dark py-3 px-5 me-3 mb-2">Privacy Policy</a>
+                        <a href="https://play.google.com/store/apps/details?id=com.doctorwala.dochealth" target="_blank" class="btn btn-light py-3 px-5 mb-2"><i class="fab fa-google-play me-2" style="font-size: 1.2rem;"></i>Download Doctorwala Mobile App</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Join As Partner End -->
+@endauth
 
 
 
 
-    <!-- PARTNER REGISTER BUTTON -->
-    @guest
-    <a href="/partner-register" class="btn btn-lg btn-dark2 btn-lg-square rounded partner-login">
-        <i class="fa fa-plus" aria-hidden="true"></i>
-        <span class="showing-text"> Partner Register</span>
-    </a>
-    @endguest
-    @auth
-    @endauth
+<!-- About Start -->
+@foreach($aboutDetails as $aboutDetail)
+<div class="container-fluid py-5 wow fadeInUp" data-wow-delay="0.1s">
+    <div class="container">
+        <div class="row g-5">
+            <div class="col-lg-7">
+                <div class="section-title mb-4">
+                    <h5 class="position-relative d-inline-block text-primary text-uppercase">Jio Ji Bharka</h5>
+                    <h1 class="display-5 mb-0">{{$aboutDetail->ab_title}}</h1>
+                </div>
+                <h4 class="text-body fst-italic mb-4">{{$aboutDetail->ab_b_txt}}</h4>
+                <p class="mb-4">{{$aboutDetail->ab_desc}}</p>
+                <div class="row g-3">
+                    <div class="col-sm-6 wow zoomIn" data-wow-delay="0.3s">
+                        <h5 class="mb-3"><i class="fa fa-check-circle text-primary me-3"></i>Find Best Doctors</h5>
+                        <h5 class="mb-3"><i class="fa fa-check-circle text-primary me-3"></i>Find Best Pathologists
+                        </h5>
+                        <h5 class="mb-3"><i class="fa fa-check-circle text-primary me-3"></i>Find Best Clinics</h5>
+                    </div>
+                    <div class="col-sm-6 wow zoomIn" data-wow-delay="0.6s">
+                        <h5 class="mb-3"><i class="fa fa-check-circle text-primary me-3"></i>Single Call</h5>
+                        <h5 class="mb-3"><i class="fa fa-check-circle text-primary me-3"></i>24/7 Opened</h5>
+                        <h5 class="mb-3"><i class="fa fa-check-circle text-primary me-3"></i>Fair Prices</h5>
+                    </div>
+                </div>
+                @guest
+                <a href="/partner-register" class="btn btn-primary py-3 px-5 mt-4 wow zoomIn"
+                    data-wow-delay="0.6s">Join As Partners</a>
+                @endguest
+
+                @auth
+                <a href="/dw/about" class="btn btn-primary py-3 px-5 mt-4 wow zoomIn"
+                    data-wow-delay="0.6s">About Doctorwala</a>
+                @endauth
+            </div>
+            <div class="col-lg-5" style="min-height: 500px;">
+                <div class="position-relative h-100">
+                    <img class="position-absolute w-100 h-100 rounded wow zoomIn" data-wow-delay="0.9s"
+                        src="{{ asset('storage/' . $aboutDetail->about_image) }}" style="object-fit: cover;">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@endforeach
+<!-- About End -->
 
 
 
 
-    @if(session('password_update_status') == 'success')
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const successModal = new bootstrap.Modal(document.getElementById('passwordUpdateSuccessModal'));
-            successModal.show();
-        });
-    </script>
-    @elseif(session('password_update_status') == 'failure')
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const failureModal = new bootstrap.Modal(document.getElementById('passwordUpdateUnsuccessModal'));
-            failureModal.show();
-        });
-    </script>
-    @endif
-
-    @if(session('profile_update_status') == 'success')
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const successModal = new bootstrap.Modal(document.getElementById('profileUpdateSuccessModal'));
-            successModal.show();
-        });
-    </script>
-    @elseif(session('profile_update_status') == 'failure')
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const failureModal = new bootstrap.Modal(document.getElementById('profileUpdateUnsuccessModal'));
-            failureModal.show();
-        });
-    </script>
-    @endif
 
 
 
 
+<!-- Service Start -->
+<div class="service-section wow fadeInUp" data-wow-delay="0.1s">
+    <div class="container">
+
+        {{-- Row 1 --}}
+        <div class="row g-4 mb-0 align-items-stretch">
+
+            {{-- Before/After Image --}}
+            <div class="col-lg-5 wow zoomIn" data-wow-delay="0.3s">
+                <div class="service-img-container twentytwenty-container">
+                    <img class="position-absolute w-100 h-100" src="{{ asset('img/af.jpg') }}" style="object-fit: cover;">
+                    <img class="position-absolute w-100 h-100" src="{{ asset('img/be.jpg') }}" style="object-fit: cover;">
+                    <div class="img-badge-floating">
+                        <i class="bi bi-shield-check"></i> Trusted Healthcare
+                    </div>
+                </div>
+            </div>
+
+            {{-- Right: Heading + 2 Service Cards --}}
+            <div class="col-lg-7">
+                <div class="mb-4 wow fadeInUp" data-wow-delay="0.2s">
+                    <div class="section-label">Our Services</div>
+                    <h2 class="section-heading">
+                        We Offer The Best <span>Doctors, OPD</span><br>& Pathology Services
+                    </h2>
+                </div>
+
+                <div class="row g-4">
+                    <div class="col-md-6 wow zoomIn" data-wow-delay="0.4s">
+                        <div class="service-card">
+                            <div class="service-card-img-wrap">
+                                <img class="service-card-img" src="{{ asset('img/himatology.jpg') }}" alt="Hematology">
+                            </div>
+                            <div class="service-card-body">
+                                <div class="service-card-icon">
+                                    <i class="fa fa-droplet"></i>
+                                </div>
+                                <h5>Hematology Tests</h5>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 wow zoomIn" data-wow-delay="0.5s">
+                        <div class="service-card">
+                            <div class="service-card-img-wrap">
+                                <img class="service-card-img" src="{{ asset('img/biochemic.jpg') }}" alt="Biochemistry">
+                            </div>
+                            <div class="service-card-body">
+                                <div class="service-card-icon">
+                                    <i class="fa fa-flask"></i>
+                                </div>
+                                <h5>Biochemistry Tests</h5>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {{-- Divider --}}
+        <div class="service-row-divider"></div>
+
+        {{-- Row 2 --}}
+        <div class="row g-4 align-items-stretch wow fadeInUp" data-wow-delay="0.1s">
+
+            {{-- Left: 2 Service Cards --}}
+            <div class="col-lg-7">
+                <div class="row g-4">
+                    <div class="col-md-6 wow zoomIn" data-wow-delay="0.3s">
+                        <div class="service-card">
+                            <div class="service-card-img-wrap">
+                                <img class="service-card-img" src="{{ asset('img/microbiology.jpg') }}" alt="Microbiology">
+                            </div>
+                            <div class="service-card-body">
+                                <div class="service-card-icon">
+                                    <i class="fa fa-microscope"></i>
+                                </div>
+                                <h5>Microbiology Tests</h5>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 wow zoomIn" data-wow-delay="0.4s">
+                        <div class="service-card">
+                            <div class="service-card-img-wrap">
+                                <img class="service-card-img" src="{{ asset('img/cytology.jpg') }}" alt="Cytology">
+                            </div>
+                            <div class="service-card-body">
+                                <div class="service-card-icon">
+                                    <i class="fa fa-dna"></i>
+                                </div>
+                                <h5>Cytology & More...</h5>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {{-- Right: Offer Card --}}
+            <div class="col-lg-5 wow zoomIn" data-wow-delay="0.5s">
+                <div class="offer-card">
+                    <div class="offer-card-badge">
+                        <i class="fa fa-star"></i> What We Offer
+                    </div>
+                    <h3>Complete Healthcare at Your Fingertips</h3>
+                    <p>Our platform connects you with doctors across all specialties — cardiology, orthopedics, dermatology, gynecology, pediatrics, and more. Find the right care, fast.</p>
+                    <div class="offer-card-divider"></div>
+                    @foreach($aboutDetails as $aboutDetail)
+                    <div class="offer-card-phone">
+                        <div class="offer-card-phone-icon">
+                            <i class="fa fa-phone"></i>
+                        </div>
+                        <div class="offer-card-phone-text">
+                            <small>Call Us Anytime</small>
+                            <a href="tel:+91{{ $aboutDetail->number }}">+91-{{ $aboutDetail->number }}</a>
+                        </div>
+                    </div>
+                    @endforeach
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!-- Service End -->
 
 
 
 
 
-    <!-- JavaScript Libraries -->
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-
-    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="{{asset('./lib/wow/wow.min.js')}}"></script>
-    <script src="{{asset('./lib/easing/easing.min.js')}}"></script>
-    <script src="{{asset('./lib/waypoints/waypoints.min.js')}}"></script>
-    <script src="{{asset('./lib/owlcarousel/owl.carousel.min.js')}}"></script>
-    <script src="{{asset('./lib/tempusdominus/js/moment.min.js')}}"></script>
-    <script src="{{asset('./lib/tempusdominus/js/moment-timezone.min.js')}}"></script>
-    <script src="{{asset('./lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js')}}"></script>
-    <script src="{{asset('./lib/twentytwenty/jquery.event.move.js')}}"></script>
-    <script src="{{asset('./lib/twentytwenty/jquery.twentytwenty.js')}}"></script>
-
-    <!-- Template Javascript -->
-    <script src="{{asset('./js/main.js')}}"></script>
-    <script src="{{asset('./js/cards-scroll.js')}}"></script>
-
-    <!-- Carousels -->
-    <script src="{{asset('./js/opd-carousel-card.js')}}"></script>
-    <script src="{{asset('./js/path-carousel-card.js')}}"></script>
-    <script src="{{asset('./js/doc-carousel-card.js')}}"></script>
-
-    <script src="{{asset('./js/global-search.js')}}"></script>
-    <script src="{{asset('./js/float-btn.js')}}"></script>
 
 
 
 
-    <script>
-        document.addEventListener('DOMContentLoaded', async () => {
-
-            // 1. Parse browser & OS from userAgent
-            const ua = navigator.userAgent;
-            const browser = ua.includes('Chrome') ? 'Chrome' :
-                ua.includes('Firefox') ? 'Firefox' :
-                ua.includes('Safari') ? 'Safari' :
-                ua.includes('Edge') ? 'Edge' :
-                'Other';
-
-            const os = ua.includes('Windows') ? 'Windows' :
-                ua.includes('Mac') ? 'MacOS' :
-                ua.includes('Android') ? 'Android' :
-                ua.includes('iPhone') || ua.includes('iPad') ? 'iOS' :
-                ua.includes('Linux') ? 'Linux' :
-                'Other';
-
-            const deviceType = /Mobi|Android|iPhone|iPad/i.test(ua) ? 'Mobile' : 'Desktop';
-
-            // 2. Get approx location from IP (free, no key needed)
-            let country = null,
-                city = null;
-            try {
-                const geo = await fetch('https://ipapi.co/json/');
-                const geoData = await geo.json();
-                country = geoData.country_name;
-                city = geoData.city;
-            } catch (e) {}
-
-            // 3. Send to Laravel
-            fetch('{{ route("visitor.track") }}', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                },
-                body: JSON.stringify({
-                    page_url: window.location.href,
-                    referrer: document.referrer || null,
-                    browser: browser,
-                    os: os,
-                    device_type: deviceType,
-                    screen_size: `${screen.width}x${screen.height}`,
-                    language: navigator.language,
-                    timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-                    country: country,
-                    city: city,
-                })
-            });
-        });
 
 
-        // ── Loading state helper ──
-        document.querySelectorAll('.btn-search').forEach(btn => {
-            btn.addEventListener('click', () => {
-                btn.classList.add('loading');
-                setTimeout(() => btn.classList.remove('loading'), 1500);
-            });
-        });
 
-        // ── Better no-results messages ──
-        const showNoResults = (container, msg) => {
-            container.innerHTML = `
-        <div class="no-results-msg">
-            <i class="fa fa-circle-exclamation" style="color: green"></i>
-            ${msg}
-        </div>`;
-        };
-    </script>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            document.getElementById('gsOpenBtn').click();
-        });
-    </script>
 
-</body>
 
-</html>
+<!-- Testimonial Start -->
+<div class="container-fluid bg-primary bg-testimonial py-5 wow fadeInUp" data-wow-delay="0.1s">
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-7">
+                <div class="owl-carousel testimonial-carousel rounded p-5 wow zoomIn" data-wow-delay="0.6s">
+
+                    @foreach($testi as $t)
+                    <div class="testimonial-item text-center text-white">
+                        <img class="img-fluid mx-auto rounded mb-4 testi-logo" src="{{asset('img/testilogo.png')}}" alt="">
+
+                        <p class="testi-text"
+                            style="color: white; opacity: 1; font-weight: 700; font-size: 1.3rem;">
+
+                            <i class="fa-solid fa-2x fa-quote-left"></i>&nbsp;{{$t->feedback}}&nbsp;
+                            <i class="fa-solid fa-2x fa-quote-right"></i>
+                        </p>
+                        <hr class="mx-auto w-25">
+                        <h4 class="text-white mb-0 testi-text">{{$t->user_name}}</h4>
+                    </div>
+                    @endforeach
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Testimonial End -->
+
+
+@endsection
