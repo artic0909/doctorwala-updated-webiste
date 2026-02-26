@@ -134,6 +134,9 @@ Route::middleware(['auth:dwuser', 'verified'])->group(function () {
     // Route to update the profile details---------------------------------------------------------------------------------------------------------------->
     Route::post('/dw/user-profile-update', [ProfileEditController::class, 'updateProfile'])->name('user.profile.update');
 
+    // Route to generate medical card---------------------------------------------------------------------------------------------------------------->
+    Route::post('/dw/generate-medical-card', [DwUserController::class, 'generateMedicalCard'])->name('dw.generate.medical-card');
+
     // Route to update the password---------------------------------------------------------------------------------------------------------------->
     Route::post('/dw/user-password-update', [ProfileEditController::class, 'updatePassword'])->name('user.password.update');
 
@@ -141,4 +144,12 @@ Route::middleware(['auth:dwuser', 'verified'])->group(function () {
 
 
     Route::post('/user-logout', [DwUserController::class, 'userlogout'])->name('user.logout');
+
+
+
+
+
+
+    // Profile & Medical Card
+    Route::get('/dw/profile', [ProfileEditController::class, 'userProfile'])->name('dw.profile');
 });

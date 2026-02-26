@@ -412,26 +412,6 @@
 <body>
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     <div id="container" class="container">
         <!-- FORM SECTION -->
         <div class="row">
@@ -622,22 +602,6 @@
         </div>
         <!-- END CONTENT SECTION -->
     </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     <script>

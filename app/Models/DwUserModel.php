@@ -10,7 +10,7 @@ use Illuminate\Notifications\Notifiable;
 class DwUserModel extends Authenticatable
 {
     use HasApiTokens, Notifiable;
-    
+
     protected $table = 'dw_user_models';
 
     protected $fillable = [
@@ -18,8 +18,20 @@ class DwUserModel extends Authenticatable
         'user_mobile',
         'user_city',
         'user_email',
+        'image',
         'user_password',
         'api_token',
+        'dob',
+        'memberid',
+        'medical_card_no',
+        'blood_group',
+        'address',
+        'gender',
+        'height',
+        'weight',
+        'emergency_contact',
+        'allergies',
+        'chronic_conditions',
     ];
 
     protected $hidden = [
