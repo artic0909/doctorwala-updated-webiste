@@ -35,11 +35,6 @@
     <link href="{{asset('./css/cards-css.css')}}" rel="stylesheet">
     <link href="{{asset('./css/service.css')}}" rel="stylesheet">
 
-    <!-- Carousels -->
-    <link href="{{asset('./css/opd-carousel-card.css')}}" rel="stylesheet">
-    <link href="{{asset('./css/path-carousel-card.css')}}" rel="stylesheet">
-    <link href="{{asset('./css/doc-carousel-card.css')}}" rel="stylesheet">
-
     <!-- Search Area -->
     <link href="{{asset('./css/serach-banner.css')}}" rel="stylesheet">
     <link href="{{asset('./css/float-btn.css')}}" rel="stylesheet">

@@ -59,6 +59,7 @@ Route::middleware(['auth:dwuser', 'verified'])->group(function () {
     Route::get('/dw', [FrontHomePageController::class, 'index'])->name('dw.index');
     Route::get('/dw/about', [FrontAboutPageController::class, 'index'])->name('dw.about');
     Route::get('/dw/blog', [FrontBlogsPageController::class, 'index'])->name('dw.blog');
+    Route::get('/dw/blog/{slug}', [FrontBlogsPageController::class, 'blogdetails'])->name('dw.blog.details');
     Route::get('/dw/contact', [FrontContactusPageController::class, 'index'])->name('dw.contact');
     Route::post('/dw/contact', [FrontContactusPageController::class, 'store'])->name('restricted-contact.store');
     Route::get('/dw/privacy-policy', [FrontPrivacyPolicyPageController::class, 'index'])->name('dw.privacy-policy');

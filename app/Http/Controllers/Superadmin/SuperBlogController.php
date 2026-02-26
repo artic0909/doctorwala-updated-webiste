@@ -21,26 +21,22 @@ class SuperBlogController extends Controller
     {
         $validated = $request->validate([
             'blg_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
-            'blg_title' => 'nullable|string',
+            'blg_title' => 'required|string',
             'blg_desc' => 'nullable|string',
         ]);
 
         $filePath = null;
 
         if ($request->hasFile('blg_image')) {
-            try {
-                $file = $request->file('blg_image');
-                $fileName = time() . '_' . $file->getClientOriginalName();
-                $filePath = $file->storeAs('uploads/blog-image', $fileName, 'public');
-            } catch (\Exception $e) {
-                return back()->withErrors(['blg_image' => 'File upload failed. Please try again.']);
-            }
+            $file = $request->file('blg_image');
+            $fileName = time() . '_' . $file->getClientOriginalName();
+            $filePath = $file->storeAs('uploads/blog-image', $fileName, 'public');
         }
 
         SuperBlogModel::create([
             'blg_image' => $filePath,
-            'blg_title' => $request->input('blg_title'),
-            'blg_desc' => $request->input('blg_desc'),
+            'blg_title' => $request->blg_title,
+            'blg_desc' => $request->blg_desc,
         ]);
 
         return back()->with('success', 'Added Successfully!');
@@ -49,37 +45,31 @@ class SuperBlogController extends Controller
 
     public function update(Request $request, $id)
     {
-
         $validated = $request->validate([
             'blg_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
-            'blg_title' => 'nullable|string',
+            'blg_title' => 'required|string',
             'blg_desc' => 'nullable|string',
         ]);
 
-        $blogInfo = SuperBlogModel::find($id);
+        $blogInfo = SuperBlogModel::findOrFail($id);
 
-        if ($blogInfo) {
-            if ($request->hasFile('blg_image')) {
+        if ($request->hasFile('blg_image')) {
 
-                if (file_exists(public_path('storage/' . $blogInfo->blg_image))) {
-                    unlink(public_path('storage/' . $blogInfo->blg_image));
-                }
-
-
-                $file = $request->file('blg_image');
-                $fileName = time() . '_' . $file->getClientOriginalName();
-                $filePath = $file->storeAs('uploads/blog-image', $fileName, 'public');
-                $blogInfo->blg_image = $filePath;
+            if ($blogInfo->blg_image && file_exists(public_path('storage/' . $blogInfo->blg_image))) {
+                unlink(public_path('storage/' . $blogInfo->blg_image));
             }
 
-            $blogInfo->blg_title = $request->input('blg_title');
-            $blogInfo->blg_desc = $request->input('blg_desc');
-            $blogInfo->save();
-
-            return back()->with('success', 'updated successfully!');
-        } else {
-            return back()->with('error', 'not found.');
+            $file = $request->file('blg_image');
+            $fileName = time() . '_' . $file->getClientOriginalName();
+            $filePath = $file->storeAs('uploads/blog-image', $fileName, 'public');
+            $blogInfo->blg_image = $filePath;
         }
+
+        $blogInfo->blg_title = $request->blg_title;
+        $blogInfo->blg_desc = $request->blg_desc;
+        $blogInfo->save();
+
+        return back()->with('success', 'Updated successfully!');
     }
 
 

@@ -1,888 +1,183 @@
-<!DOCTYPE html>
-<html lang="en">
+@extends('frontend.layout.app')
+
+@section('title', 'Privacy & Policies | Doctorwala.info')
+
+@section('content')
 
 <head>
-    <meta charset="utf-8">
-    <title>Privacy & Policies | Doctorwala</title>
-    <meta content="width=device-width, initial-scale=1.0" name="viewport">
-
     <meta content="privacy, policies, doctorwala, doctorwala.info, Information We Collect, Use of Information,Data Security,Links to Third-Party Websites,Children's Privacy,Changes to this Privacy Policy,Contact Us, Personal Information,Usage Data,Provide Services,Communication,Analytics and Improvements" name="keywords">
-
     <meta content="We may collect personal information such as your name, email address, contact number, and other relevant information when you voluntarily provide it to us through forms or by contacting us, We may collect non-personal information about your interaction with our Website, such as your IP address, browser type, referring/exit pages, and the date and time of your visit. We may use cookies and similar technologies to collect this information, We may use the personal information you provide to us to provide and improve our services, such as facilitating appointments with doctors, displaying relevant search results, and delivering personalized content, We may use your contact information to communicate with you regarding your inquiries, appointments, service updates, and promotional offers. You may opt out of receiving promotional communications at any time, We may use the non-personal information and usage data to analyze trends, administer the Website, and improve our services, features, and user experience, We take reasonable precautions to protect the personal information we collect from unauthorized access, use, disclosure, or alteration. However, no method of transmission over the internet or electronic storage is completely secure. Therefore, we cannot guarantee absolute security of your personal information, Our Website may contain links to third-party websites or services. This Privacy Policy does not apply to those third-party websites. We recommend reviewing the privacy policies of those websites for information about their data collection, use, and disclosure practices, Our Website is not intended for children under the age of 13. We do not knowingly collect personal information from children under the age of 13. If you are a parent or guardian and believe that your child has provided us with personal information, please contact us, and we will promptly remove the information, We reserve the right to update or modify this Privacy Policy at any time. Any changes will be effective immediately upon posting the updated Privacy Policy on our Website. We encourage you to review this Privacy Policy periodically, If you have any questions, concerns, or requests regarding this Privacy Policy or our privacy practices, please contact us at info.doctorwala@gmail.com" name="description">
-
-    <!-- Favicon -->
-    <link href="fav5.png" rel="icon">
-
-    <!-- Google Web Fonts -->
-    <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link
-        href="https://fonts.googleapis.com/css2?family=Jost:wght@500;600;700&family=Open+Sans:wght@400;600&display=swap"
-        rel="stylesheet">
-
-    <!-- Icon Font Stylesheet -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.0/css/all.min.css"
-        integrity="sha512-9xKTRVabjVeZmc+GUW8GgSmcREDunMM+Dt/GrzchfN8tkwHizc5RP4Ok/MXFFy5rIjJjzhndFScTceq5e6GvVQ=="
-        crossorigin="anonymous" referrerpolicy="no-referrer" />
-
-    <!-- Libraries Stylesheet -->
-    <link href="{{asset('../lib/owlcarousel/assets/owl.carousel.min.css')}}" rel="stylesheet">
-    <link href="{{asset('../lib/animate/animate.min.css')}}" rel="stylesheet">
-    <link href="{{asset('../lib/tempusdominus/css/tempusdominus-bootstrap-4.min.css')}}" rel="stylesheet" />
-    <link href="{{asset('../lib/twentytwenty/twentytwenty.css')}}" rel="stylesheet" />
-
-    <!-- Customized Bootstrap Stylesheet -->
-    <link href="{{asset('../css/bootstrap.min.css')}}" rel="stylesheet">
-    <link href="{{asset('./css/float-btn.css')}}" rel="stylesheet">
-
-    <!-- Template Stylesheet -->
-    <link href="{{asset('../css/style.css')}}" rel="stylesheet">
-    <link href="{{asset('../css/cards-css.css')}}" rel="stylesheet">
-    <link href="{{asset('../css/partner-btn.css')}}" rel="stylesheet">
-    <link href="{{asset('../responsive/index_responsive.css')}}" rel="stylesheet">
-    <link href="{{asset('./css/topbar.css')}}" rel="stylesheet">
-
-
 </head>
 
-<body>
-    <!-- Spinner Start -->
-    <div id="spinner"
-        class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
-        <div class="spinner-grow text-primary m-1" role="status">
-            <span class="sr-only">Loading...</span>
-        </div>
-        <div class="spinner-grow text-dark m-1" role="status">
-            <span class="sr-only">Loading...</span>
-        </div>
-        <div class="spinner-grow text-secondary m-1" role="status">
-            <span class="sr-only">Loading...</span>
-        </div>
-    </div>
-    <!-- Spinner End -->
 
 
-    <!-- ====== TOPBAR ====== -->
-    <div class="topbar">
-        <div class="topbar-inner">
-
-            <!-- LEFT -->
-            <div class="topbar-left">
-                <div class="hours-pill">
-                    <span class="live-dot"><span></span></span>
-                    <i class="far fa-clock"></i>
-                    24/7 Open
-                </div>
-                <div class="ticker-wrap">
-                    <div class="ticker-track">
-                        <span class="t-item"><i class="fa fa-heart-pulse"></i> Expert doctors, trusted care</span>
-                        <span class="t-sep">✦</span>
-                        <span class="t-item"><i class="fa fa-calendar-check"></i> Easy online appointment booking</span>
-                        <span class="t-sep">✦</span>
-                        <span class="t-item"><i class="fa fa-stethoscope"></i> Quality healthcare for your family</span>
-                        <span class="t-sep">✦</span>
-                        <span class="t-item"><i class="fa fa-leaf"></i> Your health, our priority</span>
-                        <span class="t-sep">✦</span>
-                        <span class="t-item"><i class="fa fa-shield-halved"></i> Mon to Sun — always available</span>
-                        <span class="t-sep">✦</span>
-                        <!-- duplicate -->
-                        <span class="t-item"><i class="fa fa-heart-pulse"></i> Expert doctors, trusted care</span>
-                        <span class="t-sep">✦</span>
-                        <span class="t-item"><i class="fa fa-calendar-check"></i> Easy online appointment booking</span>
-                        <span class="t-sep">✦</span>
-                        <span class="t-item"><i class="fa fa-stethoscope"></i> Quality healthcare for your family</span>
-                        <span class="t-sep">✦</span>
-                        <span class="t-item"><i class="fa fa-leaf"></i> Your health, our priority</span>
-                        <span class="t-sep">✦</span>
-                        <span class="t-item"><i class="fa fa-shield-halved"></i> Mon to Sun — always available</span>
-                        <span class="t-sep">✦</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- RIGHT -->
-            <div class="topbar-right">
-                @foreach($aboutDetails as $aboutDetail)
-                <a href="mailto:{{$aboutDetail->email}}" class="c-chip">
-                    <span class="c-ico"><i class="fa fa-envelope"></i></span>
-                    {{$aboutDetail->email}}
-                </a>
-                <a href="tel:{{$aboutDetail->number}}" class="c-chip">
-                    <span class="c-ico"><i class="fa fa-phone"></i></span>
-                    +91-{{$aboutDetail->number}}
-                </a>
-                @endforeach
-            </div>
-
-        </div>
-    </div>
-    <!-- ====== TOPBAR ====== -->
-
-
-    
-    @guest
-    <!-- Navbar Start -->
-    <nav class="navbar navbar-expand-lg bg-white navbar-light shadow-sm px-5 py-3 py-lg-0">
-        <a href="/" class="navbar-brand p-0">
-
-            <img class="m-0 nav-bar-logo" src="{{asset('img/logoo.png')}}" width="300" alt="DoctorWala">
-        </a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarCollapse">
-            <div class="navbar-nav ms-auto py-0">
-                <a href="/" class="nav-item nav-link ">Home</a>
-                <a href="/about" class="nav-item nav-link ">About</a>
-                <div class="nav-item dropdown">
-                    <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Search</a>
-                    <div class="dropdown-menu m-0">
-                        <a href="/opd" class="dropdown-item">OPD Details</a>
-                        <a href="/doctor" class="dropdown-item">Doctor Details</a>
-                        <a href="/pathology" class="dropdown-item">Pathology Details</a>
-                        <!-- <a href="/coupons" class="dropdown-item">Coupon Details </a> -->
-                    </div>
-                </div>
-                <a href="/blog" class="nav-item nav-link ">Blogs</a>
-
-                <a href="/contact" class="nav-item nav-link ">Contact</a>
-                <a href="/privacy-policy" class="nav-item nav-link active">Privacy Policy</a>
-            </div>
-            <!-- <button type="button" class="btn text-dark" data-bs-toggle="modal" data-bs-target="#searchModal"><i
-                    class="fa fa-search"></i></button> -->
-
-
-            <a href="/dw/user-auth" class="btn btn-primary py-2 px-4 ms-3">Login</a>
-
-
-
-            <!-- <a href="" data-bs-toggle="modal" data-bs-target="#userProfileModal" class="btn btn-primary ms-3"><i
-                    class="fa fa-user" aria-hidden="true"></i></a> -->
-
-        </div>
-    </nav>
-    <!-- Navbar End -->
-    @endguest
-
-
-    @auth
-    <!-- Navbar Start -->
-    <nav class="navbar navbar-expand-lg bg-white navbar-light shadow-sm px-5 py-3 py-lg-0">
-        <a href="/dw" class="navbar-brand p-0">
-
-            <img class="m-0 nav-bar-logo" src="{{asset('img/logoo.png')}}" width="300" alt="DoctorWala">
-        </a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarCollapse">
-            <div class="navbar-nav ms-auto py-0">
-                <a href="/dw" class="nav-item nav-link">Home</a>
-                <a href="/dw/about" class="nav-item nav-link ">About</a>
-                <div class="nav-item dropdown">
-                    <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Search</a>
-                    <div class="dropdown-menu m-0">
-                        <a href="/dw/opd" class="dropdown-item">OPD Details</a>
-                        <a href="/dw/doctor" class="dropdown-item">Doctor Details</a>
-                        <a href="/dw/pathology" class="dropdown-item">Pathology Details</a>
-                        <!-- <a href="/dw/coupons" class="dropdown-item">Coupon Details </a> -->
-                    </div>
-                </div>
-                <a href="/dw/blog" class="nav-item nav-link">Blogs</a>
-
-                <a href="/dw/contact" class="nav-item nav-link">Contact</a>
-                <a href="/dw/privacy-policy" class="nav-item nav-link active">Privacy Policy</a>
-            </div>
-            <!-- <button type="button" class="btn text-dark" data-bs-toggle="modal" data-bs-target="#searchModal"><i
-                    class="fa fa-search"></i></button> -->
-
-
-            <!-- <a href="/dw/user-auth" class="btn btn-primary py-2 px-4 ms-3">Login</a> -->
-
-
-
-            <a href="" data-bs-toggle="modal" data-bs-target="#userProfileModal" class="btn btn-primary ms-3"><i
-                    class="fa fa-user" aria-hidden="true"></i></a>
-
-        </div>
-    </nav>
-    <!-- Navbar End -->
-    @endauth
-
-
-
-
-
-
-
-
-
-
-
-    <!-- User Profile & Password Edit Modal -->
-    <div class="modal fade" id="userProfileModal" tabindex="-1" aria-labelledby="userProfileModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-body position-relative">
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-
-
-                    <!-- profile update form -->
-                    <form class="text-center">
-                        <h4 class="modal-title" id="userProfileModalLabel">User Profile</h4>
-                        <p class="mb-4">Update your profile details</p>
-                        <div class="row">
-
-
-                            <div class="col-md-12">
-                                <div class="form-floating mb-3">
-                                    <input type="text" class="form-control" id="user_name" name="user_name"
-                                        value="Saklin Mustak">
-                                    <label for="user_name">Name</label>
-                                </div>
-                            </div>
-
-
-
-                            <div class="col-md-6">
-                                <div class="form-floating mb-3">
-                                    <input type="email" class="form-control" id="user_email" name="user_email"
-                                        value="saklin@gmail.com">
-                                    <label for="user_email">Email</label>
-                                </div>
-                            </div>
-
-                            <div class="col-md-6">
-                                <div class="form-floating mb-3">
-                                    <input type="number" class="form-control" id="user_mobile" name="user_mobile"
-                                        value="9061234567">
-                                    <label for="user_mobile">Mobile</label>
-                                </div>
-                            </div>
-
-
-
-                            <div class="col-md-12">
-                                <div class="form-floating mb-3">
-                                    <a href="" class="btn btn-primary py-3 col-md-12">Update Profile</a>
-                                </div>
-                            </div>
-
-
-
-                        </div>
-                    </form>
-
-
-
-                    <!-- password update form -->
-                    <form class="text-center form password-update">
-                        <h4 class="modal-title" id="userProfileModalLabel">Security Privacy</h4>
-                        <p class="mb-4">Update your account password</p>
-                        <div class="row">
-
-
-                            <div class="col-md-12">
-                                <div class="form-floating mb-3">
-                                    <input type="password" class="form-control" id="user_old_password"
-                                        name="user_old_password" placeholder="Existing Password">
-                                    <label for="user_old_password">Existing Password</label>
-                                </div>
-                            </div>
-
-
-
-                            <div class="col-md-12">
-                                <div class="form-floating mb-3">
-                                    <input type="password" class="form-control" id="user_new_password"
-                                        name="user_new_password" placeholder="New Password">
-                                    <label for="user_new_password">New Password</label>
-                                </div>
-                            </div>
-
-
-                            <div class="col-md-12">
-                                <div class="form-floating mb-3"
-                                    style="background: url('img/captcha.jpg'); background-repeat: no-repeat; background-position: center; background-size: cover;">
-                                    <canvas id="passwordUpdateCaptchaCanvas" width="200" height="40"
-                                        style="cursor: pointer;"></canvas>
-                                </div>
-                            </div>
-
-
-
-                            <div class="col-md-12">
-                                <div class="form-floating mb-3">
-                                    <input type="text" class="form-control" id="passwordUpdateCaptchaInput"
-                                        name="passwordUpdateCaptchaInput" placeholder="Captcha">
-                                    <label for="passwordUpdateCaptchaInput">Captcha</label>
-                                </div>
-                            </div>
-
-
-
-
-
-                            <div class="col-md-12">
-                                <div class="form-floating mb-3">
-                                    <button type="submit" class="btn btn-primary py-3 col-md-12">Save Changes</button>
-                                </div>
-                            </div>
-
-
-
-                        </div>
-                    </form>
-
-
-                    <div class="col-md-12">
-                        <div class="form-floating mb-3">
-                            <form method="POST" action="{{ route('user.logout') }}">
-                                @csrf
-                                <a class="btn btn-danger py-3 col-md-12" :href="route('user.logout')"
-                                    onclick="event.preventDefault();
-                                                this.closest('form').submit();">
-                                    Logout
-                                </a>
-                            </form>
-
-                        </div>
-                    </div>
-
-
-                    <!-- <div class="col-md-12">
-                        <div class="form-floating mb-3">
-                            <button type="submit" class="btn btn-danger py-3 col-md-12">Logout</button>
-                        </div>
-                    </div> -->
-
-
-
-                </div>
-
-            </div>
-        </div>
-    </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    <!-- Hero Start -->
-    <div class="container-fluid bg-primary py-5 hero-header mb-5">
-        <div class="row py-3">
-            <div class="col-12 text-center">
-                <h1 class="display-3 text-white animated zoomIn">Our Privacy Policy</h1>
-                @guest
-                <a href="/" class="h4 text-white" style="text-decoration: underline;">Home</a>
-                @endguest
-
-                @auth
-                <a href="/dw" class="h4 text-white" style="text-decoration: underline;">Home</a>
-                @endauth
-                <i class="fa fa-plus text-dark px-2" style="font-size: 2rem; font-weight: 700;"></i>
-                <a href="" class="h4 text-white">Policies</a>
-            </div>
-        </div>
-    </div>
-    <!-- Hero End -->
-
-
-
-
-
-
-
-
-    <!-- Privacy Policy Start -->
-    <div class="container-fluid py-5">
-        <div class="container">
-            <div class="row">
-                <div class="col-12 wow slideInUp" data-wow-delay="0.1s">
-                    <div class="bg-light rounded h-100 p-5">
-                        <div class="section-title">
-                            <h5 class="position-relative d-inline-block text-primary text-uppercase">Privacy Policy</h5>
-                            <h1 class="display-6 mb-4">Welcome to our site</h1>
-                        </div>
-
-                        <div class="d-flex align-items-center mb-5 wow slideInUp" data-wow-delay="0.1s">
-                            <div class="text-start bg-white p-3" style="color: #051225; font-style: italic;">
-                                <p class="mb-0 fw-bold fs-5"><i class="fa-solid fa-quote-left"></i>&nbsp;This
-                                    Privacy Policy explains how Sumatra Sales Private Limited ("we" or "us")
-                                    collects, uses, and protects the personal information of users ("you" or "users") on
-                                    our website www.doctorwala.info (the "Website"). By using our Website, you consent
-                                    to the collection, use, and disclosure of your personal information as described in
-                                    this Privacy Policy.&nbsp;<i class="fa-solid fa-quote-right"></i></p>
-                            </div>
-                        </div>
-
-
-                        <div class="d-flex align-items-center mb-2 wow slideInUp" data-wow-delay="0.1s">
-                            <div class="text-start">
-                                <h5 class="mb-0">Information We Collect</h5>
-                                <span>1.1 Personal Information: We may collect personal information such as your name,
-                                    email address, contact number, and other relevant information when you voluntarily
-                                    provide it to us through forms or by contacting us.</span> <br> <br>
-
-                                <p>1.2 Usage Data: We may collect non-personal information about your interaction with
-                                    our Website, such as your IP address, browser type, referring/exit pages, and the
-                                    date and time of your visit. We may use cookies and similar technologies to collect
-                                    this information.</p>
-                            </div>
-                        </div>
-
-
-
-
-                        <div class="d-flex align-items-center wow slideInUp" data-wow-delay="0.1s">
-                            <div class="text-start">
-                                <h5 class="mb-0">Use of Information</h5>
-                                <span>2.1 Provide Services: We may use the personal information you provide to us to
-                                    provide and improve our services, such as facilitating appointments with doctors,
-                                    displaying relevant search results, and delivering personalized content.</span>
-                                <br>
-                                <br>
-                                <p>2.2 Communication: We may use your contact information to communicate with you
-                                    regarding your inquiries, appointments, service updates, and promotional offers. You
-                                    may opt out of receiving promotional communications at any time.</p>
-
-                                <p>2.3 Analytics and Improvements: We may use the non-personal information and usage
-                                    data to analyze trends, administer the Website, and improve our services, features,
-                                    and user experience.</p>
-                            </div>
-                        </div>
-
-
-
-                        <div class="d-flex align-items-center mb-4 wow slideInUp" data-wow-delay="0.1s">
-                            <div class="text-start">
-                                <h5 class="mb-0">Data Security</h5>
-
-                                <span>
-                                    We take reasonable precautions to protect the personal information we collect from
-                                    unauthorized access, use, disclosure, or alteration. However, no method of
-                                    transmission over the internet or electronic storage is completely secure.
-                                    Therefore, we cannot guarantee absolute security of your personal information.
-                                </span>
-                            </div>
-                        </div>
-
-
-
-
-                        <div class="d-flex align-items-center mb-4 wow slideInUp" data-wow-delay="0.1s">
-                            <div class="text-start">
-                                <h5 class="mb-0">Links to Third-Party Websites</h5>
-
-                                <span>
-                                    Our Website may contain links to third-party websites or services. This Privacy
-                                    Policy does not apply to those third-party websites. We recommend reviewing the
-                                    privacy policies of those websites for information about their data collection, use,
-                                    and disclosure practices.
-                                </span>
-                            </div>
-                        </div>
-
-
-
-
-
-                        <div class="d-flex align-items-center mb-4 wow slideInUp" data-wow-delay="0.1s">
-                            <div class="text-start">
-                                <h5 class="mb-0">Children's Privacy</h5>
-
-                                <span>
-                                    Our Website is not intended for children under the age of 13. We do not knowingly
-                                    collect personal information from children under the age of 13. If you are a parent
-                                    or guardian and believe that your child has provided us with personal information,
-                                    please contact us, and we will promptly remove the information.
-                                </span>
-                            </div>
-                        </div>
-
-
-
-
-                        <div class="d-flex align-items-center mb-4 wow slideInUp" data-wow-delay="0.1s">
-                            <div class="text-start">
-                                <h5 class="mb-0">Changes to this Privacy Policy</h5>
-
-                                <span>
-                                    We reserve the right to update or modify this Privacy Policy at any time. Any
-                                    changes will be effective immediately upon posting the updated Privacy Policy on our
-                                    Website. We encourage you to review this Privacy Policy periodically.
-                                </span>
-                            </div>
-                        </div>
-
-
-
-
-                        <div class="d-flex align-items-center wow slideInUp" data-wow-delay="0.1s">
-                            <div class="text-start">
-                                <h5 class="mb-0">Contact Us</h5>
-
-                                <span>
-                                    If you have any questions, concerns, or requests regarding this Privacy Policy or
-                                    our privacy practices, please contact us at <strong>info.doctorwala@gmail.com</strong>
-                                </span>
-                            </div>
-                        </div>
-
-
-
-                    </div>
-                </div>
-
-            </div>
-        </div>
-    </div>
-    <!-- Privacy Policy End -->
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    <!-- marquee text start -->
-    <marquee id="marqueeText"
-        style="background: #051225; color: white; padding: 10px; position: fixed; bottom: 0; width: 100%; z-index: 1000;">
-        Welcome to <b>Doctorwala.info</b> !! In addition
-        to doctors, we also connect you with pathologists and OPDs. If you require diagnostic services or need to visit
-        an OPD for consultation, DoctorWala.info is your go-to platform. We collaborate with trusted pathologists and
-        OPDs to ensure that you receive accurate and timely medical tests and consultations. for more information feel
-        free to call us or write us directly at <b>info.doctorwala@gmail.com</b>
-    </marquee>
-    <!-- marquee text end -->
-
-
-
-
-
-
-
-
-
-    <!-- Footer Start -->
-    <div class="container-fluid text-light py-4 footer-content"
-        style="background: #051225; position: relative; z-index: 1001;">
-        <div class="">
-            <div class="footer-content-inner">
-
-                <div class="text-center text-md-start">
-                    <p class="mb-md-0">&copy; <a class="text-white border-bottom"
-                            href="doctorwala.info">DoctorWala.info</a>. All
-                        Rights Reserved.</p>
-                </div>
-
-                <!-- <div class="col-md-6 text-center text-md-end">
-                    <p class="mb-0">Designed by <a class="text-white border-bottom" href="https://htmlcodex.com">HTML
-                            Codex</a><br>
-                        Distributed by <a class="text-white border-bottom" href="https://themewagon.com">ThemeWagon</a>
-                    </p>
-                </div> -->
-
-                <div class="">
-                    <div class="d-flex">
-                        <a class="btn btn-lg btn-dark btn-lg-square rounded me-2 btn-footer" href="#"><i
-                                class="fab fa-twitter fw-normal"></i></a>
-                        <a class="btn btn-lg btn-dark btn-lg-square rounded me-2 btn-footer" href="#"><i
-                                class="fab fa-facebook-f fw-normal"></i></a>
-                        <a class="btn btn-lg btn-dark btn-lg-square rounded me-2 btn-footer" href="#"><i
-                                class="fab fa-linkedin-in fw-normal"></i></a>
-                        <a class="btn btn-lg btn-dark btn-lg-square rounded btn-footer" href="#"><i
-                                class="fab fa-instagram fw-normal"></i></a>
-                    </div>
-                </div>
-
-
-                <div class="login-partner">
-                    @guest
-                    <a href="/partner-login" class="btn btn-dark btn-lg rounded me-2">Login As Partner</a>
-                    @endguest
-
-                    @auth
-                    <form method="POST" action="{{ route('user.logout') }}">
-                        @csrf
-                        <a class="btn btn-dark btn-lg rounded me-2" :href="route('user.logout')"
-                            onclick="event.preventDefault();
-                                                this.closest('form').submit();">
-                            Logout
-                        </a>
-                    </form>
-                    @endauth
-                </div>
-
-
-            </div>
-        </div>
-    </div>
-    <!-- Footer End -->
-
-
-    <!-- Global Search Section========================================================================================= -->
-    <!-- ── Floating Search FAB ── -->
-    <button class="gs-fab" id="gsOpenBtn" title="Search Everything">
-        <i class="bi bi-search"></i>
-        <span class="gs-fab-ring"></span>
-    </button>
-
-    <!-- ── Global Search Modal Overlay ── -->
-    <div class="gs-overlay" id="gsOverlay">
-        <div class="gs-modal" id="gsModal" role="dialog" aria-modal="true" aria-label="Global Search">
-
-            <!-- Header -->
-            <div class="gs-modal-header">
-                <div class="gs-modal-icon">
-                    <i class="bi bi-search"></i>
-                </div>
-                <div class="gs-modal-title">
-                    <h4>Search Your Nearby Doctors</h4>
-                    <p>Doctor's name · Clinic's Name · Using Location</p>
-                </div>
-                <button class="gs-modal-close" id="gsCloseBtn" aria-label="Close">
-                    <i class="bi bi-x-lg">X</i>
-                </button>
-            </div>
-
-            <!-- Search Form — submits to search-result page -->
+<!-- Hero Start -->
+<div class="container-fluid bg-primary py-5 hero-header mb-5">
+    <div class="row py-3">
+        <div class="col-12 text-center">
+            <h1 class="display-3 text-white animated zoomIn">Our Privacy Policy</h1>
             @guest
-            <form action="{{ route('search.result') }}" method="GET" class="gs-form" id="gsForm">
-                <div class="gs-input-group">
-                    <i class="bi bi-search gs-input-icon"></i>
-                    <input
-                        type="text"
-                        name="query"
-                        id="gsInput"
-                        class="gs-input"
-                        placeholder="Type doctor name, clinic, test, city..."
-                        autocomplete="off"
-                        spellcheck="false"
-                        required />
-                    <button type="submit" class="gs-search-btn">
-                        <i class="bi bi-arrow-right-circle-fill"></i>
-                    </button>
-                </div>
-
-                <!-- Category chips -->
-                <div class="gs-chips-row">
-                    <span class="gs-chip-label">Filter:</span>
-                    <label class="gs-chip gs-chip-all active-chip">
-                        <input type="radio" name="category" value="all" checked hidden> All
-                    </label>
-                    <label class="gs-chip gs-chip-doc">
-                        <input type="radio" name="category" value="doctor" hidden>
-                        <i class="bi bi-person-heart-fill"></i> Direct to Doctors
-                    </label>
-                    <label class="gs-chip gs-chip-opd">
-                        <input type="radio" name="category" value="opd" hidden>
-                        <i class="bi bi-hospital-fill"></i> OPD Doctors
-                    </label>
-                    <label class="gs-chip gs-chip-path">
-                        <input type="radio" name="category" value="pathology" hidden>
-                        <i class="bi bi-flask-fill"></i> Test Pathology
-                    </label>
-                </div>
-            </form>
+            <a href="/" class="h4 text-white" style="text-decoration: underline;">Home</a>
             @endguest
+
             @auth
-            <form action="{{ route('dw.search.result') }}" method="GET" class="gs-form" id="gsForm">
-                <div class="gs-input-group">
-                    <i class="bi bi-search gs-input-icon"></i>
-                    <input
-                        type="text"
-                        name="query"
-                        id="gsInput"
-                        class="gs-input"
-                        placeholder="Type doctor name, clinic, test, city..."
-                        autocomplete="off"
-                        spellcheck="false"
-                        required />
-                    <button type="submit" class="gs-search-btn">
-                        <i class="bi bi-arrow-right-circle-fill"></i>
-                    </button>
-                </div>
-
-                <!-- Category chips -->
-                <div class="gs-chips-row">
-                    <span class="gs-chip-label">Filter:</span>
-                    <label class="gs-chip gs-chip-all active-chip">
-                        <input type="radio" name="category" value="all" checked hidden> All
-                    </label>
-                    <label class="gs-chip gs-chip-doc">
-                        <input type="radio" name="category" value="doctor" hidden>
-                        <i class="bi bi-person-heart-fill"></i> Doctors
-                    </label>
-                    <label class="gs-chip gs-chip-opd">
-                        <input type="radio" name="category" value="opd" hidden>
-                        <i class="bi bi-hospital-fill"></i> OPD
-                    </label>
-                    <label class="gs-chip gs-chip-path">
-                        <input type="radio" name="category" value="pathology" hidden>
-                        <i class="bi bi-flask-fill"></i> Pathology
-                    </label>
-                </div>
-            </form>
+            <a href="/dw" class="h4 text-white" style="text-decoration: underline;">Home</a>
             @endauth
-
-            <!-- Quick tags -->
-            <div class="gs-quick-tags">
-                <span class="gs-quick-label">Popular:</span>
-                <button type="button" class="gs-quick-tag" data-val="Cardiologist">Cardiologist</button>
-                <button type="button" class="gs-quick-tag" data-val="Blood Test">Blood Test</button>
-                <button type="button" class="gs-quick-tag" data-val="Urine Test">Urine Test</button>
-                <button type="button" class="gs-quick-tag" data-val="Eye Specialist">Eye Specialist</button>
-                <button type="button" class="gs-quick-tag" data-val="X-Ray">X-Ray</button>
-                <button type="button" class="gs-quick-tag" data-val="Skin">Skin Doctor</button>
-                <button type="button" class="gs-quick-tag" data-val="Dentist">Dentist</button>
-                <button type="button" class="gs-quick-tag" data-val="Orthopedic">Orthopedic</button>
-                <button type="button" class="gs-quick-tag" data-val="Pediatrician">Pediatrician</button>
-                <button type="button" class="gs-quick-tag" data-val="General Physician">General Physician</button>
-                <button type="button" class="gs-quick-tag" data-val="General Surgeon">General Surgeon</button>
-                <button type="button" class="gs-quick-tag" data-val="Gynecologist">Gynecologist</button>
-                
-            </div>
-
-            <!-- ESC hint -->
-            <p class="gs-esc-hint">Press <kbd>ESC</kbd> to close &nbsp;·&nbsp; <kbd>Enter</kbd> to search</p>
-
-
-            <!-- Branding logo -->
-            <div class="gs-brand-logo">
-                <img src="{{asset('../img/logoo.png')}}" alt="Logo" class="gs-brand-img">
-            </div>
+            <i class="fa fa-plus text-dark px-2" style="font-size: 2rem; font-weight: 700;"></i>
+            <a href="" class="h4 text-white">Policies</a>
         </div>
     </div>
-    <!-- Global Search Section========================================================================================= -->
+</div>
+<!-- Hero End -->
+
+<!-- Privacy Policy Start -->
+<div class="container-fluid py-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 wow slideInUp" data-wow-delay="0.1s">
+                <div class="bg-light rounded h-100 p-5">
+                    <div class="section-title">
+                        <h5 class="position-relative d-inline-block text-primary text-uppercase">Privacy Policy</h5>
+                        <h1 class="display-6 mb-4">Welcome to our site</h1>
+                    </div>
+
+                    <div class="d-flex align-items-center mb-5 wow slideInUp" data-wow-delay="0.1s">
+                        <div class="text-start bg-white p-3" style="color: #051225; font-style: italic;">
+                            <p class="mb-0 fw-bold fs-5"><i class="fa-solid fa-quote-left"></i>&nbsp;This
+                                Privacy Policy explains how Sumatra Sales Private Limited ("we" or "us")
+                                collects, uses, and protects the personal information of users ("you" or "users") on
+                                our website www.doctorwala.info (the "Website"). By using our Website, you consent
+                                to the collection, use, and disclosure of your personal information as described in
+                                this Privacy Policy.&nbsp;<i class="fa-solid fa-quote-right"></i></p>
+                        </div>
+                    </div>
+
+
+                    <div class="d-flex align-items-center mb-2 wow slideInUp" data-wow-delay="0.1s">
+                        <div class="text-start">
+                            <h5 class="mb-0">Information We Collect</h5>
+                            <span>1.1 Personal Information: We may collect personal information such as your name,
+                                email address, contact number, and other relevant information when you voluntarily
+                                provide it to us through forms or by contacting us.</span> <br> <br>
+
+                            <p>1.2 Usage Data: We may collect non-personal information about your interaction with
+                                our Website, such as your IP address, browser type, referring/exit pages, and the
+                                date and time of your visit. We may use cookies and similar technologies to collect
+                                this information.</p>
+                        </div>
+                    </div>
 
 
 
 
-    <!-- PARTNER REGISTER BUTTON -->
-    @guest
-    <a href="/partner-register" class="btn btn-lg btn-dark2 btn-lg-square rounded partner-login">
-        <i class="fa fa-plus" aria-hidden="true"></i>
-        <span class="showing-text"> Partner Register</span>
-    </a>
-    @endguest
-    @auth
-    @endauth
+                    <div class="d-flex align-items-center wow slideInUp" data-wow-delay="0.1s">
+                        <div class="text-start">
+                            <h5 class="mb-0">Use of Information</h5>
+                            <span>2.1 Provide Services: We may use the personal information you provide to us to
+                                provide and improve our services, such as facilitating appointments with doctors,
+                                displaying relevant search results, and delivering personalized content.</span>
+                            <br>
+                            <br>
+                            <p>2.2 Communication: We may use your contact information to communicate with you
+                                regarding your inquiries, appointments, service updates, and promotional offers. You
+                                may opt out of receiving promotional communications at any time.</p>
+
+                            <p>2.3 Analytics and Improvements: We may use the non-personal information and usage
+                                data to analyze trends, administer the Website, and improve our services, features,
+                                and user experience.</p>
+                        </div>
+                    </div>
+
+
+
+                    <div class="d-flex align-items-center mb-4 wow slideInUp" data-wow-delay="0.1s">
+                        <div class="text-start">
+                            <h5 class="mb-0">Data Security</h5>
+
+                            <span>
+                                We take reasonable precautions to protect the personal information we collect from
+                                unauthorized access, use, disclosure, or alteration. However, no method of
+                                transmission over the internet or electronic storage is completely secure.
+                                Therefore, we cannot guarantee absolute security of your personal information.
+                            </span>
+                        </div>
+                    </div>
+
+
+
+
+                    <div class="d-flex align-items-center mb-4 wow slideInUp" data-wow-delay="0.1s">
+                        <div class="text-start">
+                            <h5 class="mb-0">Links to Third-Party Websites</h5>
+
+                            <span>
+                                Our Website may contain links to third-party websites or services. This Privacy
+                                Policy does not apply to those third-party websites. We recommend reviewing the
+                                privacy policies of those websites for information about their data collection, use,
+                                and disclosure practices.
+                            </span>
+                        </div>
+                    </div>
 
 
 
 
 
+                    <div class="d-flex align-items-center mb-4 wow slideInUp" data-wow-delay="0.1s">
+                        <div class="text-start">
+                            <h5 class="mb-0">Children's Privacy</h5>
+
+                            <span>
+                                Our Website is not intended for children under the age of 13. We do not knowingly
+                                collect personal information from children under the age of 13. If you are a parent
+                                or guardian and believe that your child has provided us with personal information,
+                                please contact us, and we will promptly remove the information.
+                            </span>
+                        </div>
+                    </div>
 
 
 
 
+                    <div class="d-flex align-items-center mb-4 wow slideInUp" data-wow-delay="0.1s">
+                        <div class="text-start">
+                            <h5 class="mb-0">Changes to this Privacy Policy</h5>
+
+                            <span>
+                                We reserve the right to update or modify this Privacy Policy at any time. Any
+                                changes will be effective immediately upon posting the updated Privacy Policy on our
+                                Website. We encourage you to review this Privacy Policy periodically.
+                            </span>
+                        </div>
+                    </div>
 
 
 
 
+                    <div class="d-flex align-items-center wow slideInUp" data-wow-delay="0.1s">
+                        <div class="text-start">
+                            <h5 class="mb-0">Contact Us</h5>
+
+                            <span>
+                                If you have any questions, concerns, or requests regarding this Privacy Policy or
+                                our privacy practices, please contact us at <strong>info.doctorwala@gmail.com</strong>
+                            </span>
+                        </div>
+                    </div>
 
 
 
+                </div>
+            </div>
 
+        </div>
+    </div>
+</div>
+<!-- Privacy Policy End -->
 
-
-    <!-- JavaScript Libraries -->
-    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="{{asset('../lib/wow/wow.min.js')}}"></script>
-    <script src="{{asset('../lib/easing/easing.min.js')}}"></script>
-    <script src="{{asset('../lib/waypoints/waypoints.min.js')}}"></script>
-    <script src="{{asset('../lib/owlcarousel/owl.carousel.min.js')}}"></script>
-    <script src="{{asset('../lib/tempusdominus/js/moment.min.js')}}"></script>
-    <script src="{{asset('../lib/tempusdominus/js/moment-timezone.min.js')}}"></script>
-    <script src="{{asset('../lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js')}}"></script>
-    <script src="{{asset('../lib/twentytwenty/jquery.event.move.js')}}"></script>
-    <script src="{{asset('../lib/twentytwenty/jquery.twentytwenty.js')}}"></script>
-
-    <!-- Template Javascript -->
-    <script src="{{asset('../js/main.js')}}"></script>
-    <script src="{{asset('../js/cards-scroll.js')}}"></script>
-    <script src="{{asset('../js/captcha.js')}}"></script>
-    <script src="js/password-update-captcha.js"></script>
-
-
-    <script>
-        document.addEventListener('DOMContentLoaded', async () => {
-
-            // 1. Parse browser & OS from userAgent
-            const ua = navigator.userAgent;
-            const browser = ua.includes('Chrome') ? 'Chrome' :
-                ua.includes('Firefox') ? 'Firefox' :
-                ua.includes('Safari') ? 'Safari' :
-                ua.includes('Edge') ? 'Edge' :
-                'Other';
-
-            const os = ua.includes('Windows') ? 'Windows' :
-                ua.includes('Mac') ? 'MacOS' :
-                ua.includes('Android') ? 'Android' :
-                ua.includes('iPhone') || ua.includes('iPad') ? 'iOS' :
-                ua.includes('Linux') ? 'Linux' :
-                'Other';
-
-            const deviceType = /Mobi|Android|iPhone|iPad/i.test(ua) ? 'Mobile' : 'Desktop';
-
-            // 2. Get approx location from IP (free, no key needed)
-            let country = null,
-                city = null;
-            try {
-                const geo = await fetch('https://ipapi.co/json/');
-                const geoData = await geo.json();
-                country = geoData.country_name;
-                city = geoData.city;
-            } catch (e) {}
-
-            // 3. Send to Laravel
-            fetch('{{ route("visitor.track") }}', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                },
-                body: JSON.stringify({
-                    page_url: window.location.href,
-                    referrer: document.referrer || null,
-                    browser: browser,
-                    os: os,
-                    device_type: deviceType,
-                    screen_size: `${screen.width}x${screen.height}`,
-                    language: navigator.language,
-                    timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-                    country: country,
-                    city: city,
-                })
-            });
-        });
-    </script>
-
-    <script src="{{asset('./js/float-btn.js')}}"></script>
-</body>
-
-</html>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.getElementById('gsOpenBtn').click();
+    });
+</script>
+@endsection

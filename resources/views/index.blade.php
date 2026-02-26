@@ -6,6 +6,11 @@
 
 <head>
 
+    <!-- Carousels -->
+    <link href="{{asset('./css/opd-carousel-card.css')}}" rel="stylesheet">
+    <link href="{{asset('./css/path-carousel-card.css')}}" rel="stylesheet">
+    <link href="{{asset('./css/doc-carousel-card.css')}}" rel="stylesheet">
+
     <!-- SEO Meta Tags -->
     <meta name="description" content="Search for doctors, specialists, and pathology types. Find the best healthcare options tailored to your needs.">
     <meta name="keywords" content="{{ implode(',', $specialists->toArray()) }}, {{ implode(',', $types->toArray()) }}, doctor, specialist, pathology, doctorwala.info, doctor wala, DoctorWala, Doctorwala, doctorwala">
@@ -890,5 +895,11 @@
 </div>
 <!-- Testimonial End -->
 
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.getElementById('gsOpenBtn').click();
+    });
+</script>
 
 @endsection

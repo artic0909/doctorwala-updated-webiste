@@ -1,0 +1,500 @@
+@import url("https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800;900&family=Lora:ital,wght@0,400;0,600;0,700;1,400;1,600&display=swap");
+
+:root {
+    --primary: #0891b2;
+    --primary-lt: #e0f2fe;
+    --primary-dk: #0e7490;
+    --coral: #f97316;
+    --coral-lt: #fff7ed;
+    --green: #059669;
+    --green-lt: #d1fae5;
+    --bg: #f0f9ff;
+    --surface: #ffffff;
+    --border: #e0f2fe;
+    --text: #0f172a;
+    --muted: #64748b;
+    --light-muted: #94a3b8;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+body {
+    font-family: "Nunito", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+}
+
+/* ─── HERO ─── */
+.bd-hero {
+    position: relative;
+    background: linear-gradient(135deg, #0891b2 0%, #0284c7 55%, #38bdf8 100%);
+    padding: 70px 0 110px;
+    overflow: hidden;
+}
+.bd-hero__c1 {
+    position: absolute;
+    top: -60px;
+    right: -60px;
+    width: 320px;
+    height: 320px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.07);
+    pointer-events: none;
+}
+.bd-hero__c2 {
+    position: absolute;
+    bottom: -80px;
+    left: -50px;
+    width: 260px;
+    height: 260px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.05);
+    pointer-events: none;
+}
+.bd-hero__wave {
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    right: 0;
+    line-height: 0;
+}
+.bd-hero__wave svg {
+    display: block;
+    width: 100%;
+}
+
+.bd-hero__inner {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 0 24px;
+}
+
+.bd-hero__badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    background: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 100px;
+    padding: 5px 18px;
+    font-size: 0.68rem;
+    font-weight: 800;
+    color: #fff;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+}
+
+.bd-hero__title {
+    font-family: "Lora", serif;
+    font-size: clamp(26px, 4.5vw, 50px);
+    font-weight: 700;
+    color: #fff;
+    line-height: 1.15;
+    margin-bottom: 22px;
+    text-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+}
+
+.bd-hero__bc {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(255, 255, 255, 0.16);
+    border-radius: 100px;
+    padding: 8px 22px;
+    font-size: 0.82rem;
+}
+.bd-hero__bc a {
+    color: rgba(255, 255, 255, 0.78);
+    text-decoration: none;
+    font-weight: 700;
+    transition: color 0.2s;
+}
+.bd-hero__bc a:hover {
+    color: #fff;
+}
+.bd-hero__bc .sep {
+    color: rgba(255, 255, 255, 0.4);
+}
+.bd-hero__bc .cur {
+    color: #fff;
+    font-weight: 800;
+}
+
+/* ─── LAYOUT ─── */
+.bd-wrap {
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 0 24px;
+}
+
+.bd-layout {
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    gap: 44px;
+    padding: 64px 0 96px;
+    align-items: start;
+}
+@media (max-width: 880px) {
+    .bd-layout {
+        grid-template-columns: 1fr;
+    }
+    .bd-sidebar {
+        order: -1;
+    }
+}
+
+/* ─── MAIN ─── */
+.bd-main {
+}
+
+.bd-main__meta {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 22px;
+}
+
+.bd-badge-coral {
+    background: var(--coral);
+    color: #fff;
+    font-size: 0.6rem;
+    font-weight: 800;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    padding: 4px 13px;
+    border-radius: 100px;
+}
+
+.bd-meta-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: var(--primary-lt);
+    color: var(--primary-dk);
+    font-size: 0.71rem;
+    font-weight: 700;
+    padding: 4px 12px;
+    border-radius: 100px;
+}
+
+.bd-main__title {
+    font-family: "Lora", serif;
+    font-size: clamp(24px, 3.5vw, 40px);
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.2;
+    margin-bottom: 28px;
+}
+
+/* Cover */
+.bd-cover {
+    border-radius: 20px;
+    overflow: hidden;
+    position: relative;
+    margin-bottom: 32px;
+    box-shadow: 0 8px 40px rgba(8, 145, 178, 0.15);
+}
+.bd-cover img {
+    width: 100%;
+    aspect-ratio: 16/9;
+    object-fit: cover;
+    display: block;
+}
+.bd-cover__logo {
+    position: absolute;
+    bottom: 14px;
+    right: 14px;
+    background: rgba(255, 255, 255, 0.92);
+    border-radius: 12px;
+    padding: 6px 12px;
+    display: flex;
+    align-items: center;
+}
+.bd-cover__logo img {
+    width: 64px;
+}
+
+/* Author bar */
+.bd-author-bar {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 18px 22px;
+    background: linear-gradient(
+        90deg,
+        var(--primary-lt),
+        rgba(224, 242, 254, 0.3)
+    );
+    border-radius: 16px;
+    border-left: 4px solid var(--primary);
+    margin-bottom: 36px;
+}
+
+.bd-author-av {
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary), #38bdf8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    font-weight: 800;
+    color: #fff;
+    flex-shrink: 0;
+}
+
+.bd-author-name {
+    font-size: 0.9rem;
+    font-weight: 800;
+    color: var(--text);
+}
+.bd-author-role {
+    font-size: 0.72rem;
+    color: var(--muted);
+    margin-top: 2px;
+}
+
+/* Body */
+.bd-body {
+    font-size: 1.04rem;
+    line-height: 1.9;
+    color: #1e293b;
+}
+.bd-body p {
+    margin-bottom: 1.5em;
+}
+.bd-body h2 {
+    font-family: "Lora", serif;
+    font-size: 1.45rem;
+    font-weight: 700;
+    color: var(--text);
+    margin: 2.2em 0 0.8em;
+    padding-bottom: 0.5em;
+    border-bottom: 2px solid var(--primary-lt);
+}
+.bd-body blockquote {
+    margin: 2em 0;
+    padding: 22px 26px;
+    background: var(--primary-lt);
+    border-left: 5px solid var(--primary);
+    border-radius: 0 16px 16px 0;
+    font-family: "Lora", serif;
+    font-style: italic;
+    font-size: 1.1rem;
+    color: var(--primary-dk);
+    line-height: 1.7;
+}
+
+/* Back btn */
+.bd-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 44px;
+    padding: 12px 28px;
+    border-radius: 100px;
+    border: 2px solid var(--primary);
+    color: var(--primary);
+    font-size: 0.8rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition:
+        background 0.25s,
+        color 0.25s,
+        transform 0.2s;
+}
+.bd-back:hover {
+    background: var(--primary);
+    color: #fff;
+    transform: translateX(-3px);
+}
+
+/* ─── SIDEBAR ─── */
+.bd-sidebar {
+}
+
+.bd-sblock {
+    background: var(--surface);
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    padding: 24px;
+    margin-bottom: 24px;
+    box-shadow: 0 2px 12px rgba(8, 145, 178, 0.06);
+}
+
+.bd-sblock__head {
+    font-family: "Lora", serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 18px;
+    padding-bottom: 14px;
+    border-bottom: 2px solid var(--primary-lt);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.bd-sblock__head svg {
+    color: var(--primary);
+}
+
+/* Info rows */
+.bd-info-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.84rem;
+}
+.bd-info-row:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+.bd-info-row:first-child {
+    padding-top: 0;
+}
+
+.bd-info-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    background: var(--primary-lt);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    color: var(--primary);
+}
+
+.bd-info-label {
+    font-size: 0.66rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+}
+.bd-info-val {
+    font-weight: 700;
+    color: var(--text);
+    font-size: 0.84rem;
+}
+
+/* Related */
+.bd-related-item {
+    display: flex;
+    gap: 12px;
+    padding: 13px 0;
+    border-bottom: 1px solid var(--border);
+    text-decoration: none;
+    transition: transform 0.2s;
+}
+.bd-related-item:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+.bd-related-item:first-child {
+    padding-top: 0;
+}
+.bd-related-item:hover {
+    transform: translateX(4px);
+}
+
+.bd-rel-thumb {
+    width: 64px;
+    height: 54px;
+    border-radius: 10px;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+.bd-rel-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.bd-rel-title {
+    font-family: "Lora", serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.4;
+    margin-bottom: 4px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.bd-rel-date {
+    font-size: 0.67rem;
+    color: var(--muted);
+    font-weight: 600;
+}
+
+/* CTA card */
+.bd-cta {
+    background: linear-gradient(135deg, var(--primary) 0%, #0284c7 100%);
+    border-radius: 20px;
+    padding: 28px 24px;
+    text-align: center;
+    box-shadow: 0 8px 32px rgba(8, 145, 178, 0.3);
+}
+.bd-cta__icon {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 16px;
+    color: #fff;
+}
+.bd-cta h3 {
+    font-family: "Lora", serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 10px;
+    line-height: 1.35;
+}
+.bd-cta p {
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.75);
+    margin-bottom: 20px;
+    line-height: 1.6;
+}
+.bd-cta a {
+    display: inline-block;
+    background: #fff;
+    color: var(--primary);
+    padding: 11px 26px;
+    border-radius: 100px;
+    font-size: 0.78rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition:
+        background 0.2s,
+        transform 0.2s;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+.bd-cta a:hover {
+    background: var(--primary-lt);
+    transform: translateY(-2px);
+}

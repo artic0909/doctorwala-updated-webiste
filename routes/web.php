@@ -50,6 +50,7 @@ Route::get('/coupons', function () {
 Route::get('/', [FrontHomePageController::class, 'index'])->name('homepage');
 Route::get('/about', [FrontAboutPageController::class, 'index'])->name('aboutpage');
 Route::get('/blog', [FrontBlogsPageController::class, 'index'])->name('blogpage');
+Route::get('/blog/{slug}', [FrontBlogsPageController::class, 'blogdetails'])->name('blogpage.details');
 Route::get('/contact', [FrontContactusPageController::class, 'index'])->name('contactpage');
 Route::post('/contact', [FrontContactusPageController::class, 'store'])->name('contact.store');
 Route::get('/privacy-policy', [FrontPrivacyPolicyPageController::class, 'index'])->name('privacy-policiypage');

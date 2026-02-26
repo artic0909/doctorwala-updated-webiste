@@ -99,9 +99,3 @@
         </div>`;
         };
     </script>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            document.getElementById('gsOpenBtn').click();
-        });
-    </script>
