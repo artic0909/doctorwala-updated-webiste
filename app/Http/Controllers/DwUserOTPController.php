@@ -12,87 +12,77 @@ use Illuminate\Support\Facades\Mail;
 
 class DwUserOTPController extends Controller
 {
-    // Show OTP form
-    public function userLoginWithOTPView()
+    public function userOtpView()
     {
-        return view('user-otp'); // Your Blade file for Enter email entry
+        return view('user-otp');
     }
 
-    public function userLoginWithOTPVerifyView()
-    {
-        return view('user-otp-verify'); // Your Blade file for OTP entry
-    }
-
-
-    // Send OTP to the email
     public function sendOTP(Request $request)
     {
         $request->validate([
             'user_email' => 'required|email',
+        ], [
+            'user_email.required' => 'Email address is required.',
+            'user_email.email'    => 'Please enter a valid email address.',
         ]);
 
-        $email = $request->user_email;
-
-        // Check if the email exists in the DwUserModel
-        $user = DwUserModel::where('user_email', $email)->first();
+        $user = DwUserModel::where('user_email', $request->user_email)->first();
 
         if (!$user) {
-            // If email is not found, return error message
-            return back()->withErrors(['user_email' => 'Email is not registered.']);
+            return back()->withErrors(['user_email' => 'This email is not registered with us.'])->withInput();
         }
 
-        // Generate OTP
         $otp = rand(1000, 9999);
 
-        // Store OTP in cookie for 3 minutes
         Cookie::queue('user_otp', $otp, 3);
+        session(['user_email' => $request->user_email]);
 
-        // Store email in session to use it later
-        session(['user_email' => $email]);
+        Mail::to($request->user_email)->send(new SendOTPUser($otp));
 
-        // Send OTP email
-        Mail::to($email)->send(new SendOTPUser($otp));
-
-        // Redirect to OTP verification page
-        return redirect()->route('user-otp.verify')->with('message', 'OTP has been sent to your email.');
+        return redirect()->route('dw.user-otp')
+            ->with('message', 'OTP sent successfully! Please check your inbox (and spam folder).');
     }
 
-
-    // Verify OTP
     public function verifyOTP(Request $request)
     {
         $request->validate([
-            'user_otp' => 'required|numeric|digits:4',
+            'user_otp' => 'required|digits:4',
+        ], [
+            'user_otp.required' => 'Please enter the 4-digit OTP.',
+            'user_otp.digits'   => 'OTP must be exactly 4 digits.',
         ]);
 
-        $enteredOtp = $request->user_otp;
-
-        // Get OTP from the cookie
         $storedOtp = Cookie::get('user_otp');
+        $email     = session('user_email');
 
-        // Get email from the session
-        $email = session('user_email');
-
-        // Verify OTP
-        if ($storedOtp && $enteredOtp == $storedOtp) {
-            // OTP is valid, log the user in
-
-            // Retrieve the user data using the stored email
-            $user = DwUserModel::where('user_email', $email)->first();
-
-            if ($user) {
-                // Log the user in using the user guard
-                Auth::guard('dwuser')->login($user);
-
-                // Redirect to the user dashboard
-                return redirect()->route('dw.opd');
-            } else {
-                // user not found, return error
-                return back()->withErrors(['user_email' => 'User does not exist.']);
-            }
-        } else {
-            // OTP is invalid or expired
-            return back()->withErrors(['user_otp' => 'Invalid or expired OTP.']);
+        if (!$storedOtp) {
+            return back()->withErrors(['user_otp' => 'OTP has expired. Please request a new one.']);
         }
+
+        if ($request->user_otp != $storedOtp) {
+            return back()->withErrors(['user_otp' => 'Incorrect OTP. Please try again.']);
+        }
+
+        $user = DwUserModel::where('user_email', $email)->first();
+
+        if (!$user) {
+            return back()->withErrors(['user_otp' => 'Account not found. Please contact support.']);
+        }
+
+        Cookie::queue(Cookie::forget('user_otp'));
+        session()->forget('user_email');
+
+        Auth::guard('dwuser')->login($user);
+        $request->session()->regenerate();
+
+        return redirect()->route('dw.opd')->with('success', 'Login successful! Welcome back.');
+    }
+
+    public function resetOtp(Request $request)
+    {
+        session()->forget('user_email');
+        Cookie::queue(Cookie::forget('user_otp'));
+
+        return response()->json(['status' => 'ok']);
     }
 }

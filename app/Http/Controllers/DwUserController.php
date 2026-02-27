@@ -33,33 +33,39 @@ class DwUserController extends Controller
 
     public function userRegForm(Request $request)
     {
-        $validated = $request->validate([
+        $request->validate([
             'user_name'     => 'required|string|max:255',
-            'user_mobile'   => 'required|string|max:255',
+            'user_mobile'   => 'required|digits:10',
             'user_city'     => 'required|string|max:255',
-            'user_email'    => 'required|string|email|max:255',
-            'user_password' => 'required|string',
+            'user_email'    => 'required|email|max:255|unique:dw_user_models,user_email',
+            'user_password' => 'required|string|min:8',
+        ], [
+            'user_name.required'     => 'Full name is required.',
+            'user_name.max'          => 'Name must not exceed 255 characters.',
+            'user_mobile.required'   => 'Mobile number is required.',
+            'user_mobile.digits'     => 'Mobile number must be exactly 10 digits.',
+            'user_city.required'     => 'City is required.',
+            'user_email.required'    => 'Email address is required.',
+            'user_email.email'       => 'Please enter a valid email address.',
+            'user_email.unique'      => 'This email is already registered. Please login or use a different email.',
+            'user_password.required' => 'Password is required.',
+            'user_password.min'      => 'Password must be at least 8 characters.',
         ]);
 
         try {
-
-            // ── Serial number: count users registered in current year ──────────
-            $currentYear      = now()->format('Y');   // e.g. 2026
-            $currentYearShort = now()->format('y');   // e.g. 26
+            $currentYear      = now()->format('Y');
+            $currentYearShort = now()->format('y');
 
             $serial = DwUserModel::whereYear('created_at', $currentYear)->count() + 1;
 
-            // ── 1. memberid  →  DW-2026-001 / DW-2026-010 / DW-2026-100 ───────
             $paddedSerial = str_pad($serial, 3, '0', STR_PAD_LEFT);
             $memberId     = 'DW-' . $currentYear . '-' . $paddedSerial;
 
-            // ── 2. medical_card_no  →  DW26 4866 01 ────────────────────────────
             $last4Mobile   = substr(preg_replace('/\D/', '', $request->user_mobile), -4);
             $cardSerial    = str_pad($serial, 2, '0', STR_PAD_LEFT);
             $medicalCardNo = 'DW' . $currentYearShort . ' ' . $last4Mobile . ' ' . $cardSerial;
 
-            // ── Save ────────────────────────────────────────────────────────────
-            $dwuser                  = new DwUserModel($validated);
+            $dwuser                  = new DwUserModel($request->only(['user_name', 'user_mobile', 'user_city', 'user_email']));
             $dwuser->user_password   = bcrypt($request->user_password);
             $dwuser->memberid        = $memberId;
             $dwuser->medical_card_no = $medicalCardNo;
@@ -67,21 +73,18 @@ class DwUserController extends Controller
             $dwuser->save();
 
             return redirect()->route('dw.user-auth')
-                ->with('success', 'Registration successful! Please log in.');
+                ->with('success', 'Registration successful! Your Medical Card ID is ' . $memberId . '. Please log in.');
         } catch (\Illuminate\Database\QueryException $e) {
-
-            // Duplicate email / mobile or any DB constraint violation
             return redirect()->back()
                 ->withInput()
-                ->with('error', 'This email or mobile number is already registered. Please try again.');
+                ->with('error', 'This email or mobile number is already registered. Please log in or use different details.');
         } catch (\Exception $e) {
-
-            // Any other unexpected error
             return redirect()->back()
                 ->withInput()
                 ->with('error', 'Something went wrong. Please try again later.');
         }
     }
+
 
     public function generateMedicalCard()
     {
@@ -125,41 +128,34 @@ class DwUserController extends Controller
 
     public function userLogin(Request $request)
     {
-        // Validate the login credentials
-        $validated = $request->validate([
-            'user_email' => 'required|email',
-            'user_password' => 'required',
+        $request->validate([
+            'user_email'    => 'required|email',
+            'user_password' => 'required|string',
+        ], [
+            'user_email.required'    => 'Email address is required.',
+            'user_email.email'       => 'Please enter a valid email address.',
+            'user_password.required' => 'Password is required.',
         ]);
 
-        // Check if captcha matches the one in session
-        if ($request->captcha !== session('captcha_text')) {
-            return back()->withErrors(['captcha' => 'Captcha is incorrect.'])->withInput();
-        }
-
-        // Prepare credentials array
         $credentials = [
             'user_email' => $request->user_email,
-            'password' => $request->user_password, // Must use 'password' key for Auth
+            'password'   => $request->user_password,
         ];
 
-        // Attempt login using the dwuser guard
         if (Auth::guard('dwuser')->attempt($credentials)) {
-            // Login successful
             $request->session()->regenerate();
             $intended = session()->pull('url.intended');
 
-            // Only honour it if it starts with /dw/
             if ($intended && str_starts_with(parse_url($intended, PHP_URL_PATH), '/dw/')) {
-                return redirect($intended)->with('success', 'Login successful! You are now logged in.');
+                return redirect($intended)->with('success', 'Login successful! Welcome back.');
             }
 
-            return redirect()->route('dw.opd')->with('success', 'Login successful! You are now logged in.');
+            return redirect()->route('dw.opd')->with('success', 'Login successful! Welcome back.');
         }
 
-        // Login failed
         return back()->withErrors([
-            'user_email' => 'Invalid credentials. Please try again.',
-        ]);
+            'user_email' => 'Invalid email or password. Please try again.',
+        ])->withInput($request->only('user_email'));
     }
 
     public function userlogout(Request $request)

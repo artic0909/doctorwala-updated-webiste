@@ -23,20 +23,11 @@ Route::post('/dw/user-auth', [DwUserController::class, 'userLogin'])->name('dw.u
 
 
 
-
-
-
-// Route for showing the email input form (user-otp)---------------------------------------------------------------------------------------------------------------->
-Route::get('/user-otp', [DwUserOTPController::class, 'userLoginWithOTPView'])->name('user-otp.view');
-
-// Route for showing the OTP verification form---------------------------------------------------------------------------------------------------------------->
-Route::get('/user-otp-verify', [DwUserOTPController::class, 'userLoginWithOTPVerifyView'])->name('user-otp.verify');
-
-// Route to send OTP to the email---------------------------------------------------------------------------------------------------------------->
-Route::post('/user-send-otp', [DwUserOTPController::class, 'sendOTP'])->name('user.send.otp');
-
-// Route to verify the OTP---------------------------------------------------------------------------------------------------------------->
-Route::post('/user-verify-otp', [DwUserOTPController::class, 'verifyOTP'])->name('user.verify.otp');
+// OTP Routes
+Route::get('/user-otp',          [DwUserOTPController::class, 'userOtpView'])->name('dw.user-otp');
+Route::post('/user-otp/send',    [DwUserOTPController::class, 'sendOTP'])->name('user.send.otp');
+Route::post('/user-otp/verify',  [DwUserOTPController::class, 'verifyOTP'])->name('user.verify.otp');
+Route::post('/user-otp/reset',   [DwUserOTPController::class, 'resetOtp'])->name('user.otp.reset');
 
 
 

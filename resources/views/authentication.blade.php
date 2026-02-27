@@ -2,710 +2,1415 @@
 <html lang="en">
 
 <head>
-    <meta charset="utf-8">
-    <title>Login | Doctorwala</title>
-    <meta content="width=device-width, initial-scale=1.0" name="viewport">
-    <meta content="Free HTML Templates" name="keywords">
-    <meta content="Free HTML Templates" name="description">
-
-    <!-- Favicon -->
-    <link href="{{asset('fav5.png')}}" rel="icon">
-
-    <!-- Google Web Fonts -->
-    <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link
-        href="https://fonts.googleapis.com/css2?family=Jost:wght@500;600;700&family=Open+Sans:wght@400;600&display=swap"
-        rel="stylesheet">
-
-    <!-- Icon Font Stylesheet -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.0/css/all.min.css"
-        integrity="sha512-9xKTRVabjVeZmc+GUW8GgSmcREDunMM+Dt/GrzchfN8tkwHizc5RP4Ok/MXFFy5rIjJjzhndFScTceq5e6GvVQ=="
-        crossorigin="anonymous" referrerpolicy="no-referrer" />
-
-    <!-- Latest compiled JavaScript -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="DoctorWala – Login or Create Your Free Digital Medical Card. Secure access to your health records anytime, anywhere.">
+    <title>Login & Sign Up | DoctorWala.info – Your Digital Medical Card</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
-        :root {
-            --primary-color: #1896e4;
-            --secondary-color: #1896e4;
-            --black: #000000;
-            --white: #ffffff;
-            --gray: #efefef;
-            --gray-2: #757575;
-
-            --facebook-color: #4267b2;
-            --google-color: #db4437;
-            --twitter-color: #1896e4;
-            --insta-color: #e1306c;
-        }
-
-        @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600&display=swap");
-
-        * {
-            font-family: "Poppins", sans-serif;
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
         }
 
-        html,
+        :root {
+            --blue: #0d8de3;
+            --blue-d: #0a72bb;
+            --teal: #06c4ae;
+            --white: #ffffff;
+            --card-bg: rgba(255, 255, 255, 0.97);
+            --slate: #64748b;
+            --muted: #94a3b8;
+            --border: #e2e8f0;
+            --red: #f43f5e;
+            --green: #10b981;
+            --inp-bg: #f7fbff;
+            --transition: .25s cubic-bezier(.4, 0, .2, 1);
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
         body {
-            height: 100vh;
-            overflow: hidden;
-        }
-
-        .container {
-            position: relative;
+            font-family: 'DM Sans', sans-serif;
+            background: #07162a;
             min-height: 100vh;
-            overflow: hidden;
-        }
-
-        .row {
-            display: flex;
-            flex-wrap: wrap;
-            height: 100vh;
-        }
-
-        .col {
-            width: 50%;
-        }
-
-        .align-items-center {
             display: flex;
             align-items: center;
             justify-content: center;
-            text-align: center;
-        }
-
-        .form-wrapper {
-            width: 100%;
-            max-width: 28rem;
-        }
-
-        .form {
-            padding: 1rem;
-            background-color: var(--white);
-            border-radius: 1.5rem;
-            width: 100%;
-            box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-            transform: scale(0);
-            transition: 0.5s ease-in-out;
-            transition-delay: 1s;
-        }
-
-        .input-group {
+            padding: 16px;
             position: relative;
-            width: 100%;
-            margin: 1rem 0;
+            overflow: hidden;
         }
 
-        .input-group i {
-            position: absolute;
-            top: 50%;
-            left: 1rem;
-            transform: translateY(-50%);
-            font-size: 1.4rem;
-            color: var(--gray-2);
-        }
-
-        .input-group input {
-            width: 100%;
-            padding: 1rem 3rem;
-            font-size: 1rem;
-            background-color: var(--gray);
-            border-radius: 0.5rem;
-            border: 0.125rem solid var(--white);
-            outline: none;
-        }
-
-        .input-group input:focus {
-            border: 0.125rem solid var(--primary-color);
-        }
-
-        .input-group select {
-            width: 100%;
-            padding: 1rem 3rem;
-            font-size: 1rem;
-            background-color: var(--gray);
-            border-radius: 0.5rem;
-            border: 0.125rem solid var(--white);
-            outline: none;
-        }
-
-        .input-group select:focus {
-            border: 0.125rem solid var(--primary-color);
-        }
-
-
-        .form button {
-            cursor: pointer;
-            width: 100%;
-            padding: 0.6rem 0;
-            border-radius: 0.5rem;
-            border: none;
-            background-color: var(--primary-color);
-            color: var(--white);
-            font-size: 1.2rem;
-            outline: none;
-        }
-
-        .form p {
-            margin: 1rem 0;
-            font-size: 0.7rem;
-        }
-
-        .flex-col {
-            flex-direction: column;
-        }
-
-        .social-list {
-            margin: 2rem 0;
-            padding: 1rem;
-            border-radius: 1.5rem;
-            width: 100%;
-            box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-            transform: scale(0);
-            transition: 0.5s ease-in-out;
-            transition-delay: 1.2s;
-        }
-
-        .social-list>div {
-            color: var(--white);
-            margin: 0 0.5rem;
-            padding: 0.7rem;
-            cursor: pointer;
-            border-radius: 0.5rem;
-            cursor: pointer;
-            transform: scale(0);
-            transition: 0.5s ease-in-out;
-        }
-
-        .social-list>div:nth-child(1) {
-            transition-delay: 1.4s;
-        }
-
-        .social-list>div:nth-child(2) {
-            transition-delay: 1.6s;
-        }
-
-        .social-list>div:nth-child(3) {
-            transition-delay: 1.8s;
-        }
-
-        .social-list>div:nth-child(4) {
-            transition-delay: 2s;
-        }
-
-        .social-list>div>i {
-            font-size: 1.5rem;
-            transition: 0.4s ease-in-out;
-        }
-
-        .social-list>div:hover i {
-            transform: scale(1.5);
-        }
-
-        .facebook-bg {
-            background-color: var(--facebook-color);
-        }
-
-        .google-bg {
-            background-color: var(--google-color);
-        }
-
-        .twitter-bg {
-            background-color: var(--twitter-color);
-        }
-
-        .insta-bg {
-            background-color: var(--insta-color);
-        }
-
-        .pointer {
-            cursor: pointer;
-        }
-
-        .container.sign-in .form.sign-in,
-        .container.sign-in .social-list.sign-in,
-        .container.sign-in .social-list.sign-in>div,
-        .container.sign-up .form.sign-up,
-        .container.sign-up .social-list.sign-up,
-        .container.sign-up .social-list.sign-up>div {
-            transform: scale(1);
-        }
-
-        .content-row {
-            position: absolute;
-            top: 0;
-            left: 0;
+        /* ═══ BG BLOBS ═══ */
+        .blob-wrap {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            overflow: hidden;
             pointer-events: none;
-            z-index: 6;
-            width: 100%;
         }
 
-        .text {
-            margin: 3.5rem;
-            color: var(--white);
-        }
-
-        .text h2 {
-            font-size: 2.5rem;
-            font-weight: 800;
-            margin: 2rem 0;
-            transition: 1s ease-in-out;
-        }
-
-        .text p {
-            font-weight: 600;
-            transition: 1s ease-in-out;
-            transition-delay: 0.2s;
-        }
-
-        .img img {
-            width: 30vw;
-            transition: 1s ease-in-out;
-            transition-delay: 0.4s;
-        }
-
-        .text.sign-in h2,
-        .text.sign-in p,
-        .img.sign-in img {
-            transform: translateX(-250%);
-        }
-
-        .text.sign-up h2,
-        .text.sign-up p,
-        .img.sign-up img {
-            transform: translateX(200%);
-        }
-
-        .container.sign-in .text.sign-in h2,
-        .container.sign-in .text.sign-in p,
-        .container.sign-in .img.sign-in img,
-        .container.sign-up .text.sign-up h2,
-        .container.sign-up .text.sign-up p,
-        .container.sign-up .img.sign-up img {
-            transform: translateX(0);
-        }
-
-        /* BACKGROUND */
-
-        .container::before {
-            content: "";
+        .blob {
             position: absolute;
-            top: 0;
-            right: 0;
-            height: 100vh;
-            width: 300vw;
-            transform: translate(35%, 0);
-            background-image: linear-gradient(-45deg,
-                    var(--primary-color) 0%,
-                    var(--secondary-color) 100%);
-            transition: 1s ease-in-out;
-            z-index: 6;
-            box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-            border-bottom-right-radius: max(50vw, 50vh);
-            border-top-left-radius: max(50vw, 50vh);
+            border-radius: 50%;
+            filter: blur(90px);
+            opacity: .2;
+            animation: blobMove 22s ease-in-out infinite alternate;
+            will-change: transform;
         }
 
-        .container.sign-in::before {
-            transform: translate(0, 0);
-            right: 50%;
+        .blob:nth-child(1) {
+            width: 680px;
+            height: 680px;
+            background: #0d8de3;
+            top: -180px;
+            left: -180px;
+            animation-duration: 26s;
         }
 
-        .container.sign-up::before {
-            transform: translate(100%, 0);
-            right: 50%;
+        .blob:nth-child(2) {
+            width: 480px;
+            height: 480px;
+            background: #06c4ae;
+            bottom: -130px;
+            right: -130px;
+            animation-duration: 18s;
+            animation-delay: -7s;
         }
 
-        /* RESPONSIVE */
+        .blob:nth-child(3) {
+            width: 320px;
+            height: 320px;
+            background: #2550b8;
+            top: 38%;
+            left: 52%;
+            animation-duration: 30s;
+            animation-delay: -4s;
+        }
 
-        @media only screen and (max-width: 425px) {
+        .blob:nth-child(4) {
+            width: 240px;
+            height: 240px;
+            background: #06c4ae;
+            top: 8%;
+            right: 18%;
+            animation-duration: 14s;
+            animation-delay: -13s;
+        }
 
-
-            .container.sign-in,
-            .container.sign-up {
-                margin-top: -33px;
+        @keyframes blobMove {
+            0% {
+                transform: translate(0, 0) scale(1);
             }
 
-            .container.sign-up {
-                margin-top: -40px;
+            33% {
+                transform: translate(40px, -28px) scale(1.07);
             }
 
-            .container::before,
-            .container.sign-in::before,
-            .container.sign-up::before {
-                height: 100vh;
-                border-bottom-right-radius: 0;
-                border-top-left-radius: 0;
-                z-index: 0;
-                transform: none;
-                right: 0;
+            66% {
+                transform: translate(-22px, 45px) scale(.95);
             }
 
-            /* .container.sign-in .col.sign-up {
-                transform: translateY(100%);
-            } */
+            100% {
+                transform: translate(18px, -14px) scale(1.04);
+            }
+        }
 
-            .container.sign-in .col.sign-in,
-            .container.sign-up .col.sign-up {
-                transform: translateY(0);
+        /* ═══ GRID ═══ */
+        .bg-grid {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+            background-image:
+                linear-gradient(rgba(13, 141, 227, .06) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(13, 141, 227, .06) 1px, transparent 1px);
+            background-size: 50px 50px;
+        }
+
+        /* ═══ CANVAS PARTICLES ═══ */
+        #bg-canvas {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* ═══ PULSE RINGS ═══ */
+        .pulse-ring {
+            position: fixed;
+            border-radius: 50%;
+            border: 1px solid rgba(13, 141, 227, .25);
+            animation: pulseRing 7s ease-out infinite;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .pulse-ring:nth-child(1) {
+            width: 90px;
+            height: 90px;
+            top: 12%;
+            left: 6%;
+            animation-delay: 0s;
+        }
+
+        .pulse-ring:nth-child(2) {
+            width: 65px;
+            height: 65px;
+            top: 72%;
+            left: 4%;
+            animation-delay: -2.5s;
+        }
+
+        .pulse-ring:nth-child(3) {
+            width: 110px;
+            height: 110px;
+            top: 78%;
+            right: 8%;
+            animation-delay: -1s;
+        }
+
+        .pulse-ring:nth-child(4) {
+            width: 75px;
+            height: 75px;
+            top: 4%;
+            right: 10%;
+            animation-delay: -4s;
+        }
+
+        .pulse-ring:nth-child(5) {
+            width: 50px;
+            height: 50px;
+            top: 48%;
+            left: 2%;
+            animation-delay: -5.5s;
+        }
+
+        @keyframes pulseRing {
+            0% {
+                transform: scale(.4);
+                opacity: .8;
             }
 
-            .content-row {
-                align-items: flex-start !important;
+            100% {
+                transform: scale(3.5);
+                opacity: 0;
             }
+        }
 
-            .content-row .col {
-                transform: translateY(0);
-                background-color: unset;
-            }
+        /* ═══ FLOATING ICONS ═══ */
+        .float-icons {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+        }
 
-            .col {
-                width: 100%;
-                position: absolute;
-                padding: 2rem;
-                background-color: var(--white);
-                border-top-left-radius: 2rem;
-                border-top-right-radius: 2rem;
-                transform: translateY(100%);
-                transition: 1s ease-in-out;
-            }
+        .ficon {
+            position: absolute;
+            color: rgba(13, 141, 227, .13);
+            animation: floatIcon linear infinite;
+        }
 
-            .row {
-                align-items: flex-end;
-                justify-content: flex-end;
-            }
+        .ficon:nth-child(1) {
+            left: 3%;
+            font-size: .85rem;
+            animation-duration: 21s;
+            animation-delay: 0s;
+        }
 
-            .form,
-            .social-list {
-                box-shadow: none;
-                margin: 0;
-                padding: 0;
-            }
+        .ficon:nth-child(2) {
+            left: 11%;
+            font-size: 1.2rem;
+            animation-duration: 27s;
+            animation-delay: -6s;
+        }
 
-            .text {
-                margin: 0;
-                margin-top: 30px;
-            }
+        .ficon:nth-child(3) {
+            left: 22%;
+            font-size: .75rem;
+            animation-duration: 17s;
+            animation-delay: -11s;
+        }
 
-            .text p {
-                display: none;
-            }
+        .ficon:nth-child(4) {
+            left: 33%;
+            font-size: .95rem;
+            animation-duration: 24s;
+            animation-delay: -3s;
+        }
 
-            .text h2 {
-                margin: 0.5rem;
-                font-size: 1.9rem;
-            }
+        .ficon:nth-child(5) {
+            left: 56%;
+            font-size: 1.3rem;
+            animation-duration: 31s;
+            animation-delay: -16s;
+        }
 
-            .sig-text {
+        .ficon:nth-child(6) {
+            left: 68%;
+            font-size: .8rem;
+            animation-duration: 20s;
+            animation-delay: -8s;
+        }
+
+        .ficon:nth-child(7) {
+            left: 78%;
+            font-size: 1.1rem;
+            animation-duration: 25s;
+            animation-delay: -2s;
+        }
+
+        .ficon:nth-child(8) {
+            left: 88%;
+            font-size: .9rem;
+            animation-duration: 19s;
+            animation-delay: -19s;
+        }
+
+        .ficon:nth-child(9) {
+            left: 94%;
+            font-size: 1rem;
+            animation-duration: 28s;
+            animation-delay: -9s;
+        }
+
+        .ficon:nth-child(10) {
+            left: 44%;
+            font-size: .7rem;
+            animation-duration: 16s;
+            animation-delay: -14s;
+        }
+
+        @keyframes floatIcon {
+            0% {
+                transform: translateY(110vh) rotate(0deg);
                 opacity: 0;
             }
 
+            5% {
+                opacity: 1;
+            }
+
+            90% {
+                opacity: .65;
+            }
+
+            100% {
+                transform: translateY(-12vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* ═══ ECG LINE ═══ */
+        .ecg-wrap {
+            position: fixed;
+            bottom: 24px;
+            left: 0;
+            right: 0;
+            z-index: 0;
+            pointer-events: none;
+            opacity: .2;
+            height: 55px;
+            overflow: hidden;
+        }
+
+        .ecg-svg {
+            width: 200%;
+            height: 55px;
+            animation: ecgScroll 4.5s linear infinite;
+        }
+
+        @keyframes ecgScroll {
+            from {
+                transform: translateX(0)
+            }
+
+            to {
+                transform: translateX(-50%)
+            }
+        }
+
+        /* ═══════════════════════════════════
+       MAIN CARD — split layout
+    ═══════════════════════════════════ */
+        .auth-wrap {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            max-width: 900px;
+            display: grid;
+            grid-template-columns: 290px 1fr;
+            min-height: 580px;
+            border-radius: 30px;
+            overflow: hidden;
+            box-shadow: 0 40px 100px rgba(0, 0, 0, .55), 0 0 0 1px rgba(255, 255, 255, .06);
+            animation: wrapIn .65s cubic-bezier(.34, 1.4, .64, 1) both;
+        }
+
+        @keyframes wrapIn {
+            from {
+                opacity: 0;
+                transform: translateY(44px) scale(.95);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        /* ── LEFT SIDE PANEL ── */
+        .side-panel {
+            background: linear-gradient(150deg, #0d8de3 0%, #06c4ae 100%);
+            padding: 36px 28px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            justify-content: space-between;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .side-panel::before {
+            content: '';
+            position: absolute;
+            width: 340px;
+            height: 340px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, .07);
+            bottom: -90px;
+            left: -90px;
+        }
+
+        .side-panel::after {
+            content: '';
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, .05);
+            top: -50px;
+            right: -60px;
+        }
+
+        /* rotating ring decoration */
+        .sp-ring {
+            position: absolute;
+            border-radius: 50%;
+            border: 1px solid rgba(255, 255, 255, .15);
+            animation: spinRing 20s linear infinite;
+            pointer-events: none;
+        }
+
+        .sp-ring:nth-child(1) {
+            width: 180px;
+            height: 180px;
+            top: 30%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation-duration: 25s;
+        }
+
+        .sp-ring:nth-child(2) {
+            width: 260px;
+            height: 260px;
+            top: 30%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(30deg);
+            animation-duration: 35s;
+            animation-direction: reverse;
+        }
+
+        @keyframes spinRing {
+            to {
+                transform: translate(-50%, -50%) rotate(360deg);
+            }
+        }
+
+        .sp-logo {
+            display: flex;
+            align-items: center;
+            gap: 11px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .sp-logo-icon {
+            width: 46px;
+            height: 46px;
+            background: rgba(255, 255, 255, .2);
+            backdrop-filter: blur(6px);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, .3);
+            flex-shrink: 0;
+        }
+
+        .sp-logo-text h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.05rem;
+            font-weight: 800;
+            color: #fff;
+            letter-spacing: -.01em;
+            line-height: 1.2;
+        }
+
+        .sp-logo-text p {
+            font-size: .7rem;
+            color: rgba(255, 255, 255, .72);
+            margin-top: 1px;
+        }
+
+        .sp-middle {
+            position: relative;
+            z-index: 1;
+        }
+
+        .sp-tagline {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #fff;
+            line-height: 1.3;
+            margin-bottom: 16px;
+        }
+
+        .sp-tagline span {
+            color: rgba(255, 255, 255, .65);
+            font-weight: 400;
+            font-size: 1rem;
+            display: block;
+            margin-top: 6px;
+        }
+
+        .sp-features {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 9px;
+        }
+
+        .sp-features li {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            font-size: .81rem;
+            color: rgba(255, 255, 255, .88);
+            font-weight: 500;
+        }
+
+        .sp-features li .feat-icon {
+            width: 27px;
+            height: 27px;
+            flex-shrink: 0;
+            background: rgba(255, 255, 255, .18);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: .72rem;
+        }
+
+        .sp-bottom {
+            font-size: .71rem;
+            color: rgba(255, 255, 255, .52);
+            position: relative;
+            z-index: 1;
+            line-height: 1.5;
+        }
+
+        /* ── RIGHT FORM SIDE ── */
+        .form-panel-wrap {
+            background: var(--card-bg);
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Tabs */
+        .tab-bar {
+            display: flex;
+            background: #f1f7fe;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 15px 12px;
+            border: none;
+            background: transparent;
+            font-family: 'DM Sans', sans-serif;
+            font-size: .87rem;
+            font-weight: 600;
+            color: var(--muted);
+            cursor: pointer;
+            transition: var(--transition);
+            position: relative;
+            letter-spacing: .01em;
+        }
+
+        .tab-btn::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 18%;
+            right: 18%;
+            height: 2.5px;
+            background: linear-gradient(90deg, var(--blue), var(--teal));
+            border-radius: 2px;
+            transform: scaleX(0);
+            transition: transform var(--transition);
+        }
+
+        .tab-btn.active {
+            color: var(--blue);
+            background: #fff;
+        }
+
+        .tab-btn.active::after {
+            transform: scaleX(1);
+        }
+
+        .tab-btn i {
+            margin-right: 6px;
+            font-size: .78rem;
+        }
+
+        /* Scroll area */
+        .form-scroll {
+            flex: 1;
+            overflow-y: auto;
+            padding: 26px 30px 26px;
+            scrollbar-width: thin;
+            scrollbar-color: var(--border) transparent;
+        }
+
+        .form-scroll::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .form-scroll::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 4px;
+        }
+
+        .form-panel {
+            display: none;
+        }
+
+        .form-panel.active {
+            display: block;
+            animation: panelIn .3s ease both;
+        }
+
+        @keyframes panelIn {
+            from {
+                opacity: 0;
+                transform: translateX(14px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* Form header */
+        .form-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .form-header h2 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #18283f;
+            letter-spacing: -.02em;
+            line-height: 1.2;
+        }
+
+        .form-header p {
+            font-size: .78rem;
+            color: var(--muted);
+            margin-top: 4px;
+        }
+
+        .form-badge {
+            background: linear-gradient(135deg, var(--blue), var(--teal));
+            color: #fff;
+            font-family: 'Outfit', sans-serif;
+            font-size: .67rem;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 20px;
+            letter-spacing: .05em;
+            white-space: nowrap;
+            margin-top: 2px;
+            flex-shrink: 0;
+        }
+
+        /* Alerts */
+        .alert-box {
+            border-radius: 12px;
+            padding: 11px 13px;
+            font-size: .81rem;
+            font-weight: 500;
+            display: flex;
+            align-items: flex-start;
+            gap: 9px;
+            margin-bottom: 16px;
+            animation: alertIn .35s ease both;
+        }
+
+        @keyframes alertIn {
+            from {
+                opacity: 0;
+                transform: translateY(-8px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .alert-box i {
+            flex-shrink: 0;
+            margin-top: 1px;
+            font-size: .83rem;
+        }
+
+        .alert-error {
+            background: #fff1f3;
+            color: #be123c;
+            border: 1.5px solid #fecdd3;
+        }
+
+        .alert-success {
+            background: #f0fdf6;
+            color: #047857;
+            border: 1.5px solid #a7f3d0;
+        }
+
+        .alert-list {
+            list-style: none;
+            padding: 0;
+            margin: 3px 0 0;
+        }
+
+        .alert-list li::before {
+            content: '• ';
+        }
+
+        .alert-list li+li {
+            margin-top: 2px;
+        }
+
+        /* 2-col grid for signup */
+        .fields-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0 14px;
+        }
+
+        .field-full {
+            grid-column: 1/-1;
+        }
+
+        /* Fields */
+        .field {
+            margin-bottom: 13px;
+        }
+
+        .field label {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: .73rem;
+            font-weight: 700;
+            color: #4a5568;
+            margin-bottom: 5px;
+            letter-spacing: .025em;
+            text-transform: uppercase;
+        }
+
+        .field label i {
+            color: var(--blue);
+            font-size: .66rem;
+        }
+
+        .input-wrap {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-wrap input {
+            width: 100%;
+            padding: 11px 14px 11px 40px;
+            border: 1.5px solid var(--border);
+            border-radius: 10px;
+            background: var(--inp-bg);
+            font-family: 'DM Sans', sans-serif;
+            font-size: .88rem;
+            color: #18283f;
+            transition: var(--transition);
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        .input-wrap input::placeholder {
+            color: #b0bec5;
+        }
+
+        .input-wrap input:focus {
+            border-color: var(--blue);
+            background: #fff;
+            box-shadow: 0 0 0 3.5px rgba(13, 141, 227, .1);
+        }
+
+        .input-wrap input.is-invalid {
+            border-color: var(--red);
+            background: #fff5f7;
+            box-shadow: 0 0 0 3px rgba(244, 63, 94, .07);
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 13px;
+            color: var(--muted);
+            font-size: .8rem;
+            pointer-events: none;
+            transition: color var(--transition);
+        }
+
+        .input-wrap:focus-within .input-icon {
+            color: var(--blue);
+        }
+
+        .eye-btn {
+            position: absolute;
+            right: 11px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--muted);
+            padding: 5px;
+            font-size: .83rem;
+            transition: color var(--transition);
+            line-height: 1;
+        }
+
+        .eye-btn:hover {
+            color: var(--blue);
+        }
+
+        .field-error {
+            font-size: .73rem;
+            color: var(--red);
+            margin-top: 4px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        input[type=number]::-webkit-inner-spin-button,
+        input[type=number]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+        }
+
+        input[type=number] {
+            -moz-appearance: textfield;
+        }
+
+        /* Submit */
+        .btn-submit {
+            width: 100%;
+            padding: 13px;
+            background: linear-gradient(120deg, var(--blue) 0%, var(--teal) 100%);
+            color: #fff;
+            border: none;
+            border-radius: 11px;
+            font-family: 'Outfit', sans-serif;
+            font-size: .93rem;
+            font-weight: 700;
+            letter-spacing: .06em;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: 0 5px 22px rgba(13, 141, 227, .28);
+            margin-top: 5px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-submit::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(120deg, rgba(255, 255, 255, .13) 0%, transparent 60%);
+            border-radius: inherit;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(13, 141, 227, .38);
+        }
+
+        .btn-submit:active {
+            transform: translateY(0);
+        }
+
+        .btn-submit i {
+            margin-right: 8px;
+        }
+
+        /* Footer */
+        .form-footer {
+            text-align: center;
+            margin-top: 14px;
+            font-size: .8rem;
+            color: var(--slate);
+            border-top: 1px solid var(--border);
+            padding-top: 13px;
+        }
+
+        .link-btn {
+            color: var(--blue);
+            font-weight: 700;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: inherit;
+            padding: 0;
+            text-decoration: underline;
+        }
+
+        .link-btn:hover {
+            color: var(--blue-d);
+        }
+
+        .home-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            color: var(--muted);
+            font-size: .75rem;
+            text-decoration: none;
+            margin-top: 8px;
+            transition: color var(--transition);
+        }
+
+        .home-link:hover {
+            color: var(--blue);
+        }
+
+        /* ── RESPONSIVE ── */
+        @media(max-width:780px) {
+            .auth-wrap {
+                grid-template-columns: 1fr;
+                max-width: 460px;
+                min-height: unset;
+            }
+
+            .side-panel {
+                padding: 20px 22px;
+                flex-direction: row;
+                align-items: center;
+                gap: 14px;
+            }
+
+            .sp-middle,
+            .sp-bottom,
+            .sp-ring {
+                display: none;
+            }
+
+            .sp-logo {
+                flex: 1;
+            }
+        }
+
+        @media(max-width:520px) {
+            body {
+                padding: 10px;
+                align-items: flex-start;
+                padding-top: 18px;
+            }
+
+            .form-scroll {
+                padding: 18px 16px 20px;
+            }
+
+            .fields-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .field-full {
+                grid-column: unset;
+            }
+
+            .form-header {
+                flex-direction: column;
+                gap: 6px;
+            }
+        }
+
+        @media(max-width:360px) {
+            .tab-btn {
+                font-size: .77rem;
+                padding: 12px 8px;
+            }
+
+            .side-panel {
+                padding: 16px 18px;
+            }
         }
     </style>
 </head>
 
 <body>
 
+    <!-- BG -->
+    <div class="blob-wrap" aria-hidden="true">
+        <div class="blob"></div>
+        <div class="blob"></div>
+        <div class="blob"></div>
+        <div class="blob"></div>
+    </div>
+    <div class="bg-grid" aria-hidden="true"></div>
+    <canvas id="bg-canvas" aria-hidden="true"></canvas>
 
-    <div id="container" class="container">
-        <!-- FORM SECTION -->
-        <div class="row">
+    <div class="pulse-ring" aria-hidden="true"></div>
+    <div class="pulse-ring" aria-hidden="true"></div>
+    <div class="pulse-ring" aria-hidden="true"></div>
+    <div class="pulse-ring" aria-hidden="true"></div>
+    <div class="pulse-ring" aria-hidden="true"></div>
 
+    <div class="float-icons" aria-hidden="true">
+        <i class="fa-solid fa-plus ficon"></i>
+        <i class="fa-solid fa-heart-pulse ficon"></i>
+        <i class="fa-solid fa-plus ficon"></i>
+        <i class="fa-solid fa-capsules ficon"></i>
+        <i class="fa-solid fa-plus ficon"></i>
+        <i class="fa-solid fa-stethoscope ficon"></i>
+        <i class="fa-solid fa-plus ficon"></i>
+        <i class="fa-solid fa-heart-pulse ficon"></i>
+        <i class="fa-solid fa-dna ficon"></i>
+        <i class="fa-solid fa-plus ficon"></i>
+    </div>
 
+    <div class="ecg-wrap" aria-hidden="true">
+        <svg class="ecg-svg" viewBox="0 0 1200 55" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+            <polyline
+                points="0,28 80,28 100,28 112,4 122,52 132,4 142,52 152,28 165,28
+                    240,28 260,28 272,8 282,48 292,8 302,48 312,28 325,28
+                    400,28 420,28 432,4 442,52 452,4 462,52 472,28 485,28
+                    560,28 580,28 592,8 602,48 612,8 622,48 632,28 645,28
+                    720,28 740,28 752,4 762,52 772,4 782,52 792,28 805,28
+                    880,28 900,28 912,8 922,48 932,8 942,48 952,28 965,28
+                    1040,28 1060,28 1072,4 1082,52 1092,4 1102,52 1112,28 1125,28 1200,28"
+                stroke="#0d8de3" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+    </div>
 
-            <!-- SIGN UP -->
-            <div class="col align-items-center flex-col sign-up signup-form" style="margin-top: -10px;">
-                <div class="form-wrapper align-items-center">
-                    <form class="form sign-up" action="{{ route('dw.user-register') }}" method="POST">
-                        @csrf
-                        <h1 style="color: #1896e4; font-weight: 900;"><span
-                                style="color: red; font-weight: 1000;">+</span> JOIN US NOW <span
-                                style="color: red; font-weight: 1000;">+</span></h1>
-                        <div class="input-group">
-                            <i class="fa-solid fa-user"></i>
-                            <input type="text" placeholder="Your Name*" name="user_name" id="user_name" required value="{{ old('user_name') }}">
-                        </div>
+    <!-- CARD -->
+    <div class="auth-wrap" role="main">
 
+        <!-- Left branding -->
+        <aside class="side-panel" aria-label="DoctorWala branding">
+            <div class="sp-ring"></div>
+            <div class="sp-ring"></div>
 
-                        <div class="input-group">
-                            <i class="fa-solid fa-phone"></i>
-                            <input type="number" placeholder="Mobile Number*" name="user_mobile" id="user_mobile" required value="{{ old('user_mobile') }}">
-                        </div>
-
-
-                        <div class="input-group">
-                            <i class="fa-solid fa-building"></i>
-                            <input type="text" name="user_city" id="user_city" placeholder="Your City*" required value="{{ old('user_city') }}">
-                        </div>
-
-
-                        <div class="input-group">
-                            <i class="fa-solid fa-at"></i>
-                            <input type="email" placeholder="Email ID*" name="user_email" id="user_email" required value="{{ old('user_email') }}">
-                        </div>
-
-
-                        <div class="input-group">
-                            <i class="fa-solid fa-lock signin-lock-icon"></i>
-                            <input type="password" placeholder="Password at least 8 characters*" name="user_password" id="user_password" required value="{{ old('user_password') }}">
-                            
-                        </div>
-                        
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                        <button type="submit" style="font-weight: 700;">
-                            SIGN UP
-                        </button>
-                        <p style="margin-top: 4px;">
-                            <span>
-                                Already have an account?
-                            </span>
-                            <b onclick="toggle()" class="pointer" style="text-decoration: underline;">
-                                Login here
-                            </b>
-                            <span>&nbsp; <a href="/" style="color: black; font-size: 0.8rem;"
-                                    onmouseover="this.style.color='red'" onmouseout="this.style.color='black'"><i
-                                        class="fa fa-home" aria-hidden="true"></i></a></span>
-                        </p>
-                    </form>
+            <div class="sp-logo">
+                <div class="sp-logo-icon"><i class="fa-solid fa-stethoscope" aria-hidden="true"></i></div>
+                <div class="sp-logo-text">
+                    <h1>DoctorWala.info</h1>
+                    <p>Digital Health Platform</p>
                 </div>
-
             </div>
-            <!-- END SIGN UP -->
 
+            <div class="sp-middle">
+                <p class="sp-tagline">
+                    Your health.<br>Always with you.
+                    <span>Secure digital medical cards for every Indian family.</span>
+                </p>
+                <ul class="sp-features" aria-label="Platform features">
+                    <li><span class="feat-icon"><i class="fa-solid fa-shield-halved" aria-hidden="true"></i></span> Secure &amp; encrypted records</li>
+                    <li><span class="feat-icon"><i class="fa-solid fa-mobile-screen-button" aria-hidden="true"></i></span> Access anywhere, anytime</li>
+                    <li><span class="feat-icon"><i class="fa-solid fa-hospital-user" aria-hidden="true"></i></span> Share with any doctor</li>
+                    <li><span class="feat-icon"><i class="fa-solid fa-bell" aria-hidden="true"></i></span> Appointment reminders</li>
+                </ul>
+            </div>
 
+            <p class="sp-bottom">
+                Trusted by thousands of patients across India<br>— 100% free to join
+            </p>
+        </aside>
 
+        <!-- Right form -->
+        <div class="form-panel-wrap">
+            <div class="tab-bar" role="tablist" aria-label="Authentication options">
+                <button class="tab-btn active" id="tab-login" role="tab" aria-selected="true" aria-controls="panel-login" onclick="switchTab('login')">
+                    <i class="fa-solid fa-right-to-bracket" aria-hidden="true"></i> Sign In
+                </button>
+                <button class="tab-btn" id="tab-signup" role="tab" aria-selected="false" aria-controls="panel-signup" onclick="switchTab('signup')">
+                    <i class="fa-solid fa-user-plus" aria-hidden="true"></i> Create Account
+                </button>
+            </div>
 
+            <div class="form-scroll">
 
-            <!-- Login -->
-            <div class="col align-items-center flex-col sign-in">
+                <!-- LOGIN -->
+                <div class="form-panel active" id="panel-login" role="tabpanel" aria-labelledby="tab-login">
+                    <div class="form-header">
+                        <div>
+                            <h2>Welcome back 👋</h2>
+                            <p>Sign in to your medical card &amp; health records</p>
+                        </div>
+                        <span class="form-badge">SECURE LOGIN</span>
+                    </div>
 
-                <div class="form-wrapper align-items-center">
-                    <form class="form sign-in login-form" action="{{ route('dw.user-login') }}" method="POST">
+                    @if(session('success'))
+                    <div class="alert-box alert-success" role="alert">
+                        <i class="fa-solid fa-circle-check" aria-hidden="true"></i>
+                        <span>{{ session('success') }}</span>
+                    </div>
+                    @endif
+
+                    @if($errors->has('user_email') || $errors->has('user_password'))
+                    <div class="alert-box alert-error" role="alert">
+                        <i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i>
+                        <div>
+                            <strong>Login failed —</strong> please check your credentials.
+                            <ul class="alert-list">
+                                @foreach($errors->get('user_email') as $e)<li>{{ $e }}</li>@endforeach
+                                @foreach($errors->get('user_password') as $e)<li>{{ $e }}</li>@endforeach
+                            </ul>
+                        </div>
+                    </div>
+                    @endif
+
+                    <form action="{{ route('dw.user-login') }}" method="POST" novalidate>
                         @csrf
-                        <h1 style="color: #1896e4; font-weight: 900;"><span
-                                style="color: red; font-weight: 1000;">+</span> HELLO USER <span
-                                style="color: red; font-weight: 1000;">+</span></h1>
-                        <div class="input-group">
-                            <i class="fa-solid fa-at"></i>
-                            <input type="email" placeholder="Email" name="user_email" id="user_email" required value="{{ old('user_email') }}">
-                        </div>
-                        <div class="input-group">
-                            <i class="fa-regular fa-eye login-eye-icon"></i>
-                            <input type="password" placeholder="Password" name="user_password" id="user_password" required value="{{ old('user_password') }}">
-                        </div>
-
-                        <div class="input-group"
-                             data-captcha="{{ $captcha }}">
-                            <canvas id="captchaCanvas" width="200" height="40" style="cursor: pointer;"></canvas>
-                        </div>
-
-                        <div class="input-group">
-                            <i class="fa-solid fa-circle-check"></i>
-                            <input type="text" placeholder="Enter Captcha" name="captcha" id="captcha" required>
-                            @error('captcha')
-                            <small class="text-white">{{ $message }}</small>
+                        <div class="field">
+                            <label for="login_email"><i class="fa-solid fa-at" aria-hidden="true"></i> Email Address</label>
+                            <div class="input-wrap">
+                                <i class="fa-solid fa-at input-icon" aria-hidden="true"></i>
+                                <input type="email" id="login_email" name="user_email"
+                                    placeholder="you@example.com" autocomplete="email" required
+                                    value="{{ old('user_email') }}"
+                                    class="{{ $errors->has('user_email') ? 'is-invalid' : '' }}">
+                            </div>
+                            @error('user_email')
+                            <p class="field-error" role="alert"><i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i>{{ $message }}</p>
                             @enderror
                         </div>
 
-                        <button type="submit" style="font-weight: 700;">
-                            LOGIN
+                        <div class="field">
+                            <label for="login_password"><i class="fa-solid fa-lock" aria-hidden="true"></i> Password</label>
+                            <div class="input-wrap">
+                                <i class="fa-solid fa-lock input-icon" aria-hidden="true"></i>
+                                <input type="password" id="login_password" name="user_password"
+                                    placeholder="Enter your password" autocomplete="current-password" required
+                                    class="{{ $errors->has('user_password') ? 'is-invalid' : '' }}">
+                                <button type="button" class="eye-btn" onclick="togglePwd('login_password',this)" aria-label="Toggle password visibility">
+                                    <i class="fa-regular fa-eye" aria-hidden="true"></i>
+                                </button>
+                            </div>
+                            @error('user_password')
+                            <p class="field-error" role="alert"><i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i>{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <button type="submit" class="btn-submit">
+                            <i class="fa-solid fa-right-to-bracket" aria-hidden="true"></i> LOGIN TO MY ACCOUNT
                         </button>
-                        <p style="margin-top: 4px;">
-                            <b>
-                                Forgot password? <a href="/user-otp" class="pointer" style="color: black;">Login
-                                    with OTP</a>
-                            </b>
-                        </p>
-                        <p style="margin-top: -14px;">
-                            <span>
-                                Don't have an account?
-                            </span>
-                            <b onclick="toggle()" class="pointer" style="text-decoration: underline;">
-                                Sign up here
-                            </b>
-                            <span>&nbsp; <a href="/" style="color: black; font-size: 1rem;"
-                                    onmouseover="this.style.color='red'" onmouseout="this.style.color='black'"><i
-                                        class="fa fa-home" aria-hidden="true"></i></a></span>
-                        </p>
                     </form>
+
+                    <div class="form-footer">
+                        <a href="/user-otp" style="color:var(--blue);font-weight:600;text-decoration:none;">
+                            <i class="fa-solid fa-mobile-screen-button" aria-hidden="true"></i> Forgot password? Login with OTP
+                        </a>
+                        <br><br>
+                        Don't have an account? <button class="link-btn" onclick="switchTab('signup')">Create one free</button>
+                        <br>
+                        <a href="/" class="home-link"><i class="fa-solid fa-house" aria-hidden="true"></i> Back to Homepage</a>
+                    </div>
                 </div>
-                <div class="form-wrapper">
 
+                <!-- SIGNUP -->
+                <div class="form-panel" id="panel-signup" role="tabpanel" aria-labelledby="tab-signup">
+                    <div class="form-header">
+                        <div>
+                            <h2>Create your card ✦</h2>
+                            <p>Free digital medical card — takes just 30 seconds</p>
+                        </div>
+                        <span class="form-badge">100% FREE</span>
+                    </div>
+
+                    {{-- SUCCESS: login redirect after registration --}}
+                    @if(session('success'))
+                    <div class="alert-box alert-success" role="alert">
+                        <i class="fa-solid fa-circle-check" aria-hidden="true"></i>
+                        <span>{{ session('success') }}</span>
+                    </div>
+                    @endif
+
+                    {{-- DB / server error from controller catch block --}}
+                    @if(session('error'))
+                    <div class="alert-box alert-error" role="alert">
+                        <i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i>
+                        <span>{{ session('error') }}</span>
+                    </div>
+                    @endif
+
+                    {{-- VALIDATION errors (required fields, email format, etc.) --}}
+                    @if($errors->hasAny(['user_name','user_mobile','user_city','user_email','user_password']))
+                    <div class="alert-box alert-error" role="alert">
+                        <i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i>
+                        <div>
+                            <strong>Please fix the following errors:</strong>
+                            <ul class="alert-list">
+                                @foreach(['user_name','user_mobile','user_city','user_email','user_password'] as $f)
+                                @foreach($errors->get($f) as $e)<li>{{ $e }}</li>@endforeach
+                                @endforeach
+                            </ul>
+                        </div>
+                    </div>
+                    @endif
+
+                    <form action="{{ route('dw.user-register') }}" method="POST" novalidate>
+                        @csrf
+                        <div class="fields-grid">
+
+                            <div class="field">
+                                <label for="user_name"><i class="fa-solid fa-user" aria-hidden="true"></i> Full Name</label>
+                                <div class="input-wrap">
+                                    <i class="fa-solid fa-user input-icon" aria-hidden="true"></i>
+                                    <input type="text" id="user_name" name="user_name"
+                                        placeholder="Your full name" autocomplete="name" required
+                                        value="{{ old('user_name') }}"
+                                        class="{{ $errors->has('user_name') ? 'is-invalid' : '' }}">
+                                </div>
+                                @error('user_name')
+                                <p class="field-error" role="alert"><i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i>{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <div class="field">
+                                <label for="user_mobile"><i class="fa-solid fa-phone" aria-hidden="true"></i> Mobile</label>
+                                <div class="input-wrap">
+                                    <i class="fa-solid fa-phone input-icon" aria-hidden="true"></i>
+                                    <input type="number" id="user_mobile" name="user_mobile"
+                                        placeholder="10-digit number" autocomplete="tel" required
+                                        value="{{ old('user_mobile') }}"
+                                        class="{{ $errors->has('user_mobile') ? 'is-invalid' : '' }}">
+                                </div>
+                                @error('user_mobile')
+                                <p class="field-error" role="alert"><i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i>{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <div class="field field-full">
+                                <label for="user_city"><i class="fa-solid fa-building" aria-hidden="true"></i> Your City</label>
+                                <div class="input-wrap">
+                                    <i class="fa-solid fa-building input-icon" aria-hidden="true"></i>
+                                    <input type="text" id="user_city" name="user_city"
+                                        placeholder="e.g. Mumbai, Delhi, Kolkata" autocomplete="address-level2" required
+                                        value="{{ old('user_city') }}"
+                                        class="{{ $errors->has('user_city') ? 'is-invalid' : '' }}">
+                                </div>
+                                @error('user_city')
+                                <p class="field-error" role="alert"><i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i>{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <div class="field field-full">
+                                <label for="user_email"><i class="fa-solid fa-at" aria-hidden="true"></i> Email Address</label>
+                                <div class="input-wrap">
+                                    <i class="fa-solid fa-at input-icon" aria-hidden="true"></i>
+                                    <input type="email" id="user_email" name="user_email"
+                                        placeholder="you@example.com" autocomplete="email" required
+                                        value="{{ old('user_email') }}"
+                                        class="{{ $errors->has('user_email') ? 'is-invalid' : '' }}">
+                                </div>
+                                @error('user_email')
+                                <p class="field-error" role="alert"><i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i>{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <div class="field field-full">
+                                <label for="user_password"><i class="fa-solid fa-lock" aria-hidden="true"></i> Password</label>
+                                <div class="input-wrap">
+                                    <i class="fa-solid fa-lock input-icon" aria-hidden="true"></i>
+                                    <input type="password" id="user_password" name="user_password"
+                                        placeholder="At least 8 characters" autocomplete="new-password" required
+                                        class="{{ $errors->has('user_password') ? 'is-invalid' : '' }}">
+                                    <button type="button" class="eye-btn" onclick="togglePwd('user_password',this)" aria-label="Toggle password visibility">
+                                        <i class="fa-regular fa-eye" aria-hidden="true"></i>
+                                    </button>
+                                </div>
+                                @error('user_password')
+                                <p class="field-error" role="alert"><i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i>{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                        </div>
+
+                        <button type="submit" class="btn-submit">
+                            <i class="fa-solid fa-id-card-clip" aria-hidden="true"></i> CREATE MY MEDICAL CARD
+                        </button>
+                    </form>
+
+                    <div class="form-footer">
+                        Already have an account? <button class="link-btn" onclick="switchTab('login')">Login here</button>
+                        <br>
+                        <a href="/" class="home-link"><i class="fa-solid fa-house" aria-hidden="true"></i> Back to Homepage</a>
+                    </div>
                 </div>
-            </div>
-            <!-- Login -->
 
-
-
-
-
-
-        </div>
-        <!-- END FORM SECTION -->
-
-
-
-
-        <!-- CONTENT SECTION -->
-        <div class="row content-row">
-
-
-
-            <!-- Login CONTENT -->
-            <div class="col align-items-center flex-col">
-                <div class="text sign-in">
-                    <h2>
-                        Welcome Back to DoctorWala.info !
-                    </h2>
-
-                </div>
-            </div>
-            <!-- END Login CONTENT -->
-
-
-
-
-            <!-- SIGN UP CONTENT -->
-            <div class="col align-items-center flex-col sig-text">
-                <div class="text sign-up">
-                    <h2>
-                        Join us!
-                        
-                    </h2>
-
-                </div>
-            </div>
-            <!-- END SIGN UP CONTENT -->
-
-
-
-
-
-        </div>
-        <!-- END CONTENT SECTION -->
-    </div>
-
+            </div><!-- /form-scroll -->
+        </div><!-- /form-panel-wrap -->
+    </div><!-- /auth-wrap -->
 
     <script>
-        // Render captcha on canvas
-        const captcha = @json($captcha); // Pass captcha value from controller
-        const canvas = document.getElementById('captchaCanvas');
-        const ctx = canvas.getContext('2d');
-        ctx.font = '23px Arial';
-        ctx.fillText(captcha, 10, 35);
-
-        // Reload captcha on click
-        canvas.addEventListener('click', () => location.reload());
-    </script>
-
-
-    <script>
-        let container = document.getElementById('container')
-
-        toggle = () => {
-            container.classList.toggle('sign-in')
-            container.classList.toggle('sign-up')
+        /* ── TAB SWITCH ── */
+        function switchTab(tab) {
+            ['login', 'signup'].forEach(t => {
+                const btn = document.getElementById('tab-' + t);
+                const pan = document.getElementById('panel-' + t);
+                const on = t === tab;
+                btn.classList.toggle('active', on);
+                btn.setAttribute('aria-selected', on);
+                pan.classList.toggle('active', on);
+            });
         }
 
-        setTimeout(() => {
-            container.classList.add('sign-in')
-        }, 200);
-    </script>
-    
-    
-    <script>
-        document.getElementById('secure_pin').addEventListener('blur', function () {
-            const pin = this.value;
-            const errorText = document.getElementById('pin-error');
-        
-            if (pin.length >= 4) {
-                fetch(`/check-secure-pin?pin=${pin}`)
-                    .then(res => res.json())
-                    .then(data => {
-                        if (data.exists) {
-                            errorText.innerText = 'Secure PIN already taken';
-                        } else {
-                            errorText.innerText = '';
-                        }
-                    });
-            }
-        });
-    </script>
-    <small id="pin-error" class="text-danger"></small>
+        /* ── PASSWORD TOGGLE ── */
+        function togglePwd(id, btn) {
+            const inp = document.getElementById(id);
+            const icon = btn.querySelector('i');
+            const show = inp.type === 'password';
+            inp.type = show ? 'text' : 'password';
+            icon.classList.toggle('fa-eye', !show);
+            icon.classList.toggle('fa-eye-slash', show);
+            btn.setAttribute('aria-label', show ? 'Hide password' : 'Show password');
+        }
 
-
-
-    <script>
-        document.addEventListener('DOMContentLoaded', async () => {
-
-            // 1. Parse browser & OS from userAgent
-            const ua = navigator.userAgent;
-            const browser = ua.includes('Chrome') ? 'Chrome' :
-                ua.includes('Firefox') ? 'Firefox' :
-                ua.includes('Safari') ? 'Safari' :
-                ua.includes('Edge') ? 'Edge' :
-                'Other';
-
-            const os = ua.includes('Windows') ? 'Windows' :
-                ua.includes('Mac') ? 'MacOS' :
-                ua.includes('Android') ? 'Android' :
-                ua.includes('iPhone') || ua.includes('iPad') ? 'iOS' :
-                ua.includes('Linux') ? 'Linux' :
-                'Other';
-
-            const deviceType = /Mobi|Android|iPhone|iPad/i.test(ua) ? 'Mobile' : 'Desktop';
-
-            // 2. Get approx location from IP (free, no key needed)
-            let country = null,
-                city = null;
-            try {
-                const geo = await fetch('https://ipapi.co/json/');
-                const geoData = await geo.json();
-                country = geoData.country_name;
-                city = geoData.city;
-            } catch (e) {}
-
-            // 3. Send to Laravel
-            fetch('{{ route("visitor.track") }}', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                },
-                body: JSON.stringify({
-                    page_url: window.location.href,
-                    referrer: document.referrer || null,
-                    browser: browser,
-                    os: os,
-                    device_type: deviceType,
-                    screen_size: `${screen.width}x${screen.height}`,
-                    language: navigator.language,
-                    timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-                    country: country,
-                    city: city,
-                })
+        /* ── AUTO-SWITCH TO SIGNUP IF IT HAS ERRORS/OLD INPUT ── */
+        (function() {
+            const sFields = ['user_name', 'user_mobile', 'user_city'];
+            const hasOld = sFields.some(id => {
+                const el = document.getElementById(id);
+                return el && el.value.trim() !== '';
             });
-        });
-    </script>
+            const hasErr = document.querySelectorAll('#panel-signup .field-error, #panel-signup .alert-error').length > 0;
+            if (hasOld || hasErr) switchTab('signup');
+        })();
 
+        /* ── CANVAS PARTICLE NETWORK ── */
+        (function() {
+            const canvas = document.getElementById('bg-canvas');
+            const ctx = canvas.getContext('2d');
+            let W, H, pts = [];
+
+            const COLS = ['rgba(13,141,227,', 'rgba(6,196,174,', 'rgba(59,111,200,'];
+
+            function resize() {
+                W = canvas.width = window.innerWidth;
+                H = canvas.height = window.innerHeight;
+            }
+
+            function Pt() {
+                this.init();
+            }
+            Pt.prototype.init = function() {
+                this.x = Math.random() * W;
+                this.y = Math.random() * H;
+                this.r = Math.random() * 1.6 + 0.4;
+                this.vx = (Math.random() - .5) * .35;
+                this.vy = (Math.random() - .5) * .35;
+                this.a = Math.random() * .3 + .08;
+                this.c = COLS[Math.floor(Math.random() * COLS.length)];
+                this.p = Math.random() * Math.PI * 2;
+                this.ps = .018 + Math.random() * .02;
+            };
+            Pt.prototype.update = function() {
+                this.x += this.vx;
+                this.y += this.vy;
+                this.p += this.ps;
+                if (this.x < -10 || this.x > W + 10 || this.y < -10 || this.y > H + 10) this.init();
+            };
+            Pt.prototype.draw = function() {
+                const a = this.a * (.7 + .3 * Math.sin(this.p));
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+                ctx.fillStyle = this.c + a + ')';
+                ctx.fill();
+            };
+
+            function drawLines() {
+                const D = 115;
+                for (let i = 0; i < pts.length; i++) {
+                    for (let j = i + 1; j < pts.length; j++) {
+                        const dx = pts[i].x - pts[j].x,
+                            dy = pts[i].y - pts[j].y;
+                        const d = Math.sqrt(dx * dx + dy * dy);
+                        if (d < D) {
+                            ctx.beginPath();
+                            ctx.moveTo(pts[i].x, pts[i].y);
+                            ctx.lineTo(pts[j].x, pts[j].y);
+                            ctx.strokeStyle = `rgba(13,141,227,${(1-d/D)*.07})`;
+                            ctx.lineWidth = .55;
+                            ctx.stroke();
+                        }
+                    }
+                }
+            }
+
+            function init() {
+                resize();
+                const n = Math.min(Math.floor(W * H / 13000), 100);
+                pts = Array.from({
+                    length: n
+                }, () => new Pt());
+            }
+
+            function loop() {
+                ctx.clearRect(0, 0, W, H);
+                drawLines();
+                pts.forEach(p => {
+                    p.update();
+                    p.draw();
+                });
+                requestAnimationFrame(loop);
+            }
+
+            window.addEventListener('resize', () => {
+                resize();
+                init();
+            });
+            init();
+            loop();
+        })();
+    </script>
 
 </body>
 
