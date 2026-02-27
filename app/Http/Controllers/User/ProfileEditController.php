@@ -13,6 +13,7 @@ use App\Models\PartnerAllPathologyTestModel;
 use App\Models\PartnerFeedback;
 use App\Models\PartnerOPDContactModel;
 use App\Models\PartnerPathologyContactModel;
+use App\Models\PartnerPatientInquiry;
 use App\Models\SuperAboutusModel;
 use App\Models\SuperHomeBannerModel;
 use App\Models\SuperOtherBannerModel;
@@ -48,10 +49,19 @@ class ProfileEditController extends Controller
         $aboutDetails = SuperAboutusModel::get();
         $otherBanners = SuperOtherBannerModel::get();
         $user = Auth::guard('dwuser')->user();
+        $latestSingleBooking = PartnerPatientInquiry::where('dw_user_id', $user->id)
+            ->where('status', '=', 'Upcoming')
+            ->with(['opdContact.banner', 'pathologyContact.banner', 'doctorContact.banner', 'user', 'doctor', 'test'])
+            ->latest()
+            ->first();
+        
+        $bookings = PartnerPatientInquiry::where('dw_user_id', $user->id)
+            ->with(['opdContact.banner', 'pathologyContact.banner', 'doctorContact.banner', 'user', 'doctor', 'test'])
+            ->latest()
+            ->get();
 
-        return view('user-profile', compact('user', 'aboutDetails', 'otherBanners'));
+        return view('user-profile', compact('user', 'aboutDetails', 'otherBanners', 'latestSingleBooking', 'bookings'));
     }
-
 
 
 
@@ -125,10 +135,6 @@ class ProfileEditController extends Controller
     }
 
 
-
-
-
-
     public function updatePassword(Request $request)
     {
 
@@ -161,5 +167,34 @@ class ProfileEditController extends Controller
         } else {
             return back()->with('password_update_status', 'failure');
         }
+    }
+
+
+    public function updatePatientEnquiryStatusIntoComplete($id)
+    {
+        $inquiry = PartnerPatientInquiry::find($id);
+
+        if (!$inquiry) {
+            return back()->with('error', 'Inquiry not found.');
+        }
+
+        $inquiry->status = 'Completed';
+        $inquiry->save();
+
+        return back()->with('success', 'Inquiry status updated to Completed.');
+    }
+
+    public function cancelPatientEnquiry($id)
+    {
+        $inquiry = PartnerPatientInquiry::find($id);
+
+        if (!$inquiry) {
+            return back()->with('error', 'Inquiry not found.');
+        }
+
+        $inquiry->status = 'Cancelled';
+        $inquiry->save();
+
+        return back()->with('success', 'Inquiry has been cancelled.');
     }
 }

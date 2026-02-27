@@ -95,7 +95,7 @@
             </div>
 
             <div class="clinic-actions">
-                <button class="btn btn-book" onclick="openM('inquiryModal{{ $path->id }}')">
+                <!-- <button class="btn btn-book" onclick="openM('inquiryModal{{ $path->id }}')">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                         <rect x="3" y="4" width="18" height="18" rx="2" />
                         <line x1="16" y1="2" x2="16" y2="6" />
@@ -103,7 +103,7 @@
                         <line x1="3" y1="10" x2="21" y2="10" />
                     </svg>
                     Book
-                </button>
+                </button> -->
                 <a href="tel:{{ $path->clinic_mobile_number }}" class="btn btn-call">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                         <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 10.8a19.79 19.79 0 01-3.07-8.67A2 2 0 012 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.92z" />
@@ -299,7 +299,7 @@
                             </div>
 
                             <div class="test-btns">
-                                <button class="btn-appt" onclick="openM('inquiryModal{{ $path->id }}')">
+                                <button class="btn-appt" onclick="openM('inquiryModal{{ $path->id }}', '{{ $test->id }}')">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                                         <rect x="3" y="4" width="18" height="18" rx="2" />
                                         <line x1="16" y1="2" x2="16" y2="6" />
@@ -444,6 +444,8 @@
                 @csrf
                 <input type="hidden" name="currently_loggedin_partner_id" value="{{ $path->currently_loggedin_partner_id }}">
                 <input type="hidden" name="clinic_type" value="Pathology">
+                <input type="hidden" name="dw_user_id" value="{{ $user->id ?? '' }}">
+                <input type="text" name="test_id" id="test_id_field">
                 <div class="fg">
                     <div class="fgrp">
                         <label class="flbl">Inquiry About</label>
@@ -478,9 +480,37 @@
                         <input class="fc" name="user_email" type="email" placeholder="Email address" required>
                         @endguest
                     </div>
+                    <div class="fr">
+                        <div class="fgrp"><label class="flbl">Appointment Booking Date *</label>
+                            @auth<input class="fc" type="date" name="booking_date" value="{{ $user->booking_date ?? '' }}">@endauth
+                            @guest<input class="fc" name="booking_date" type="date" required>@endguest
+                        </div>
+                        <div class="fgrp"><label class="flbl">Appointment Booking Time *</label>
+                            @auth<input class="fc" name="booking_time" type="time" value="{{ $user->booking_time ?? '' }}">@endauth
+                            @guest<input class="fc" name="booking_time" type="time" required>@endguest
+                        </div>
+                    </div>
                     <div class="fgrp">
-                        <label class="flbl">Message *</label>
-                        <textarea class="fc" name="user_inquiry" rows="3" placeholder="Describe your requirement..." required></textarea>
+                        <label class="flbl">Visit Mode *</label>
+
+                        <select name="visit_mode" class="fc" required>
+                            <option value="">Select Visit Mode</option>
+
+                            <option value="offline"
+                                {{ old('visit_mode', auth()->check() ? ($user->visit_mode ?? 'offline') : 'offline') == 'offline' ? 'selected' : '' }}>
+                                Offline
+                            </option>
+
+                            <option value="online"
+                                {{ old('visit_mode', auth()->check() ? ($user->visit_mode ?? 'offline') : 'offline') == 'online' ? 'selected' : '' }}>
+                                Online
+                            </option>
+
+                        </select>
+                    </div>
+
+                    <div class="fgrp"><label class="flbl">Describe your concern *</label>
+                        <textarea class="fc" name="user_inquiry" rows="3" placeholder="Describe your concern..." required></textarea>
                     </div>
                     <button type="submit" class="btn-sub btn-sub-red">Book Appointment</button>
                 </div>
@@ -683,11 +713,19 @@
     });
 
     // Modals
-    function openM(id) {
+    function openM(id, testId = null) {
         const e = document.getElementById(id);
+
         if (e) {
             e.classList.add('open');
             document.body.style.overflow = 'hidden';
+
+            if (testId) {
+                const input = e.querySelector('input[name="test_id"]');
+                if (input) {
+                    input.value = testId;
+                }
+            }
         }
     }
 

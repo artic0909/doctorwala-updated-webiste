@@ -35,7 +35,6 @@ class UserAllOPDHandleController extends Controller
         return view('opd', compact('aboutDetails', 'user', 'opds', 'states', 'cities'));
     }
 
-
     public function opdFilterSearch(Request $request)
     {
         $user = Auth::guard('dwuser')->user();
@@ -59,9 +58,6 @@ class UserAllOPDHandleController extends Controller
 
         return view('opd', compact('aboutDetails', 'user', 'opds', 'states', 'cities'));
     }
-
-
-
 
     public function singleOPDView($slug)
     {
@@ -90,26 +86,40 @@ class UserAllOPDHandleController extends Controller
         return view('single-opd-details', compact('aboutDetails', 'user', 'opd', 'doctors', 'services', 'photos', 'aboutClinics'));
     }
 
-
-
-
     public function patientInquiry(Request $request)
     {
         $validated = $request->validate([
             'currently_loggedin_partner_id' => 'required|string',
-            'clinic_type' => 'required|string',
-            'clinic_name' => 'required|string',
-            'user_name' => 'required|string',
-            'user_mobile' => 'required|string',
-            'user_email' => 'required|string',
-            'user_inquiry' => 'required|string',
+            'clinic_type'                   => 'required|string',
+            'clinic_name'                   => 'required|string',
+            'user_name'                     => 'required|string|max:255',
+            'user_mobile'                   => 'required|string|max:20',
+            'user_email'                    => 'required|email|max:255',
+            'user_inquiry'                  => 'required|string',
+
+            'dw_user_id'   => 'nullable|exists:dw_user_models,id',
+            'doctor_id'   => 'nullable|exists:partner_all_o_p_d_doctor_models,id',
+            'booking_date' => 'nullable|date',
+            'booking_time' => 'nullable|date_format:H:i',
+            'visit_mode'   => 'nullable|in:online,offline,video,home_visit',
+        ], [
+            'user_email.email'        => 'Please enter a valid email address.',
+            'dw_user_id.exists'       => 'Selected user does not exist.',
+            'booking_date.date'       => 'Invalid booking date.',
+            'booking_time.date_format' => 'Booking time must be in HH:MM format.',
+            'visit_mode.in'           => 'Visit mode must be online, offline, video, or home visit.',
         ]);
 
         try {
+
             PartnerPatientInquiry::create($validated);
+
             return back()->with('success', 'Your message has been sent successfully!');
         } catch (\Exception $e) {
-            return back()->with('error', 'Failed to send your message. Please try again.');
+
+            return back()
+                ->withInput()
+                ->with('error', 'Failed to send your message. Please try again.');
         }
     }
 

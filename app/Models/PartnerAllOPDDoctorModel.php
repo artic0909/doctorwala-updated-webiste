@@ -28,7 +28,18 @@ class PartnerAllOPDDoctorModel extends Model
 
     public function opdContact()
     {
-        return $this->belongsTo(PartnerOPDContactModel::class, 'currently_loggedin_partner_id', 'currently_loggedin_partner_id');
+        return $this->belongsTo(
+            PartnerOPDContactModel::class,
+            'currently_loggedin_partner_id',
+            'currently_loggedin_partner_id'
+        );
     }
-    
+
+    public function patientInquiries()
+    {
+        return $this->hasMany(
+            PartnerPatientInquiry::class,
+            'doctor_id'
+        );
+    }
 }

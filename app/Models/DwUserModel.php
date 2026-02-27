@@ -44,4 +44,9 @@ class DwUserModel extends Authenticatable
     {
         return $this->user_password;
     }
+
+    public function patientInquiries()
+    {
+        return $this->hasMany(PartnerPatientInquiry::class, 'dw_user_id');
+    }
 }

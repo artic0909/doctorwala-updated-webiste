@@ -23,8 +23,6 @@ class DwPartnerController extends Controller
     protected $guard = 'partner';
 
 
-
-
     public function viewPartnerRegForm()
     {
 
@@ -39,11 +37,6 @@ class DwPartnerController extends Controller
 
         return view('partner-register', compact('captcha', 'aboutDetails', 'otherBanners', 'testi'));
     }
-
-
-
-
-
 
 
     public function partnerLoginFormView()
@@ -61,11 +54,6 @@ class DwPartnerController extends Controller
     }
 
 
-
-
-
-
-
     public function partnerCouponCodeAddView()
     {
 
@@ -75,7 +63,6 @@ class DwPartnerController extends Controller
         $partnerID = Auth::guard('partner')->user();
         return view('payments', compact('partnerID', 'aboutDetails', 'otherBanners'));
     }
-
 
 
     public function getCouponDetails(Request $request)
@@ -97,8 +84,6 @@ class DwPartnerController extends Controller
             'message' => 'Coupon not found.',
         ]);
     }
-
-
 
     public function partnerCouponCodeAdd(Request $request)
     {
@@ -126,9 +111,6 @@ class DwPartnerController extends Controller
         return redirect()->route('partnerpanel.partner-dashboard')->with('success', 'Coupon added successfully!');
     }
 
-
-
-
     public function partnerdashboardview()
     {
         $partnerId = Auth::guard('partner')->id();
@@ -150,18 +132,6 @@ class DwPartnerController extends Controller
 
         return view('partnerpanel.partner-dashboard', compact('opdBanner', 'pathologyBanner', 'doctorBanner', 'registrationTypes', 'partnerName', 'clinicName'));
     }
-
-
-
-
-
-
-
-
-
-
-
-
 
     public function partnerRegForm(Request $request)
     {
@@ -215,13 +185,6 @@ class DwPartnerController extends Controller
         return back()->with('unsuccess', 'An unexpected error occurred. Please try again.'); 
     }
 
-
-
-
-
-
-
-
     private function generateCaptcha()
     {
         $chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghjkmnopqrstuvwxyz0123456789';
@@ -231,14 +194,6 @@ class DwPartnerController extends Controller
         }
         return $captcha;
     }
-
-
-
-
-
-
-
-
 
     public function partnerLogin(Request $request)
     {
@@ -274,19 +229,6 @@ class DwPartnerController extends Controller
             'partner_email' => 'Invalid credentials. Please try again.',
         ]);
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     public function partnerlogout(Request $request)
     {

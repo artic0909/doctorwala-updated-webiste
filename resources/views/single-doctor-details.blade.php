@@ -515,6 +515,7 @@
                 @csrf
                 <input type="hidden" name="currently_loggedin_partner_id" value="{{ $doc->currently_loggedin_partner_id }}">
                 <input type="hidden" name="clinic_type" value="Doctor">
+                <input type="hidden" name="dw_user_id" value="{{ $user->id ?? '' }}">
                 <div class="fg">
                     <div class="fgrp">
                         <label class="flbl">Inquiry About</label>
@@ -549,8 +550,37 @@
                         <input class="fc" name="user_email" type="email" placeholder="Email address" required>
                         @endguest
                     </div>
+                                        <div class="fr">
+                        <div class="fgrp"><label class="flbl">Appointment Booking Date *</label>
+                            @auth<input class="fc" type="date" name="booking_date" value="{{ $user->booking_date ?? '' }}">@endauth
+                            @guest<input class="fc" name="booking_date" type="date" required>@endguest
+                        </div>
+                        <div class="fgrp"><label class="flbl">Appointment Booking Time *</label>
+                            @auth<input class="fc" name="booking_time" type="time" value="{{ $user->booking_time ?? '' }}">@endauth
+                            @guest<input class="fc" name="booking_time" type="time" required>@endguest
+                        </div>
+                    </div>
+
                     <div class="fgrp">
-                        <label class="flbl">Your Message *</label>
+                        <label class="flbl">Visit Mode *</label>
+
+                        <select name="visit_mode" class="fc" required>
+                            <option value="">Select Visit Mode</option>
+
+                            <option value="offline"
+                                {{ old('visit_mode', auth()->check() ? ($user->visit_mode ?? 'offline') : 'offline') == 'offline' ? 'selected' : '' }}>
+                                Offline
+                            </option>
+
+                            <option value="online"
+                                {{ old('visit_mode', auth()->check() ? ($user->visit_mode ?? 'offline') : 'offline') == 'online' ? 'selected' : '' }}>
+                                Online
+                            </option>
+
+                        </select>
+                    </div>
+                    <div class="fgrp">
+                        <label class="flbl">Describe your concern *</label>
                         <textarea class="fc" name="user_inquiry" rows="3" placeholder="Describe your concern..." required></textarea>
                     </div>
                     <button type="submit" class="btn-sub btn-sub-rose">Book Appointment</button>

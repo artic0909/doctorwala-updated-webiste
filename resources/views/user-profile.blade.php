@@ -1,14 +1,635 @@
 @extends('frontend.layout.app')
 
-@section('title', 'My Profile & Medical history - DoctorWala.info')
+@section('title', 'My Profile & Medical history - Doctorwala.info')
 
 @section('content')
 
 <head>
     <link rel="stylesheet" href="{{ asset('./css/user-profile.css') }}">
     <style>
+        .up-appt-table-wrap {
+            overflow-x: auto;
+        }
+
+        /* Filter count badges */
+        .up-filter-count {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 18px;
+            height: 18px;
+            padding: 0 5px;
+            border-radius: 20px;
+            background: rgba(13, 141, 227, .12);
+            color: var(--p, #0d8de3);
+            font-size: .68rem;
+            font-weight: 800;
+            margin-left: 5px;
+            line-height: 1;
+        }
+
+        .up-filter-btn.active .up-filter-count {
+            background: rgba(255, 255, 255, .25);
+            color: #fff;
+        }
+
+        /* Row index # */
+        .up-appt-num {
+            font-size: .78rem;
+            font-weight: 700;
+            color: var(--muted, #94a3b8);
+            width: 32px;
+        }
+
+        /* Time */
+        .up-appt-time {
+            color: var(--muted, #94a3b8);
+            font-size: .75rem;
+        }
+
+        /* Service type chips */
+        .up-appt-type {
+            font-size: .72rem;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 6px;
+        }
+
+        .type--doctor {
+            color: #0d8de3;
+            background: rgba(13, 141, 227, .08);
+        }
+
+        .type--opd {
+            color: #06c4ae;
+            background: rgba(6, 196, 174, .08);
+        }
+
+        .type--path {
+            color: #8b5cf6;
+            background: rgba(139, 92, 246, .08);
+        }
+
+        /* Mode */
+        .mode--online {
+            color: var(--p, #0d8de3);
+            font-weight: 700;
+        }
+
+        .mode--inperson {
+            color: var(--mint, #06c4ae);
+            font-weight: 700;
+        }
+
+        /* Action buttons in table */
+        .up-appt-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .up-action-btn--complete,
+        .up-action-btn--cancel {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: .73rem;
+            font-weight: 700;
+            border: none;
+            cursor: pointer;
+            transition: all .18s ease;
+            font-family: inherit;
+            line-height: 1.4;
+            white-space: nowrap;
+        }
+
+        .up-action-btn--complete {
+            background: rgba(16, 185, 129, .1);
+            color: #059669;
+            border: 1px solid rgba(16, 185, 129, .2);
+        }
+
+        .up-action-btn--complete:hover {
+            background: rgba(16, 185, 129, .18);
+            transform: translateY(-1px);
+        }
+
+        .up-action-btn--cancel {
+            background: rgba(244, 63, 94, .08);
+            color: #e11d48;
+            border: 1px solid rgba(244, 63, 94, .18);
+        }
+
+        .up-action-btn--cancel:hover {
+            background: rgba(244, 63, 94, .15);
+            transform: translateY(-1px);
+        }
+
+        .up-action-done {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: .73rem;
+            font-weight: 700;
+            color: #10b981;
+            opacity: .7;
+        }
+
+        .up-action-na {
+            color: var(--muted, #94a3b8);
+            font-size: .8rem;
+        }
+
+        /* Empty state */
+        .up-appt-empty {
+            text-align: center;
+            padding: 52px 20px;
+            color: var(--muted, #94a3b8);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .up-appt-empty p {
+            font-size: .9rem;
+            font-weight: 500;
+        }
+
+        /* Hidden row (filtered out) */
+        .appt-row.is-hidden {
+            display: none;
+        }
+
         marquee {
             display: none !important;
+        }
+
+        .complete-modal-overlay,
+        .cancel-modal-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 9000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+            background: rgba(10, 18, 35, 0.55);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity .25s ease, visibility .25s ease;
+        }
+
+        .complete-modal-overlay.is-open,
+        .cancel-modal-overlay.is-open {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .complete-modal-overlay.is-open .complete-modal-box,
+        .cancel-modal-overlay.is-open .cancel-modal-box {
+            transform: translateY(0) scale(1);
+            opacity: 1;
+        }
+
+        /* ════════════════════════════════
+   COMPLETE MODAL
+════════════════════════════════ */
+        .complete-modal-box {
+            background: #fff;
+            border-radius: 22px;
+            padding: 36px 32px 30px;
+            width: 100%;
+            max-width: 420px;
+            box-shadow:
+                0 24px 60px rgba(13, 141, 100, .15),
+                0 4px 20px rgba(0, 0, 0, .12),
+                0 0 0 1px rgba(16, 185, 129, .12);
+            transform: translateY(28px) scale(.96);
+            opacity: 0;
+            transition: transform .32s cubic-bezier(.34, 1.4, .64, 1), opacity .28s ease;
+            position: relative;
+            overflow: hidden;
+            text-align: center;
+        }
+
+        .complete-modal-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #10b981, #06c4ae);
+            border-radius: 22px 22px 0 0;
+        }
+
+        /* Icon */
+        .complete-modal-icon-wrap {
+            position: relative;
+            width: 72px;
+            height: 72px;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .complete-modal-icon-ring {
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            border: 2px solid rgba(16, 185, 129, .25);
+            animation: completeRingPulse 2.4s ease-out infinite;
+        }
+
+        .complete-modal-icon-ring--2 {
+            animation-delay: 1.2s;
+        }
+
+        @keyframes completeRingPulse {
+            0% {
+                transform: scale(.7);
+                opacity: .8;
+            }
+
+            100% {
+                transform: scale(1.6);
+                opacity: 0;
+            }
+        }
+
+        .complete-modal-icon-circle {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #10b981, #06c4ae);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            box-shadow: 0 8px 24px rgba(16, 185, 129, .35);
+            position: relative;
+            z-index: 1;
+            animation: completeIconBounce .5s cubic-bezier(.34, 1.56, .64, 1) both;
+            animation-delay: .1s;
+        }
+
+        @keyframes completeIconBounce {
+            from {
+                transform: scale(0);
+            }
+
+            to {
+                transform: scale(1);
+            }
+        }
+
+        /* Text */
+        .complete-modal-title {
+            font-family: 'Outfit', 'DM Sans', sans-serif;
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: #0f2415;
+            margin-bottom: 8px;
+            letter-spacing: -.02em;
+        }
+
+        .complete-modal-desc {
+            font-size: .875rem;
+            color: #5a7165;
+            line-height: 1.55;
+            margin-bottom: 18px;
+        }
+
+        .complete-modal-desc strong {
+            color: #10b981;
+        }
+
+        /* Appt preview badge */
+        .complete-modal-appt-preview {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(16, 185, 129, .08);
+            border: 1.5px solid rgba(16, 185, 129, .2);
+            border-radius: 10px;
+            padding: 8px 16px;
+            font-size: .82rem;
+            font-weight: 600;
+            color: #059669;
+            margin-bottom: 24px;
+        }
+
+        .complete-modal-appt-preview i {
+            font-size: .8rem;
+        }
+
+        /* Actions */
+        .complete-modal-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 4px;
+        }
+
+        .complete-modal-btn {
+            flex: 1;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 11px 16px;
+            border-radius: 11px;
+            font-family: 'Outfit', 'DM Sans', sans-serif;
+            font-size: .85rem;
+            font-weight: 700;
+            cursor: pointer;
+            border: none;
+            transition: all .2s ease;
+            letter-spacing: .02em;
+        }
+
+        .complete-modal-btn--cancel {
+            background: #f1f5f2;
+            color: #4a6657;
+            border: 1.5px solid #d1e8dc;
+        }
+
+        .complete-modal-btn--cancel:hover {
+            background: #e2ede7;
+            border-color: #b8d9c5;
+        }
+
+        .complete-modal-btn--confirm {
+            background: linear-gradient(120deg, #10b981, #06c4ae);
+            color: #fff;
+            box-shadow: 0 4px 16px rgba(16, 185, 129, .3);
+        }
+
+        .complete-modal-btn--confirm:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 22px rgba(16, 185, 129, .4);
+        }
+
+        .complete-modal-btn--confirm:active {
+            transform: translateY(0);
+        }
+
+
+        /* ════════════════════════════════
+   CANCEL MODAL
+════════════════════════════════ */
+        .cancel-modal-box {
+            background: #fff;
+            border-radius: 22px;
+            padding: 36px 32px 30px;
+            width: 100%;
+            max-width: 440px;
+            box-shadow:
+                0 24px 60px rgba(220, 38, 38, .12),
+                0 4px 20px rgba(0, 0, 0, .12),
+                0 0 0 1px rgba(244, 63, 94, .1);
+            transform: translateY(28px) scale(.96);
+            opacity: 0;
+            transition: transform .32s cubic-bezier(.34, 1.4, .64, 1), opacity .28s ease;
+            position: relative;
+            overflow: hidden;
+            text-align: center;
+        }
+
+        .cancel-modal-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #f43f5e, #ef4444);
+            border-radius: 22px 22px 0 0;
+        }
+
+        /* Icon */
+        .cancel-modal-icon-wrap {
+            position: relative;
+            width: 72px;
+            height: 72px;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .cancel-modal-icon-ring {
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            border: 2px solid rgba(244, 63, 94, .25);
+            animation: cancelRingPulse 2.4s ease-out infinite;
+        }
+
+        .cancel-modal-icon-ring--2 {
+            animation-delay: 1.2s;
+        }
+
+        @keyframes cancelRingPulse {
+            0% {
+                transform: scale(.7);
+                opacity: .8;
+            }
+
+            100% {
+                transform: scale(1.6);
+                opacity: 0;
+            }
+        }
+
+        .cancel-modal-icon-circle {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #f43f5e, #ef4444);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            box-shadow: 0 8px 24px rgba(244, 63, 94, .35);
+            position: relative;
+            z-index: 1;
+            animation: cancelIconBounce .5s cubic-bezier(.34, 1.56, .64, 1) both;
+            animation-delay: .1s;
+        }
+
+        @keyframes cancelIconBounce {
+            from {
+                transform: scale(0) rotate(-20deg);
+            }
+
+            to {
+                transform: scale(1) rotate(0deg);
+            }
+        }
+
+        /* Text */
+        .cancel-modal-title {
+            font-family: 'Outfit', 'DM Sans', sans-serif;
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: #1f0a0e;
+            margin-bottom: 8px;
+            letter-spacing: -.02em;
+        }
+
+        .cancel-modal-desc {
+            font-size: .875rem;
+            color: #7a5560;
+            line-height: 1.55;
+            margin-bottom: 18px;
+        }
+
+        .cancel-modal-desc strong {
+            color: #f43f5e;
+        }
+
+        /* Appt preview badge */
+        .cancel-modal-appt-preview {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(244, 63, 94, .07);
+            border: 1.5px solid rgba(244, 63, 94, .18);
+            border-radius: 10px;
+            padding: 8px 16px;
+            font-size: .82rem;
+            font-weight: 600;
+            color: #dc2626;
+            margin-bottom: 20px;
+        }
+
+        .cancel-modal-appt-preview i {
+            font-size: .8rem;
+        }
+
+        /* Reason textarea */
+        .cancel-modal-reason-wrap {
+            text-align: left;
+            margin-bottom: 20px;
+        }
+
+        .cancel-modal-reason-label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: .76rem;
+            font-weight: 700;
+            color: #7a5560;
+            text-transform: uppercase;
+            letter-spacing: .04em;
+            margin-bottom: 6px;
+        }
+
+        .cancel-modal-reason-label i {
+            color: #f43f5e;
+            font-size: .7rem;
+        }
+
+        .cancel-modal-reason-label span {
+            color: #b0adb0;
+            font-weight: 400;
+            text-transform: none;
+            letter-spacing: 0;
+        }
+
+        .cancel-modal-reason-input {
+            width: 100%;
+            padding: 10px 13px;
+            border: 1.5px solid #fecdd3;
+            border-radius: 10px;
+            background: #fff5f7;
+            font-family: 'DM Sans', sans-serif;
+            font-size: .875rem;
+            color: #1f0a0e;
+            resize: vertical;
+            outline: none;
+            transition: border-color .2s ease, box-shadow .2s ease;
+            min-height: 76px;
+        }
+
+        .cancel-modal-reason-input::placeholder {
+            color: #d4a0ab;
+        }
+
+        .cancel-modal-reason-input:focus {
+            border-color: #f43f5e;
+            background: #fff;
+            box-shadow: 0 0 0 3.5px rgba(244, 63, 94, .1);
+        }
+
+        /* Actions */
+        .cancel-modal-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .cancel-modal-btn {
+            flex: 1;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 11px 16px;
+            border-radius: 11px;
+            font-family: 'Outfit', 'DM Sans', sans-serif;
+            font-size: .85rem;
+            font-weight: 700;
+            cursor: pointer;
+            border: none;
+            transition: all .2s ease;
+            letter-spacing: .02em;
+        }
+
+        .cancel-modal-btn--keep {
+            background: #f9f1f2;
+            color: #7a5560;
+            border: 1.5px solid #f5d0d6;
+        }
+
+        .cancel-modal-btn--keep:hover {
+            background: #f5e6e8;
+            border-color: #f0bdc5;
+        }
+
+        .cancel-modal-btn--confirm {
+            background: linear-gradient(120deg, #f43f5e, #ef4444);
+            color: #fff;
+            box-shadow: 0 4px 16px rgba(244, 63, 94, .3);
+        }
+
+        .cancel-modal-btn--confirm:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 22px rgba(244, 63, 94, .42);
+        }
+
+        .cancel-modal-btn--confirm:active {
+            transform: translateY(0);
+        }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 480px) {
+
+            .complete-modal-box,
+            .cancel-modal-box {
+                padding: 28px 20px 24px;
+                border-radius: 18px;
+            }
+
+            .complete-modal-actions,
+            .cancel-modal-actions {
+                flex-direction: column-reverse;
+            }
         }
     </style>
 </head>
@@ -280,6 +901,7 @@
         <div class="up-main">
 
             <!-- Next Appointment Banner -->
+            @if($latestSingleBooking)
             <div class="up-next-appt">
                 <div class="up-next-appt__ico">
                     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -289,22 +911,123 @@
                 </div>
                 <div class="up-next-appt__info">
                     <div class="up-next-appt__label">Upcoming Appointment</div>
-                    <div class="up-next-appt__title">Dr. Priya Sharma — Cardiologist</div>
+
+                    @if ($latestSingleBooking->clinic_type === 'OPD' && $latestSingleBooking->doctor)
+                    <div class="up-next-appt__title">{{$latestSingleBooking->doctor->doctor_name}}</div>
+                    <div class="up-next-appt__title" style="color: yellow;">{{$latestSingleBooking->doctor->doctor_specialist}} | {{$latestSingleBooking->opdContact->clinic_name}}</div>
+                    <small class="up-next-appt__sub">{{$latestSingleBooking->doctor->doctor_more}}</small>
+                    <br>
+                    <small class="up-next-appt__sub">{{$latestSingleBooking->opdContact->clinic_city}}, {{$latestSingleBooking->opdContact->clinic_state}}, {{$latestSingleBooking->opdContact->clinic_pincode}}</small>
+
+                    @elseif ($latestSingleBooking->clinic_type === 'Pathology' && $latestSingleBooking->test)
+                    <div class="up-next-appt__title">{{$latestSingleBooking->test->test_name}}</div>
+                    <div class="up-next-appt__title" style="color: yellow;">{{$latestSingleBooking->test->test_type}} | {{$latestSingleBooking->pathologyContact->clinic_name}}</div>
+                    <small class="up-next-appt__sub"><svg width="12" height="12" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2"
+                            style="display:inline;vertical-align:middle">
+
+                            <path d="M21 10c0 6-9 12-9 12S3 16 3 10a9 9 0 1 1 18 0z"></path>
+                            <circle cx="12" cy="10" r="3"></circle>
+
+                        </svg>
+                        {{$latestSingleBooking->pathologyContact->clinic_city}}, {{$latestSingleBooking->pathologyContact->clinic_state}}, {{$latestSingleBooking->pathologyContact->clinic_pincode}}
+                    </small>
+
+
+                    @elseif ($latestSingleBooking->clinic_type === 'Doctor' && $latestSingleBooking->doctorContact)
+                    <div class="up-next-appt__title">{{$latestSingleBooking->doctorContact->partner_doctor_name}}</div>
+                    <div class="up-next-appt__title" style="color: yellow;">{{$latestSingleBooking->doctorContact->partner_doctor_specialist}}</div>
+                    <small class="up-next-appt__sub"><svg width="12" height="12" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2"
+                            style="display:inline;vertical-align:middle">
+
+                            <path d="M21 10c0 6-9 12-9 12S3 16 3 10a9 9 0 1 1 18 0z"></path>
+                            <circle cx="12" cy="10" r="3"></circle>
+
+                        </svg>
+                        {{$latestSingleBooking->doctorContact->partner_doctor_city}}, {{$latestSingleBooking->doctorContact->partner_doctor_state}}, {{$latestSingleBooking->doctorContact->partner_doctor_pincode}}
+                    </small>
+                    @endif
+
                     <div class="up-next-appt__sub">
                         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:inline;vertical-align:middle">
                             <circle cx="12" cy="12" r="10" />
                             <path d="M12 6v6l4 2" />
                         </svg>
-                        Tomorrow, 28 Feb 2026 &bull; 11:30 AM &bull; Online Consultation
+                        {{ \Carbon\Carbon::parse($latestSingleBooking->booking_date)->isTomorrow() 
+    ? 'Tomorrow, ' . \Carbon\Carbon::parse($latestSingleBooking->booking_date)->format('d M Y')
+    : \Carbon\Carbon::parse($latestSingleBooking->booking_date)->format('l, d M Y') }} &bull; {{ \Carbon\Carbon::parse($latestSingleBooking->booking_time)->format('h:i A') }} &bull; <span style="text-transform: capitalize;">{{ $latestSingleBooking->visit_mode }}</span> Consultation
                     </div>
                 </div>
-                <a href="#" class="up-next-appt__action">
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                        <path d="M5 12h14M12 5l7 7-7 7" />
+
+                <!-- Action -->
+                @if ($latestSingleBooking->clinic_type === 'OPD' && $latestSingleBooking->doctor)
+                <a href="{{ $latestSingleBooking->opdContact->clinic_google_map_link }}" target="_blank" class="up-next-appt__action" style="color: #1B9AAA;">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2"
+                        style="display:inline;vertical-align:middle">
+
+                        <path d="M21 10c0 6-9 12-9 12S3 16 3 10a9 9 0 1 1 18 0z"></path>
+                        <circle cx="12" cy="10" r="3"></circle>
+
                     </svg>
-                    View Details
+                    MAP
                 </a>
+                @elseif ($latestSingleBooking->clinic_type === 'Pathology' && $latestSingleBooking->test)
+                <a href="{{ $latestSingleBooking->pathologyContact->clinic_google_map_link }}" target="_blank" class="up-next-appt__action" style="color: #1B9AAA;">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2"
+                        style="display:inline;vertical-align:middle">
+
+                        <path d="M21 10c0 6-9 12-9 12S3 16 3 10a9 9 0 1 1 18 0z"></path>
+                        <circle cx="12" cy="10" r="3"></circle>
+
+                    </svg>
+                    MAP
+                </a>
+                @elseif ($latestSingleBooking->clinic_type === 'Doctor' && $latestSingleBooking->doctorContact)
+                <a href="{{ $latestSingleBooking->doctorContact->partner_doctor_google_map_link }}" target="_blank" class="up-next-appt__action" style="color: #1B9AAA;">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2"
+                        style="display:inline;vertical-align:middle">
+
+                        <path d="M21 10c0 6-9 12-9 12S3 16 3 10a9 9 0 1 1 18 0z"></path>
+                        <circle cx="12" cy="10" r="3"></circle>
+
+                    </svg>
+                    MAP
+                </a>
+                @endif
+
+                @if ($latestSingleBooking->status === 'Upcoming')
+
+                <button
+                    type="button"
+                    class="up-next-appt__action"
+                    onclick="openCompleteModal({{ $latestSingleBooking->id }})">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <path d="M20 6L9 17l-5-5" />
+                    </svg>
+                    Complete
+                </button>
+
+                <button
+                    type="button"
+                    class="up-next-appt__action"
+                    style="color: red;"
+                    onclick="openCancelModal({{ $latestSingleBooking->id }})">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <circle cx="12" cy="12" r="9"></circle>
+                        <line x1="5" y1="5" x2="19" y2="19"></line>
+                    </svg>
+                    Cancel
+                </button>
+
+                @endif
+
+
             </div>
+            @endif
 
 
             <!-- MEDICAL VIRTUAL CARD -->
@@ -320,11 +1043,11 @@
                 <div class="up-med-card__top">
                     <div class="up-med-card__logo-wrap">
                         <div class="up-med-card__logo-ico">
-                            <img src="{{ asset('img/logo.png') }}" alt="DoctorWala">
+                            <img src="{{ asset('./img/fav5.png') }}" alt="Doctorwala">
                         </div>
                         <div>
                             <div class="up-med-card__brand">
-                                DoctorWala
+                                Doctorwala
                                 <span>MEDICAL CARD</span>
                             </div>
                         </div>
@@ -333,7 +1056,7 @@
 
                 <div class="up-med-card__mid">
                     <div class="up-med-card__number">
-                        <span>•••• </span> &nbsp;{{ Auth::user()->medical_card_no ?? '******' }}
+                        {{ Auth::user()->medical_card_no ?? 'DW** **** ***' }}
                     </div>
                 </div>
 
@@ -357,17 +1080,17 @@
                 <div class="up-med-card__actions">
 
                     @if(!Auth::user()->medical_card_no)
-    <form action="{{ route('dw.generate.medical-card') }}" method="POST" style="display:inline;">
-        @csrf
-        <button type="submit" class="up-med-card__btn up-med-card__btn--white">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
-                <polyline points="14 2 14 8 20 8" />
-            </svg>
-            Create Medical Card
-        </button>
-    </form>
-@else
+                    <form action="{{ route('dw.generate.medical-card') }}" method="POST" style="display:inline;">
+                        @csrf
+                        <button type="submit" class="up-med-card__btn up-med-card__btn--white">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
+                                <polyline points="14 2 14 8 20 8" />
+                            </svg>
+                            Create Medical Card
+                        </button>
+                    </form>
+                    @else
 
                     <button class="up-med-card__btn up-med-card__btn--white" onclick="switchTab('history')">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -455,7 +1178,7 @@
                             <path d="M16 2v4M8 2v4M3 10h18" />
                         </svg>
                         Appointments
-                        <span class="up-tab-count">6</span>
+                        <span class="up-tab-count">{{ $bookings->count() }}</span>
                     </button>
                     <button class="up-tab" onclick="switchTab('history')" id="tab-history">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -482,105 +1205,130 @@
                 </div>
 
 
-                <!-- ── TAB: APPOINTMENTS ── -->
+                {{-- ── TAB: APPOINTMENTS ── --}}
                 <div id="content-appointments" class="up-tab-content active">
                     <div class="up-appt-wrap">
 
                         <div class="up-appt-filters">
-                            <button class="up-filter-btn active">All</button>
-                            <button class="up-filter-btn">Upcoming</button>
-                            <button class="up-filter-btn">Completed</button>
-                            <button class="up-filter-btn">Cancelled</button>
+                            <button class="up-filter-btn active" onclick="filterAppts(this, 'all')">
+                                All <span class="up-filter-count" id="count-all">{{ $bookings->count() }}</span>
+                            </button>
+                            <button class="up-filter-btn" onclick="filterAppts(this, 'Upcoming')">
+                                Upcoming <span class="up-filter-count" id="count-upcoming">{{ $bookings->where('status', 'Upcoming')->count() }}</span>
+                            </button>
+                            <button class="up-filter-btn" onclick="filterAppts(this, 'Completed')">
+                                Completed <span class="up-filter-count" id="count-completed">{{ $bookings->where('status', 'Completed')->count() }}</span>
+                            </button>
+                            <button class="up-filter-btn" onclick="filterAppts(this, 'Cancelled')">
+                                Cancelled <span class="up-filter-count" id="count-cancelled">{{ $bookings->where('status', 'Cancelled')->count() }}</span>
+                            </button>
                         </div>
 
-                        <table class="up-appt-table">
-                            <thead>
-                                <tr>
-                                    <th>Doctor</th>
-                                    <th>Date & Time</th>
-                                    <th>Type</th>
-                                    <th>Status</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>
-                                        <div class="up-appt-doc">
-                                            <div class="up-appt-av">PS</div>
-                                            <div>
-                                                <div class="up-appt-dname">Dr. Priya Sharma</div>
-                                                <div class="up-appt-spec">Cardiologist</div>
+                        @if($bookings->isEmpty())
+                        <div class="up-appt-empty">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" opacity=".3">
+                                <rect x="3" y="4" width="18" height="18" rx="3" />
+                                <path d="M16 2v4M8 2v4M3 10h18" />
+                            </svg>
+                            <p>No appointments found</p>
+                        </div>
+                        @else
+                        <div class="up-appt-table-wrap">
+                            <table class="up-appt-table">
+                                <thead>
+                                    <tr>
+                                        <th>OPD / Test / Doctor</th>
+                                        <th>Date &amp; Time</th>
+                                        <th>Visit</th>
+                                        <th>Status</th>
+                                        <th>Location</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="apptTableBody">
+
+                                    @foreach($bookings as $index => $booking)
+                                    @php
+                                    $status = $booking->status ?? 'Upcoming';
+                                    $statusMap = [
+                                    'Upcoming' => ['class' => 'up-status--upcoming', 'label' => 'Upcoming'],
+                                    'Completed' => ['class' => 'up-status--done', 'label' => 'Completed'],
+                                    'Cancelled' => ['class' => 'up-status--cancelled','label' => 'Cancelled'],
+                                    ];
+                                    $statusInfo = $statusMap[$status] ?? ['class' => 'up-status--upcoming', 'label' => $status];
+                                    @endphp
+
+                                    <tr class="appt-row" data-status="{{ $status }}">
+
+
+                                        <td>
+                                            @if ($booking->clinic_type === 'OPD' && $booking->doctor)
+                                            <div class="up-appt-doc">
+                                                <div class="up-appt-av">{{ strtoupper(substr($booking->doctor->doctor_name, 0, 1)) }}{{ strtoupper(substr(strstr($booking->doctor->doctor_name, ' '), 1, 1)) }}</div>
+                                                <div>
+                                                    <div class="up-appt-dname">Dr. {{ $booking->doctor->doctor_name }}</div>
+                                                    <div class="up-appt-dname" style="color: red;">{{ $booking->doctor->doctor_specialist }}</div>
+                                                    <div class="up-appt-subname" style="color: #5E807F;">{{ $booking->opdContact->clinic_name }}</div>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </td>
-                                    <td>28 Feb 2026<br><span style="color:var(--muted);font-size:.75rem">11:30 AM</span></td>
-                                    <td><span style="font-size:.74rem;font-weight:700;color:var(--p)">Online</span></td>
-                                    <td><span class="up-status up-status--upcoming"><span class="dot"></span>Upcoming</span></td>
-                                    <td><a href="#" class="up-action-btn">Join Call</a></td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <div class="up-appt-doc">
-                                            <div class="up-appt-av up-appt-av--mint">AR</div>
-                                            <div>
-                                                <div class="up-appt-dname">Dr. Arjun Rao</div>
-                                                <div class="up-appt-spec">General Physician</div>
+
+                                            @elseif ($booking->clinic_type === 'Pathology' && $booking->test)
+                                            <div class="up-appt-doc">
+                                                <div class="up-appt-av">{{ strtoupper(substr($booking->test->test_name, 0, 1)) }}{{ strtoupper(substr(strstr($booking->test->test_name, ' '), 1, 1)) }}</div>
+                                                <div>
+                                                    <div class="up-appt-dname">{{ $booking->test->test_name }}</div>
+                                                    <div class="up-appt-dname" style="color: green;">{{ $booking->test->test_type }}</div>
+                                                    <div class="up-appt-subname" style="color: #5E807F;">{{ $booking->pathologyContact->clinic_name }}</div>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </td>
-                                    <td>20 Feb 2026<br><span style="color:var(--muted);font-size:.75rem">10:00 AM</span></td>
-                                    <td><span style="font-size:.74rem;font-weight:700;color:var(--mint)">In-person</span></td>
-                                    <td><span class="up-status up-status--done"><span class="dot"></span>Completed</span></td>
-                                    <td><a href="#" class="up-action-btn">View Report</a></td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <div class="up-appt-doc">
-                                            <div class="up-appt-av up-appt-av--coral">NK</div>
-                                            <div>
-                                                <div class="up-appt-dname">Dr. Neha Khan</div>
-                                                <div class="up-appt-spec">Dermatologist</div>
+
+                                            @elseif ($booking->clinic_type === 'Doctor' && $booking->doctorContact)
+                                            <div class="up-appt-doc">
+                                                <div class="up-appt-av">{{ strtoupper(substr($booking->doctorContact->partner_doctor_name, 0, 1)) }}{{ strtoupper(substr(strstr($booking->doctorContact->partner_doctor_name, ' '), 1, 1)) }}</div>
+                                                <div>
+                                                    <div class="up-appt-dname">Dr. {{ $booking->doctorContact->partner_doctor_name }}</div>
+                                                    <div class="up-appt-dname" style="color: #1B9AAA;">{{ $booking->doctorContact->partner_doctor_specialist }}</div>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </td>
-                                    <td>14 Feb 2026<br><span style="color:var(--muted);font-size:.75rem">03:00 PM</span></td>
-                                    <td><span style="font-size:.74rem;font-weight:700;color:var(--p)">Online</span></td>
-                                    <td><span class="up-status up-status--done"><span class="dot"></span>Completed</span></td>
-                                    <td><a href="#" class="up-action-btn">View Report</a></td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <div class="up-appt-doc">
-                                            <div class="up-appt-av up-appt-av--violet">SM</div>
-                                            <div>
-                                                <div class="up-appt-dname">Dr. Suresh Mehta</div>
-                                                <div class="up-appt-spec">Orthopedic</div>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>05 Feb 2026<br><span style="color:var(--muted);font-size:.75rem">09:30 AM</span></td>
-                                    <td><span style="font-size:.74rem;font-weight:700;color:var(--mint)">In-person</span></td>
-                                    <td><span class="up-status up-status--cancelled"><span class="dot"></span>Cancelled</span></td>
-                                    <td><a href="#" class="up-action-btn">Rebook</a></td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <div class="up-appt-doc">
-                                            <div class="up-appt-av">RG</div>
-                                            <div>
-                                                <div class="up-appt-dname">Dr. Ritu Gupta</div>
-                                                <div class="up-appt-spec">Gynecologist</div>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>28 Jan 2026<br><span style="color:var(--muted);font-size:.75rem">02:00 PM</span></td>
-                                    <td><span style="font-size:.74rem;font-weight:700;color:var(--p)">Online</span></td>
-                                    <td><span class="up-status up-status--done"><span class="dot"></span>Completed</span></td>
-                                    <td><a href="#" class="up-action-btn">View Report</a></td>
-                                </tr>
-                            </tbody>
-                        </table>
+                                            @endif
+                                        </td>
+
+
+                                        <td>{{ \Carbon\Carbon::parse($booking->booking_date)->format('d M Y') }}<br><span style="color:var(--muted);font-size:.75rem">{{ \Carbon\Carbon::parse($booking->booking_time)->format('h:i A') }}</span></td>
+
+
+                                        <td><span style="font-size:.74rem;font-weight:700;color:var(--p); text-transform:capitalize">{{ $booking->visit_mode }}</span></td>
+
+
+                                        <td>
+                                            <span class="up-status {{ $statusInfo['class'] }}">
+                                                <span class="dot"></span>{{ $statusInfo['label'] }}
+                                            </span>
+                                        </td>
+
+
+                                        <td>
+                                            @if ($booking->clinic_type === 'OPD' && $booking->doctor)
+                                            <a href="{{$booking->opdContact->clinic_google_map_link}}" target="_blank" class="up-action-done">
+                                                Map Link
+                                            </a>
+                                            @elseif ($booking->clinic_type === 'Pathology' && $booking->test)
+                                            <a href="{{$booking->pathologyContact->clinic_google_map_link}}" target="_blank" class="up-action-done">
+                                                Map Link
+                                            </a>
+                                            @elseif ($booking->clinic_type === 'Doctor' && $booking->doctorContact)
+                                            <a href="{{$booking->doctorContact->partner_doctor_google_map_link}}" target="_blank" class="up-action-done">
+                                                Map Link
+                                            </a>
+                                            @endif
+                                        </td>
+
+                                    </tr>
+                                    @endforeach
+
+                                </tbody>
+                            </table>
+                        </div>
+                        @endif
 
                     </div>
                 </div>
@@ -934,8 +1682,121 @@
 </div>
 
 
+
+
+<!-- {{-- ============================================================
+     COMPLETE MODAL
+============================================================ --}} -->
+<div class="complete-modal-overlay" id="completeModalOverlay" role="dialog" aria-modal="true" aria-labelledby="completeModalTitle">
+    <div class="complete-modal-box">
+
+        <div class="complete-modal-icon-wrap">
+            <div class="complete-modal-icon-ring"></div>
+            <div class="complete-modal-icon-ring complete-modal-icon-ring--2"></div>
+            <div class="complete-modal-icon-circle">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <path d="M20 6L9 17l-5-5" />
+                </svg>
+            </div>
+        </div>
+
+        <h2 class="complete-modal-title" id="completeModalTitle">Mark as Completed?</h2>
+        <p class="complete-modal-desc">
+            This will mark the appointment as <strong>Completed</strong>. This action cannot be undone.
+        </p>
+
+        <div class="complete-modal-appt-preview">
+            <i class="fa-solid fa-calendar-check"></i>
+            <span>Appointment #<strong id="completeApptId">—</strong></span>
+        </div>
+
+        <form
+            action=""
+            method="POST"
+            id="completeForm"
+            novalidate>
+            @csrf
+            <input type="hidden" name="status" value="Completed">
+
+            <div class="complete-modal-actions">
+                <button type="button" class="complete-modal-btn complete-modal-btn--cancel" onclick="closeCompleteModal()">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <path d="M18 6L6 18M6 6l12 12" />
+                    </svg>
+                    Cancel
+                </button>
+                <button type="submit" class="complete-modal-btn complete-modal-btn--confirm">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <path d="M20 6L9 17l-5-5" />
+                    </svg>
+                    Yes, Complete It
+                </button>
+            </div>
+        </form>
+
+    </div>
+</div>
+
+
+<!-- {{-- ============================================================
+     CANCEL MODAL
+============================================================ --}} -->
+<div class="cancel-modal-overlay" id="cancelModalOverlay" role="dialog" aria-modal="true" aria-labelledby="cancelModalTitle">
+    <div class="cancel-modal-box">
+
+        <div class="cancel-modal-icon-wrap">
+            <div class="cancel-modal-icon-ring"></div>
+            <div class="cancel-modal-icon-ring cancel-modal-icon-ring--2"></div>
+            <div class="cancel-modal-icon-circle">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <circle cx="12" cy="12" r="9"></circle>
+                    <line x1="5" y1="5" x2="19" y2="19"></line>
+                </svg>
+            </div>
+        </div>
+
+        <h2 class="cancel-modal-title" id="cancelModalTitle">Cancel Appointment?</h2>
+        <p class="cancel-modal-desc">
+            This will mark the appointment as <strong>Cancelled</strong>. The patient will be notified. This action cannot be undone.
+        </p>
+
+        <div class="cancel-modal-appt-preview">
+            <i class="fa-solid fa-calendar-xmark"></i>
+            <span>Appointment #<strong id="cancelApptId">—</strong></span>
+        </div>
+
+        <form
+            action=""
+            method="POST"
+            id="cancelForm"
+            novalidate>
+            @csrf
+            <input type="hidden" name="status" value="Cancelled">
+
+            <div class="cancel-modal-actions">
+                <button type="button" class="cancel-modal-btn cancel-modal-btn--keep" onclick="closeCancelModal()">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <path d="M18 6L6 18M6 6l12 12" />
+                    </svg>
+                    Cancel
+                </button>
+                <button type="submit" class="cancel-modal-btn cancel-modal-btn--confirm">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <circle cx="12" cy="12" r="9"></circle>
+                        <line x1="5" y1="5" x2="19" y2="19"></line>
+                    </svg>
+                    Yes, Cancel It
+                </button>
+            </div>
+        </form>
+
+    </div>
+</div>
+
+
+
 <script>
-    // Modal
+    /* ── Modal ── */
     function openModal() {
         document.getElementById('profileModal').classList.add('open');
         document.body.style.overflow = 'hidden';
@@ -953,7 +1814,7 @@
         if (e.key === 'Escape') closeModal();
     });
 
-    // Tabs
+    /* ── Tabs ── */
     function switchTab(name) {
         document.querySelectorAll('.up-tab').forEach(t => t.classList.remove('active'));
         document.querySelectorAll('.up-tab-content').forEach(c => c.classList.remove('active'));
@@ -961,13 +1822,85 @@
         document.getElementById('content-' + name).classList.add('active');
     }
 
-    // Filter buttons (demo)
-    document.querySelectorAll('.up-appt-filters .up-filter-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-            document.querySelectorAll('.up-appt-filters .up-filter-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
+    /* ── Filter appointments by status ── */
+    function filterAppts(clickedBtn, filter) {
+        // Update active button
+        document.querySelectorAll('.up-appt-filters .up-filter-btn').forEach(b => b.classList.remove('active'));
+        clickedBtn.classList.add('active');
+
+        // Show/hide rows
+        document.querySelectorAll('#apptTableBody .appt-row').forEach(row => {
+            if (filter === 'all') {
+                row.classList.remove('is-hidden');
+            } else {
+                const rowStatus = row.getAttribute('data-status');
+                row.classList.toggle('is-hidden', rowStatus !== filter);
+            }
         });
+
+        // Show empty state if no visible rows
+        const visibleRows = document.querySelectorAll('#apptTableBody .appt-row:not(.is-hidden)');
+        const emptyEl = document.querySelector('.up-appt-empty');
+        const tableWrap = document.querySelector('.up-appt-table-wrap');
+
+        if (emptyEl && tableWrap) {
+            if (visibleRows.length === 0) {
+                tableWrap.style.display = 'none';
+                emptyEl.style.display = 'flex';
+                emptyEl.querySelector('p').textContent = 'No ' + (filter === 'all' ? '' : filter.toLowerCase() + ' ') + 'appointments found';
+            } else {
+                tableWrap.style.display = '';
+                emptyEl.style.display = 'none';
+            }
+        }
+    }
+</script>
+
+
+<script>
+    /* ── COMPLETE MODAL ── */
+    function openCompleteModal(bookingId) {
+        document.getElementById('completeForm').action = '/dw/profile/appointment-complete/' + bookingId;
+        document.getElementById('completeApptId').textContent = bookingId;
+        document.getElementById('completeModalOverlay').classList.add('is-open');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeCompleteModal() {
+        document.getElementById('completeModalOverlay').classList.remove('is-open');
+        document.body.style.overflow = '';
+    }
+
+    /* ── CANCEL MODAL ── */
+    function openCancelModal(bookingId) {
+        document.getElementById('cancelForm').action = '/dw/profile/appointment-cancel/' + bookingId;
+        document.getElementById('cancelApptId').textContent = bookingId;
+        document.getElementById('cancelModalOverlay').classList.add('is-open');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeCancelModal() {
+        document.getElementById('cancelModalOverlay').classList.remove('is-open');
+        document.getElementById('cancelReason').value = '';
+        document.body.style.overflow = '';
+    }
+
+    /* ── CLOSE ON BACKDROP CLICK ── */
+    document.getElementById('completeModalOverlay').addEventListener('click', function(e) {
+        if (e.target === this) closeCompleteModal();
+    });
+    document.getElementById('cancelModalOverlay').addEventListener('click', function(e) {
+        if (e.target === this) closeCancelModal();
+    });
+
+    /* ── CLOSE ON ESCAPE KEY ── */
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            closeCompleteModal();
+            closeCancelModal();
+        }
     });
 </script>
+
 
 @endsection

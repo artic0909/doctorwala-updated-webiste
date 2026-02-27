@@ -143,4 +143,8 @@ Route::middleware(['auth:dwuser', 'verified'])->group(function () {
 
     // Profile & Medical Card
     Route::get('/dw/profile', [ProfileEditController::class, 'userProfile'])->name('dw.profile');
+    
+    // Status Change of appointment
+    Route::post('/dw/profile/appointment-complete/{id}', [ProfileEditController::class, 'updatePatientEnquiryStatusIntoComplete'])->name('dw.appointment.complete');
+    Route::post('/dw/profile/appointment-cancel/{id}', [ProfileEditController::class, 'cancelPatientEnquiry'])->name('dw.appointment.cancel');
 });
