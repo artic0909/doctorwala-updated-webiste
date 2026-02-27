@@ -4,8 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="DoctorWala – Login with OTP. Secure one-time password access to your digital medical card.">
-    <title>Login with OTP | DoctorWala.info – Your Digital Medical Card</title>
+    <meta name="description" content="Doctorwala – Login with OTP. Secure one-time password access to your digital medical card.">
+    <title>Login with OTP | Doctorwala.info – Your Digital Medical Card</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -1164,14 +1164,14 @@
 
     <div class="auth-wrap" role="main">
 
-        <aside class="side-panel" aria-label="DoctorWala branding">
+        <aside class="side-panel" aria-label="Doctorwala branding">
             <div class="sp-ring"></div>
             <div class="sp-ring"></div>
             <div class="sp-logo">
-                <div class="sp-logo-icon"><i class="fa-solid fa-stethoscope" aria-hidden="true"></i></div>
+                <div class="sp-logo-icon"><img src="{{asset('./img/fav5.png')}}" width="50" alt="Doctorwala Logo"></div>
                 <div class="sp-logo-text">
-                    <h1>DoctorWala.info</h1>
-                    <p>Digital Health Platform</p>
+                    <h1>Doctorwala.info</h1>
+                    <p>Your Medical Ecosystem</p>
                 </div>
             </div>
             <div class="sp-middle">
