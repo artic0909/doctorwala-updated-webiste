@@ -1394,7 +1394,7 @@
                         </svg>
                         Latest Vitals
                     </div>
-                    <span style="font-size:.7rem;color:var(--muted);font-weight:700">Updated: {{ \Carbon\Carbon::parse($vital->updated_at ?? 'N/A')->format('d M Y') }}</span>
+                    <span style="font-size:.7rem;color:var(--muted);font-weight:700">Updated: {{ $vital && $vital->updated_at ? \Carbon\Carbon::parse($vital->updated_at)->format('d M Y') : '00-00-000' }}</span>
                 </div>
                 <div class="up-vitals">
                     <div class="up-vital up-qstat--coral" style="border-color:#fed7aa">
