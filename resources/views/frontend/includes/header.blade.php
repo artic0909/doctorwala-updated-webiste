@@ -21,9 +21,9 @@
                     Search
                 </a>
                 <div class="dropdown-menu m-0">
-                    <a href="/opd" class="dropdown-item {{ request()->is('opd') ? 'active' : '' }}">OPD Details</a>
-                    <a href="/doctor" class="dropdown-item {{ request()->is('doctor') ? 'active' : '' }}">Doctor Details</a>
-                    <a href="/pathology" class="dropdown-item {{ request()->is('pathology') ? 'active' : '' }}">Pathology Details</a>
+                    <a href="/opd" class="dropdown-item {{ request()->is('opd') ? 'active' : '' }}">OPD Doctors</a>
+                    <a href="/pathology" class="dropdown-item {{ request()->is('pathology') ? 'active' : '' }}">Test Pathology</a>
+                    <a href="/doctor" class="dropdown-item {{ request()->is('doctor') ? 'active' : '' }}">Direct to Doctors</a>
                 </div>
             </div>
 
@@ -67,9 +67,9 @@
                     Search
                 </a>
                 <div class="dropdown-menu m-0">
-                    <a href="/dw/opd" class="dropdown-item {{ request()->is('dw/opd') ? 'active' : '' }}">OPD Details</a>
-                    <a href="/dw/doctor" class="dropdown-item {{ request()->is('dw/doctor') ? 'active' : '' }}">Doctor Details</a>
-                    <a href="/dw/pathology" class="dropdown-item {{ request()->is('dw/pathology') ? 'active' : '' }}">Pathology Details</a>
+                    <a href="/dw/opd" class="dropdown-item {{ request()->is('dw/opd') ? 'active' : '' }}">OPD Doctors</a>
+                    <a href="/dw/pathology" class="dropdown-item {{ request()->is('dw/pathology') ? 'active' : '' }}">Test Pathology</a>
+                    <a href="/dw/doctor" class="dropdown-item {{ request()->is('dw/doctor') ? 'active' : '' }}">Direct to Doctors</a>
                 </div>
             </div>
 

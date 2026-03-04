@@ -143,7 +143,10 @@ Route::middleware(['auth:dwuser', 'verified'])->group(function () {
 
     // Profile & Medical Card
     Route::get('/dw/profile', [ProfileEditController::class, 'userProfile'])->name('dw.profile');
-    
+    Route::get('/dw/medical-history', [ProfileEditController::class, 'medicalHistory'])->name('dw.medical-history');
+    Route::post('/dw/medical-history/add', [ProfileEditController::class, 'addMedicalHistory'])->name('dw.medical-history.add');
+    Route::delete('/dw/medical-history/{id}', [ProfileEditController::class, 'destroy'])->name('dw.medical-history.destroy');
+
     // Status Change of appointment
     Route::post('/dw/profile/appointment-complete/{id}', [ProfileEditController::class, 'updatePatientEnquiryStatusIntoComplete'])->name('dw.appointment.complete');
     Route::post('/dw/profile/appointment-cancel/{id}', [ProfileEditController::class, 'cancelPatientEnquiry'])->name('dw.appointment.cancel');

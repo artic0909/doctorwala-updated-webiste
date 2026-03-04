@@ -122,32 +122,6 @@
 <div class="container search-banner-section">
     <div class="search-cards-row">
 
-        <!-- {{-- Card 1: Search All --}} -->
-        <form action="{{ route('search.result') }}" method="GET" class="search-card search-card-all wow zoomIn" data-wow-delay="0.1s">
-            <div class="search-card-header">
-                <div class="search-card-icon">
-                    <i class="fa fa-magnifying-glass"></i>
-                </div>
-                <div>
-                    <h3>Search Your Direct to Doctor</h3>
-                    <p>Doctor's name, Address, OPD, Pathology & All</p>
-                </div>
-            </div>
-
-            <input type="hidden" name="category" value="all">
-
-            <div class="search-input-wrap">
-                <i class="fa fa-search"></i>
-                <input type="text" name="query" class="form-control"
-                    placeholder="Search for Doctor / Path / OPD">
-            </div>
-
-            <button type="submit" class="btn btn-search">
-                <i class="fa fa-search"></i> Search Now
-            </button>
-
-        </form>
-
         <!-- {{-- Card 2: Search OPD --}} -->
         <form action="{{ route('search.result') }}" method="GET" class="search-card search-card-opd wow zoomIn" data-wow-delay="0.2s">
             <div class="search-card-header">
@@ -206,6 +180,32 @@
                 <span class="spinner"></span>
                 <span class="btn-text"><i class="fa fa-syringe"></i> Search Pathology</span>
             </button>
+        </form>
+
+        <!-- {{-- Card 1: Search All --}} -->
+        <form action="{{ route('search.result') }}" method="GET" class="search-card search-card-all wow zoomIn" data-wow-delay="0.1s">
+            <div class="search-card-header">
+                <div class="search-card-icon">
+                    <i class="fa fa-magnifying-glass"></i>
+                </div>
+                <div>
+                    <h3>Search Your Direct to Doctor</h3>
+                    <p>Doctor's name, Address, OPD, Pathology & All</p>
+                </div>
+            </div>
+
+            <input type="hidden" name="category" value="all">
+
+            <div class="search-input-wrap">
+                <i class="fa fa-search"></i>
+                <input type="text" name="query" class="form-control"
+                    placeholder="Search for Doctor / Path / OPD">
+            </div>
+
+            <button type="submit" class="btn btn-search">
+                <i class="fa fa-search"></i> Search Now
+            </button>
+
         </form>
 
     </div>
@@ -315,9 +315,9 @@
 
         <!-- Header + Buttons -->
         <div class="opd-controls">
-            <div>
-                <div class="section-badge">Available OPD</div>
-                <h1>Display Your OPD / Clinics</h1>
+            <div style="background-color: white; padding: 10px; border-radius: 10px;">
+                <div class="section-badge" style="color: red;">Available OPD</div>
+                <h1 style="color: red;">Doctor Siting in OPD/Clinic/Medical Shop</h1>
             </div>
             <div class="opd-btn-group">
                 <button class="opd-btn btn-prev-opd" aria-label="Previous" id="opdBtnPrev">
@@ -414,9 +414,9 @@
 
         <!-- Header + Buttons -->
         <div class="path-controls">
-            <div>
-                <div class="section-badge-path">Available Pathology</div>
-                <h1>Display Your Test Pathology</h1>
+            <div style="background-color: white; padding: 10px; border-radius: 10px;">
+                <div class="section-badge-path" style="color: red;">Available Test Pathology</div>
+                <h1 style="color: red;">Your Test Pathology</h1>
             </div>
             <div class="path-btn-group">
                 <button class="path-btn" id="pathBtnPrev" aria-label="Previous" id="pathBtnPrev">
@@ -506,9 +506,9 @@
 
         <!-- Header + Buttons -->
         <div class="doc-controls">
-            <div>
-                <div class="section-badge-doc">Available Doctors</div>
-                <h1>Direct to Doctors</h1>
+            <div style="background-color: white; padding: 10px; border-radius: 10px;">
+                <div class="section-badge-doc" style="color: red;">Available Individual Doctors</div>
+                <h1 style="color: red;">Direct to Doctors</h1>
             </div>
             <div class="doc-btn-group">
                 <button class="doc-btn" id="docBtnPrev" aria-label="Previous">
@@ -720,11 +720,6 @@
 </div>
 @endforeach
 <!-- About End -->
-
-
-
-
-
 
 
 

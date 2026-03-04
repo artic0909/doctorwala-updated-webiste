@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
+use App\Models\MedicalHistory;
 use App\Models\PartnerAllOPDDoctorModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -54,7 +55,7 @@ class ProfileEditController extends Controller
             ->with(['opdContact.banner', 'pathologyContact.banner', 'doctorContact.banner', 'user', 'doctor', 'test'])
             ->latest()
             ->first();
-        
+
         $bookings = PartnerPatientInquiry::where('dw_user_id', $user->id)
             ->with(['opdContact.banner', 'pathologyContact.banner', 'doctorContact.banner', 'user', 'doctor', 'test'])
             ->latest()
@@ -62,9 +63,6 @@ class ProfileEditController extends Controller
 
         return view('user-profile', compact('user', 'aboutDetails', 'otherBanners', 'latestSingleBooking', 'bookings'));
     }
-
-
-
 
 
     public function updateProfile(Request $request)
@@ -196,5 +194,80 @@ class ProfileEditController extends Controller
         $inquiry->save();
 
         return back()->with('success', 'Inquiry has been cancelled.');
+    }
+
+
+    public function medicalHistory()
+    {
+        $aboutDetails = SuperAboutusModel::get();
+        $otherBanners = SuperOtherBannerModel::get();
+        $user = Auth::guard('dwuser')->user();
+        $latestSingleBooking = PartnerPatientInquiry::where('dw_user_id', $user->id)
+            ->where('status', '=', 'Upcoming')
+            ->with(['opdContact.banner', 'pathologyContact.banner', 'doctorContact.banner', 'user', 'doctor', 'test'])
+            ->latest()
+            ->first();
+
+        $bookings = PartnerPatientInquiry::where('dw_user_id', $user->id)
+            ->with(['opdContact.banner', 'pathologyContact.banner', 'doctorContact.banner', 'user', 'doctor', 'test'])
+            ->latest()
+            ->get();
+
+        return view('user-medical-history', compact('user', 'aboutDetails', 'otherBanners', 'latestSingleBooking', 'bookings'));
+    }
+
+    public function addMedicalHistory(Request $request)
+    {
+        $request->validate([
+            'dw_user_id'     => 'required|integer|exists:dw_user_models,id',
+            'type'           => 'required|in:report,prescription',
+            'date_of_report' => 'required|date|before_or_equal:today',
+            'heading'        => 'required|string|max:255',
+            'images'         => 'nullable|array|max:20',
+            'images.*'       => 'file|mimes:jpg,jpeg,png,webp,pdf|max:5120', // 5 MB each
+        ]);
+
+        // ── Store images ──────────────────────────────────────────
+        $imagePaths = [];
+
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $file) {
+                // Store under storage/app/public/medical_histories/{user_id}/
+                $path = $file->store(
+                    'medical_histories/' . Auth::id(),
+                    'public'
+                );
+                $imagePaths[] = $path;
+            }
+        }
+
+        // ── Create record ─────────────────────────────────────────
+        MedicalHistory::create([
+            'dw_user_id'     => Auth::id(), // always use authenticated ID, ignore user-supplied value
+            'type'           => $request->type,
+            'date_of_report' => $request->date_of_report,
+            'heading'        => $request->heading,
+            'images'         => $imagePaths, // cast to JSON via model
+        ]);
+
+        return redirect()->back()->with('success', 'Medical record added successfully.');
+    }
+    
+    public function destroy($id)
+    {
+        $record = MedicalHistory::where('id', $id)
+            ->where('dw_user_id', Auth::id()) // ensure ownership
+            ->firstOrFail();
+
+        // Remove stored images from disk
+        if (!empty($record->images)) {
+            foreach ($record->images as $path) {
+                Storage::disk('public')->delete($path);
+            }
+        }
+
+        $record->delete();
+
+        return redirect()->back()->with('success', 'Record deleted.');
     }
 }
