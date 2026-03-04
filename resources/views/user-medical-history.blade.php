@@ -1666,19 +1666,21 @@
             <div class="up-hero__left">
                 <div class="up-hero__av-wrap">
                     <div class="up-hero__av">
-                        @if(Auth::user()->image)
-                        <img src="{{ asset('storage/' . Auth::user()->image) }}" alt="{{ Auth::user()->user_name }}">
+                        @if(Auth::user()->image ?? null)
+                            <img src="{{ asset('storage/' . Auth::user()->image) }}" alt="{{ Auth::user()->user_name ?? '' }}">
                         @else
-                        {{ strtoupper(substr(Auth::user()->user_name, 0, 1)) }}{{ strtoupper(substr(strstr(Auth::user()->user_name, ' '), 1, 1)) }}
+                            {{ strtoupper(substr(Auth::user()->user_name ?? 'U', 0, 1)) }}{{ strtoupper(substr(strstr(Auth::user()->user_name ?? '', ' '), 1, 1)) }}
                         @endif
                     </div>
                     <span class="up-hero__status-dot"></span>
                 </div>
                 <div class="up-hero__info">
-                    <h1 class="up-hero__name" style="text-transform: capitalize;">{{ Auth::user()->user_name }}</h1>
-                    <p class="up-hero__email">{{ Auth::user()->user_email }}</p>
+                    <h1 class="up-hero__name" style="text-transform: capitalize;">{{ Auth::user()->user_name ?? '—' }}</h1>
+                    <p class="up-hero__email">{{ Auth::user()->user_email ?? '—' }}</p>
                     <div class="up-hero__badges">
-                        <span class="up-hero__badge"><span class="dot" style="background-color: red"></span> Not Verified</span>
+                        <span class="up-hero__badge">
+                            <span class="dot" style="background-color: red"></span> Not Verified
+                        </span>
                     </div>
                 </div>
             </div>
@@ -1705,8 +1707,6 @@
 
         <!-- ═══════════════ SIDEBAR ═══════════════ -->
         <aside class="up-sidebar">
-
-            <!-- Quick Stats -->
             <div class="up-card">
                 <div class="up-card__head">
                     <div class="up-card__title">
@@ -1717,40 +1717,47 @@
                     </div>
                 </div>
                 <div class="up-qstat-grid">
+
                     <div class="up-qstat up-qstat--mint">
                         <div class="up-qstat__ico">💊</div>
-                        <div class="up-qstat__num">{{$noOfPrescription}}</div>
+                        <div class="up-qstat__num">{{ $noOfPrescription ?? 0 }}</div>
                         <div class="up-qstat__lbl">Prescriptions</div>
                     </div>
+
                     <div class="up-qstat up-qstat--coral">
                         <div class="up-qstat__ico">📋</div>
-                        <div class="up-qstat__num">{{$noOfReport}}</div>
+                        <div class="up-qstat__num">{{ $noOfReport ?? 0 }}</div>
                         <div class="up-qstat__lbl">Reports</div>
                     </div>
 
-                    <button class="up-qstat up-qstat--coral" style="border: none;" onclick="openVitalsModal()">
+                    <button class="up-qstat up-qstat--coral" style="border:none;" onclick="openVitalsModal()">
                         <div class="up-qstat__num">Add Vitals</div>
                     </button>
 
-                    <button class="up-qstat up-qstat--mint" style="border: none;"
-                        onclick="openEditVitalsModal({{ Js::from([
-            'id'             => $vital->id,
-            'heart_rate'     => $vital->heart_rate,
-            'blood_pressure' => $vital->blood_pressure,
-            'temparature'    => $vital->temparature,
-            'spo'            => $vital->spo,
-            'blood_sugar'    => $vital->blood_sugar,
-            'weight'         => $vital->weight,
-            'height'         => $vital->height,
-            'bmi'            => $vital->bmi,
-            'blood_group'    => $vital->blood_group,
-        ]) }})">
-                        <div class="up-qstat__num">Edit Vitals</div>
-                    </button>
+                    @if($vital ?? null)
+                        <button class="up-qstat up-qstat--mint" style="border:none;"
+                            onclick="openEditVitalsModal({{ Js::from([
+                                'id'             => $vital->id,
+                                'heart_rate'     => $vital->heart_rate,
+                                'blood_pressure' => $vital->blood_pressure,
+                                'temparature'    => $vital->temparature,
+                                'spo'            => $vital->spo,
+                                'blood_sugar'    => $vital->blood_sugar,
+                                'weight'         => $vital->weight,
+                                'height'         => $vital->height,
+                                'bmi'            => $vital->bmi,
+                                'blood_group'    => $vital->blood_group,
+                            ]) }})">
+                            <div class="up-qstat__num">Edit Vitals</div>
+                        </button>
+                    @else
+                        <button class="up-qstat up-qstat--mint" style="border:none;opacity:.45;cursor:not-allowed;" disabled>
+                            <div class="up-qstat__num">Edit Vitals</div>
+                        </button>
+                    @endif
 
                 </div>
             </div>
-
         </aside>
 
 
@@ -1759,7 +1766,7 @@
 
             <div class="mht-wrap">
 
-                {{-- ── Flash messages ─────────────────────────────────────── --}}
+                {{-- ── Flash messages ── --}}
                 @if(session('success'))
                 <div class="mht-alert mht-alert--success">
                     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
@@ -1769,9 +1776,9 @@
                 </div>
                 @endif
 
-                {{-- ── Table ──────────────────────────────────────────────── --}}
+                {{-- ── Table ── --}}
                 <div class="mht-table-wrap">
-                    @if($histories->count())
+                    @if(isset($histories) && $histories->count())
                     <table class="mht-table">
                         <thead>
                             <tr>
@@ -1786,11 +1793,12 @@
                         <tbody>
                             @foreach($histories as $i => $rec)
                             <tr class="mht-row" style="--row-delay:{{ $i * 40 }}ms">
+
                                 <td class="mht-td--num">{{ $histories->firstItem() + $i }}</td>
 
                                 <td>
-                                    <span class="mht-badge mht-badge--{{ $rec->type }}">
-                                        @if($rec->type === 'report')
+                                    <span class="mht-badge mht-badge--{{ $rec->type ?? 'report' }}">
+                                        @if(($rec->type ?? '') === 'report')
                                         <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                                             <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
                                             <polyline points="14 2 14 8 20 8" />
@@ -1806,7 +1814,7 @@
                                     </span>
                                 </td>
 
-                                <td class="mht-td--heading" style="text-transform: capitalize;">{{ $rec->heading }}</td>
+                                <td class="mht-td--heading" style="text-transform:capitalize;">{{ $rec->heading ?? '—' }}</td>
 
                                 <td class="mht-td--date">
                                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -1815,11 +1823,11 @@
                                         <line x1="8" y1="2" x2="8" y2="6" />
                                         <line x1="3" y1="10" x2="21" y2="10" />
                                     </svg>
-                                    {{ \Carbon\Carbon::parse($rec->date_of_report)->format('d M Y') }}
+                                    {{ $rec->date_of_report ? \Carbon\Carbon::parse($rec->date_of_report)->format('d M Y') : '—' }}
                                 </td>
 
                                 <td class="mht-td--files">
-                                    @if($rec->images && count($rec->images))
+                                    @if(($rec->images ?? null) && count($rec->images))
                                     <a href="{{ route('dw.medical-history.view', $rec->id) }}" class="mht-files-pill" title="View {{ count($rec->images) }} file(s)">
                                         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                             <path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66l-9.2 9.19a2 2 0 01-2.83-2.83l8.49-8.48" />
@@ -1832,15 +1840,14 @@
                                 </td>
 
                                 <td class="mht-td--actions">
-                                    {{-- Edit --}}
                                     <button class="mht-action-btn mht-action-btn--edit"
                                         onclick="openEditMhModal(
-        {{ $rec->id }},
-        '{{ $rec->type }}',
-        '{{ $rec->date_of_report->format('Y-m-d') }}',
-        '{{ htmlspecialchars(addslashes($rec->heading), ENT_QUOTES) }}',
-        {{ Js::from($rec->images ?? []) }}
-    )"
+                                            {{ $rec->id }},
+                                            '{{ $rec->type ?? '' }}',
+                                            '{{ $rec->date_of_report ? $rec->date_of_report->format('Y-m-d') : '' }}',
+                                            '{{ htmlspecialchars(addslashes($rec->heading ?? ''), ENT_QUOTES) }}',
+                                            {{ Js::from($rec->images ?? []) }}
+                                        )"
                                         title="Edit">
                                         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                                             <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" />
@@ -1848,7 +1855,6 @@
                                         </svg>
                                     </button>
 
-                                    {{-- Delete --}}
                                     <form action="{{ route('dw.medical-history.destroy', $rec->id) }}" method="POST"
                                         onsubmit="return confirm('Delete this record?')" style="display:inline;">
                                         @csrf @method('DELETE')
@@ -1862,6 +1868,7 @@
                                         </button>
                                     </form>
                                 </td>
+
                             </tr>
                             @endforeach
                         </tbody>
@@ -1878,67 +1885,55 @@
                     @endif
                 </div>
 
-                {{-- ── Pagination ──────────────────────────────────────────── --}}
-                @if($histories->lastPage() > 1)
+                {{-- ── Pagination ── --}}
+                @if(isset($histories) && $histories->lastPage() > 1)
                 <div class="mht-pagination">
-                    {{-- Prev --}}
                     @if($histories->onFirstPage())
                     <span class="mht-page-btn mht-page-btn--disabled">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                            <polyline points="15 18 9 12 15 6" />
-                        </svg>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6" /></svg>
                     </span>
                     @else
                     <a href="{{ $histories->previousPageUrl() }}" class="mht-page-btn">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                            <polyline points="15 18 9 12 15 6" />
-                        </svg>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6" /></svg>
                     </a>
                     @endif
 
-                    {{-- Pages with ellipsis --}}
                     @php
-                    $current = $histories->currentPage();
-                    $last = $histories->lastPage();
-                    $pages = [];
-                    // Always show 1
-                    $pages[] = 1;
-                    if ($current > 4) $pages[] = '...';
-                    for ($p = max(2, $current - 1); $p <= min($last - 1, $current + 1); $p++) $pages[]=$p;
-                        if ($current < $last - 3) $pages[]='...' ;
-                        // Always show last
-                        if ($last> 1) $pages[] = $last;
-                        @endphp
+                        $current = $histories->currentPage();
+                        $last    = $histories->lastPage();
+                        $pages   = [];
+                        $pages[] = 1;
+                        if ($current > 4) $pages[] = '...';
+                        for ($p = max(2, $current - 1); $p <= min($last - 1, $current + 1); $p++) $pages[] = $p;
+                        if ($current < $last - 3) $pages[] = '...';
+                        if ($last > 1) $pages[] = $last;
+                    @endphp
 
-                        @foreach($pages as $page)
+                    @foreach($pages as $page)
                         @if($page === '...')
-                        <span class="mht-page-ellipsis">…</span>
+                            <span class="mht-page-ellipsis">…</span>
                         @elseif($page == $current)
-                        <span class="mht-page-btn mht-page-btn--active">{{ $page }}</span>
+                            <span class="mht-page-btn mht-page-btn--active">{{ $page }}</span>
                         @else
-                        <a href="{{ $histories->url($page) }}" class="mht-page-btn">{{ $page }}</a>
+                            <a href="{{ $histories->url($page) }}" class="mht-page-btn">{{ $page }}</a>
                         @endif
-                        @endforeach
+                    @endforeach
 
-                        {{-- Next --}}
-                        @if($histories->hasMorePages())
-                        <a href="{{ $histories->nextPageUrl() }}" class="mht-page-btn">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                                <polyline points="9 18 15 12 9 6" />
-                            </svg>
-                        </a>
-                        @else
-                        <span class="mht-page-btn mht-page-btn--disabled">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                                <polyline points="9 18 15 12 9 6" />
-                            </svg>
-                        </span>
-                        @endif
+                    @if($histories->hasMorePages())
+                    <a href="{{ $histories->nextPageUrl() }}" class="mht-page-btn">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6" /></svg>
+                    </a>
+                    @else
+                    <span class="mht-page-btn mht-page-btn--disabled">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6" /></svg>
+                    </span>
+                    @endif
                 </div>
                 @endif
             </div>
 
-            <!-- {{-- ════════════════ EDIT MODAL ════════════════ --}} -->
+
+            <!-- ════════════════ EDIT MEDICAL RECORD MODAL ════════════════ -->
             <div class="mh-modal-overlay" id="editMhModal" onclick="handleEditMhOverlay(event)">
                 <div class="mh-modal">
                     <div class="mh-modal__head">
@@ -1951,19 +1946,14 @@
                         </div>
                         <button class="mh-modal__close" onclick="closeEditMhModal()" type="button">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                                <line x1="18" y1="6" x2="6" y2="18" />
-                                <line x1="6" y1="6" x2="18" y2="18" />
+                                <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
                             </svg>
                         </button>
                     </div>
 
                     <form id="editMhForm" action="" method="POST" enctype="multipart/form-data" class="mh-modal__body">
-                        @csrf
-                        @method('PUT')
-
-                        <input type="hidden" name="dw_user_id" value="{{ Auth::user()->id }}">
-
-                        {{-- deleted_images[] — populated by JS when user removes an existing file --}}
+                        @csrf @method('PUT')
+                        <input type="hidden" name="dw_user_id" value="{{ Auth::user()->id ?? '' }}">
                         <div id="editDeletedImagesInputs"></div>
 
                         <div class="mh-form-row">
@@ -1974,9 +1964,7 @@
                                         <option value="report">Medical Report</option>
                                         <option value="prescription">Prescription</option>
                                     </select>
-                                    <svg class="mh-select-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                                        <polyline points="6 9 12 15 18 9" />
-                                    </svg>
+                                    <svg class="mh-select-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9" /></svg>
                                 </div>
                             </div>
                             <div class="mh-field">
@@ -1992,43 +1980,28 @@
                             </div>
                         </div>
 
-                        {{-- ── Existing images ── --}}
                         <div class="mh-form-row mh-form-row--single">
                             <div class="mh-field">
-                                <label>
-                                    Existing Files
-                                    <span style="font-weight:400;color:#aaa;font-size:11px;"> — click ✕ to remove</span>
-                                </label>
+                                <label>Existing Files <span style="font-weight:400;color:#aaa;font-size:11px;"> — click ✕ to remove</span></label>
                                 <div class="mh-preview-grid" id="editExistingGrid"></div>
                                 <p class="mh-upload-hint" id="editNoExistingMsg" style="display:none;">No existing files.</p>
                             </div>
                         </div>
 
-                        {{-- ── Add new images ── --}}
                         <div class="mh-form-row mh-form-row--single">
                             <div class="mh-field">
                                 <label>Add More Files <span style="font-weight:400;color:#999;">(optional)</span></label>
                                 <div class="mh-upload-sources">
                                     <button type="button" class="mh-src-btn" onclick="triggerEditInput('camera')">
-                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                            <path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z" />
-                                            <circle cx="12" cy="13" r="4" />
-                                        </svg>
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>
                                         Camera
                                     </button>
                                     <button type="button" class="mh-src-btn" onclick="triggerEditInput('gallery')">
-                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                            <rect x="3" y="3" width="18" height="18" rx="2" />
-                                            <circle cx="8.5" cy="8.5" r="1.5" />
-                                            <polyline points="21 15 16 10 5 21" />
-                                        </svg>
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
                                         Gallery
                                     </button>
                                     <button type="button" class="mh-src-btn" onclick="triggerEditInput('file')">
-                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                            <path d="M13 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V9z" />
-                                            <polyline points="13 2 13 9 20 9" />
-                                        </svg>
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V9z"/><polyline points="13 2 13 9 20 9"/></svg>
                                         File
                                     </button>
                                 </div>
@@ -2043,9 +2016,7 @@
                         <div class="mh-modal__foot">
                             <button type="button" class="mh-btn-cancel" onclick="closeEditMhModal()">Cancel</button>
                             <button type="submit" class="mh-btn-save">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                                    <polyline points="20 6 9 17 4 12" />
-                                </svg>
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12" /></svg>
                                 Update Record
                             </button>
                         </div>
@@ -2054,7 +2025,7 @@
             </div>
 
 
-            <!-- VITALS -->
+            <!-- ════════════════ VITALS SECTION ════════════════ -->
             <div class="up-card">
                 <div class="up-card__head">
                     <div class="up-card__title">
@@ -2063,539 +2034,445 @@
                         </svg>
                         Latest Vitals
                     </div>
-                    <span style="font-size:.7rem;color:var(--muted);font-weight:700">Updated: {{ \Carbon\Carbon::parse($vital->updated_at)->format('d M Y') }}</span>
+                    <span style="font-size:.7rem;color:var(--muted);font-weight:700">
+                        Updated: {{ ($vital && $vital->updated_at) ? \Carbon\Carbon::parse($vital->updated_at)->format('d M Y') : 'N/A' }}
+                    </span>
                 </div>
+
+                @if($vital ?? null)
                 <div class="up-vitals">
+
                     <div class="up-vital up-qstat--coral" style="border-color:#fed7aa">
                         <div class="up-vital__ico">🔴</div>
-                        <div class="up-vital__val" style="color:#c2410c">{{$vital->blood_group}}</div>
-                        <div class="up-vital__unit">mg/dL</div>
+                        <div class="up-vital__val" style="color:#c2410c">{{ $vital->blood_group ?? '—' }}</div>
+                        <div class="up-vital__unit">Blood Type</div>
                         <div class="up-vital__lbl">Blood Group</div>
                     </div>
+
                     <div class="up-vital up-qstat--teal" style="border-color:#bae6fd">
                         <div class="up-vital__ico">❤️</div>
-                        <div class="up-vital__val" style="color:var(--p-dk)">{{$vital->heart_rate}}</div>
+                        <div class="up-vital__val" style="color:var(--p-dk)">{{ $vital->heart_rate ?? '—' }}</div>
                         <div class="up-vital__unit">bpm</div>
                         <div class="up-vital__lbl">Heart Rate</div>
                     </div>
+
                     <div class="up-vital up-qstat--rose" style="border-color:#fecdd3;background:var(--rose-lt)">
                         <div class="up-vital__ico">🩸</div>
-                        <div class="up-vital__val" style="color:var(--rose)">{{$vital->blood_pressure}}</div>
+                        <div class="up-vital__val" style="color:var(--rose)">{{ $vital->blood_pressure ?? '—' }}</div>
                         <div class="up-vital__unit">mmHg</div>
                         <div class="up-vital__lbl">Blood Pressure</div>
                     </div>
+
                     <div class="up-vital up-qstat--mint" style="border-color:#a7f3d0">
                         <div class="up-vital__ico">🌡️</div>
-                        <div class="up-vital__val" style="color:#047857">{{$vital->temparature}}</div>
+                        <div class="up-vital__val" style="color:#047857">{{ $vital->temparature ?? '—' }}</div>
                         <div class="up-vital__unit">°C</div>
                         <div class="up-vital__lbl">Temperature</div>
                     </div>
+
                     <div class="up-vital up-qstat--amber" style="border-color:#fde68a">
                         <div class="up-vital__ico">⚖️</div>
-                        <div class="up-vital__val" style="color:#b45309">{{$vital->weight}}</div>
+                        <div class="up-vital__val" style="color:#b45309">{{ $vital->weight ?? '—' }}</div>
                         <div class="up-vital__unit">kg</div>
                         <div class="up-vital__lbl">Weight</div>
                     </div>
+
                     <div class="up-vital up-qstat--mint" style="border-color:#fde68a">
                         <div class="up-vital__ico">📏</div>
-                        <div class="up-vital__val" style="color:#b45309">{{$vital->weight}}</div>
+                        <div class="up-vital__val" style="color:#b45309">{{ $vital->height ?? '—' }}</div>
                         <div class="up-vital__unit">cm</div>
                         <div class="up-vital__lbl">Height</div>
                     </div>
+
                     <div class="up-vital up-qstat--coral" style="border-color:#fed7aa">
                         <div class="up-vital__ico">📊</div>
-                        <div class="up-vital__val" style="color:#c2410c">{{$vital->bmi}}</div>
+                        <div class="up-vital__val" style="color:#c2410c">{{ $vital->bmi ?? '—' }}</div>
                         <div class="up-vital__unit">
-                            @if($vital->bmi < 18.5) Underweight
+                            @if($vital->bmi ?? null)
+                                @if($vital->bmi < 18.5) Underweight
                                 @elseif($vital->bmi < 25) Normal
-                                    @elseif($vital->bmi < 30) Overweight
-                                        @else Obese
-                                        @endif
-                                        </div>
-                                        <div class="up-vital__lbl">BMI
-                                        </div>
+                                @elseif($vital->bmi < 30) Overweight
+                                @else Obese
+                                @endif
+                            @else —
+                            @endif
                         </div>
-                        <div class="up-vital up-qstat--violet" style="border-color:#ddd6fe;background:var(--violet-lt)">
-                            <div class="up-vital__ico">🫁</div>
-                            <div class="up-vital__val" style="color:var(--violet)">{{$vital->spo}}</div>
-                            <div class="up-vital__unit">SpO₂ %</div>
-                            <div class="up-vital__lbl">Oxygen</div>
-                        </div>
-                        <div class="up-vital up-qstat--amber" style="border-color:#fed7aa">
-                            <div class="up-vital__ico">🧪</div>
-                            <div class="up-vital__val" style="color:#c2410c">{{$vital->blood_sugar}}</div>
-                            <div class="up-vital__unit">mg/dL</div>
-                            <div class="up-vital__lbl">Blood Sugar</div>
-                        </div>
-
+                        <div class="up-vital__lbl">BMI</div>
                     </div>
-                </div>
 
+                    <div class="up-vital up-qstat--violet" style="border-color:#ddd6fe;background:var(--violet-lt)">
+                        <div class="up-vital__ico">🫁</div>
+                        <div class="up-vital__val" style="color:var(--violet)">{{ $vital->spo ?? '—' }}</div>
+                        <div class="up-vital__unit">SpO₂ %</div>
+                        <div class="up-vital__lbl">Oxygen</div>
+                    </div>
+
+                    <div class="up-vital up-qstat--amber" style="border-color:#fed7aa">
+                        <div class="up-vital__ico">🧪</div>
+                        <div class="up-vital__val" style="color:#c2410c">{{ $vital->blood_sugar ?? '—' }}</div>
+                        <div class="up-vital__unit">mg/dL</div>
+                        <div class="up-vital__lbl">Blood Sugar</div>
+                    </div>
+
+                </div>
+                @else
+                <div style="padding:28px 20px;text-align:center;color:#94a3b8;font-size:13.5px;">
+                    No vitals recorded yet. Click <strong>Add Vitals</strong> to get started.
+                </div>
+                @endif
             </div>
 
-
-            <!-- end main -->
-
-        </div><!-- end layout -->
-    </div><!-- end wrap -->
+        </div><!-- end main -->
+    </div><!-- end layout -->
+</div><!-- end wrap -->
 
 
-    <!-- {{-- ════════════════════════════════════════════════
+<!-- ════════════════════════════════════════════════
      ADD VITALS MODAL
-     ════════════════════════════════════════════════ --}} -->
+════════════════════════════════════════════════ -->
+<div class="vm-overlay" id="vitalsModal" onclick="handleVmOverlay(event)">
+    <div class="vm-modal">
+        <div class="vm-head">
+            <div class="vm-title">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+                </svg>
+                Add Vitals
+            </div>
+            <button class="vm-close" onclick="closeVitalsModal()" type="button">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
+                </svg>
+            </button>
+        </div>
 
-    <div class="vm-overlay" id="vitalsModal" onclick="handleVmOverlay(event)">
-        <div class="vm-modal">
+        <form action="{{ route('dw.vitals.add') }}" method="POST" class="vm-body">
+            @csrf
+            <input type="hidden" name="dw_user_id" value="{{ Auth::id() ?? '' }}">
 
-            <div class="vm-head">
-                <div class="vm-title">
-                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
-                    </svg>
-                    Add Vitals
+            <div class="vm-row">
+                <div class="vm-field">
+                    <label>
+                        <span class="vm-field__icon vm-field__icon--red">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12" /></svg>
+                        </span>
+                        Heart Rate <em>bpm</em>
+                    </label>
+                    <input type="number" name="heart_rate" placeholder="e.g. 72" min="30" max="250">
                 </div>
-                <button class="vm-close" onclick="closeVitalsModal()" type="button">
-                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                        <line x1="18" y1="6" x2="6" y2="18" />
-                        <line x1="6" y1="6" x2="18" y2="18" />
-                    </svg>
-                </button>
+                <div class="vm-field">
+                    <label>
+                        <span class="vm-field__icon vm-field__icon--blue">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z" /></svg>
+                        </span>
+                        Blood Pressure <em>mmHg</em>
+                    </label>
+                    <input type="text" name="blood_pressure" placeholder="e.g. 120/80">
+                </div>
             </div>
 
-            <form action="{{ route('dw.vitals.add') }}" method="POST" class="vm-body">
-                @csrf
-                <input type="hidden" name="dw_user_id" value="{{ Auth::id() }}">
+            <div class="vm-row">
+                <div class="vm-field">
+                    <label>
+                        <span class="vm-field__icon vm-field__icon--orange">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 14.76V3.5a2.5 2.5 0 00-5 0v11.26a4.5 4.5 0 105 0z" /></svg>
+                        </span>
+                        Temperature <em>°C</em>
+                    </label>
+                    <input type="number" name="temparature" placeholder="e.g. 36.6" step="0.1" min="30">
+                </div>
+                <div class="vm-field">
+                    <label>
+                        <span class="vm-field__icon vm-field__icon--teal">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22a10 10 0 110-20 10 10 0 010 20z" /><path d="M12 8v4l3 3" /></svg>
+                        </span>
+                        SpO₂ <em>%</em>
+                    </label>
+                    <input type="number" name="spo" placeholder="e.g. 98" min="50" max="100">
+                </div>
+            </div>
 
-                {{-- Row 1 --}}
-                <div class="vm-row">
-                    <div class="vm-field">
-                        <label>
-                            <span class="vm-field__icon vm-field__icon--red">
-                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                                    <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
-                                </svg>
-                            </span>
-                            Heart Rate <em>bpm</em>
-                        </label>
-                        <input type="number" name="heart_rate" placeholder="e.g. 72" min="30" max="250">
-                    </div>
-                    <div class="vm-field">
-                        <label>
-                            <span class="vm-field__icon vm-field__icon--blue">
-                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                                    <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z" />
-                                </svg>
-                            </span>
-                            Blood Pressure <em>mmHg</em>
-                        </label>
-                        <input type="text" name="blood_pressure" placeholder="e.g. 120/80">
+            <div class="vm-row">
+                <div class="vm-field">
+                    <label>
+                        <span class="vm-field__icon vm-field__icon--purple">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><ellipse cx="12" cy="5" rx="9" ry="3" /><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3" /><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5" /></svg>
+                        </span>
+                        Blood Sugar <em>mg/dL</em>
+                    </label>
+                    <input type="number" name="blood_sugar" placeholder="e.g. 90" min="20" max="600">
+                </div>
+                <div class="vm-field">
+                    <label>
+                        <span class="vm-field__icon vm-field__icon--red">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z" /></svg>
+                        </span>
+                        Blood Group
+                    </label>
+                    <div class="vm-select-wrap">
+                        <select name="blood_group">
+                            <option value="" disabled selected>Choose</option>
+                            @foreach(['A+','A-','B+','B-','O+','O-','AB+','AB-'] as $bg)
+                            <option value="{{ $bg }}" {{ (Auth::user()->blood_group ?? '') == $bg ? 'selected' : '' }}>{{ $bg }}</option>
+                            @endforeach
+                        </select>
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9" /></svg>
                     </div>
                 </div>
+            </div>
 
-                {{-- Row 2 --}}
-                <div class="vm-row">
-                    <div class="vm-field">
-                        <label>
-                            <span class="vm-field__icon vm-field__icon--orange">
-                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                                    <path d="M14 14.76V3.5a2.5 2.5 0 00-5 0v11.26a4.5 4.5 0 105 0z" />
-                                </svg>
-                            </span>
-                            Temperature <em>°C</em>
-                        </label>
-                        <input type="number" name="temparature" placeholder="e.g. 36.6" step="0.1" min="30">
-                    </div>
-                    <div class="vm-field">
-                        <label>
-                            <span class="vm-field__icon vm-field__icon--teal">
-                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                                    <path d="M12 22a10 10 0 110-20 10 10 0 010 20z" />
-                                    <path d="M12 8v4l3 3" />
-                                </svg>
-                            </span>
-                            SpO₂ <em>%</em>
-                        </label>
-                        <input type="number" name="spo" placeholder="e.g. 98" min="50" max="100">
+            <div class="vm-row">
+                <div class="vm-field">
+                    <label>
+                        <span class="vm-field__icon vm-field__icon--green">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="2" x2="12" y2="22" /><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6" /></svg>
+                        </span>
+                        Weight <em>kg</em>
+                    </label>
+                    <input type="number" name="weight" id="vmWeight" placeholder="e.g. 70" step="0.1" min="1" max="300" oninput="calcVmBmi()">
+                </div>
+                <div class="vm-field">
+                    <label>
+                        <span class="vm-field__icon vm-field__icon--blue">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="2" x2="12" y2="22" /><line x1="2" y1="12" x2="22" y2="12" /></svg>
+                        </span>
+                        Height <em>cm</em>
+                    </label>
+                    <input type="number" name="height" id="vmHeight" placeholder="e.g. 170" step="0.1" min="50" max="300" oninput="calcVmBmi()">
+                </div>
+            </div>
+
+            <div class="vm-row vm-row--single">
+                <div class="vm-field">
+                    <label>
+                        <span class="vm-field__icon vm-field__icon--teal">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" /></svg>
+                        </span>
+                        BMI <em>auto-calculated</em>
+                    </label>
+                    <div class="vm-bmi-wrap">
+                        <input type="text" name="bmi" id="vmBmi" placeholder="Fill weight & height above" readonly>
+                        <span class="vm-bmi-tag" id="vmBmiTag"></span>
                     </div>
                 </div>
+            </div>
 
-                {{-- Row 3 --}}
-                <div class="vm-row">
-                    <div class="vm-field">
-                        <label>
-                            <span class="vm-field__icon vm-field__icon--purple">
-                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                                    <ellipse cx="12" cy="5" rx="9" ry="3" />
-                                    <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3" />
-                                    <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5" />
-                                </svg>
-                            </span>
-                            Blood Sugar <em>mg/dL</em>
-                        </label>
-                        <input type="number" name="blood_sugar" placeholder="e.g. 90" min="20" max="600">
-                    </div>
-                    <div class="vm-field">
-                        <label>
-                            <span class="vm-field__icon vm-field__icon--red">
-                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                                    <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z" />
-                                </svg>
-                            </span>
-                            Blood Group
-                        </label>
-                        <div class="vm-select-wrap">
-                            <select name="blood_group">
-                                <option value="" disabled selected>Choose</option>
-                                @foreach(['A+','A-','B+','B-','O+','O-','AB+','AB-'] as $bg)
-                                <option value="{{ $bg }}" {{ (Auth::user()->blood_group ?? '') == $bg ? 'selected' : '' }}>{{ $bg }}</option>
-                                @endforeach
-                            </select>
-                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                                <polyline points="6 9 12 15 18 9" />
-                            </svg>
-                        </div>
-                    </div>
-                </div>
-
-                {{-- Row 4 --}}
-                <div class="vm-row">
-                    <div class="vm-field">
-                        <label>
-                            <span class="vm-field__icon vm-field__icon--green">
-                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                                    <line x1="12" y1="2" x2="12" y2="22" />
-                                    <path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6" />
-                                </svg>
-                            </span>
-                            Weight <em>kg</em>
-                        </label>
-                        <input type="number" name="weight" id="vmWeight" placeholder="e.g. 70" step="0.1" min="1" max="300" oninput="calcVmBmi()">
-                    </div>
-                    <div class="vm-field">
-                        <label>
-                            <span class="vm-field__icon vm-field__icon--blue">
-                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                                    <line x1="12" y1="2" x2="12" y2="22" />
-                                    <line x1="2" y1="12" x2="22" y2="12" />
-                                </svg>
-                            </span>
-                            Height <em>cm</em>
-                        </label>
-                        <input type="number" name="height" id="vmHeight" placeholder="e.g. 170" step="0.1" min="50" max="300" oninput="calcVmBmi()">
-                    </div>
-                </div>
-
-                {{-- BMI (auto-calculated) --}}
-                <div class="vm-row vm-row--single">
-                    <div class="vm-field">
-                        <label>
-                            <span class="vm-field__icon vm-field__icon--teal">
-                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                                    <circle cx="12" cy="12" r="10" />
-                                    <line x1="12" y1="8" x2="12" y2="12" />
-                                    <line x1="12" y1="16" x2="12.01" y2="16" />
-                                </svg>
-                            </span>
-                            BMI <em>auto-calculated</em>
-                        </label>
-                        <div class="vm-bmi-wrap">
-                            <input type="text" name="bmi" id="vmBmi" placeholder="Fill weight & height above" readonly>
-                            <span class="vm-bmi-tag" id="vmBmiTag"></span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="vm-foot">
-                    <button type="button" class="vm-btn-cancel" onclick="closeVitalsModal()">Cancel</button>
-                    <button type="submit" class="vm-btn-save">
-                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                            <polyline points="20 6 9 17 4 12" />
-                        </svg>
-                        Save Vitals
-                    </button>
-                </div>
-            </form>
-        </div>
+            <div class="vm-foot">
+                <button type="button" class="vm-btn-cancel" onclick="closeVitalsModal()">Cancel</button>
+                <button type="submit" class="vm-btn-save">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12" /></svg>
+                    Save Vitals
+                </button>
+            </div>
+        </form>
     </div>
+</div>
 
-    <!-- {{-- ════════════════════════════════════════════════
+
+<!-- ════════════════════════════════════════════════
      EDIT VITALS MODAL
-     ════════════════════════════════════════════════ --}} -->
+════════════════════════════════════════════════ -->
+<div class="vm-overlay" id="editVitalsModal" onclick="handleEditVmOverlay(event)">
+    <div class="vm-modal">
+        <div class="vm-head">
+            <div class="vm-title">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+                </svg>
+                Edit Vitals
+            </div>
+            <button class="vm-close" onclick="closeEditVitalsModal()" type="button">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
+                </svg>
+            </button>
+        </div>
 
-    <div class="vm-overlay" id="editVitalsModal" onclick="handleEditVmOverlay(event)">
-        <div class="vm-modal">
+        <form id="editVitalsForm" action="" method="POST" class="vm-body">
+            @csrf @method('PUT')
+            <input type="hidden" name="dw_user_id" value="{{ Auth::id() ?? '' }}">
 
-            <div class="vm-head">
-                <div class="vm-title">
-                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
-                    </svg>
-                    Edit Vitals
+            <div class="vm-row">
+                <div class="vm-field">
+                    <label><span class="vm-field__icon vm-field__icon--red"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12" /></svg></span>Heart Rate <em>bpm</em></label>
+                    <input type="number" name="heart_rate" id="evHeartRate" placeholder="e.g. 72" min="30" max="250">
                 </div>
-                <button class="vm-close" onclick="closeEditVitalsModal()" type="button">
-                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                        <line x1="18" y1="6" x2="6" y2="18" />
-                        <line x1="6" y1="6" x2="18" y2="18" />
-                    </svg>
-                </button>
+                <div class="vm-field">
+                    <label><span class="vm-field__icon vm-field__icon--blue"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z" /></svg></span>Blood Pressure <em>mmHg</em></label>
+                    <input type="text" name="blood_pressure" id="evBloodPressure" placeholder="e.g. 120/80">
+                </div>
             </div>
 
-            <form id="editVitalsForm" action="" method="POST" class="vm-body">
-                @csrf @method('PUT')
-                <input type="hidden" name="dw_user_id" value="{{ Auth::id() }}">
+            <div class="vm-row">
+                <div class="vm-field">
+                    <label><span class="vm-field__icon vm-field__icon--orange"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 14.76V3.5a2.5 2.5 0 00-5 0v11.26a4.5 4.5 0 105 0z" /></svg></span>Temperature <em>°C</em></label>
+                    <input type="number" name="temparature" id="evTemparature" placeholder="e.g. 36.6" step="0.1" min="30">
+                </div>
+                <div class="vm-field">
+                    <label><span class="vm-field__icon vm-field__icon--teal"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22a10 10 0 110-20 10 10 0 010 20z" /><path d="M12 8v4l3 3" /></svg></span>SpO₂ <em>%</em></label>
+                    <input type="number" name="spo" id="evSpo" placeholder="e.g. 98" min="50" max="100">
+                </div>
+            </div>
 
-                <div class="vm-row">
-                    <div class="vm-field">
-                        <label><span class="vm-field__icon vm-field__icon--red"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                                    <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
-                                </svg></span>Heart Rate <em>bpm</em></label>
-                        <input type="number" name="heart_rate" id="evHeartRate" placeholder="e.g. 72" min="30" max="250">
-                    </div>
-                    <div class="vm-field">
-                        <label><span class="vm-field__icon vm-field__icon--blue"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                                    <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z" />
-                                </svg></span>Blood Pressure <em>mmHg</em></label>
-                        <input type="text" name="blood_pressure" id="evBloodPressure" placeholder="e.g. 120/80">
+            <div class="vm-row">
+                <div class="vm-field">
+                    <label><span class="vm-field__icon vm-field__icon--purple"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><ellipse cx="12" cy="5" rx="9" ry="3" /><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3" /><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5" /></svg></span>Blood Sugar <em>mg/dL</em></label>
+                    <input type="number" name="blood_sugar" id="evBloodSugar" placeholder="e.g. 90" min="20" max="600">
+                </div>
+                <div class="vm-field">
+                    <label><span class="vm-field__icon vm-field__icon--red"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z" /></svg></span>Blood Group</label>
+                    <div class="vm-select-wrap">
+                        <select name="blood_group" id="evBloodGroup">
+                            <option value="" disabled>Choose</option>
+                            @foreach(['A+','A-','B+','B-','O+','O-','AB+','AB-'] as $bg)
+                            <option value="{{ $bg }}">{{ $bg }}</option>
+                            @endforeach
+                        </select>
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9" /></svg>
                     </div>
                 </div>
+            </div>
 
-                <div class="vm-row">
-                    <div class="vm-field">
-                        <label><span class="vm-field__icon vm-field__icon--orange"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                                    <path d="M14 14.76V3.5a2.5 2.5 0 00-5 0v11.26a4.5 4.5 0 105 0z" />
-                                </svg></span>Temperature <em>°C</em></label>
-                        <input type="number" name="temparature" id="evTemparature" placeholder="e.g. 36.6" step="0.1" min="30">
-                    </div>
-                    <div class="vm-field">
-                        <label><span class="vm-field__icon vm-field__icon--teal"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                                    <path d="M12 22a10 10 0 110-20 10 10 0 010 20z" />
-                                    <path d="M12 8v4l3 3" />
-                                </svg></span>SpO₂ <em>%</em></label>
-                        <input type="number" name="spo" id="evSpo" placeholder="e.g. 98" min="50" max="100">
+            <div class="vm-row">
+                <div class="vm-field">
+                    <label><span class="vm-field__icon vm-field__icon--green"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="2" x2="12" y2="22" /><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6" /></svg></span>Weight <em>kg</em></label>
+                    <input type="number" name="weight" id="evWeight" placeholder="e.g. 70" step="0.1" min="1" max="300" oninput="calcEvBmi()">
+                </div>
+                <div class="vm-field">
+                    <label><span class="vm-field__icon vm-field__icon--blue"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="2" x2="12" y2="22" /><line x1="2" y1="12" x2="22" y2="12" /></svg></span>Height <em>cm</em></label>
+                    <input type="number" name="height" id="evHeight" placeholder="e.g. 170" step="0.1" min="50" max="300" oninput="calcEvBmi()">
+                </div>
+            </div>
+
+            <div class="vm-row vm-row--single">
+                <div class="vm-field">
+                    <label><span class="vm-field__icon vm-field__icon--teal"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" /></svg></span>BMI <em>auto-calculated</em></label>
+                    <div class="vm-bmi-wrap">
+                        <input type="text" name="bmi" id="evBmi" placeholder="Fill weight & height above" readonly>
+                        <span class="vm-bmi-tag" id="evBmiTag"></span>
                     </div>
                 </div>
+            </div>
 
-                <div class="vm-row">
-                    <div class="vm-field">
-                        <label><span class="vm-field__icon vm-field__icon--purple"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                                    <ellipse cx="12" cy="5" rx="9" ry="3" />
-                                    <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3" />
-                                    <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5" />
-                                </svg></span>Blood Sugar <em>mg/dL</em></label>
-                        <input type="number" name="blood_sugar" id="evBloodSugar" placeholder="e.g. 90" min="20" max="600">
-                    </div>
-                    <div class="vm-field">
-                        <label><span class="vm-field__icon vm-field__icon--red"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                                    <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z" />
-                                </svg></span>Blood Group</label>
-                        <div class="vm-select-wrap">
-                            <select name="blood_group" id="evBloodGroup">
-                                <option value="" disabled>Choose</option>
-                                @foreach(['A+','A-','B+','B-','O+','O-','AB+','AB-'] as $bg)
-                                <option value="{{ $bg }}">{{ $bg }}</option>
-                                @endforeach
-                            </select>
-                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                                <polyline points="6 9 12 15 18 9" />
-                            </svg>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="vm-row">
-                    <div class="vm-field">
-                        <label><span class="vm-field__icon vm-field__icon--green"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                                    <line x1="12" y1="2" x2="12" y2="22" />
-                                    <path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6" />
-                                </svg></span>Weight <em>kg</em></label>
-                        <input type="number" name="weight" id="evWeight" placeholder="e.g. 70" step="0.1" min="1" max="300" oninput="calcEvBmi()">
-                    </div>
-                    <div class="vm-field">
-                        <label><span class="vm-field__icon vm-field__icon--blue"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                                    <line x1="12" y1="2" x2="12" y2="22" />
-                                    <line x1="2" y1="12" x2="22" y2="12" />
-                                </svg></span>Height <em>cm</em></label>
-                        <input type="number" name="height" id="evHeight" placeholder="e.g. 170" step="0.1" min="50" max="300" oninput="calcEvBmi()">
-                    </div>
-                </div>
-
-                <div class="vm-row vm-row--single">
-                    <div class="vm-field">
-                        <label><span class="vm-field__icon vm-field__icon--teal"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                                    <circle cx="12" cy="12" r="10" />
-                                    <line x1="12" y1="8" x2="12" y2="12" />
-                                    <line x1="12" y1="16" x2="12.01" y2="16" />
-                                </svg></span>BMI <em>auto-calculated</em></label>
-                        <div class="vm-bmi-wrap">
-                            <input type="text" name="bmi" id="evBmi" placeholder="Fill weight & height above" readonly>
-                            <span class="vm-bmi-tag" id="evBmiTag"></span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="vm-foot">
-                    <button type="button" class="vm-btn-cancel" onclick="closeEditVitalsModal()">Cancel</button>
-                    <button type="submit" class="vm-btn-save">
-                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                            <polyline points="20 6 9 17 4 12" />
-                        </svg>
-                        Update Vitals
-                    </button>
-                </div>
-            </form>
-        </div>
+            <div class="vm-foot">
+                <button type="button" class="vm-btn-cancel" onclick="closeEditVitalsModal()">Cancel</button>
+                <button type="submit" class="vm-btn-save">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12" /></svg>
+                    Update Vitals
+                </button>
+            </div>
+        </form>
     </div>
+</div>
 
 
-    <!-- ════════════════════════════════
-    ADD MEDICAL HISTORY MODAL
+<!-- ════════════════════════════════
+     ADD MEDICAL HISTORY MODAL
 ════════════════════════════════ -->
-    <div class="mh-modal-overlay" id="medicalHistoryModal" onclick="handleMhOverlayClick(event)">
-        <div class="mh-modal">
+<div class="mh-modal-overlay" id="medicalHistoryModal" onclick="handleMhOverlayClick(event)">
+    <div class="mh-modal">
+        <div class="mh-modal__head">
+            <div class="mh-modal__title">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
+                    <polyline points="14 2 14 8 20 8" />
+                    <line x1="12" y1="18" x2="12" y2="12" />
+                    <line x1="9" y1="15" x2="15" y2="15" />
+                </svg>
+                Add Medical Report / Prescription
+            </div>
+            <button class="mh-modal__close" onclick="closeMhModal()" type="button">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
+                </svg>
+            </button>
+        </div>
 
-            <div class="mh-modal__head">
-                <div class="mh-modal__title">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
-                        <polyline points="14 2 14 8 20 8" />
-                        <line x1="12" y1="18" x2="12" y2="12" />
-                        <line x1="9" y1="15" x2="15" y2="15" />
-                    </svg>
-                    Add Medical Report / Prescription
+        <form action="{{ route('dw.medical-history.add') }}" method="POST" enctype="multipart/form-data" class="mh-modal__body" id="medicalHistoryForm">
+            @csrf
+            <input type="hidden" name="dw_user_id" value="{{ Auth::user()->id ?? '' }}">
+
+            <div class="mh-form-row">
+                <div class="mh-field">
+                    <label>Type <span class="mh-req">*</span></label>
+                    <div class="mh-select-wrap">
+                        <select name="type" required>
+                            <option value="" disabled selected>Select type</option>
+                            <option value="report">Medical Report</option>
+                            <option value="prescription">Prescription</option>
+                        </select>
+                        <svg class="mh-select-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9" /></svg>
+                    </div>
                 </div>
-                <button class="mh-modal__close" onclick="closeMhModal()" type="button">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                        <line x1="18" y1="6" x2="6" y2="18" />
-                        <line x1="6" y1="6" x2="18" y2="18" />
-                    </svg>
-                </button>
+                <div class="mh-field">
+                    <label>Date of Report <span class="mh-req">*</span></label>
+                    <input type="date" name="date_of_report" required max="{{ date('Y-m-d') }}">
+                </div>
             </div>
 
-            <form action="{{ route('dw.medical-history.add') }}" method="POST" enctype="multipart/form-data" class="mh-modal__body" id="medicalHistoryForm">
-                @csrf
-
-                {{-- Hidden user ID --}}
-                <input type="hidden" name="dw_user_id" value="{{ Auth::user()->id }}">
-
-                {{-- Type --}}
-                <div class="mh-form-row">
-                    <div class="mh-field">
-                        <label>Type <span class="mh-req">*</span></label>
-                        <div class="mh-select-wrap">
-                            <select name="type" required>
-                                <option value="" disabled selected>Select type</option>
-                                <option value="report">Medical Report</option>
-                                <option value="prescription">Prescription</option>
-                            </select>
-                            <svg class="mh-select-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                                <polyline points="6 9 12 15 18 9" />
-                            </svg>
-                        </div>
-                    </div>
-
-                    {{-- Date --}}
-                    <div class="mh-field">
-                        <label>Date of Report <span class="mh-req">*</span></label>
-                        <input type="date" name="date_of_report" required max="{{ date('Y-m-d') }}">
-                    </div>
+            <div class="mh-form-row mh-form-row--single">
+                <div class="mh-field">
+                    <label>Heading / Title <span class="mh-req">*</span></label>
+                    <input type="text" name="heading" placeholder="e.g. Blood Test Report – June 2025" required>
                 </div>
+            </div>
 
-                {{-- Heading --}}
-                <div class="mh-form-row mh-form-row--single">
-                    <div class="mh-field">
-                        <label>Heading / Title <span class="mh-req">*</span></label>
-                        <input type="text" name="heading" placeholder="e.g. Blood Test Report – June 2025" required>
-                    </div>
-                </div>
-
-                {{-- Images Upload --}}
-                <div class="mh-form-row mh-form-row--single">
-                    <div class="mh-field">
-                        <label>Images <span class="mh-req">*</span></label>
-
-                        {{-- Upload Source Buttons --}}
-                        <div class="mh-upload-sources">
-                            <button type="button" class="mh-src-btn" onclick="triggerMhInput('camera')" title="Take Photo">
-                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z" />
-                                    <circle cx="12" cy="13" r="4" />
-                                </svg>
-                                Camera
-                            </button>
-                            <button type="button" class="mh-src-btn" onclick="triggerMhInput('gallery')" title="Choose from Gallery">
-                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <rect x="3" y="3" width="18" height="18" rx="2" />
-                                    <circle cx="8.5" cy="8.5" r="1.5" />
-                                    <polyline points="21 15 16 10 5 21" />
-                                </svg>
-                                Gallery
-                            </button>
-                            <button type="button" class="mh-src-btn" onclick="triggerMhInput('file')" title="Choose File">
-                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M13 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V9z" />
-                                    <polyline points="13 2 13 9 20 9" />
-                                </svg>
-                                PDF File
-                            </button>
-                        </div>
-
-                        {{-- Hidden file inputs --}}
-                        <input type="file" id="mhInputCamera" name="images[]" accept="image/*" capture="environment" style="display:none;" onchange="handleMhFiles(this)">
-                        <input type="file" id="mhInputGallery" name="images[]" accept="image/jpeg,image/png,image/webp" multiple style="display:none;" onchange="handleMhFiles(this)">
-                        <input type="file" id="mhInputFile" name="images[]" accept="image/jpeg,image/png,image/webp,application/pdf" multiple style="display:none;" onchange="handleMhFiles(this)">
-
-                        {{-- Preview Grid --}}
-                        <div class="mh-preview-grid" id="mhPreviewGrid"></div>
-
-                        {{-- Add More (shown after first upload) --}}
-                        <button type="button" class="mh-add-more" id="mhAddMoreBtn" style="display:none;" onclick="showMhAddMoreOptions()">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                                <line x1="12" y1="5" x2="12" y2="19" />
-                                <line x1="5" y1="12" x2="19" y2="12" />
-                            </svg>
-                            Add More Images
+            <div class="mh-form-row mh-form-row--single">
+                <div class="mh-field">
+                    <label>Images <span class="mh-req">*</span></label>
+                    <div class="mh-upload-sources">
+                        <button type="button" class="mh-src-btn" onclick="triggerMhInput('camera')" title="Take Photo">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>
+                            Camera
                         </button>
-
-                        {{-- Add More Source picker (hidden by default) --}}
-                        <div class="mh-upload-sources mh-add-more-sources" id="mhAddMoreSources" style="display:none;">
-                            <button type="button" class="mh-src-btn mh-src-btn--sm" onclick="triggerMhInput('camera'); hideMhAddMoreOptions()">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z" />
-                                    <circle cx="12" cy="13" r="4" />
-                                </svg>Camera
-                            </button>
-                            <button type="button" class="mh-src-btn mh-src-btn--sm" onclick="triggerMhInput('gallery'); hideMhAddMoreOptions()">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <rect x="3" y="3" width="18" height="18" rx="2" />
-                                    <circle cx="8.5" cy="8.5" r="1.5" />
-                                    <polyline points="21 15 16 10 5 21" />
-                                </svg>Gallery
-                            </button>
-                            <button type="button" class="mh-src-btn mh-src-btn--sm" onclick="triggerMhInput('file'); hideMhAddMoreOptions()">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M13 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V9z" />
-                                    <polyline points="13 2 13 9 20 9" />
-                                </svg>File
-                            </button>
-                            <button type="button" class="mh-src-btn mh-src-btn--sm mh-src-btn--cancel" onclick="hideMhAddMoreOptions()">Cancel</button>
-                        </div>
-
-                        <p class="mh-upload-hint">Accepted: JPG, PNG, WEBP, PDF &mdash; max 5MB each</p>
+                        <button type="button" class="mh-src-btn" onclick="triggerMhInput('gallery')" title="Choose from Gallery">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                            Gallery
+                        </button>
+                        <button type="button" class="mh-src-btn" onclick="triggerMhInput('file')" title="Choose File">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V9z"/><polyline points="13 2 13 9 20 9"/></svg>
+                            PDF File
+                        </button>
                     </div>
-                </div>
 
-                <div class="mh-modal__foot">
-                    <button type="button" class="mh-btn-cancel" onclick="closeMhModal()">Cancel</button>
-                    <button type="submit" class="mh-btn-save">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                            <polyline points="20 6 9 17 4 12" />
-                        </svg>
-                        Save Record
+                    <input type="file" id="mhInputCamera" name="images[]" accept="image/*" capture="environment" style="display:none;" onchange="handleMhFiles(this)">
+                    <input type="file" id="mhInputGallery" name="images[]" accept="image/jpeg,image/png,image/webp" multiple style="display:none;" onchange="handleMhFiles(this)">
+                    <input type="file" id="mhInputFile" name="images[]" accept="image/jpeg,image/png,image/webp,application/pdf" multiple style="display:none;" onchange="handleMhFiles(this)">
+
+                    <div class="mh-preview-grid" id="mhPreviewGrid"></div>
+
+                    <button type="button" class="mh-add-more" id="mhAddMoreBtn" style="display:none;" onclick="showMhAddMoreOptions()">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" /></svg>
+                        Add More Images
                     </button>
+
+                    <div class="mh-upload-sources mh-add-more-sources" id="mhAddMoreSources" style="display:none;">
+                        <button type="button" class="mh-src-btn mh-src-btn--sm" onclick="triggerMhInput('camera'); hideMhAddMoreOptions()">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>Camera
+                        </button>
+                        <button type="button" class="mh-src-btn mh-src-btn--sm" onclick="triggerMhInput('gallery'); hideMhAddMoreOptions()">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>Gallery
+                        </button>
+                        <button type="button" class="mh-src-btn mh-src-btn--sm" onclick="triggerMhInput('file'); hideMhAddMoreOptions()">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V9z"/><polyline points="13 2 13 9 20 9"/></svg>File
+                        </button>
+                        <button type="button" class="mh-src-btn mh-src-btn--sm mh-src-btn--cancel" onclick="hideMhAddMoreOptions()">Cancel</button>
+                    </div>
+
+                    <p class="mh-upload-hint">Accepted: JPG, PNG, WEBP, PDF &mdash; max 5MB each</p>
                 </div>
-            </form>
-        </div>
+            </div>
+
+            <div class="mh-modal__foot">
+                <button type="button" class="mh-btn-cancel" onclick="closeMhModal()">Cancel</button>
+                <button type="submit" class="mh-btn-save">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12" /></svg>
+                    Save Record
+                </button>
+            </div>
+        </form>
     </div>
+</div>
 
     <script>
         // Holds all selected File objects across multiple picks
