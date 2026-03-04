@@ -1,0 +1,37 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('vitals', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('dw_user_id')->constrained('dw_user_models')->cascadeOnDelete();
+            $table->string('heart_rate');
+            $table->string('blood_pressure');
+            $table->string('temparature');
+            $table->string('spo'); //spo2 percentage 
+            $table->string('blood_sugar');
+            $table->string('weight');
+            $table->string('height');
+            $table->string('bmi');
+            $table->string('blood_group');
+            $table->timestamps();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('vitals');
+    }
+};

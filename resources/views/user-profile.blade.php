@@ -7,6 +7,184 @@
 <head>
     <link rel="stylesheet" href="{{ asset('./css/user-profile.css') }}">
     <style>
+        .up-pwd-alert {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 11px 15px;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 500;
+            margin-bottom: 16px;
+        }
+
+        .up-pwd-alert--success {
+            background: #ecfdf5;
+            color: #059669;
+            border: 1px solid #a7f3d0;
+        }
+
+        .up-pwd-alert--error {
+            background: #fff1f1;
+            color: #e53e3e;
+            border: 1px solid #fecaca;
+        }
+
+        .up-pwd-form {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            /* max-width: 460px; */
+        }
+
+        .up-pwd-header {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 16px;
+            border-radius: 14px;
+            background: linear-gradient(135deg, #eef2ff 0%, #f5f3ff 100%);
+            border: 1.5px solid #e0e7ff;
+            margin-bottom: 4px;
+        }
+
+        .up-pwd-header__ico {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            background: #4361ee;
+            color: #fff;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .up-pwd-header__title {
+            font-size: 15px;
+            font-weight: 700;
+            color: #1a1f36;
+        }
+
+        .up-pwd-header__sub {
+            font-size: 12px;
+            color: #7c85a2;
+            margin-top: 2px;
+        }
+
+        .up-pwd-field {
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+        }
+
+        .up-pwd-field label {
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: .05em;
+            color: #555;
+        }
+
+        .up-pwd-input-wrap {
+            position: relative;
+        }
+
+        .up-pwd-input-wrap input {
+            width: 100%;
+            padding: 11px 42px 11px 14px;
+            border: 1.5px solid #e8ecf4;
+            border-radius: 11px;
+            font-size: 14px;
+            color: #1a1f36;
+            background: #fafbff;
+            outline: none;
+            transition: border-color .18s, box-shadow .18s;
+        }
+
+        .up-pwd-input-wrap input:focus {
+            border-color: #4361ee;
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, .11);
+            background: #fff;
+        }
+
+        .up-pwd-eye {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #aaa;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            transition: color .15s;
+        }
+
+        .up-pwd-eye:hover {
+            color: #4361ee;
+        }
+
+        .up-pwd-eye.active {
+            color: #4361ee;
+        }
+
+        .up-pwd-err {
+            font-size: 12px;
+            color: #e53e3e;
+        }
+
+        /* Strength bars */
+        .up-pwd-strength {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 2px;
+        }
+
+        .up-pwd-strength__bars {
+            display: flex;
+            gap: 4px;
+            flex: 1;
+        }
+
+        .up-pwd-bar {
+            flex: 1;
+            height: 4px;
+            border-radius: 4px;
+            background: #e8ecf4;
+            transition: background .25s;
+        }
+
+        .up-pwd-strength__label {
+            font-size: 11.5px;
+            font-weight: 600;
+            min-width: 70px;
+        }
+
+        .up-pwd-submit {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 7px;
+            padding: 12px;
+            border-radius: 11px;
+            border: none;
+            background: #4361ee;
+            color: #fff;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background .15s, transform .12s;
+            margin-top: 4px;
+        }
+
+        .up-pwd-submit:hover {
+            background: #3451d1;
+            transform: translateY(-1px);
+        }
+
         .up-appt-table-wrap {
             overflow-x: auto;
         }
@@ -711,26 +889,28 @@
                     </div>
                 </div>
                 <div class="up-qstat-grid">
-                    <div class="up-qstat up-qstat--teal">
-                        <div class="up-qstat__ico">🏥</div>
-                        <div class="up-qstat__num">12</div>
-                        <div class="up-qstat__lbl">Visits</div>
-                    </div>
+                    
                     <div class="up-qstat up-qstat--mint">
                         <div class="up-qstat__ico">💊</div>
-                        <div class="up-qstat__num">8</div>
-                        <div class="up-qstat__lbl">Medicines</div>
+                        <div class="up-qstat__num">{{$noOfPrescription}}</div>
+                        <div class="up-qstat__lbl">Prescriptions</div>
                     </div>
                     <div class="up-qstat up-qstat--coral">
                         <div class="up-qstat__ico">📋</div>
-                        <div class="up-qstat__num">5</div>
+                        <div class="up-qstat__num">{{$noOfReport}}</div>
                         <div class="up-qstat__lbl">Reports</div>
                     </div>
-                    <div class="up-qstat up-qstat--amber">
+                    <a href="{{route('dw.notification')}}" class="up-qstat up-qstat--teal">
+                        <div class="up-qstat__ico">🔔</div>
+                        <div class="up-qstat__num">{{$noOfRequest}}</div>
+                        <div class="up-qstat__lbl">Notifications</div>
+                    </a>
+
+                    <a href="{{route('dw.medical-history')}}" class="up-qstat up-qstat--amber">
                         <div class="up-qstat__ico">⭐</div>
-                        <div class="up-qstat__num">4.9</div>
-                        <div class="up-qstat__lbl">Rating</div>
-                    </div>
+                        <div class="up-qstat__num">Add</div>
+                        <div class="up-qstat__lbl">Vitals</div>
+                    </a>
                 </div>
             </div>
 
@@ -850,48 +1030,137 @@
                         Health Score
                     </div>
                 </div>
-                <div class="up-health-score">
-                    <div class="up-score-ring">
-                        <svg width="120" height="120" viewBox="0 0 120 120">
-                            <circle cx="60" cy="60" r="50" fill="none" stroke="var(--border)" stroke-width="10" />
-                            <circle cx="60" cy="60" r="50" fill="none" stroke="var(--mint)" stroke-width="10"
-                                stroke-dasharray="314" stroke-dashoffset="47" stroke-linecap="round" />
-                        </svg>
-                        <div class="up-score-ring__text">
-                            <span class="up-score-ring__num">85</span>
-                            <span class="up-score-ring__sub">/100</span>
-                        </div>
-                    </div>
-                    <div class="up-score-label">Excellent Health</div>
-                    <div class="up-score-sub">Based on your medical history & vitals</div>
 
-                    <div class="up-score-bars">
-                        <div class="up-sbar-row">
-                            <div class="up-sbar-top"><span>Diet</span><span style="color:var(--mint);font-weight:800">90%</span></div>
-                            <div class="up-sbar-track">
-                                <div class="up-sbar-fill" style="width:90%;background:var(--mint)"></div>
-                            </div>
-                        </div>
-                        <div class="up-sbar-row">
-                            <div class="up-sbar-top"><span>Exercise</span><span style="color:var(--p);font-weight:800">75%</span></div>
-                            <div class="up-sbar-track">
-                                <div class="up-sbar-fill" style="width:75%;background:var(--p)"></div>
-                            </div>
-                        </div>
-                        <div class="up-sbar-row">
-                            <div class="up-sbar-top"><span>Sleep</span><span style="color:var(--amber);font-weight:800">70%</span></div>
-                            <div class="up-sbar-track">
-                                <div class="up-sbar-fill" style="width:70%;background:var(--amber)"></div>
-                            </div>
-                        </div>
-                        <div class="up-sbar-row">
-                            <div class="up-sbar-top"><span>Stress</span><span style="color:var(--coral);font-weight:800">60%</span></div>
-                            <div class="up-sbar-track">
-                                <div class="up-sbar-fill" style="width:60%;background:var(--coral)"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                @php
+                $scores = [];
+
+                // Heart Rate (60–100 is normal)
+                if (!empty($vital->heart_rate)) {
+                $hr = (float) $vital->heart_rate;
+                if ($hr >= 60 && $hr <= 100) $scores['Heart Rate']=100;
+                    elseif ($hr>= 50 && $hr <= 110) $scores['Heart Rate']=75;
+                        elseif ($hr>= 40 && $hr <= 130) $scores['Heart Rate']=50;
+                            else $scores['Heart Rate']=25;
+                            }
+
+                            // Blood Pressure — parse systolic (e.g. "120/80" )
+                            if (!empty($vital->blood_pressure)) {
+                            $parts = explode('/', $vital->blood_pressure);
+                            $sys = (float) ($parts[0] ?? 0);
+                            if ($sys >= 90 && $sys <= 120) $scores['Blood Pressure']=100;
+                                elseif ($sys>= 80 && $sys <= 139) $scores['Blood Pressure']=70;
+                                    elseif ($sys>= 70 && $sys <= 159) $scores['Blood Pressure']=45;
+                                        else $scores['Blood Pressure']=20;
+                                        }
+
+                                        // Temperature (36.1–37.2 normal)
+                                        if (!empty($vital->temparature)) {
+                                        $temp = (float) $vital->temparature;
+                                        if ($temp >= 36.1 && $temp <= 37.2) $scores['Temperature']=100;
+                                            elseif ($temp>= 35.5 && $temp <= 38.0) $scores['Temperature']=65;
+                                                else $scores['Temperature']=30;
+                                                }
+
+                                                // SpO2 (95–100 normal)
+                                                if (!empty($vital->spo)) {
+                                                $spo = (float) $vital->spo;
+                                                if ($spo >= 95) $scores['SpO₂'] = 100;
+                                                elseif ($spo >= 90) $scores['SpO₂'] = 65;
+                                                elseif ($spo >= 85) $scores['SpO₂'] = 35;
+                                                else $scores['SpO₂'] = 15;
+                                                }
+
+                                                // Blood Sugar (70–99 fasting normal)
+                                                if (!empty($vital->blood_sugar)) {
+                                                $bs = (float) $vital->blood_sugar;
+                                                if ($bs >= 70 && $bs <= 99) $scores['Blood Sugar']=100;
+                                                    elseif ($bs>= 60 && $bs <= 125) $scores['Blood Sugar']=70;
+                                                        elseif ($bs>= 50 && $bs <= 199) $scores['Blood Sugar']=40;
+                                                            else $scores['Blood Sugar']=15;
+                                                            }
+
+                                                            // BMI (18.5–24.9 normal)
+                                                            if (!empty($vital->bmi)) {
+                                                            $bmi = (float) $vital->bmi;
+                                                            if ($bmi >= 18.5 && $bmi <= 24.9) $scores['BMI']=100;
+                                                                elseif ($bmi>= 17 && $bmi <= 29.9) $scores['BMI']=70;
+                                                                    elseif ($bmi>= 15 && $bmi <= 34.9) $scores['BMI']=45;
+                                                                        else $scores['BMI']=20;
+                                                                        }
+
+                                                                        // Overall score
+                                                                        $overallScore=count($scores)> 0 ? (int) round(array_sum($scores) / count($scores)) : 0;
+
+                                                                        // Ring offset: circumference = 2π×50 ≈ 314
+                                                                        $dashOffset = 314 - (314 * $overallScore / 100);
+
+                                                                        // Label
+                                                                        if ($overallScore >= 85) $scoreLabel = 'Excellent Health';
+                                                                        elseif ($overallScore >= 70) $scoreLabel = 'Good Health';
+                                                                        elseif ($overallScore >= 50) $scoreLabel = 'Fair Health';
+                                                                        elseif ($overallScore >= 30) $scoreLabel = 'Poor Health';
+                                                                        else $scoreLabel = 'No Data';
+
+                                                                        // Ring color
+                                                                        if ($overallScore >= 85) $ringColor = 'var(--mint)';
+                                                                        elseif ($overallScore >= 70) $ringColor = 'var(--p)';
+                                                                        elseif ($overallScore >= 50) $ringColor = 'var(--amber)';
+                                                                        else $ringColor = 'var(--coral)';
+
+                                                                        // Bar colors
+                                                                        $barColors = [
+                                                                        'Heart Rate' => 'var(--coral)',
+                                                                        'Blood Pressure' => 'var(--p)',
+                                                                        'Temperature' => 'var(--amber)',
+                                                                        'SpO₂' => 'var(--mint)',
+                                                                        'Blood Sugar' => '#a855f7',
+                                                                        'BMI' => '#0ea5e9',
+                                                                        ];
+                                                                        @endphp
+
+                                                                        <div class="up-health-score">
+                                                                            <div class="up-score-ring">
+                                                                                <svg width="120" height="120" viewBox="0 0 120 120">
+                                                                                    <circle cx="60" cy="60" r="50" fill="none" stroke="var(--border)" stroke-width="10" />
+                                                                                    <circle cx="60" cy="60" r="50" fill="none"
+                                                                                        stroke="{{ $ringColor }}"
+                                                                                        stroke-width="10"
+                                                                                        stroke-dasharray="314"
+                                                                                        stroke-dashoffset="{{ $dashOffset }}"
+                                                                                        stroke-linecap="round"
+                                                                                        style="transition: stroke-dashoffset 1s ease;" />
+                                                                                </svg>
+                                                                                <div class="up-score-ring__text">
+                                                                                    <span class="up-score-ring__num">{{ $overallScore }}</span>
+                                                                                    <span class="up-score-ring__sub">/100</span>
+                                                                                </div>
+                                                                            </div>
+
+                                                                            <div class="up-score-label">{{ $scoreLabel }}</div>
+                                                                            <div class="up-score-sub">Based on your vitals data</div>
+
+                                                                            @if(count($scores))
+                                                                            <div class="up-score-bars">
+                                                                                @foreach($scores as $label => $pct)
+                                                                                <div class="up-sbar-row">
+                                                                                    <div class="up-sbar-top">
+                                                                                        <span>{{ $label }}</span>
+                                                                                        <span style="color:{{ $barColors[$label] ?? 'var(--p)' }};font-weight:800">{{ $pct }}%</span>
+                                                                                    </div>
+                                                                                    <div class="up-sbar-track">
+                                                                                        <div class="up-sbar-fill"
+                                                                                            style="width:{{ $pct }}%;background:{{ $barColors[$label] ?? 'var(--p)' }}">
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                                @endforeach
+                                                                            </div>
+                                                                            @else
+                                                                            <p style="font-size:13px;color:#aaa;text-align:center;margin-top:8px;">
+                                                                                Add your vitals to see your health score.
+                                                                            </p>
+                                                                            @endif
+                                                                        </div>
             </div>
 
         </aside>
@@ -1125,782 +1394,736 @@
                         </svg>
                         Latest Vitals
                     </div>
-                    <span style="font-size:.7rem;color:var(--muted);font-weight:700">Updated: 20 Feb 2026</span>
+                    <span style="font-size:.7rem;color:var(--muted);font-weight:700">Updated: {{ \Carbon\Carbon::parse($vital->updated_at)->format('d M Y') }}</span>
                 </div>
                 <div class="up-vitals">
+                    <div class="up-vital up-qstat--coral" style="border-color:#fed7aa">
+                        <div class="up-vital__ico">🔴</div>
+                        <div class="up-vital__val" style="color:#c2410c">{{$vital->blood_group}}</div>
+                        <div class="up-vital__unit">mg/dL</div>
+                        <div class="up-vital__lbl">Blood Group</div>
+                    </div>
                     <div class="up-vital up-qstat--teal" style="border-color:#bae6fd">
                         <div class="up-vital__ico">❤️</div>
-                        <div class="up-vital__val" style="color:var(--p-dk)">72</div>
+                        <div class="up-vital__val" style="color:var(--p-dk)">{{$vital->heart_rate}}</div>
                         <div class="up-vital__unit">bpm</div>
                         <div class="up-vital__lbl">Heart Rate</div>
                     </div>
                     <div class="up-vital up-qstat--rose" style="border-color:#fecdd3;background:var(--rose-lt)">
                         <div class="up-vital__ico">🩸</div>
-                        <div class="up-vital__val" style="color:var(--rose)">120/80</div>
+                        <div class="up-vital__val" style="color:var(--rose)">{{$vital->blood_pressure}}</div>
                         <div class="up-vital__unit">mmHg</div>
                         <div class="up-vital__lbl">Blood Pressure</div>
                     </div>
                     <div class="up-vital up-qstat--mint" style="border-color:#a7f3d0">
                         <div class="up-vital__ico">🌡️</div>
-                        <div class="up-vital__val" style="color:#047857">98.4</div>
-                        <div class="up-vital__unit">°F</div>
+                        <div class="up-vital__val" style="color:#047857">{{$vital->temparature}}</div>
+                        <div class="up-vital__unit">°C</div>
                         <div class="up-vital__lbl">Temperature</div>
                     </div>
                     <div class="up-vital up-qstat--amber" style="border-color:#fde68a">
                         <div class="up-vital__ico">⚖️</div>
-                        <div class="up-vital__val" style="color:#b45309">72</div>
+                        <div class="up-vital__val" style="color:#b45309">{{$vital->weight}}</div>
                         <div class="up-vital__unit">kg</div>
                         <div class="up-vital__lbl">Weight</div>
                     </div>
-                    <div class="up-vital up-qstat--violet" style="border-color:#ddd6fe;background:var(--violet-lt)">
-                        <div class="up-vital__ico">🫁</div>
-                        <div class="up-vital__val" style="color:var(--violet)">98</div>
-                        <div class="up-vital__unit">SpO₂ %</div>
-                        <div class="up-vital__lbl">Oxygen</div>
+                    <div class="up-vital up-qstat--mint" style="border-color:#fde68a">
+                        <div class="up-vital__ico">📏</div>
+                        <div class="up-vital__val" style="color:#b45309">{{$vital->weight}}</div>
+                        <div class="up-vital__unit">cm</div>
+                        <div class="up-vital__lbl">Height</div>
                     </div>
                     <div class="up-vital up-qstat--coral" style="border-color:#fed7aa">
-                        <div class="up-vital__ico">🧪</div>
-                        <div class="up-vital__val" style="color:#c2410c">92</div>
-                        <div class="up-vital__unit">mg/dL</div>
-                        <div class="up-vital__lbl">Blood Sugar</div>
+                        <div class="up-vital__ico">📊</div>
+                        <div class="up-vital__val" style="color:#c2410c">{{$vital->bmi}}</div>
+                        <div class="up-vital__unit">
+                            @if($vital->bmi < 18.5) Underweight
+                                @elseif($vital->bmi < 25) Normal
+                                    @elseif($vital->bmi < 30) Overweight
+                                        @else Obese
+                                        @endif
+                                        </div>
+                                        <div class="up-vital__lbl">BMI
+                                        </div>
+                        </div>
+                        <div class="up-vital up-qstat--violet" style="border-color:#ddd6fe;background:var(--violet-lt)">
+                            <div class="up-vital__ico">🫁</div>
+                            <div class="up-vital__val" style="color:var(--violet)">{{$vital->spo}}</div>
+                            <div class="up-vital__unit">SpO₂ %</div>
+                            <div class="up-vital__lbl">Oxygen</div>
+                        </div>
+                        <div class="up-vital up-qstat--amber" style="border-color:#fed7aa">
+                            <div class="up-vital__ico">🧪</div>
+                            <div class="up-vital__val" style="color:#c2410c">{{$vital->blood_sugar}}</div>
+                            <div class="up-vital__unit">mg/dL</div>
+                            <div class="up-vital__lbl">Blood Sugar</div>
+                        </div>
                     </div>
                 </div>
-            </div>
 
 
-            <!-- TABS CARD -->
-            <div class="up-card">
+                <!-- TABS CARD -->
+                <div class="up-card">
 
-                <div class="up-tabs">
-                    <button class="up-tab active" onclick="switchTab('appointments')" id="tab-appointments">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <rect x="3" y="4" width="18" height="18" rx="2" />
-                            <path d="M16 2v4M8 2v4M3 10h18" />
-                        </svg>
-                        Appointments
-                        <span class="up-tab-count">{{ $bookings->count() }}</span>
-                    </button>
-                    <button class="up-tab" onclick="switchTab('history')" id="tab-history">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
-                            <polyline points="14 2 14 8 20 8" />
-                        </svg>
-                        Medical History
-                        <span class="up-tab-count">5</span>
-                    </button>
-                    <button class="up-tab" onclick="switchTab('prescriptions')" id="tab-prescriptions">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M9 3H5a2 2 0 00-2 2v4m6-6h10a2 2 0 012 2v4M9 3v11m0 0H5m4 0h4m4 0h2M9 14v7m0 0H5m4 0h4m4-7v7m0 0h-4" />
-                        </svg>
-                        Prescriptions
-                        <span class="up-tab-count">8</span>
-                    </button>
-                    <button class="up-tab" onclick="switchTab('settings')" id="tab-settings">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <circle cx="12" cy="12" r="3" />
-                            <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z" />
-                        </svg>
-                        Settings
-                    </button>
-                </div>
-
-
-                {{-- ── TAB: APPOINTMENTS ── --}}
-                <div id="content-appointments" class="up-tab-content active">
-                    <div class="up-appt-wrap">
-
-                        <div class="up-appt-filters">
-                            <button class="up-filter-btn active" onclick="filterAppts(this, 'all')">
-                                All <span class="up-filter-count" id="count-all">{{ $bookings->count() }}</span>
-                            </button>
-                            <button class="up-filter-btn" onclick="filterAppts(this, 'Upcoming')">
-                                Upcoming <span class="up-filter-count" id="count-upcoming">{{ $bookings->where('status', 'Upcoming')->count() }}</span>
-                            </button>
-                            <button class="up-filter-btn" onclick="filterAppts(this, 'Completed')">
-                                Completed <span class="up-filter-count" id="count-completed">{{ $bookings->where('status', 'Completed')->count() }}</span>
-                            </button>
-                            <button class="up-filter-btn" onclick="filterAppts(this, 'Cancelled')">
-                                Cancelled <span class="up-filter-count" id="count-cancelled">{{ $bookings->where('status', 'Cancelled')->count() }}</span>
-                            </button>
-                        </div>
-
-                        @if($bookings->isEmpty())
-                        <div class="up-appt-empty">
-                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" opacity=".3">
-                                <rect x="3" y="4" width="18" height="18" rx="3" />
+                    <div class="up-tabs">
+                        <button class="up-tab active" onclick="switchTab('appointments')" id="tab-appointments">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="4" width="18" height="18" rx="2" />
                                 <path d="M16 2v4M8 2v4M3 10h18" />
                             </svg>
-                            <p>No appointments found</p>
-                        </div>
-                        @else
-                        <div class="up-appt-table-wrap">
-                            <table class="up-appt-table">
-                                <thead>
-                                    <tr>
-                                        <th>OPD / Test / Doctor</th>
-                                        <th>Date &amp; Time</th>
-                                        <th>Visit</th>
-                                        <th>Status</th>
-                                        <th>Location</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="apptTableBody">
-
-                                    @foreach($bookings as $index => $booking)
-                                    @php
-                                    $status = $booking->status ?? 'Upcoming';
-                                    $statusMap = [
-                                    'Upcoming' => ['class' => 'up-status--upcoming', 'label' => 'Upcoming'],
-                                    'Completed' => ['class' => 'up-status--done', 'label' => 'Completed'],
-                                    'Cancelled' => ['class' => 'up-status--cancelled','label' => 'Cancelled'],
-                                    ];
-                                    $statusInfo = $statusMap[$status] ?? ['class' => 'up-status--upcoming', 'label' => $status];
-                                    @endphp
-
-                                    <tr class="appt-row" data-status="{{ $status }}">
-
-
-                                        <td>
-                                            @if ($booking->clinic_type === 'OPD' && $booking->doctor)
-                                            <div class="up-appt-doc">
-                                                <div class="up-appt-av">{{ strtoupper(substr($booking->doctor->doctor_name, 0, 1)) }}{{ strtoupper(substr(strstr($booking->doctor->doctor_name, ' '), 1, 1)) }}</div>
-                                                <div>
-                                                    <div class="up-appt-dname">Dr. {{ $booking->doctor->doctor_name }}</div>
-                                                    <div class="up-appt-dname" style="color: red;">{{ $booking->doctor->doctor_specialist }}</div>
-                                                    <div class="up-appt-subname" style="color: #5E807F;">{{ $booking->opdContact->clinic_name }}</div>
-                                                </div>
-                                            </div>
-
-                                            @elseif ($booking->clinic_type === 'Pathology' && $booking->test)
-                                            <div class="up-appt-doc">
-                                                <div class="up-appt-av">{{ strtoupper(substr($booking->test->test_name, 0, 1)) }}{{ strtoupper(substr(strstr($booking->test->test_name, ' '), 1, 1)) }}</div>
-                                                <div>
-                                                    <div class="up-appt-dname">{{ $booking->test->test_name }}</div>
-                                                    <div class="up-appt-dname" style="color: green;">{{ $booking->test->test_type }}</div>
-                                                    <div class="up-appt-subname" style="color: #5E807F;">{{ $booking->pathologyContact->clinic_name }}</div>
-                                                </div>
-                                            </div>
-
-                                            @elseif ($booking->clinic_type === 'Doctor' && $booking->doctorContact)
-                                            <div class="up-appt-doc">
-                                                <div class="up-appt-av">{{ strtoupper(substr($booking->doctorContact->partner_doctor_name, 0, 1)) }}{{ strtoupper(substr(strstr($booking->doctorContact->partner_doctor_name, ' '), 1, 1)) }}</div>
-                                                <div>
-                                                    <div class="up-appt-dname">Dr. {{ $booking->doctorContact->partner_doctor_name }}</div>
-                                                    <div class="up-appt-dname" style="color: #1B9AAA;">{{ $booking->doctorContact->partner_doctor_specialist }}</div>
-                                                </div>
-                                            </div>
-                                            @endif
-                                        </td>
-
-
-                                        <td>{{ \Carbon\Carbon::parse($booking->booking_date)->format('d M Y') }}<br><span style="color:var(--muted);font-size:.75rem">{{ \Carbon\Carbon::parse($booking->booking_time)->format('h:i A') }}</span></td>
-
-
-                                        <td><span style="font-size:.74rem;font-weight:700;color:var(--p); text-transform:capitalize">{{ $booking->visit_mode }}</span></td>
-
-
-                                        <td>
-                                            <span class="up-status {{ $statusInfo['class'] }}">
-                                                <span class="dot"></span>{{ $statusInfo['label'] }}
-                                            </span>
-                                        </td>
-
-
-                                        <td>
-                                            @if ($booking->clinic_type === 'OPD' && $booking->doctor)
-                                            <a href="{{$booking->opdContact->clinic_google_map_link}}" target="_blank" class="up-action-done">
-                                                Map Link
-                                            </a>
-                                            @elseif ($booking->clinic_type === 'Pathology' && $booking->test)
-                                            <a href="{{$booking->pathologyContact->clinic_google_map_link}}" target="_blank" class="up-action-done">
-                                                Map Link
-                                            </a>
-                                            @elseif ($booking->clinic_type === 'Doctor' && $booking->doctorContact)
-                                            <a href="{{$booking->doctorContact->partner_doctor_google_map_link}}" target="_blank" class="up-action-done">
-                                                Map Link
-                                            </a>
-                                            @endif
-                                        </td>
-
-                                    </tr>
-                                    @endforeach
-
-                                </tbody>
-                            </table>
-                        </div>
-                        @endif
-
-                    </div>
-                </div>
-
-
-                <!-- ── TAB: MEDICAL HISTORY ── -->
-                <div id="content-history" class="up-tab-content">
-                    <div class="up-med-history">
-                        <div class="up-med-grid">
-                            <div class="up-med-item up-med-item--teal">
-                                <div class="up-med-item__ico">🫀</div>
-                                <div class="up-med-item__title">Cardiac Checkup</div>
-                                <div class="up-med-item__date">20 Feb 2026</div>
-                                <div class="up-med-item__status" style="color:var(--p)">Normal</div>
-                            </div>
-                            <div class="up-med-item up-med-item--mint">
-                                <div class="up-med-item__ico">🩻</div>
-                                <div class="up-med-item__title">X-Ray Chest</div>
-                                <div class="up-med-item__date">14 Jan 2026</div>
-                                <div class="up-med-item__status" style="color:var(--mint)">Clear</div>
-                            </div>
-                            <div class="up-med-item up-med-item--amber">
-                                <div class="up-med-item__ico">🧬</div>
-                                <div class="up-med-item__title">Blood Panel</div>
-                                <div class="up-med-item__date">10 Jan 2026</div>
-                                <div class="up-med-item__status" style="color:var(--amber)">Review Needed</div>
-                            </div>
-                            <div class="up-med-item up-med-item--rose">
-                                <div class="up-med-item__ico">💉</div>
-                                <div class="up-med-item__title">Vaccination</div>
-                                <div class="up-med-item__date">05 Dec 2025</div>
-                                <div class="up-med-item__status" style="color:var(--rose)">Completed</div>
-                            </div>
-                            <div class="up-med-item up-med-item--violet">
-                                <div class="up-med-item__ico">🧠</div>
-                                <div class="up-med-item__title">Neurology Scan</div>
-                                <div class="up-med-item__date">18 Nov 2025</div>
-                                <div class="up-med-item__status" style="color:var(--violet)">Normal</div>
-                            </div>
-                            <div class="up-med-item up-med-item--coral">
-                                <div class="up-med-item__ico">🫁</div>
-                                <div class="up-med-item__title">Pulmonary Test</div>
-                                <div class="up-med-item__date">02 Oct 2025</div>
-                                <div class="up-med-item__status" style="color:var(--coral)">Good</div>
-                            </div>
-                        </div>
-
-                        <button class="up-view-btn">
-                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
-                                <polyline points="14 2 14 8 20 8" />
+                            Appointments
+                            <span class="up-tab-count">{{ $bookings->count() }}</span>
+                        </button>
+                        <button class="up-tab" onclick="switchTab('settings')" id="tab-settings">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="3" />
+                                <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z" />
                             </svg>
-                            View Complete Medical History
+                            Settings
                         </button>
                     </div>
-                </div>
 
 
-                <!-- ── TAB: PRESCRIPTIONS ── -->
-                <div id="content-prescriptions" class="up-tab-content">
-                    <div class="up-appt-wrap">
-                        <div class="up-rx-list">
-                            <div class="up-rx-item">
-                                <div class="up-rx-ico" style="background:var(--rose-lt)">💊</div>
-                                <div>
-                                    <div class="up-rx-name">Amlodipine 5mg</div>
-                                    <div class="up-rx-dose">1 tablet daily — Morning &bull; Dr. Priya Sharma</div>
-                                </div>
-                                <span class="up-rx-status up-rx-status--active">Active</span>
+                    {{-- ── TAB: APPOINTMENTS ── --}}
+                    <div id="content-appointments" class="up-tab-content active">
+                        <div class="up-appt-wrap">
+
+                            <div class="up-appt-filters">
+                                <button class="up-filter-btn active" onclick="filterAppts(this, 'all')">
+                                    All <span class="up-filter-count" id="count-all">{{ $bookings->count() }}</span>
+                                </button>
+                                <button class="up-filter-btn" onclick="filterAppts(this, 'Upcoming')">
+                                    Upcoming <span class="up-filter-count" id="count-upcoming">{{ $bookings->where('status', 'Upcoming')->count() }}</span>
+                                </button>
+                                <button class="up-filter-btn" onclick="filterAppts(this, 'Completed')">
+                                    Completed <span class="up-filter-count" id="count-completed">{{ $bookings->where('status', 'Completed')->count() }}</span>
+                                </button>
+                                <button class="up-filter-btn" onclick="filterAppts(this, 'Cancelled')">
+                                    Cancelled <span class="up-filter-count" id="count-cancelled">{{ $bookings->where('status', 'Cancelled')->count() }}</span>
+                                </button>
                             </div>
-                            <div class="up-rx-item">
-                                <div class="up-rx-ico" style="background:var(--mint-lt)">🌿</div>
-                                <div>
-                                    <div class="up-rx-name">Metformin 500mg</div>
-                                    <div class="up-rx-dose">2 tablets daily — After meals &bull; Dr. Arjun Rao</div>
-                                </div>
-                                <span class="up-rx-status up-rx-status--active">Active</span>
+
+                            @if($bookings->isEmpty())
+                            <div class="up-appt-empty">
+                                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" opacity=".3">
+                                    <rect x="3" y="4" width="18" height="18" rx="3" />
+                                    <path d="M16 2v4M8 2v4M3 10h18" />
+                                </svg>
+                                <p>No appointments found</p>
                             </div>
-                            <div class="up-rx-item">
-                                <div class="up-rx-ico" style="background:var(--p-lt)">💉</div>
-                                <div>
-                                    <div class="up-rx-name">Vitamin D3 60K IU</div>
-                                    <div class="up-rx-dose">1 capsule weekly &bull; Dr. Arjun Rao</div>
-                                </div>
-                                <span class="up-rx-status up-rx-status--active">Active</span>
+                            @else
+                            <div class="up-appt-table-wrap">
+                                <table class="up-appt-table">
+                                    <thead>
+                                        <tr>
+                                            <th>OPD / Test / Doctor</th>
+                                            <th>Date &amp; Time</th>
+                                            <th>Visit</th>
+                                            <th>Status</th>
+                                            <th>Location</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="apptTableBody">
+
+                                        @foreach($bookings as $index => $booking)
+                                        @php
+                                        $status = $booking->status ?? 'Upcoming';
+                                        $statusMap = [
+                                        'Upcoming' => ['class' => 'up-status--upcoming', 'label' => 'Upcoming'],
+                                        'Completed' => ['class' => 'up-status--done', 'label' => 'Completed'],
+                                        'Cancelled' => ['class' => 'up-status--cancelled','label' => 'Cancelled'],
+                                        ];
+                                        $statusInfo = $statusMap[$status] ?? ['class' => 'up-status--upcoming', 'label' => $status];
+                                        @endphp
+
+                                        <tr class="appt-row" data-status="{{ $status }}">
+
+
+                                            <td>
+                                                @if ($booking->clinic_type === 'OPD' && $booking->doctor)
+                                                <div class="up-appt-doc">
+                                                    <div class="up-appt-av">{{ strtoupper(substr($booking->doctor->doctor_name, 0, 1)) }}{{ strtoupper(substr(strstr($booking->doctor->doctor_name, ' '), 1, 1)) }}</div>
+                                                    <div>
+                                                        <div class="up-appt-dname">Dr. {{ $booking->doctor->doctor_name }}</div>
+                                                        <div class="up-appt-dname" style="color: red;">{{ $booking->doctor->doctor_specialist }}</div>
+                                                        <div class="up-appt-subname" style="color: #5E807F;">{{ $booking->opdContact->clinic_name }}</div>
+                                                    </div>
+                                                </div>
+
+                                                @elseif ($booking->clinic_type === 'Pathology' && $booking->test)
+                                                <div class="up-appt-doc">
+                                                    <div class="up-appt-av">{{ strtoupper(substr($booking->test->test_name, 0, 1)) }}{{ strtoupper(substr(strstr($booking->test->test_name, ' '), 1, 1)) }}</div>
+                                                    <div>
+                                                        <div class="up-appt-dname">{{ $booking->test->test_name }}</div>
+                                                        <div class="up-appt-dname" style="color: green;">{{ $booking->test->test_type }}</div>
+                                                        <div class="up-appt-subname" style="color: #5E807F;">{{ $booking->pathologyContact->clinic_name }}</div>
+                                                    </div>
+                                                </div>
+
+                                                @elseif ($booking->clinic_type === 'Doctor' && $booking->doctorContact)
+                                                <div class="up-appt-doc">
+                                                    <div class="up-appt-av">{{ strtoupper(substr($booking->doctorContact->partner_doctor_name, 0, 1)) }}{{ strtoupper(substr(strstr($booking->doctorContact->partner_doctor_name, ' '), 1, 1)) }}</div>
+                                                    <div>
+                                                        <div class="up-appt-dname">Dr. {{ $booking->doctorContact->partner_doctor_name }}</div>
+                                                        <div class="up-appt-dname" style="color: #1B9AAA;">{{ $booking->doctorContact->partner_doctor_specialist }}</div>
+                                                    </div>
+                                                </div>
+                                                @endif
+                                            </td>
+
+
+                                            <td>{{ \Carbon\Carbon::parse($booking->booking_date)->format('d M Y') }}<br><span style="color:var(--muted);font-size:.75rem">{{ \Carbon\Carbon::parse($booking->booking_time)->format('h:i A') }}</span></td>
+
+
+                                            <td><span style="font-size:.74rem;font-weight:700;color:var(--p); text-transform:capitalize">{{ $booking->visit_mode }}</span></td>
+
+
+                                            <td>
+                                                <span class="up-status {{ $statusInfo['class'] }}">
+                                                    <span class="dot"></span>{{ $statusInfo['label'] }}
+                                                </span>
+                                            </td>
+
+
+                                            <td>
+                                                @if ($booking->clinic_type === 'OPD' && $booking->doctor)
+                                                <a href="{{$booking->opdContact->clinic_google_map_link}}" target="_blank" class="up-action-done">
+                                                    Map Link
+                                                </a>
+                                                @elseif ($booking->clinic_type === 'Pathology' && $booking->test)
+                                                <a href="{{$booking->pathologyContact->clinic_google_map_link}}" target="_blank" class="up-action-done">
+                                                    Map Link
+                                                </a>
+                                                @elseif ($booking->clinic_type === 'Doctor' && $booking->doctorContact)
+                                                <a href="{{$booking->doctorContact->partner_doctor_google_map_link}}" target="_blank" class="up-action-done">
+                                                    Map Link
+                                                </a>
+                                                @endif
+                                            </td>
+
+                                        </tr>
+                                        @endforeach
+
+                                    </tbody>
+                                </table>
                             </div>
-                            <div class="up-rx-item">
-                                <div class="up-rx-ico" style="background:var(--amber-lt)">🔬</div>
-                                <div>
-                                    <div class="up-rx-name">Pantoprazole 40mg</div>
-                                    <div class="up-rx-dose">1 tablet before breakfast &bull; Dr. Neha Khan</div>
-                                </div>
-                                <span class="up-rx-status up-rx-status--active">Active</span>
-                            </div>
-                            <div class="up-rx-item" style="opacity:.6">
-                                <div class="up-rx-ico" style="background:var(--border)">💊</div>
-                                <div>
-                                    <div class="up-rx-name">Azithromycin 500mg</div>
-                                    <div class="up-rx-dose">3-day course — Completed &bull; Dr. Ritu Gupta</div>
-                                </div>
-                                <span class="up-rx-status up-rx-status--done">Completed</span>
-                            </div>
-                            <div class="up-rx-item" style="opacity:.6">
-                                <div class="up-rx-ico" style="background:var(--border)">🌿</div>
-                                <div>
-                                    <div class="up-rx-name">Cetirizine 10mg</div>
-                                    <div class="up-rx-dose">As needed for allergy &bull; Dr. Suresh Mehta</div>
-                                </div>
-                                <span class="up-rx-status up-rx-status--done">Completed</span>
-                            </div>
+                            @endif
+
                         </div>
                     </div>
-                </div>
 
 
-                <!-- ── TAB: SETTINGS ── -->
-                <div id="content-settings" class="up-tab-content">
-                    <div class="up-settings">
-                        <div class="up-setting-row">
-                            <div class="up-setting-left">
-                                <div class="up-setting-ico" style="background:var(--p-lt);color:var(--p)">
-                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <path d="M22 17H2a3 3 0 000 6h20a3 3 0 000-6zM12 11V3m0 0L8 7m4-4l4 4" />
-                                    </svg>
-                                </div>
-                                <div>
-                                    <div class="up-setting-name">Email Notifications</div>
-                                    <div class="up-setting-desc">Appointment reminders & health tips</div>
-                                </div>
+                    <!-- ── TAB: SETTINGS ── -->
+                    <div id="content-settings" class="up-tab-content">
+                        <div class="up-settings">
+
+                            @if(session('password_success'))
+                            <div class="up-pwd-alert up-pwd-alert--success">
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                    <polyline points="20 6 9 17 4 12" />
+                                </svg>
+                                {{ session('password_success') }}
                             </div>
-                            <div class="up-toggle on" onclick="this.classList.toggle('on')"></div>
-                        </div>
-                        <div class="up-setting-row">
-                            <div class="up-setting-left">
-                                <div class="up-setting-ico" style="background:var(--mint-lt);color:var(--mint)">
-                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <path d="M22 16.92v3a2 2 0 01-2.18 2A19.79 19.79 0 0111.19 19a19.5 19.5 0 01-5-5A19.79 19.79 0 012.12 5.18 2 2 0 014 3h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 10.91A16 16 0 0014 16.91l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 18v1h-.08z" />
-                                    </svg>
-                                </div>
-                                <div>
-                                    <div class="up-setting-name">SMS Alerts</div>
-                                    <div class="up-setting-desc">Get SMS for appointment updates</div>
-                                </div>
+                            @endif
+
+                            @if(session('password_error'))
+                            <div class="up-pwd-alert up-pwd-alert--error">
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                    <circle cx="12" cy="12" r="10" />
+                                    <line x1="12" y1="8" x2="12" y2="12" />
+                                    <line x1="12" y1="16" x2="12.01" y2="16" />
+                                </svg>
+                                {{ session('password_error') }}
                             </div>
-                            <div class="up-toggle on" onclick="this.classList.toggle('on')"></div>
-                        </div>
-                        <div class="up-setting-row">
-                            <div class="up-setting-left">
-                                <div class="up-setting-ico" style="background:var(--amber-lt);color:var(--amber)">
-                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0" />
+                            @endif
+
+                            <form action="{{ route('dw.password.update') }}" method="POST" class="up-pwd-form">
+                                @csrf @method('PUT')
+
+                                <div class="up-pwd-header">
+                                    <div class="up-pwd-header__ico">
+                                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <rect x="3" y="11" width="18" height="11" rx="2" />
+                                            <path d="M7 11V7a5 5 0 0110 0v4" />
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <div class="up-pwd-header__title">Change Password</div>
+                                        <div class="up-pwd-header__sub">Keep your account secure with a strong password</div>
+                                    </div>
+                                </div>
+
+                                <div class="up-pwd-field">
+                                    <label>Current Password</label>
+                                    <div class="up-pwd-input-wrap">
+                                        <input type="password" name="current_password" id="pwdCurrent" placeholder="Enter current password" required>
+                                        <button type="button" class="up-pwd-eye" onclick="togglePwd('pwdCurrent', this)">
+                                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                                                <circle cx="12" cy="12" r="3" />
+                                            </svg>
+                                        </button>
+                                    </div>
+                                    @error('current_password')
+                                    <span class="up-pwd-err">{{ $message }}</span>
+                                    @enderror
+                                </div>
+
+                                <div class="up-pwd-field">
+                                    <label>New Password</label>
+                                    <div class="up-pwd-input-wrap">
+                                        <input type="password" name="password" id="pwdNew" placeholder="Enter new password" required oninput="checkPwdStrength(this.value)">
+                                        <button type="button" class="up-pwd-eye" onclick="togglePwd('pwdNew', this)">
+                                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                                                <circle cx="12" cy="12" r="3" />
+                                            </svg>
+                                        </button>
+                                    </div>
+                                    <div class="up-pwd-strength">
+                                        <div class="up-pwd-strength__bars">
+                                            <span id="pwdBar1" class="up-pwd-bar"></span>
+                                            <span id="pwdBar2" class="up-pwd-bar"></span>
+                                            <span id="pwdBar3" class="up-pwd-bar"></span>
+                                            <span id="pwdBar4" class="up-pwd-bar"></span>
+                                        </div>
+                                        <span id="pwdStrengthLabel" class="up-pwd-strength__label"></span>
+                                    </div>
+                                    @error('password')
+                                    <span class="up-pwd-err">{{ $message }}</span>
+                                    @enderror
+                                </div>
+
+                                <div class="up-pwd-field">
+                                    <label>Confirm New Password</label>
+                                    <div class="up-pwd-input-wrap">
+                                        <input type="password" name="password_confirmation" id="pwdConfirm" placeholder="Re-enter new password" required>
+                                        <button type="button" class="up-pwd-eye" onclick="togglePwd('pwdConfirm', this)">
+                                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                                                <circle cx="12" cy="12" r="3" />
+                                            </svg>
+                                        </button>
+                                    </div>
+                                    @error('password_confirmation')
+                                    <span class="up-pwd-err">{{ $message }}</span>
+                                    @enderror
+                                </div>
+
+                                <button type="submit" class="up-pwd-submit">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                        <polyline points="20 6 9 17 4 12" />
                                     </svg>
-                                </div>
-                                <div>
-                                    <div class="up-setting-name">Push Notifications</div>
-                                    <div class="up-setting-desc">Browser & app notifications</div>
-                                </div>
-                            </div>
-                            <div class="up-toggle" onclick="this.classList.toggle('on')"></div>
-                        </div>
-                        <div class="up-setting-row">
-                            <div class="up-setting-left">
-                                <div class="up-setting-ico" style="background:var(--violet-lt);color:var(--violet)">
-                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
-                                        <path d="M7 11V7a5 5 0 0110 0v4" />
-                                    </svg>
-                                </div>
-                                <div>
-                                    <div class="up-setting-name">Two-Factor Auth</div>
-                                    <div class="up-setting-desc">Extra security for your account</div>
-                                </div>
-                            </div>
-                            <div class="up-toggle on" onclick="this.classList.toggle('on')"></div>
-                        </div>
-                        <div class="up-setting-row">
-                            <div class="up-setting-left">
-                                <div class="up-setting-ico" style="background:var(--coral-lt);color:var(--coral)">
-                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-                                        <circle cx="12" cy="12" r="3" />
-                                    </svg>
-                                </div>
-                                <div>
-                                    <div class="up-setting-name">Profile Visibility</div>
-                                    <div class="up-setting-desc">Make profile visible to doctors</div>
-                                </div>
-                            </div>
-                            <div class="up-toggle on" onclick="this.classList.toggle('on')"></div>
-                        </div>
-                        <div class="up-setting-row">
-                            <div class="up-setting-left">
-                                <div class="up-setting-ico" style="background:var(--rose-lt);color:var(--rose)">
-                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <polyline points="3 6 5 6 21 6" />
-                                        <path d="M19 6l-1 14H6L5 6m5 0V4h4v2" />
-                                    </svg>
-                                </div>
-                                <div>
-                                    <div class="up-setting-name">Delete Account</div>
-                                    <div class="up-setting-desc">Permanently remove your data</div>
-                                </div>
-                            </div>
-                            <button style="padding:7px 16px;border-radius:100px;background:var(--rose-lt);color:var(--rose);border:none;font-size:.74rem;font-weight:800;cursor:pointer;">Delete</button>
+                                    Update Password
+                                </button>
+                            </form>
                         </div>
                     </div>
-                </div>
 
-            </div><!-- end tabs card -->
+                </div><!-- end tabs card -->
 
-        </div><!-- end main -->
+            </div>
 
-    </div><!-- end layout -->
-</div><!-- end wrap -->
+            <!-- end main -->
+
+        </div><!-- end layout -->
+    </div><!-- end wrap -->
 
 
-<!-- ════════════════════════════════
+    <!-- ════════════════════════════════
      PROFILE EDIT MODAL
 ════════════════════════════════ -->
-<div class="up-modal-overlay" id="profileModal" onclick="handleOverlayClick(event)">
-    <div class="up-modal">
-        <div class="up-modal__head">
-            <div class="up-modal__title">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" />
-                    <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" />
-                </svg>
-                Edit Profile
-            </div>
-            <button class="up-modal__close" onclick="closeModal()">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                    <line x1="18" y1="6" x2="6" y2="18" />
-                    <line x1="6" y1="6" x2="18" y2="18" />
-                </svg>
-            </button>
-        </div>
-        <form action="{{ route('user.profile.update', Auth::user()->id) }}" method="POST" enctype="multipart/form-data" class="up-modal__body">
-            @csrf
-
-            <!-- Avatar Upload -->
-            <div class="up-av-upload">
-                <div class="up-av-upload__prev">
-                    @if(Auth::user()->image)
-                    <img src="{{ asset('storage/' . Auth::user()->image) }}" alt="{{ Auth::user()->user_name }}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">
-                    @else
-                    {{ strtoupper(substr(Auth::user()->user_name, 0, 1)) }}{{ strtoupper(substr(strstr(Auth::user()->user_name, ' '), 1, 1)) }}
-                    @endif
-                </div>
-                <div class="up-av-upload__txt" style="cursor: pointer;">
-                    <input type="file" name="image" accept="image/png, image/jpeg" style="display:none;" id="avInput">
-                    <strong>Change Profile Photo</strong>
-                    <label for="avInput">Click to upload JPG or PNG (max 2MB)</label>
-                </div>
-            </div>
-
-            <div class="up-section-title">Personal Information</div>
-            <div class="up-form-row up-form-row--single">
-                <div class="up-field">
-                    <label>Full Name</label>
-                    <input type="text" value="{{ Auth::user()->user_name }}" name="user_name" placeholder="Full name">
-                </div>
-            </div>
-            <div class="up-form-row">
-                <div class="up-field">
-                    <label>Email Address</label>
-                    <input type="email" value="{{ Auth::user()->user_email }}" name="user_email" placeholder="Email">
-                </div>
-                <div class="up-field">
-                    <label>Phone Number</label>
-                    <input type="tel" value="{{ Auth::user()->user_mobile }}" name="user_mobile" placeholder="Phone">
-                </div>
-            </div>
-            <div class="up-form-row">
-                <div class="up-field">
-                    <label>Date of Birth</label>
-                    <input type="date" value="{{ Auth::user()->dob }}" name="dob">
-                </div>
-                <div class="up-field">
-                    <label>Gender</label>
-                    <select name="gender">
-                        <option value="" {{ !Auth::user()->gender ? 'selected' : '' }}>Choose Gender</option>
-                        <option value="Male" {{ Auth::user()->gender == 'Male'   ? 'selected' : '' }}>Male</option>
-                        <option value="Female" {{ Auth::user()->gender == 'Female' ? 'selected' : '' }}>Female</option>
-                        <option value="Other" {{ Auth::user()->gender == 'Other'  ? 'selected' : '' }}>Other</option>
-                    </select>
-                </div>
-            </div>
-            <div class="up-form-row up-form-row--single">
-                <div class="up-field">
-                    <label>Address</label>
-                    <input type="text" value="{{ Auth::user()->address }}" name="address" placeholder="Full address">
-                </div>
-            </div>
-
-            <div class="up-section-title">Medical Information</div>
-            <div class="up-form-row">
-                <div class="up-field">
-                    <label>Blood Group</label>
-                    <select name="blood_group">
-                        <option value="" {{ !Auth::user()->blood_group ? 'selected' : '' }}>Choose</option>
-                        <option value="A+" {{ Auth::user()->blood_group == 'A+' ? 'selected' : '' }}>A+</option>
-                        <option value="A-" {{ Auth::user()->blood_group == 'A-' ? 'selected' : '' }}>A-</option>
-                        <option value="B+" {{ Auth::user()->blood_group == 'B+' ? 'selected' : '' }}>B+</option>
-                        <option value="B-" {{ Auth::user()->blood_group == 'B-' ? 'selected' : '' }}>B-</option>
-                        <option value="O+" {{ Auth::user()->blood_group == 'O+' ? 'selected' : '' }}>O+</option>
-                        <option value="O-" {{ Auth::user()->blood_group == 'O-' ? 'selected' : '' }}>O-</option>
-                        <option value="AB+" {{ Auth::user()->blood_group == 'AB+' ? 'selected' : '' }}>AB+</option>
-                        <option value="AB-" {{ Auth::user()->blood_group == 'AB-' ? 'selected' : '' }}>AB-</option>
-                    </select>
-                </div>
-                <div class="up-field">
-                    <label>Height (cm)</label>
-                    <input type="number" value="{{ Auth::user()->height }}" name="height" placeholder="Height in cm">
-                </div>
-            </div>
-            <div class="up-form-row">
-                <div class="up-field">
-                    <label>Weight (kg)</label>
-                    <input type="number" value="{{ Auth::user()->weight }}" name="weight" placeholder="Weight in kg">
-                </div>
-                <div class="up-field">
-                    <label>Emergency Contact</label>
-                    <input type="tel" value="{{ Auth::user()->emergency_contact }}" name="emergency_contact" placeholder="Emergency phone">
-                </div>
-            </div>
-            <div class="up-form-row up-form-row--single">
-                <div class="up-field">
-                    <label>Known Allergies</label>
-                    <textarea name="allergies" placeholder="List any known allergies...">{{ Auth::user()->allergies }}</textarea>
-                </div>
-            </div>
-            <div class="up-form-row up-form-row--single">
-                <div class="up-field">
-                    <label>Chronic Conditions</label>
-                    <textarea name="chronic_conditions" placeholder="Any chronic health conditions...">{{ Auth::user()->chronic_conditions }}</textarea>
-                </div>
-            </div>
-
-            <div class="up-modal__foot">
-                <button class="up-btn-cancel" onclick="closeModal()">Cancel</button>
-                <button class="up-btn-save" type="submit">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                        <polyline points="20 6 9 17 4 12" />
+    <div class="up-modal-overlay" id="profileModal" onclick="handleOverlayClick(event)">
+        <div class="up-modal">
+            <div class="up-modal__head">
+                <div class="up-modal__title">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" />
+                        <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" />
                     </svg>
-                    Save Changes
+                    Edit Profile
+                </div>
+                <button class="up-modal__close" onclick="closeModal()">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <line x1="18" y1="6" x2="6" y2="18" />
+                        <line x1="6" y1="6" x2="18" y2="18" />
+                    </svg>
                 </button>
             </div>
+            <form action="{{ route('user.profile.update', Auth::user()->id) }}" method="POST" enctype="multipart/form-data" class="up-modal__body">
+                @csrf
 
-        </form>
+                <!-- Avatar Upload -->
+                <div class="up-av-upload">
+                    <div class="up-av-upload__prev">
+                        @if(Auth::user()->image)
+                        <img src="{{ asset('storage/' . Auth::user()->image) }}" alt="{{ Auth::user()->user_name }}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">
+                        @else
+                        {{ strtoupper(substr(Auth::user()->user_name, 0, 1)) }}{{ strtoupper(substr(strstr(Auth::user()->user_name, ' '), 1, 1)) }}
+                        @endif
+                    </div>
+                    <div class="up-av-upload__txt" style="cursor: pointer;">
+                        <input type="file" name="image" accept="image/png, image/jpeg" style="display:none;" id="avInput">
+                        <strong>Change Profile Photo</strong>
+                        <label for="avInput">Click to upload JPG or PNG (max 2MB)</label>
+                    </div>
+                </div>
+
+                <div class="up-section-title">Personal Information</div>
+                <div class="up-form-row up-form-row--single">
+                    <div class="up-field">
+                        <label>Full Name</label>
+                        <input type="text" value="{{ Auth::user()->user_name }}" name="user_name" placeholder="Full name">
+                    </div>
+                </div>
+                <div class="up-form-row">
+                    <div class="up-field">
+                        <label>Email Address</label>
+                        <input type="email" value="{{ Auth::user()->user_email }}" name="user_email" placeholder="Email">
+                    </div>
+                    <div class="up-field">
+                        <label>Phone Number</label>
+                        <input type="tel" value="{{ Auth::user()->user_mobile }}" name="user_mobile" placeholder="Phone">
+                    </div>
+                </div>
+                <div class="up-form-row">
+                    <div class="up-field">
+                        <label>Date of Birth</label>
+                        <input type="date" value="{{ Auth::user()->dob }}" name="dob">
+                    </div>
+                    <div class="up-field">
+                        <label>Gender</label>
+                        <select name="gender">
+                            <option value="" {{ !Auth::user()->gender ? 'selected' : '' }}>Choose Gender</option>
+                            <option value="Male" {{ Auth::user()->gender == 'Male'   ? 'selected' : '' }}>Male</option>
+                            <option value="Female" {{ Auth::user()->gender == 'Female' ? 'selected' : '' }}>Female</option>
+                            <option value="Other" {{ Auth::user()->gender == 'Other'  ? 'selected' : '' }}>Other</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="up-form-row up-form-row--single">
+                    <div class="up-field">
+                        <label>Address</label>
+                        <input type="text" value="{{ Auth::user()->address }}" name="address" placeholder="Full address">
+                    </div>
+                </div>
+
+                <div class="up-section-title">Medical Information</div>
+                <div class="up-form-row">
+                    <div class="up-field">
+                        <label>Blood Group</label>
+                        <select name="blood_group">
+                            <option value="" {{ !Auth::user()->blood_group ? 'selected' : '' }}>Choose</option>
+                            <option value="A+" {{ Auth::user()->blood_group == 'A+' ? 'selected' : '' }}>A+</option>
+                            <option value="A-" {{ Auth::user()->blood_group == 'A-' ? 'selected' : '' }}>A-</option>
+                            <option value="B+" {{ Auth::user()->blood_group == 'B+' ? 'selected' : '' }}>B+</option>
+                            <option value="B-" {{ Auth::user()->blood_group == 'B-' ? 'selected' : '' }}>B-</option>
+                            <option value="O+" {{ Auth::user()->blood_group == 'O+' ? 'selected' : '' }}>O+</option>
+                            <option value="O-" {{ Auth::user()->blood_group == 'O-' ? 'selected' : '' }}>O-</option>
+                            <option value="AB+" {{ Auth::user()->blood_group == 'AB+' ? 'selected' : '' }}>AB+</option>
+                            <option value="AB-" {{ Auth::user()->blood_group == 'AB-' ? 'selected' : '' }}>AB-</option>
+                        </select>
+                    </div>
+                    <div class="up-field">
+                        <label>Height (cm)</label>
+                        <input type="number" value="{{ Auth::user()->height }}" name="height" placeholder="Height in cm">
+                    </div>
+                </div>
+                <div class="up-form-row">
+                    <div class="up-field">
+                        <label>Weight (kg)</label>
+                        <input type="number" value="{{ Auth::user()->weight }}" name="weight" placeholder="Weight in kg">
+                    </div>
+                    <div class="up-field">
+                        <label>Emergency Contact</label>
+                        <input type="tel" value="{{ Auth::user()->emergency_contact }}" name="emergency_contact" placeholder="Emergency phone">
+                    </div>
+                </div>
+                <div class="up-form-row up-form-row--single">
+                    <div class="up-field">
+                        <label>Known Allergies</label>
+                        <textarea name="allergies" placeholder="List any known allergies...">{{ Auth::user()->allergies }}</textarea>
+                    </div>
+                </div>
+                <div class="up-form-row up-form-row--single">
+                    <div class="up-field">
+                        <label>Chronic Conditions</label>
+                        <textarea name="chronic_conditions" placeholder="Any chronic health conditions...">{{ Auth::user()->chronic_conditions }}</textarea>
+                    </div>
+                </div>
+
+                <div class="up-modal__foot">
+                    <button class="up-btn-cancel" onclick="closeModal()">Cancel</button>
+                    <button class="up-btn-save" type="submit">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                            <polyline points="20 6 9 17 4 12" />
+                        </svg>
+                        Save Changes
+                    </button>
+                </div>
+
+            </form>
+        </div>
     </div>
-</div>
 
 
 
 
-<!-- {{-- ============================================================
+    <!-- {{-- ============================================================
      COMPLETE MODAL
 ============================================================ --}} -->
-<div class="complete-modal-overlay" id="completeModalOverlay" role="dialog" aria-modal="true" aria-labelledby="completeModalTitle">
-    <div class="complete-modal-box">
+    <div class="complete-modal-overlay" id="completeModalOverlay" role="dialog" aria-modal="true" aria-labelledby="completeModalTitle">
+        <div class="complete-modal-box">
 
-        <div class="complete-modal-icon-wrap">
-            <div class="complete-modal-icon-ring"></div>
-            <div class="complete-modal-icon-ring complete-modal-icon-ring--2"></div>
-            <div class="complete-modal-icon-circle">
-                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                    <path d="M20 6L9 17l-5-5" />
-                </svg>
-            </div>
-        </div>
-
-        <h2 class="complete-modal-title" id="completeModalTitle">Mark as Completed?</h2>
-        <p class="complete-modal-desc">
-            This will mark the appointment as <strong>Completed</strong>. This action cannot be undone.
-        </p>
-
-        <div class="complete-modal-appt-preview">
-            <i class="fa-solid fa-calendar-check"></i>
-            <span>Appointment #<strong id="completeApptId">—</strong></span>
-        </div>
-
-        <form
-            action=""
-            method="POST"
-            id="completeForm"
-            novalidate>
-            @csrf
-            <input type="hidden" name="status" value="Completed">
-
-            <div class="complete-modal-actions">
-                <button type="button" class="complete-modal-btn complete-modal-btn--cancel" onclick="closeCompleteModal()">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                        <path d="M18 6L6 18M6 6l12 12" />
-                    </svg>
-                    Cancel
-                </button>
-                <button type="submit" class="complete-modal-btn complete-modal-btn--confirm">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <div class="complete-modal-icon-wrap">
+                <div class="complete-modal-icon-ring"></div>
+                <div class="complete-modal-icon-ring complete-modal-icon-ring--2"></div>
+                <div class="complete-modal-icon-circle">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                         <path d="M20 6L9 17l-5-5" />
                     </svg>
-                    Yes, Complete It
-                </button>
+                </div>
             </div>
-        </form>
 
+            <h2 class="complete-modal-title" id="completeModalTitle">Mark as Completed?</h2>
+            <p class="complete-modal-desc">
+                This will mark the appointment as <strong>Completed</strong>. This action cannot be undone.
+            </p>
+
+            <div class="complete-modal-appt-preview">
+                <i class="fa-solid fa-calendar-check"></i>
+                <span>Appointment #<strong id="completeApptId">—</strong></span>
+            </div>
+
+            <form
+                action=""
+                method="POST"
+                id="completeForm"
+                novalidate>
+                @csrf
+                <input type="hidden" name="status" value="Completed">
+
+                <div class="complete-modal-actions">
+                    <button type="button" class="complete-modal-btn complete-modal-btn--cancel" onclick="closeCompleteModal()">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                            <path d="M18 6L6 18M6 6l12 12" />
+                        </svg>
+                        Cancel
+                    </button>
+                    <button type="submit" class="complete-modal-btn complete-modal-btn--confirm">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                            <path d="M20 6L9 17l-5-5" />
+                        </svg>
+                        Yes, Complete It
+                    </button>
+                </div>
+            </form>
+
+        </div>
     </div>
-</div>
 
 
-<!-- {{-- ============================================================
+    <!-- {{-- ============================================================
      CANCEL MODAL
 ============================================================ --}} -->
-<div class="cancel-modal-overlay" id="cancelModalOverlay" role="dialog" aria-modal="true" aria-labelledby="cancelModalTitle">
-    <div class="cancel-modal-box">
+    <div class="cancel-modal-overlay" id="cancelModalOverlay" role="dialog" aria-modal="true" aria-labelledby="cancelModalTitle">
+        <div class="cancel-modal-box">
 
-        <div class="cancel-modal-icon-wrap">
-            <div class="cancel-modal-icon-ring"></div>
-            <div class="cancel-modal-icon-ring cancel-modal-icon-ring--2"></div>
-            <div class="cancel-modal-icon-circle">
-                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                    <circle cx="12" cy="12" r="9"></circle>
-                    <line x1="5" y1="5" x2="19" y2="19"></line>
-                </svg>
-            </div>
-        </div>
-
-        <h2 class="cancel-modal-title" id="cancelModalTitle">Cancel Appointment?</h2>
-        <p class="cancel-modal-desc">
-            This will mark the appointment as <strong>Cancelled</strong>. The patient will be notified. This action cannot be undone.
-        </p>
-
-        <div class="cancel-modal-appt-preview">
-            <i class="fa-solid fa-calendar-xmark"></i>
-            <span>Appointment #<strong id="cancelApptId">—</strong></span>
-        </div>
-
-        <form
-            action=""
-            method="POST"
-            id="cancelForm"
-            novalidate>
-            @csrf
-            <input type="hidden" name="status" value="Cancelled">
-
-            <div class="cancel-modal-actions">
-                <button type="button" class="cancel-modal-btn cancel-modal-btn--keep" onclick="closeCancelModal()">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                        <path d="M18 6L6 18M6 6l12 12" />
-                    </svg>
-                    Cancel
-                </button>
-                <button type="submit" class="cancel-modal-btn cancel-modal-btn--confirm">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <div class="cancel-modal-icon-wrap">
+                <div class="cancel-modal-icon-ring"></div>
+                <div class="cancel-modal-icon-ring cancel-modal-icon-ring--2"></div>
+                <div class="cancel-modal-icon-circle">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                         <circle cx="12" cy="12" r="9"></circle>
                         <line x1="5" y1="5" x2="19" y2="19"></line>
                     </svg>
-                    Yes, Cancel It
-                </button>
+                </div>
             </div>
-        </form>
 
+            <h2 class="cancel-modal-title" id="cancelModalTitle">Cancel Appointment?</h2>
+            <p class="cancel-modal-desc">
+                This will mark the appointment as <strong>Cancelled</strong>. The patient will be notified. This action cannot be undone.
+            </p>
+
+            <div class="cancel-modal-appt-preview">
+                <i class="fa-solid fa-calendar-xmark"></i>
+                <span>Appointment #<strong id="cancelApptId">—</strong></span>
+            </div>
+
+            <form
+                action=""
+                method="POST"
+                id="cancelForm"
+                novalidate>
+                @csrf
+                <input type="hidden" name="status" value="Cancelled">
+
+                <div class="cancel-modal-actions">
+                    <button type="button" class="cancel-modal-btn cancel-modal-btn--keep" onclick="closeCancelModal()">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                            <path d="M18 6L6 18M6 6l12 12" />
+                        </svg>
+                        Cancel
+                    </button>
+                    <button type="submit" class="cancel-modal-btn cancel-modal-btn--confirm">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                            <circle cx="12" cy="12" r="9"></circle>
+                            <line x1="5" y1="5" x2="19" y2="19"></line>
+                        </svg>
+                        Yes, Cancel It
+                    </button>
+                </div>
+            </form>
+
+        </div>
     </div>
-</div>
 
 
 
-<script>
-    /* ── Modal ── */
-    function openModal() {
-        document.getElementById('profileModal').classList.add('open');
-        document.body.style.overflow = 'hidden';
-    }
+    <script>
+        /* ── Modal ── */
+        function openModal() {
+            document.getElementById('profileModal').classList.add('open');
+            document.body.style.overflow = 'hidden';
+        }
 
-    function closeModal() {
-        document.getElementById('profileModal').classList.remove('open');
-        document.body.style.overflow = '';
-    }
+        function closeModal() {
+            document.getElementById('profileModal').classList.remove('open');
+            document.body.style.overflow = '';
+        }
 
-    function handleOverlayClick(e) {
-        if (e.target === document.getElementById('profileModal')) closeModal();
-    }
-    document.addEventListener('keydown', e => {
-        if (e.key === 'Escape') closeModal();
-    });
-
-    /* ── Tabs ── */
-    function switchTab(name) {
-        document.querySelectorAll('.up-tab').forEach(t => t.classList.remove('active'));
-        document.querySelectorAll('.up-tab-content').forEach(c => c.classList.remove('active'));
-        document.getElementById('tab-' + name).classList.add('active');
-        document.getElementById('content-' + name).classList.add('active');
-    }
-
-    /* ── Filter appointments by status ── */
-    function filterAppts(clickedBtn, filter) {
-        // Update active button
-        document.querySelectorAll('.up-appt-filters .up-filter-btn').forEach(b => b.classList.remove('active'));
-        clickedBtn.classList.add('active');
-
-        // Show/hide rows
-        document.querySelectorAll('#apptTableBody .appt-row').forEach(row => {
-            if (filter === 'all') {
-                row.classList.remove('is-hidden');
-            } else {
-                const rowStatus = row.getAttribute('data-status');
-                row.classList.toggle('is-hidden', rowStatus !== filter);
-            }
+        function handleOverlayClick(e) {
+            if (e.target === document.getElementById('profileModal')) closeModal();
+        }
+        document.addEventListener('keydown', e => {
+            if (e.key === 'Escape') closeModal();
         });
 
-        // Show empty state if no visible rows
-        const visibleRows = document.querySelectorAll('#apptTableBody .appt-row:not(.is-hidden)');
-        const emptyEl = document.querySelector('.up-appt-empty');
-        const tableWrap = document.querySelector('.up-appt-table-wrap');
+        /* ── Tabs ── */
+        function switchTab(name) {
+            document.querySelectorAll('.up-tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.up-tab-content').forEach(c => c.classList.remove('active'));
+            document.getElementById('tab-' + name).classList.add('active');
+            document.getElementById('content-' + name).classList.add('active');
+        }
 
-        if (emptyEl && tableWrap) {
-            if (visibleRows.length === 0) {
-                tableWrap.style.display = 'none';
-                emptyEl.style.display = 'flex';
-                emptyEl.querySelector('p').textContent = 'No ' + (filter === 'all' ? '' : filter.toLowerCase() + ' ') + 'appointments found';
-            } else {
-                tableWrap.style.display = '';
-                emptyEl.style.display = 'none';
+        /* ── Filter appointments by status ── */
+        function filterAppts(clickedBtn, filter) {
+            // Update active button
+            document.querySelectorAll('.up-appt-filters .up-filter-btn').forEach(b => b.classList.remove('active'));
+            clickedBtn.classList.add('active');
+
+            // Show/hide rows
+            document.querySelectorAll('#apptTableBody .appt-row').forEach(row => {
+                if (filter === 'all') {
+                    row.classList.remove('is-hidden');
+                } else {
+                    const rowStatus = row.getAttribute('data-status');
+                    row.classList.toggle('is-hidden', rowStatus !== filter);
+                }
+            });
+
+            // Show empty state if no visible rows
+            const visibleRows = document.querySelectorAll('#apptTableBody .appt-row:not(.is-hidden)');
+            const emptyEl = document.querySelector('.up-appt-empty');
+            const tableWrap = document.querySelector('.up-appt-table-wrap');
+
+            if (emptyEl && tableWrap) {
+                if (visibleRows.length === 0) {
+                    tableWrap.style.display = 'none';
+                    emptyEl.style.display = 'flex';
+                    emptyEl.querySelector('p').textContent = 'No ' + (filter === 'all' ? '' : filter.toLowerCase() + ' ') + 'appointments found';
+                } else {
+                    tableWrap.style.display = '';
+                    emptyEl.style.display = 'none';
+                }
             }
         }
-    }
-</script>
+    </script>
 
 
-<script>
-    /* ── COMPLETE MODAL ── */
-    function openCompleteModal(bookingId) {
-        document.getElementById('completeForm').action = '/dw/profile/appointment-complete/' + bookingId;
-        document.getElementById('completeApptId').textContent = bookingId;
-        document.getElementById('completeModalOverlay').classList.add('is-open');
-        document.body.style.overflow = 'hidden';
-    }
-
-    function closeCompleteModal() {
-        document.getElementById('completeModalOverlay').classList.remove('is-open');
-        document.body.style.overflow = '';
-    }
-
-    /* ── CANCEL MODAL ── */
-    function openCancelModal(bookingId) {
-        document.getElementById('cancelForm').action = '/dw/profile/appointment-cancel/' + bookingId;
-        document.getElementById('cancelApptId').textContent = bookingId;
-        document.getElementById('cancelModalOverlay').classList.add('is-open');
-        document.body.style.overflow = 'hidden';
-    }
-
-    function closeCancelModal() {
-        document.getElementById('cancelModalOverlay').classList.remove('is-open');
-        document.getElementById('cancelReason').value = '';
-        document.body.style.overflow = '';
-    }
-
-    /* ── CLOSE ON BACKDROP CLICK ── */
-    document.getElementById('completeModalOverlay').addEventListener('click', function(e) {
-        if (e.target === this) closeCompleteModal();
-    });
-    document.getElementById('cancelModalOverlay').addEventListener('click', function(e) {
-        if (e.target === this) closeCancelModal();
-    });
-
-    /* ── CLOSE ON ESCAPE KEY ── */
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape') {
-            closeCompleteModal();
-            closeCancelModal();
+    <script>
+        /* ── COMPLETE MODAL ── */
+        function openCompleteModal(bookingId) {
+            document.getElementById('completeForm').action = '/dw/profile/appointment-complete/' + bookingId;
+            document.getElementById('completeApptId').textContent = bookingId;
+            document.getElementById('completeModalOverlay').classList.add('is-open');
+            document.body.style.overflow = 'hidden';
         }
-    });
-</script>
+
+        function closeCompleteModal() {
+            document.getElementById('completeModalOverlay').classList.remove('is-open');
+            document.body.style.overflow = '';
+        }
+
+        /* ── CANCEL MODAL ── */
+        function openCancelModal(bookingId) {
+            document.getElementById('cancelForm').action = '/dw/profile/appointment-cancel/' + bookingId;
+            document.getElementById('cancelApptId').textContent = bookingId;
+            document.getElementById('cancelModalOverlay').classList.add('is-open');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeCancelModal() {
+            document.getElementById('cancelModalOverlay').classList.remove('is-open');
+            document.getElementById('cancelReason').value = '';
+            document.body.style.overflow = '';
+        }
+
+        /* ── CLOSE ON BACKDROP CLICK ── */
+        document.getElementById('completeModalOverlay').addEventListener('click', function(e) {
+            if (e.target === this) closeCompleteModal();
+        });
+        document.getElementById('cancelModalOverlay').addEventListener('click', function(e) {
+            if (e.target === this) closeCancelModal();
+        });
+
+        /* ── CLOSE ON ESCAPE KEY ── */
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeCompleteModal();
+                closeCancelModal();
+            }
+        });
+    </script>
+
+    <script>
+        function togglePwd(id, btn) {
+            const input = document.getElementById(id);
+            const isText = input.type === 'text';
+            input.type = isText ? 'password' : 'text';
+            btn.classList.toggle('active', !isText);
+        }
+
+        function checkPwdStrength(val) {
+            const bars = [1, 2, 3, 4].map(i => document.getElementById('pwdBar' + i));
+            const label = document.getElementById('pwdStrengthLabel');
+            const colors = {
+                1: '#e53e3e',
+                2: '#f59e0b',
+                3: '#3b82f6',
+                4: '#10b981'
+            };
+            const labels = {
+                1: 'Weak',
+                2: 'Fair',
+                3: 'Good',
+                4: 'Strong'
+            };
+
+            let score = 0;
+            if (val.length >= 8) score++;
+            if (/[A-Z]/.test(val)) score++;
+            if (/[0-9]/.test(val)) score++;
+            if (/[^A-Za-z0-9]/.test(val)) score++;
+
+            bars.forEach((b, i) => {
+                b.style.background = i < score ? colors[score] : '#e8ecf4';
+            });
+            label.textContent = val.length ? labels[score] || '' : '';
+            label.style.color = colors[score] || '#aaa';
+        }
+    </script>
 
 
-@endsection
+    @endsection

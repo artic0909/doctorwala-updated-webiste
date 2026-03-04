@@ -128,9 +128,6 @@ Route::middleware(['auth:dwuser', 'verified'])->group(function () {
     // Route to generate medical card---------------------------------------------------------------------------------------------------------------->
     Route::post('/dw/generate-medical-card', [DwUserController::class, 'generateMedicalCard'])->name('dw.generate.medical-card');
 
-    // Route to update the password---------------------------------------------------------------------------------------------------------------->
-    Route::post('/dw/user-password-update', [ProfileEditController::class, 'updatePassword'])->name('user.password.update');
-
 
 
 
@@ -143,9 +140,20 @@ Route::middleware(['auth:dwuser', 'verified'])->group(function () {
 
     // Profile & Medical Card
     Route::get('/dw/profile', [ProfileEditController::class, 'userProfile'])->name('dw.profile');
+    Route::put('/dw/password/update', [ProfileEditController::class, 'updatePassword'])->name('dw.password.update');
     Route::get('/dw/medical-history', [ProfileEditController::class, 'medicalHistory'])->name('dw.medical-history');
     Route::post('/dw/medical-history/add', [ProfileEditController::class, 'addMedicalHistory'])->name('dw.medical-history.add');
     Route::delete('/dw/medical-history/{id}', [ProfileEditController::class, 'destroy'])->name('dw.medical-history.destroy');
+    Route::put('/dw/medical-history/{id}/update', [ProfileEditController::class, 'editMecicalHistory'])->name('dw.medical-history.update');
+    Route::get('/dw/medical-history/{id}/files', [ProfileEditController::class, 'viewReportImagesOrPdf'])->name('dw.medical-history.view');
+    Route::post('/dw/vitals/add',[ProfileEditController::class, 'addVitals'])->name('dw.vitals.add');
+    Route::put('/dw/vitals/{id}/update',[ProfileEditController::class, 'editVitals'])->name('dw.vitals.update');
+
+    Route::get('/dw/notifications', [ProfileEditController::class, 'notification'])->name('dw.notification');
+    Route::patch('/dw/notification/{id}/accept',        [ProfileEditController::class, 'acceptRequest'])->name('dw.notification.accept');
+    Route::patch('/dw/notification/{id}/reject',        [ProfileEditController::class, 'rejectRequest'])->name('dw.notification.reject');
+    Route::patch('/dw/notification/{id}/permission-off',[ProfileEditController::class, 'permissionOffRequest'])->name('dw.notification.permission.off');
+    Route::patch('/dw/notification/{id}/permission-on',[ProfileEditController::class, 'permissionOnRequest'])->name('dw.notification.permission.on');
 
     // Status Change of appointment
     Route::post('/dw/profile/appointment-complete/{id}', [ProfileEditController::class, 'updatePatientEnquiryStatusIntoComplete'])->name('dw.appointment.complete');

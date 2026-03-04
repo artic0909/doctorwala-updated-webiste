@@ -7,6 +7,330 @@
 <head>
     <link rel="stylesheet" href="{{ asset('./css/user-profile.css') }}">
     <style>
+        .vm-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, .52);
+            backdrop-filter: blur(5px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+        }
+
+        .vm-overlay.active {
+            display: flex;
+        }
+
+        .vm-modal {
+            background: #fff;
+            border-radius: 18px;
+            width: 100%;
+            max-width: 520px;
+            max-height: 92vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 24px 72px rgba(0, 0, 0, .18);
+            animation: vmUp .26s cubic-bezier(.34, 1.56, .64, 1);
+        }
+
+        @keyframes vmUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px) scale(.97);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        /* Head */
+        .vm-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 20px;
+            border-bottom: 1.5px solid #f0f2f8;
+            flex-shrink: 0;
+        }
+
+        .vm-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 15px;
+            font-weight: 700;
+            color: #1a1f36;
+        }
+
+        .vm-close {
+            width: 30px;
+            height: 30px;
+            border-radius: 8px;
+            border: none;
+            background: #f5f5f5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: #666;
+            transition: all .15s;
+        }
+
+        .vm-close:hover {
+            background: #fee2e2;
+            color: #e53e3e;
+        }
+
+        /* Body */
+        .vm-body {
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        /* Rows */
+        .vm-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+
+        .vm-row--single {
+            grid-template-columns: 1fr;
+        }
+
+        /* Fields */
+        .vm-field {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .vm-field label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 11.5px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: .05em;
+            color: #555;
+        }
+
+        .vm-field label em {
+            font-style: normal;
+            font-weight: 400;
+            color: #aaa;
+            font-size: 10.5px;
+            text-transform: none;
+            letter-spacing: 0;
+        }
+
+        .vm-field__icon {
+            width: 20px;
+            height: 20px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .vm-field__icon--red {
+            background: #fff0f0;
+            color: #e53e3e;
+        }
+
+        .vm-field__icon--blue {
+            background: #eff6ff;
+            color: #2563eb;
+        }
+
+        .vm-field__icon--orange {
+            background: #fff7ed;
+            color: #ea580c;
+        }
+
+        .vm-field__icon--teal {
+            background: #f0fdfa;
+            color: #0d9488;
+        }
+
+        .vm-field__icon--purple {
+            background: #faf5ff;
+            color: #9333ea;
+        }
+
+        .vm-field__icon--green {
+            background: #f0fdf4;
+            color: #16a34a;
+        }
+
+        .vm-field input[type="text"],
+        .vm-field input[type="number"] {
+            border: 1.5px solid #e8ecf4;
+            border-radius: 10px;
+            padding: 10px 13px;
+            font-size: 14px;
+            color: #1a1f36;
+            background: #fafbff;
+            outline: none;
+            transition: border-color .18s, box-shadow .18s;
+            width: 100%;
+            -moz-appearance: textfield;
+        }
+
+        .vm-field input::-webkit-outer-spin-button,
+        .vm-field input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+        }
+
+        .vm-field input:focus {
+            border-color: #4361ee;
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, .12);
+            background: #fff;
+        }
+
+        .vm-field input[readonly] {
+            background: #f7f9ff;
+            color: #4361ee;
+            font-weight: 600;
+            cursor: default;
+        }
+
+        .vm-select-wrap {
+            position: relative;
+        }
+
+        .vm-select-wrap select {
+            width: 100%;
+            padding: 10px 34px 10px 13px;
+            border: 1.5px solid #e8ecf4;
+            border-radius: 10px;
+            background: #fafbff;
+            font-size: 14px;
+            color: #1a1f36;
+            appearance: none;
+            outline: none;
+            cursor: pointer;
+            transition: border-color .18s;
+        }
+
+        .vm-select-wrap select:focus {
+            border-color: #4361ee;
+        }
+
+        .vm-select-wrap>svg {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            pointer-events: none;
+            color: #888;
+        }
+
+        /* BMI */
+        .vm-bmi-wrap {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .vm-bmi-wrap input {
+            flex: 1;
+        }
+
+        .vm-bmi-tag {
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 11.5px;
+            font-weight: 700;
+            white-space: nowrap;
+            display: none;
+        }
+
+        .vm-bmi-tag.underweight {
+            display: inline-flex;
+            background: #eff6ff;
+            color: #2563eb;
+        }
+
+        .vm-bmi-tag.normal {
+            display: inline-flex;
+            background: #f0fdf4;
+            color: #16a34a;
+        }
+
+        .vm-bmi-tag.overweight {
+            display: inline-flex;
+            background: #fff7ed;
+            color: #ea580c;
+        }
+
+        .vm-bmi-tag.obese {
+            display: inline-flex;
+            background: #fff0f0;
+            color: #e53e3e;
+        }
+
+        /* Footer */
+        .vm-foot {
+            padding: 14px 20px;
+            border-top: 1.5px solid #f0f2f8;
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            flex-shrink: 0;
+        }
+
+        .vm-btn-cancel {
+            padding: 9px 18px;
+            border-radius: 10px;
+            border: 1.5px solid #e8ecf4;
+            background: #fff;
+            color: #666;
+            font-size: 13.5px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background .14s;
+        }
+
+        .vm-btn-cancel:hover {
+            background: #f5f5f5;
+        }
+
+        .vm-btn-save {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 9px 20px;
+            border-radius: 10px;
+            border: none;
+            background: #4361ee;
+            color: #fff;
+            font-size: 13.5px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background .14s;
+        }
+
+        .vm-btn-save:hover {
+            background: #3451d1;
+        }
+
+        @media (max-width: 460px) {
+            .vm-row {
+                grid-template-columns: 1fr;
+            }
+        }
+
         .mh-modal-overlay {
             display: none;
             position: fixed;
@@ -988,6 +1312,345 @@
                 flex-direction: column-reverse;
             }
         }
+
+        /* ── Wrap ── */
+        .mht-wrap {
+            font-family: 'Outfit', 'Segoe UI', sans-serif;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+
+        /* ── Header ── */
+        .mht-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 18px 0 14px;
+            border-bottom: 2px solid #f0f2f8;
+            margin-bottom: 0;
+        }
+
+        .mht-header__left {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 15px;
+            font-weight: 700;
+            color: #1a1f36;
+        }
+
+        .mht-header__count {
+            background: #eef2ff;
+            color: #4361ee;
+            font-size: 11px;
+            font-weight: 600;
+            padding: 2px 8px;
+            border-radius: 20px;
+        }
+
+        .mht-add-btn {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 9px 16px;
+            border-radius: 10px;
+            border: none;
+            background: #4361ee;
+            color: #fff;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background .15s, transform .12s;
+        }
+
+        .mht-add-btn:hover {
+            background: #3451d1;
+            transform: translateY(-1px);
+        }
+
+        /* ── Alert ── */
+        .mht-alert {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 14px;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 500;
+            margin-top: 12px;
+        }
+
+        .mht-alert--success {
+            background: #ecfdf5;
+            color: #059669;
+            border: 1px solid #a7f3d0;
+        }
+
+        /* ── Table wrap ── */
+        .mht-table-wrap {
+            width: 100%;
+            overflow-x: auto;
+            border-radius: 14px;
+            border: 1.5px solid #f0f2f8;
+            margin-top: 16px;
+            box-shadow: 0 2px 20px rgba(67, 97, 238, .06);
+        }
+
+        /* ── Table ── */
+        .mht-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13.5px;
+            color: #2d3148;
+        }
+
+        .mht-table thead tr {
+            background: #f7f9ff;
+            border-bottom: 1.5px solid #e8ecf8;
+        }
+
+        .mht-table th {
+            padding: 13px 16px;
+            text-align: left;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: .06em;
+            color: #8892b0;
+            white-space: nowrap;
+        }
+
+        .mht-row {
+            border-bottom: 1px solid #f4f5fb;
+            transition: background .14s;
+            animation: mhtRowIn .3s ease both;
+            animation-delay: var(--row-delay, 0ms);
+        }
+
+        @keyframes mhtRowIn {
+            from {
+                opacity: 0;
+                transform: translateY(6px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .mht-row:last-child {
+            border-bottom: none;
+        }
+
+        .mht-row:hover {
+            background: #f7f9ff;
+        }
+
+        .mht-table td {
+            padding: 13px 16px;
+            vertical-align: middle;
+        }
+
+        .mht-td--num {
+            color: #b0b8d0;
+            font-weight: 600;
+            font-size: 12px;
+            width: 40px;
+        }
+
+        .mht-td--heading {
+            font-weight: 600;
+            color: #1a1f36;
+            max-width: 220px;
+        }
+
+        .mht-td--date {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            color: #5a6282;
+            white-space: nowrap;
+            font-size: 13px;
+        }
+
+        /* ── Badges ── */
+        .mht-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 11.5px;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .mht-badge--report {
+            background: #eff6ff;
+            color: #2563eb;
+        }
+
+        .mht-badge--prescription {
+            background: #fdf4ff;
+            color: #9333ea;
+        }
+
+        /* ── Files pill ── */
+        .mht-files-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 4px 10px;
+            border-radius: 20px;
+            background: #f0fdf4;
+            color: #16a34a;
+            font-size: 12px;
+            font-weight: 600;
+            text-decoration: none;
+            border: 1px solid #bbf7d0;
+            transition: background .14s;
+        }
+
+        .mht-files-pill:hover {
+            background: #dcfce7;
+        }
+
+        .mht-no-files {
+            color: #cbd5e1;
+            font-size: 13px;
+        }
+
+        /* ── Action buttons ── */
+        .mht-td--actions {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+        }
+
+        .mht-action-btn {
+            width: 30px;
+            height: 30px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all .15s;
+        }
+
+        .mht-action-btn--edit {
+            background: #eef2ff;
+            color: #4361ee;
+        }
+
+        .mht-action-btn--edit:hover {
+            background: #4361ee;
+            color: #fff;
+        }
+
+        .mht-action-btn--del {
+            background: #fff1f1;
+            color: #e53e3e;
+        }
+
+        .mht-action-btn--del:hover {
+            background: #e53e3e;
+            color: #fff;
+        }
+
+        /* ── Empty ── */
+        .mht-empty {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 56px 24px;
+            color: #c0c8e0;
+        }
+
+        .mht-empty p {
+            font-size: 14px;
+            margin: 0;
+        }
+
+        /* ── Pagination ── */
+        .mht-pagination {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            padding: 18px 0 4px;
+            flex-wrap: wrap;
+        }
+
+        .mht-page-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 34px;
+            height: 34px;
+            padding: 0 10px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #5a6282;
+            background: #f7f9ff;
+            border: 1.5px solid #e8ecf8;
+            text-decoration: none;
+            transition: all .15s;
+            cursor: pointer;
+        }
+
+        .mht-page-btn:hover {
+            background: #eef2ff;
+            border-color: #c7d2fe;
+            color: #4361ee;
+        }
+
+        .mht-page-btn--active {
+            background: #4361ee;
+            color: #fff;
+            border-color: #4361ee;
+            cursor: default;
+            box-shadow: 0 2px 10px rgba(67, 97, 238, .3);
+        }
+
+        .mht-page-btn--disabled {
+            opacity: .38;
+            cursor: default;
+            pointer-events: none;
+        }
+
+        .mht-page-ellipsis {
+            color: #b0b8d0;
+            font-size: 14px;
+            padding: 0 4px;
+        }
+
+        /* ── Responsive ── */
+        @media (max-width: 640px) {
+
+            .mht-table th:nth-child(4),
+            .mht-table td:nth-child(4) {
+                display: none;
+            }
+
+            /* hide date on tiny screens */
+            .mht-td--heading {
+                max-width: 120px;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+
+            .mht-header__left span.mht-header__count {
+                display: none;
+            }
+        }
     </style>
 </head>
 
@@ -1056,120 +1719,35 @@
                 <div class="up-qstat-grid">
                     <div class="up-qstat up-qstat--mint">
                         <div class="up-qstat__ico">💊</div>
-                        <div class="up-qstat__num">8</div>
+                        <div class="up-qstat__num">{{$noOfPrescription}}</div>
                         <div class="up-qstat__lbl">Prescriptions</div>
                     </div>
                     <div class="up-qstat up-qstat--coral">
                         <div class="up-qstat__ico">📋</div>
-                        <div class="up-qstat__num">5</div>
+                        <div class="up-qstat__num">{{$noOfReport}}</div>
                         <div class="up-qstat__lbl">Reports</div>
                     </div>
-                </div>
-            </div>
 
-            <!-- Profile Info -->
-            <div class="up-card">
-                <div class="up-card__head" style="padding-bottom:0">
-                    <div class="up-card__title">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <circle cx="12" cy="8" r="4" />
-                            <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" />
-                        </svg>
-                        Personal Info
-                    </div>
-                    <a href="{{route('dw.profile')}}" style="background:var(--p-lt);border:none;color:var(--p);border-radius:8px;padding:5px 10px;font-size:.7rem;font-weight:800;cursor:pointer;display:flex;align-items:center;gap:4px">
-                        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                            <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" />
-                            <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4z" />
-                        </svg>
-                        Edit
-                    </a>
-                </div>
-                <div class="up-info-list">
-                    <div class="up-info-row">
-                        <div class="up-info-ico">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <rect x="3" y="4" width="18" height="18" rx="2" />
-                                <path d="M16 2v4M8 2v4M3 10h18" />
-                            </svg>
-                        </div>
-                        <div>
-                            <div class="up-info-lbl">Date of Birth</div>
-                            <div class="up-info-val">{{ Auth::user()->dob ? date('M d, Y', strtotime(Auth::user()->dob)) : 'N/A' }}</div>
-                        </div>
-                    </div>
-                    <div class="up-info-row">
-                        <div class="up-info-ico">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <circle cx="12" cy="12" r="10" />
-                                <path d="M2 12h20M12 2a15.3 15.3 0 010 20M12 2a15.3 15.3 0 000 20" />
-                            </svg>
-                        </div>
-                        <div>
-                            <div class="up-info-lbl">Blood Group</div>
-                            <div class="up-info-val" style="color:var(--rose);font-size:.95rem">{{ Auth::user()->blood_group ?? 'N/A' }}</div>
-                        </div>
-                    </div>
-                    <div class="up-info-row">
-                        <div class="up-info-ico">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 11a19.79 19.79 0 01-3.07-8.67A2 2 0 012 .18h3a2 2 0 012 1.72c.12.96.36 1.9.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.09-1.09a2 2 0 012.11-.45c.91.34 1.85.58 2.81.7A2 2 0 0122 16.92z" />
-                            </svg>
-                        </div>
-                        <div>
-                            <div class="up-info-lbl">Phone</div>
-                            <div class="up-info-val">{{ Auth::user()->user_mobile ?? 'N/A' }}</div>
-                        </div>
-                    </div>
-                    <div class="up-info-row">
-                        <div class="up-info-ico">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z" />
-                                <circle cx="12" cy="10" r="3" />
-                            </svg>
-                        </div>
-                        <div>
-                            <div class="up-info-lbl">Location</div>
-                            <div class="up-info-val">{{ Auth::user()->user_city ?? 'N/A' }}</div>
-                        </div>
-                    </div>
-                    <div class="up-info-row">
-                        <div class="up-info-ico">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" />
-                                <circle cx="9" cy="7" r="4" />
-                                <path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" />
-                            </svg>
-                        </div>
-                        <div>
-                            <div class="up-info-lbl">Gender</div>
-                            <div class="up-info-val">{{ Auth::user()->gender ?? 'N/A' }}</div>
-                        </div>
-                    </div>
-                    <div class="up-info-row">
-                        <div class="up-info-ico">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z" />
-                            </svg>
-                        </div>
-                        <div>
-                            <div class="up-info-lbl">Allergies</div>
-                            <div class="up-info-val">{{ Auth::user()->allergies ?? 'None' }}</div>
-                        </div>
-                    </div>
-                    <div class="up-info-row">
-                        <div class="up-info-ico">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <rect x="2" y="3" width="20" height="14" rx="2" />
-                                <line x1="8" y1="21" x2="16" y2="21" />
-                                <line x1="12" y1="17" x2="12" y2="21" />
-                            </svg>
-                        </div>
-                        <div>
-                            <div class="up-info-lbl">Member Since</div>
-                            <div class="up-info-val">{{ Auth::user()->created_at ? date('M Y', strtotime(Auth::user()->created_at)) : 'N/A' }}</div>
-                        </div>
-                    </div>
+                    <button class="up-qstat up-qstat--coral" style="border: none;" onclick="openVitalsModal()">
+                        <div class="up-qstat__num">Add Vitals</div>
+                    </button>
+
+                    <button class="up-qstat up-qstat--mint" style="border: none;"
+                        onclick="openEditVitalsModal({{ Js::from([
+            'id'             => $vital->id,
+            'heart_rate'     => $vital->heart_rate,
+            'blood_pressure' => $vital->blood_pressure,
+            'temparature'    => $vital->temparature,
+            'spo'            => $vital->spo,
+            'blood_sugar'    => $vital->blood_sugar,
+            'weight'         => $vital->weight,
+            'height'         => $vital->height,
+            'bmi'            => $vital->bmi,
+            'blood_group'    => $vital->blood_group,
+        ]) }})">
+                        <div class="up-qstat__num">Edit Vitals</div>
+                    </button>
+
                 </div>
             </div>
 
@@ -1179,88 +1757,299 @@
         <!-- ═══════════════ MAIN ═══════════════ -->
         <div class="up-main">
 
-            <!-- MEDICAL VIRTUAL CARD -->
-            <div class="up-med-card">
-                <div class="up-med-card__shimmer"></div>
-                <div class="up-med-card__chip"></div>
-                <div class="up-med-card__wifi">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                        <path d="M5 12.55a11 11 0 0114.08 0M1.42 9a16 16 0 0121.16 0M8.53 16.11a6 6 0 016.95 0M12 20h.01" />
+            <div class="mht-wrap">
+
+                {{-- ── Flash messages ─────────────────────────────────────── --}}
+                @if(session('success'))
+                <div class="mht-alert mht-alert--success">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <polyline points="20 6 9 17 4 12" />
                     </svg>
+                    {{ session('success') }}
                 </div>
+                @endif
 
-                <div class="up-med-card__top">
-                    <div class="up-med-card__logo-wrap">
-                        <div class="up-med-card__logo-ico">
-                            <img src="{{ asset('./img/fav5.png') }}" alt="Doctorwala">
-                        </div>
-                        <div>
-                            <div class="up-med-card__brand">
-                                Doctorwala
-                                <span>MEDICAL CARD</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                {{-- ── Table ──────────────────────────────────────────────── --}}
+                <div class="mht-table-wrap">
+                    @if($histories->count())
+                    <table class="mht-table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Type</th>
+                                <th>Heading</th>
+                                <th>Date</th>
+                                <th>Files</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($histories as $i => $rec)
+                            <tr class="mht-row" style="--row-delay:{{ $i * 40 }}ms">
+                                <td class="mht-td--num">{{ $histories->firstItem() + $i }}</td>
 
-                <div class="up-med-card__mid">
-                    <div class="up-med-card__number">
-                        {{ Auth::user()->medical_card_no ?? 'DW** **** *01' }}
-                    </div>
-                </div>
+                                <td>
+                                    <span class="mht-badge mht-badge--{{ $rec->type }}">
+                                        @if($rec->type === 'report')
+                                        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                            <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
+                                            <polyline points="14 2 14 8 20 8" />
+                                        </svg>
+                                        Report
+                                        @else
+                                        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                            <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
+                                            <polyline points="9 22 9 12 15 12 15 22" />
+                                        </svg>
+                                        Prescription
+                                        @endif
+                                    </span>
+                                </td>
 
-                <div class="up-med-card__bottom">
-                    <div class="up-med-card__holder">
-                        <div class="up-med-card__field-lbl">Card Holder</div>
-                        <div class="up-med-card__field-val">{{ Auth::user()->user_name ?? 'N/A' }}</div>
-                    </div>
-                    <div class="up-med-card__meta">
-                        <div>
-                            <div class="up-med-card__field-lbl">Member ID</div>
-                            <div class="up-med-card__field-val">{{ Auth::user()->memberid ?? 'N/A' }}</div>
-                        </div>
-                        <div>
-                            <div class="up-med-card__field-lbl">Expiry Date</div>
-                            <div class="up-med-card__field-val">12/28</div>
-                        </div>
-                    </div>
-                </div>
+                                <td class="mht-td--heading" style="text-transform: capitalize;">{{ $rec->heading }}</td>
 
-                <div class="up-med-card__actions">
+                                <td class="mht-td--date">
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <rect x="3" y="4" width="18" height="18" rx="2" />
+                                        <line x1="16" y1="2" x2="16" y2="6" />
+                                        <line x1="8" y1="2" x2="8" y2="6" />
+                                        <line x1="3" y1="10" x2="21" y2="10" />
+                                    </svg>
+                                    {{ \Carbon\Carbon::parse($rec->date_of_report)->format('d M Y') }}
+                                </td>
 
-                    @if(!Auth::user()->medical_card_no)
-                    <form action="{{ route('dw.generate.medical-card') }}" method="POST" style="display:inline;">
-                        @csrf
-                        <button type="submit" class="up-med-card__btn up-med-card__btn--white">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
-                                <polyline points="14 2 14 8 20 8" />
-                            </svg>
-                            Create Medical Card
-                        </button>
-                    </form>
+                                <td class="mht-td--files">
+                                    @if($rec->images && count($rec->images))
+                                    <a href="{{ route('dw.medical-history.view', $rec->id) }}" class="mht-files-pill" title="View {{ count($rec->images) }} file(s)">
+                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66l-9.2 9.19a2 2 0 01-2.83-2.83l8.49-8.48" />
+                                        </svg>
+                                        {{ count($rec->images) }} file{{ count($rec->images) > 1 ? 's' : '' }}
+                                    </a>
+                                    @else
+                                    <span class="mht-no-files">—</span>
+                                    @endif
+                                </td>
+
+                                <td class="mht-td--actions">
+                                    {{-- Edit --}}
+                                    <button class="mht-action-btn mht-action-btn--edit"
+                                        onclick="openEditMhModal(
+        {{ $rec->id }},
+        '{{ $rec->type }}',
+        '{{ $rec->date_of_report->format('Y-m-d') }}',
+        '{{ htmlspecialchars(addslashes($rec->heading), ENT_QUOTES) }}',
+        {{ Js::from($rec->images ?? []) }}
+    )"
+                                        title="Edit">
+                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                            <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" />
+                                            <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" />
+                                        </svg>
+                                    </button>
+
+                                    {{-- Delete --}}
+                                    <form action="{{ route('dw.medical-history.destroy', $rec->id) }}" method="POST"
+                                        onsubmit="return confirm('Delete this record?')" style="display:inline;">
+                                        @csrf @method('DELETE')
+                                        <button type="submit" class="mht-action-btn mht-action-btn--del" title="Delete">
+                                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                                <polyline points="3 6 5 6 21 6" />
+                                                <path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6" />
+                                                <path d="M10 11v6M14 11v6" />
+                                                <path d="M9 6V4h6v2" />
+                                            </svg>
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
                     @else
-
-                    <a href="" class="up-med-card__btn up-med-card__btn--white" onclick="switchTab('history')">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <div class="mht-empty">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2">
                             <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
                             <polyline points="14 2 14 8 20 8" />
                         </svg>
-                        View Medical History
+                        <p>No medical records yet.</p>
+                        <button onclick="openMhModal()" class="mht-add-btn">Add your first record</button>
+                    </div>
+                    @endif
+                </div>
+
+                {{-- ── Pagination ──────────────────────────────────────────── --}}
+                @if($histories->lastPage() > 1)
+                <div class="mht-pagination">
+                    {{-- Prev --}}
+                    @if($histories->onFirstPage())
+                    <span class="mht-page-btn mht-page-btn--disabled">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                            <polyline points="15 18 9 12 15 6" />
+                        </svg>
+                    </span>
+                    @else
+                    <a href="{{ $histories->previousPageUrl() }}" class="mht-page-btn">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                            <polyline points="15 18 9 12 15 6" />
+                        </svg>
                     </a>
                     @endif
 
+                    {{-- Pages with ellipsis --}}
+                    @php
+                    $current = $histories->currentPage();
+                    $last = $histories->lastPage();
+                    $pages = [];
+                    // Always show 1
+                    $pages[] = 1;
+                    if ($current > 4) $pages[] = '...';
+                    for ($p = max(2, $current - 1); $p <= min($last - 1, $current + 1); $p++) $pages[]=$p;
+                        if ($current < $last - 3) $pages[]='...' ;
+                        // Always show last
+                        if ($last> 1) $pages[] = $last;
+                        @endphp
 
-                    <button class="up-med-card__btn up-med-card__btn--light">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <circle cx="18" cy="5" r="3" />
-                            <circle cx="6" cy="12" r="3" />
-                            <circle cx="18" cy="19" r="3" />
-                            <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
-                            <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
-                        </svg>
-                        Share
-                    </button>
+                        @foreach($pages as $page)
+                        @if($page === '...')
+                        <span class="mht-page-ellipsis">…</span>
+                        @elseif($page == $current)
+                        <span class="mht-page-btn mht-page-btn--active">{{ $page }}</span>
+                        @else
+                        <a href="{{ $histories->url($page) }}" class="mht-page-btn">{{ $page }}</a>
+                        @endif
+                        @endforeach
+
+                        {{-- Next --}}
+                        @if($histories->hasMorePages())
+                        <a href="{{ $histories->nextPageUrl() }}" class="mht-page-btn">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                <polyline points="9 18 15 12 9 6" />
+                            </svg>
+                        </a>
+                        @else
+                        <span class="mht-page-btn mht-page-btn--disabled">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                <polyline points="9 18 15 12 9 6" />
+                            </svg>
+                        </span>
+                        @endif
+                </div>
+                @endif
+            </div>
+
+            <!-- {{-- ════════════════ EDIT MODAL ════════════════ --}} -->
+            <div class="mh-modal-overlay" id="editMhModal" onclick="handleEditMhOverlay(event)">
+                <div class="mh-modal">
+                    <div class="mh-modal__head">
+                        <div class="mh-modal__title">
+                            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" />
+                                <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" />
+                            </svg>
+                            Edit Medical Record
+                        </div>
+                        <button class="mh-modal__close" onclick="closeEditMhModal()" type="button">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                <line x1="18" y1="6" x2="6" y2="18" />
+                                <line x1="6" y1="6" x2="18" y2="18" />
+                            </svg>
+                        </button>
+                    </div>
+
+                    <form id="editMhForm" action="" method="POST" enctype="multipart/form-data" class="mh-modal__body">
+                        @csrf
+                        @method('PUT')
+
+                        <input type="hidden" name="dw_user_id" value="{{ Auth::user()->id }}">
+
+                        {{-- deleted_images[] — populated by JS when user removes an existing file --}}
+                        <div id="editDeletedImagesInputs"></div>
+
+                        <div class="mh-form-row">
+                            <div class="mh-field">
+                                <label>Type <span class="mh-req">*</span></label>
+                                <div class="mh-select-wrap">
+                                    <select name="type" id="editMhType" required>
+                                        <option value="report">Medical Report</option>
+                                        <option value="prescription">Prescription</option>
+                                    </select>
+                                    <svg class="mh-select-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                        <polyline points="6 9 12 15 18 9" />
+                                    </svg>
+                                </div>
+                            </div>
+                            <div class="mh-field">
+                                <label>Date of Report <span class="mh-req">*</span></label>
+                                <input type="date" name="date_of_report" id="editMhDate" required max="{{ date('Y-m-d') }}">
+                            </div>
+                        </div>
+
+                        <div class="mh-form-row mh-form-row--single">
+                            <div class="mh-field">
+                                <label>Heading / Title <span class="mh-req">*</span></label>
+                                <input type="text" name="heading" id="editMhHeading" placeholder="e.g. Blood Test Report" required>
+                            </div>
+                        </div>
+
+                        {{-- ── Existing images ── --}}
+                        <div class="mh-form-row mh-form-row--single">
+                            <div class="mh-field">
+                                <label>
+                                    Existing Files
+                                    <span style="font-weight:400;color:#aaa;font-size:11px;"> — click ✕ to remove</span>
+                                </label>
+                                <div class="mh-preview-grid" id="editExistingGrid"></div>
+                                <p class="mh-upload-hint" id="editNoExistingMsg" style="display:none;">No existing files.</p>
+                            </div>
+                        </div>
+
+                        {{-- ── Add new images ── --}}
+                        <div class="mh-form-row mh-form-row--single">
+                            <div class="mh-field">
+                                <label>Add More Files <span style="font-weight:400;color:#999;">(optional)</span></label>
+                                <div class="mh-upload-sources">
+                                    <button type="button" class="mh-src-btn" onclick="triggerEditInput('camera')">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z" />
+                                            <circle cx="12" cy="13" r="4" />
+                                        </svg>
+                                        Camera
+                                    </button>
+                                    <button type="button" class="mh-src-btn" onclick="triggerEditInput('gallery')">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <rect x="3" y="3" width="18" height="18" rx="2" />
+                                            <circle cx="8.5" cy="8.5" r="1.5" />
+                                            <polyline points="21 15 16 10 5 21" />
+                                        </svg>
+                                        Gallery
+                                    </button>
+                                    <button type="button" class="mh-src-btn" onclick="triggerEditInput('file')">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M13 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V9z" />
+                                            <polyline points="13 2 13 9 20 9" />
+                                        </svg>
+                                        File
+                                    </button>
+                                </div>
+                                <input type="file" id="editInputCamera" name="new_images[]" accept="image/*" capture="environment" style="display:none;" onchange="handleEditFiles(this)">
+                                <input type="file" id="editInputGallery" name="new_images[]" accept="image/jpeg,image/png,image/webp" multiple style="display:none;" onchange="handleEditFiles(this)">
+                                <input type="file" id="editInputFile" name="new_images[]" accept="image/jpeg,image/png,image/webp,application/pdf" multiple style="display:none;" onchange="handleEditFiles(this)">
+                                <div class="mh-preview-grid" id="editNewPreviewGrid"></div>
+                                <p class="mh-upload-hint">Accepted: JPG, PNG, WEBP, PDF — max 5MB each</p>
+                            </div>
+                        </div>
+
+                        <div class="mh-modal__foot">
+                            <button type="button" class="mh-btn-cancel" onclick="closeEditMhModal()">Cancel</button>
+                            <button type="submit" class="mh-btn-save">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                    <polyline points="20 6 9 17 4 12" />
+                                </svg>
+                                Update Record
+                            </button>
+                        </div>
+                    </form>
                 </div>
             </div>
 
@@ -1274,251 +2063,587 @@
                         </svg>
                         Latest Vitals
                     </div>
-                    <span style="font-size:.7rem;color:var(--muted);font-weight:700">Updated: 20 Feb 2026</span>
+                    <span style="font-size:.7rem;color:var(--muted);font-weight:700">Updated: {{ \Carbon\Carbon::parse($vital->updated_at)->format('d M Y') }}</span>
                 </div>
                 <div class="up-vitals">
+                    <div class="up-vital up-qstat--coral" style="border-color:#fed7aa">
+                        <div class="up-vital__ico">🔴</div>
+                        <div class="up-vital__val" style="color:#c2410c">{{$vital->blood_group}}</div>
+                        <div class="up-vital__unit">mg/dL</div>
+                        <div class="up-vital__lbl">Blood Group</div>
+                    </div>
                     <div class="up-vital up-qstat--teal" style="border-color:#bae6fd">
                         <div class="up-vital__ico">❤️</div>
-                        <div class="up-vital__val" style="color:var(--p-dk)">72</div>
+                        <div class="up-vital__val" style="color:var(--p-dk)">{{$vital->heart_rate}}</div>
                         <div class="up-vital__unit">bpm</div>
                         <div class="up-vital__lbl">Heart Rate</div>
                     </div>
                     <div class="up-vital up-qstat--rose" style="border-color:#fecdd3;background:var(--rose-lt)">
                         <div class="up-vital__ico">🩸</div>
-                        <div class="up-vital__val" style="color:var(--rose)">120/80</div>
+                        <div class="up-vital__val" style="color:var(--rose)">{{$vital->blood_pressure}}</div>
                         <div class="up-vital__unit">mmHg</div>
                         <div class="up-vital__lbl">Blood Pressure</div>
                     </div>
                     <div class="up-vital up-qstat--mint" style="border-color:#a7f3d0">
                         <div class="up-vital__ico">🌡️</div>
-                        <div class="up-vital__val" style="color:#047857">98.4</div>
-                        <div class="up-vital__unit">°F</div>
+                        <div class="up-vital__val" style="color:#047857">{{$vital->temparature}}</div>
+                        <div class="up-vital__unit">°C</div>
                         <div class="up-vital__lbl">Temperature</div>
                     </div>
                     <div class="up-vital up-qstat--amber" style="border-color:#fde68a">
                         <div class="up-vital__ico">⚖️</div>
-                        <div class="up-vital__val" style="color:#b45309">72</div>
+                        <div class="up-vital__val" style="color:#b45309">{{$vital->weight}}</div>
                         <div class="up-vital__unit">kg</div>
                         <div class="up-vital__lbl">Weight</div>
                     </div>
-                    <div class="up-vital up-qstat--violet" style="border-color:#ddd6fe;background:var(--violet-lt)">
-                        <div class="up-vital__ico">🫁</div>
-                        <div class="up-vital__val" style="color:var(--violet)">98</div>
-                        <div class="up-vital__unit">SpO₂ %</div>
-                        <div class="up-vital__lbl">Oxygen</div>
+                    <div class="up-vital up-qstat--mint" style="border-color:#fde68a">
+                        <div class="up-vital__ico">📏</div>
+                        <div class="up-vital__val" style="color:#b45309">{{$vital->weight}}</div>
+                        <div class="up-vital__unit">cm</div>
+                        <div class="up-vital__lbl">Height</div>
                     </div>
                     <div class="up-vital up-qstat--coral" style="border-color:#fed7aa">
-                        <div class="up-vital__ico">🧪</div>
-                        <div class="up-vital__val" style="color:#c2410c">92</div>
-                        <div class="up-vital__unit">mg/dL</div>
-                        <div class="up-vital__lbl">Blood Sugar</div>
-                    </div>
-                </div>
-            </div>
+                        <div class="up-vital__ico">📊</div>
+                        <div class="up-vital__val" style="color:#c2410c">{{$vital->bmi}}</div>
+                        <div class="up-vital__unit">
+                            @if($vital->bmi < 18.5) Underweight
+                                @elseif($vital->bmi < 25) Normal
+                                    @elseif($vital->bmi < 30) Overweight
+                                        @else Obese
+                                        @endif
+                                        </div>
+                                        <div class="up-vital__lbl">BMI
+                                        </div>
+                        </div>
+                        <div class="up-vital up-qstat--violet" style="border-color:#ddd6fe;background:var(--violet-lt)">
+                            <div class="up-vital__ico">🫁</div>
+                            <div class="up-vital__val" style="color:var(--violet)">{{$vital->spo}}</div>
+                            <div class="up-vital__unit">SpO₂ %</div>
+                            <div class="up-vital__lbl">Oxygen</div>
+                        </div>
+                        <div class="up-vital up-qstat--amber" style="border-color:#fed7aa">
+                            <div class="up-vital__ico">🧪</div>
+                            <div class="up-vital__val" style="color:#c2410c">{{$vital->blood_sugar}}</div>
+                            <div class="up-vital__unit">mg/dL</div>
+                            <div class="up-vital__lbl">Blood Sugar</div>
+                        </div>
 
-        </div><!-- end main -->
-
-    </div><!-- end layout -->
-</div><!-- end wrap -->
-
-
-<!-- ════════════════════════════════
-    ADD MEDICAL HISTORY MODAL
-════════════════════════════════ -->
-<div class="mh-modal-overlay" id="medicalHistoryModal" onclick="handleMhOverlayClick(event)">
-    <div class="mh-modal">
-
-        <div class="mh-modal__head">
-            <div class="mh-modal__title">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
-                    <polyline points="14 2 14 8 20 8" />
-                    <line x1="12" y1="18" x2="12" y2="12" />
-                    <line x1="9" y1="15" x2="15" y2="15" />
-                </svg>
-                Add Medical Report / Prescription
-            </div>
-            <button class="mh-modal__close" onclick="closeMhModal()" type="button">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                    <line x1="18" y1="6" x2="6" y2="18" />
-                    <line x1="6" y1="6" x2="18" y2="18" />
-                </svg>
-            </button>
-        </div>
-
-        <form action="{{ route('dw.medical-history.add') }}" method="POST" enctype="multipart/form-data" class="mh-modal__body" id="medicalHistoryForm">
-            @csrf
-
-            {{-- Hidden user ID --}}
-            <input type="hidden" name="dw_user_id" value="{{ Auth::user()->id }}">
-
-            {{-- Type --}}
-            <div class="mh-form-row">
-                <div class="mh-field">
-                    <label>Type <span class="mh-req">*</span></label>
-                    <div class="mh-select-wrap">
-                        <select name="type" required>
-                            <option value="" disabled selected>Select type</option>
-                            <option value="report">Medical Report</option>
-                            <option value="prescription">Prescription</option>
-                        </select>
-                        <svg class="mh-select-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                            <polyline points="6 9 12 15 18 9" />
-                        </svg>
                     </div>
                 </div>
 
-                {{-- Date --}}
-                <div class="mh-field">
-                    <label>Date of Report <span class="mh-req">*</span></label>
-                    <input type="date" name="date_of_report" required max="{{ date('Y-m-d') }}">
-                </div>
             </div>
 
-            {{-- Heading --}}
-            <div class="mh-form-row mh-form-row--single">
-                <div class="mh-field">
-                    <label>Heading / Title <span class="mh-req">*</span></label>
-                    <input type="text" name="heading" placeholder="e.g. Blood Test Report – June 2025" required>
-                </div>
-            </div>
 
-            {{-- Images Upload --}}
-            <div class="mh-form-row mh-form-row--single">
-                <div class="mh-field">
-                    <label>Images <span class="mh-req">*</span></label>
+            <!-- end main -->
 
-                    {{-- Upload Source Buttons --}}
-                    <div class="mh-upload-sources">
-                        <button type="button" class="mh-src-btn" onclick="triggerMhInput('camera')" title="Take Photo">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z" />
-                                <circle cx="12" cy="13" r="4" />
-                            </svg>
-                            Camera
-                        </button>
-                        <button type="button" class="mh-src-btn" onclick="triggerMhInput('gallery')" title="Choose from Gallery">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <rect x="3" y="3" width="18" height="18" rx="2" />
-                                <circle cx="8.5" cy="8.5" r="1.5" />
-                                <polyline points="21 15 16 10 5 21" />
-                            </svg>
-                            Gallery
-                        </button>
-                        <button type="button" class="mh-src-btn" onclick="triggerMhInput('file')" title="Choose File">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M13 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V9z" />
-                                <polyline points="13 2 13 9 20 9" />
-                            </svg>
-                            PDF File
-                        </button>
-                    </div>
+        </div><!-- end layout -->
+    </div><!-- end wrap -->
 
-                    {{-- Hidden file inputs --}}
-                    <input type="file" id="mhInputCamera" name="images[]" accept="image/*" capture="environment" style="display:none;" onchange="handleMhFiles(this)">
-                    <input type="file" id="mhInputGallery" name="images[]" accept="image/jpeg,image/png,image/webp" multiple style="display:none;" onchange="handleMhFiles(this)">
-                    <input type="file" id="mhInputFile" name="images[]" accept="image/jpeg,image/png,image/webp,application/pdf" multiple style="display:none;" onchange="handleMhFiles(this)">
 
-                    {{-- Preview Grid --}}
-                    <div class="mh-preview-grid" id="mhPreviewGrid"></div>
+    <!-- {{-- ════════════════════════════════════════════════
+     ADD VITALS MODAL
+     ════════════════════════════════════════════════ --}} -->
 
-                    {{-- Add More (shown after first upload) --}}
-                    <button type="button" class="mh-add-more" id="mhAddMoreBtn" style="display:none;" onclick="showMhAddMoreOptions()">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                            <line x1="12" y1="5" x2="12" y2="19" />
-                            <line x1="5" y1="12" x2="19" y2="12" />
-                        </svg>
-                        Add More Images
-                    </button>
+    <div class="vm-overlay" id="vitalsModal" onclick="handleVmOverlay(event)">
+        <div class="vm-modal">
 
-                    {{-- Add More Source picker (hidden by default) --}}
-                    <div class="mh-upload-sources mh-add-more-sources" id="mhAddMoreSources" style="display:none;">
-                        <button type="button" class="mh-src-btn mh-src-btn--sm" onclick="triggerMhInput('camera'); hideMhAddMoreOptions()">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z" />
-                                <circle cx="12" cy="13" r="4" />
-                            </svg>Camera
-                        </button>
-                        <button type="button" class="mh-src-btn mh-src-btn--sm" onclick="triggerMhInput('gallery'); hideMhAddMoreOptions()">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <rect x="3" y="3" width="18" height="18" rx="2" />
-                                <circle cx="8.5" cy="8.5" r="1.5" />
-                                <polyline points="21 15 16 10 5 21" />
-                            </svg>Gallery
-                        </button>
-                        <button type="button" class="mh-src-btn mh-src-btn--sm" onclick="triggerMhInput('file'); hideMhAddMoreOptions()">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M13 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V9z" />
-                                <polyline points="13 2 13 9 20 9" />
-                            </svg>File
-                        </button>
-                        <button type="button" class="mh-src-btn mh-src-btn--sm mh-src-btn--cancel" onclick="hideMhAddMoreOptions()">Cancel</button>
-                    </div>
-
-                    <p class="mh-upload-hint">Accepted: JPG, PNG, WEBP, PDF &mdash; max 5MB each</p>
-                </div>
-            </div>
-
-            <div class="mh-modal__foot">
-                <button type="button" class="mh-btn-cancel" onclick="closeMhModal()">Cancel</button>
-                <button type="submit" class="mh-btn-save">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                        <polyline points="20 6 9 17 4 12" />
+            <div class="vm-head">
+                <div class="vm-title">
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
                     </svg>
-                    Save Record
+                    Add Vitals
+                </div>
+                <button class="vm-close" onclick="closeVitalsModal()" type="button">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <line x1="18" y1="6" x2="6" y2="18" />
+                        <line x1="6" y1="6" x2="18" y2="18" />
+                    </svg>
                 </button>
             </div>
-        </form>
+
+            <form action="{{ route('dw.vitals.add') }}" method="POST" class="vm-body">
+                @csrf
+                <input type="hidden" name="dw_user_id" value="{{ Auth::id() }}">
+
+                {{-- Row 1 --}}
+                <div class="vm-row">
+                    <div class="vm-field">
+                        <label>
+                            <span class="vm-field__icon vm-field__icon--red">
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                    <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+                                </svg>
+                            </span>
+                            Heart Rate <em>bpm</em>
+                        </label>
+                        <input type="number" name="heart_rate" placeholder="e.g. 72" min="30" max="250">
+                    </div>
+                    <div class="vm-field">
+                        <label>
+                            <span class="vm-field__icon vm-field__icon--blue">
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                    <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z" />
+                                </svg>
+                            </span>
+                            Blood Pressure <em>mmHg</em>
+                        </label>
+                        <input type="text" name="blood_pressure" placeholder="e.g. 120/80">
+                    </div>
+                </div>
+
+                {{-- Row 2 --}}
+                <div class="vm-row">
+                    <div class="vm-field">
+                        <label>
+                            <span class="vm-field__icon vm-field__icon--orange">
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                    <path d="M14 14.76V3.5a2.5 2.5 0 00-5 0v11.26a4.5 4.5 0 105 0z" />
+                                </svg>
+                            </span>
+                            Temperature <em>°C</em>
+                        </label>
+                        <input type="number" name="temparature" placeholder="e.g. 36.6" step="0.1" min="30">
+                    </div>
+                    <div class="vm-field">
+                        <label>
+                            <span class="vm-field__icon vm-field__icon--teal">
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                    <path d="M12 22a10 10 0 110-20 10 10 0 010 20z" />
+                                    <path d="M12 8v4l3 3" />
+                                </svg>
+                            </span>
+                            SpO₂ <em>%</em>
+                        </label>
+                        <input type="number" name="spo" placeholder="e.g. 98" min="50" max="100">
+                    </div>
+                </div>
+
+                {{-- Row 3 --}}
+                <div class="vm-row">
+                    <div class="vm-field">
+                        <label>
+                            <span class="vm-field__icon vm-field__icon--purple">
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                    <ellipse cx="12" cy="5" rx="9" ry="3" />
+                                    <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3" />
+                                    <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5" />
+                                </svg>
+                            </span>
+                            Blood Sugar <em>mg/dL</em>
+                        </label>
+                        <input type="number" name="blood_sugar" placeholder="e.g. 90" min="20" max="600">
+                    </div>
+                    <div class="vm-field">
+                        <label>
+                            <span class="vm-field__icon vm-field__icon--red">
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                    <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z" />
+                                </svg>
+                            </span>
+                            Blood Group
+                        </label>
+                        <div class="vm-select-wrap">
+                            <select name="blood_group">
+                                <option value="" disabled selected>Choose</option>
+                                @foreach(['A+','A-','B+','B-','O+','O-','AB+','AB-'] as $bg)
+                                <option value="{{ $bg }}" {{ (Auth::user()->blood_group ?? '') == $bg ? 'selected' : '' }}>{{ $bg }}</option>
+                                @endforeach
+                            </select>
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                <polyline points="6 9 12 15 18 9" />
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- Row 4 --}}
+                <div class="vm-row">
+                    <div class="vm-field">
+                        <label>
+                            <span class="vm-field__icon vm-field__icon--green">
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                    <line x1="12" y1="2" x2="12" y2="22" />
+                                    <path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6" />
+                                </svg>
+                            </span>
+                            Weight <em>kg</em>
+                        </label>
+                        <input type="number" name="weight" id="vmWeight" placeholder="e.g. 70" step="0.1" min="1" max="300" oninput="calcVmBmi()">
+                    </div>
+                    <div class="vm-field">
+                        <label>
+                            <span class="vm-field__icon vm-field__icon--blue">
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                    <line x1="12" y1="2" x2="12" y2="22" />
+                                    <line x1="2" y1="12" x2="22" y2="12" />
+                                </svg>
+                            </span>
+                            Height <em>cm</em>
+                        </label>
+                        <input type="number" name="height" id="vmHeight" placeholder="e.g. 170" step="0.1" min="50" max="300" oninput="calcVmBmi()">
+                    </div>
+                </div>
+
+                {{-- BMI (auto-calculated) --}}
+                <div class="vm-row vm-row--single">
+                    <div class="vm-field">
+                        <label>
+                            <span class="vm-field__icon vm-field__icon--teal">
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                    <circle cx="12" cy="12" r="10" />
+                                    <line x1="12" y1="8" x2="12" y2="12" />
+                                    <line x1="12" y1="16" x2="12.01" y2="16" />
+                                </svg>
+                            </span>
+                            BMI <em>auto-calculated</em>
+                        </label>
+                        <div class="vm-bmi-wrap">
+                            <input type="text" name="bmi" id="vmBmi" placeholder="Fill weight & height above" readonly>
+                            <span class="vm-bmi-tag" id="vmBmiTag"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="vm-foot">
+                    <button type="button" class="vm-btn-cancel" onclick="closeVitalsModal()">Cancel</button>
+                    <button type="submit" class="vm-btn-save">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                            <polyline points="20 6 9 17 4 12" />
+                        </svg>
+                        Save Vitals
+                    </button>
+                </div>
+            </form>
+        </div>
     </div>
-</div>
 
-<script>
-    // Holds all selected File objects across multiple picks
-    let mhSelectedFiles = [];
+    <!-- {{-- ════════════════════════════════════════════════
+     EDIT VITALS MODAL
+     ════════════════════════════════════════════════ --}} -->
 
-    function openMhModal() {
-        document.getElementById('medicalHistoryModal').classList.add('active');
-    }
+    <div class="vm-overlay" id="editVitalsModal" onclick="handleEditVmOverlay(event)">
+        <div class="vm-modal">
 
-    function closeMhModal() {
-        document.getElementById('medicalHistoryModal').classList.remove('active');
-    }
+            <div class="vm-head">
+                <div class="vm-title">
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+                    </svg>
+                    Edit Vitals
+                </div>
+                <button class="vm-close" onclick="closeEditVitalsModal()" type="button">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <line x1="18" y1="6" x2="6" y2="18" />
+                        <line x1="6" y1="6" x2="18" y2="18" />
+                    </svg>
+                </button>
+            </div>
 
-    function handleMhOverlayClick(e) {
-        if (e.target === document.getElementById('medicalHistoryModal')) closeMhModal();
-    }
+            <form id="editVitalsForm" action="" method="POST" class="vm-body">
+                @csrf @method('PUT')
+                <input type="hidden" name="dw_user_id" value="{{ Auth::id() }}">
 
-    function triggerMhInput(source) {
-        const map = {
-            camera: 'mhInputCamera',
-            gallery: 'mhInputGallery',
-            file: 'mhInputFile'
-        };
-        document.getElementById(map[source]).click();
-    }
+                <div class="vm-row">
+                    <div class="vm-field">
+                        <label><span class="vm-field__icon vm-field__icon--red"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                    <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+                                </svg></span>Heart Rate <em>bpm</em></label>
+                        <input type="number" name="heart_rate" id="evHeartRate" placeholder="e.g. 72" min="30" max="250">
+                    </div>
+                    <div class="vm-field">
+                        <label><span class="vm-field__icon vm-field__icon--blue"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                    <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z" />
+                                </svg></span>Blood Pressure <em>mmHg</em></label>
+                        <input type="text" name="blood_pressure" id="evBloodPressure" placeholder="e.g. 120/80">
+                    </div>
+                </div>
 
-    function handleMhFiles(input) {
-        const files = Array.from(input.files);
-        files.forEach(file => {
-            // Avoid exact duplicates by name+size
-            const exists = mhSelectedFiles.some(f => f.name === file.name && f.size === file.size);
-            if (!exists) mhSelectedFiles.push(file);
-        });
-        input.value = ''; // reset so same file can be re-picked if removed
-        renderMhPreviews();
-        syncMhFilesToForm();
-    }
+                <div class="vm-row">
+                    <div class="vm-field">
+                        <label><span class="vm-field__icon vm-field__icon--orange"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                    <path d="M14 14.76V3.5a2.5 2.5 0 00-5 0v11.26a4.5 4.5 0 105 0z" />
+                                </svg></span>Temperature <em>°C</em></label>
+                        <input type="number" name="temparature" id="evTemparature" placeholder="e.g. 36.6" step="0.1" min="30">
+                    </div>
+                    <div class="vm-field">
+                        <label><span class="vm-field__icon vm-field__icon--teal"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                    <path d="M12 22a10 10 0 110-20 10 10 0 010 20z" />
+                                    <path d="M12 8v4l3 3" />
+                                </svg></span>SpO₂ <em>%</em></label>
+                        <input type="number" name="spo" id="evSpo" placeholder="e.g. 98" min="50" max="100">
+                    </div>
+                </div>
 
-    function renderMhPreviews() {
-        const grid = document.getElementById('mhPreviewGrid');
-        grid.innerHTML = '';
+                <div class="vm-row">
+                    <div class="vm-field">
+                        <label><span class="vm-field__icon vm-field__icon--purple"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                    <ellipse cx="12" cy="5" rx="9" ry="3" />
+                                    <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3" />
+                                    <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5" />
+                                </svg></span>Blood Sugar <em>mg/dL</em></label>
+                        <input type="number" name="blood_sugar" id="evBloodSugar" placeholder="e.g. 90" min="20" max="600">
+                    </div>
+                    <div class="vm-field">
+                        <label><span class="vm-field__icon vm-field__icon--red"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                    <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z" />
+                                </svg></span>Blood Group</label>
+                        <div class="vm-select-wrap">
+                            <select name="blood_group" id="evBloodGroup">
+                                <option value="" disabled>Choose</option>
+                                @foreach(['A+','A-','B+','B-','O+','O-','AB+','AB-'] as $bg)
+                                <option value="{{ $bg }}">{{ $bg }}</option>
+                                @endforeach
+                            </select>
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                <polyline points="6 9 12 15 18 9" />
+                            </svg>
+                        </div>
+                    </div>
+                </div>
 
-        mhSelectedFiles.forEach((file, idx) => {
-            const item = document.createElement('div');
-            item.className = 'mh-preview-item';
+                <div class="vm-row">
+                    <div class="vm-field">
+                        <label><span class="vm-field__icon vm-field__icon--green"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                    <line x1="12" y1="2" x2="12" y2="22" />
+                                    <path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6" />
+                                </svg></span>Weight <em>kg</em></label>
+                        <input type="number" name="weight" id="evWeight" placeholder="e.g. 70" step="0.1" min="1" max="300" oninput="calcEvBmi()">
+                    </div>
+                    <div class="vm-field">
+                        <label><span class="vm-field__icon vm-field__icon--blue"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                    <line x1="12" y1="2" x2="12" y2="22" />
+                                    <line x1="2" y1="12" x2="22" y2="12" />
+                                </svg></span>Height <em>cm</em></label>
+                        <input type="number" name="height" id="evHeight" placeholder="e.g. 170" step="0.1" min="50" max="300" oninput="calcEvBmi()">
+                    </div>
+                </div>
 
-            if (file.type === 'application/pdf') {
-                item.innerHTML = `
+                <div class="vm-row vm-row--single">
+                    <div class="vm-field">
+                        <label><span class="vm-field__icon vm-field__icon--teal"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                    <circle cx="12" cy="12" r="10" />
+                                    <line x1="12" y1="8" x2="12" y2="12" />
+                                    <line x1="12" y1="16" x2="12.01" y2="16" />
+                                </svg></span>BMI <em>auto-calculated</em></label>
+                        <div class="vm-bmi-wrap">
+                            <input type="text" name="bmi" id="evBmi" placeholder="Fill weight & height above" readonly>
+                            <span class="vm-bmi-tag" id="evBmiTag"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="vm-foot">
+                    <button type="button" class="vm-btn-cancel" onclick="closeEditVitalsModal()">Cancel</button>
+                    <button type="submit" class="vm-btn-save">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                            <polyline points="20 6 9 17 4 12" />
+                        </svg>
+                        Update Vitals
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+    <!-- ════════════════════════════════
+    ADD MEDICAL HISTORY MODAL
+════════════════════════════════ -->
+    <div class="mh-modal-overlay" id="medicalHistoryModal" onclick="handleMhOverlayClick(event)">
+        <div class="mh-modal">
+
+            <div class="mh-modal__head">
+                <div class="mh-modal__title">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
+                        <polyline points="14 2 14 8 20 8" />
+                        <line x1="12" y1="18" x2="12" y2="12" />
+                        <line x1="9" y1="15" x2="15" y2="15" />
+                    </svg>
+                    Add Medical Report / Prescription
+                </div>
+                <button class="mh-modal__close" onclick="closeMhModal()" type="button">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <line x1="18" y1="6" x2="6" y2="18" />
+                        <line x1="6" y1="6" x2="18" y2="18" />
+                    </svg>
+                </button>
+            </div>
+
+            <form action="{{ route('dw.medical-history.add') }}" method="POST" enctype="multipart/form-data" class="mh-modal__body" id="medicalHistoryForm">
+                @csrf
+
+                {{-- Hidden user ID --}}
+                <input type="hidden" name="dw_user_id" value="{{ Auth::user()->id }}">
+
+                {{-- Type --}}
+                <div class="mh-form-row">
+                    <div class="mh-field">
+                        <label>Type <span class="mh-req">*</span></label>
+                        <div class="mh-select-wrap">
+                            <select name="type" required>
+                                <option value="" disabled selected>Select type</option>
+                                <option value="report">Medical Report</option>
+                                <option value="prescription">Prescription</option>
+                            </select>
+                            <svg class="mh-select-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                <polyline points="6 9 12 15 18 9" />
+                            </svg>
+                        </div>
+                    </div>
+
+                    {{-- Date --}}
+                    <div class="mh-field">
+                        <label>Date of Report <span class="mh-req">*</span></label>
+                        <input type="date" name="date_of_report" required max="{{ date('Y-m-d') }}">
+                    </div>
+                </div>
+
+                {{-- Heading --}}
+                <div class="mh-form-row mh-form-row--single">
+                    <div class="mh-field">
+                        <label>Heading / Title <span class="mh-req">*</span></label>
+                        <input type="text" name="heading" placeholder="e.g. Blood Test Report – June 2025" required>
+                    </div>
+                </div>
+
+                {{-- Images Upload --}}
+                <div class="mh-form-row mh-form-row--single">
+                    <div class="mh-field">
+                        <label>Images <span class="mh-req">*</span></label>
+
+                        {{-- Upload Source Buttons --}}
+                        <div class="mh-upload-sources">
+                            <button type="button" class="mh-src-btn" onclick="triggerMhInput('camera')" title="Take Photo">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z" />
+                                    <circle cx="12" cy="13" r="4" />
+                                </svg>
+                                Camera
+                            </button>
+                            <button type="button" class="mh-src-btn" onclick="triggerMhInput('gallery')" title="Choose from Gallery">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="3" width="18" height="18" rx="2" />
+                                    <circle cx="8.5" cy="8.5" r="1.5" />
+                                    <polyline points="21 15 16 10 5 21" />
+                                </svg>
+                                Gallery
+                            </button>
+                            <button type="button" class="mh-src-btn" onclick="triggerMhInput('file')" title="Choose File">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M13 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V9z" />
+                                    <polyline points="13 2 13 9 20 9" />
+                                </svg>
+                                PDF File
+                            </button>
+                        </div>
+
+                        {{-- Hidden file inputs --}}
+                        <input type="file" id="mhInputCamera" name="images[]" accept="image/*" capture="environment" style="display:none;" onchange="handleMhFiles(this)">
+                        <input type="file" id="mhInputGallery" name="images[]" accept="image/jpeg,image/png,image/webp" multiple style="display:none;" onchange="handleMhFiles(this)">
+                        <input type="file" id="mhInputFile" name="images[]" accept="image/jpeg,image/png,image/webp,application/pdf" multiple style="display:none;" onchange="handleMhFiles(this)">
+
+                        {{-- Preview Grid --}}
+                        <div class="mh-preview-grid" id="mhPreviewGrid"></div>
+
+                        {{-- Add More (shown after first upload) --}}
+                        <button type="button" class="mh-add-more" id="mhAddMoreBtn" style="display:none;" onclick="showMhAddMoreOptions()">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                <line x1="12" y1="5" x2="12" y2="19" />
+                                <line x1="5" y1="12" x2="19" y2="12" />
+                            </svg>
+                            Add More Images
+                        </button>
+
+                        {{-- Add More Source picker (hidden by default) --}}
+                        <div class="mh-upload-sources mh-add-more-sources" id="mhAddMoreSources" style="display:none;">
+                            <button type="button" class="mh-src-btn mh-src-btn--sm" onclick="triggerMhInput('camera'); hideMhAddMoreOptions()">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z" />
+                                    <circle cx="12" cy="13" r="4" />
+                                </svg>Camera
+                            </button>
+                            <button type="button" class="mh-src-btn mh-src-btn--sm" onclick="triggerMhInput('gallery'); hideMhAddMoreOptions()">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="3" width="18" height="18" rx="2" />
+                                    <circle cx="8.5" cy="8.5" r="1.5" />
+                                    <polyline points="21 15 16 10 5 21" />
+                                </svg>Gallery
+                            </button>
+                            <button type="button" class="mh-src-btn mh-src-btn--sm" onclick="triggerMhInput('file'); hideMhAddMoreOptions()">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M13 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V9z" />
+                                    <polyline points="13 2 13 9 20 9" />
+                                </svg>File
+                            </button>
+                            <button type="button" class="mh-src-btn mh-src-btn--sm mh-src-btn--cancel" onclick="hideMhAddMoreOptions()">Cancel</button>
+                        </div>
+
+                        <p class="mh-upload-hint">Accepted: JPG, PNG, WEBP, PDF &mdash; max 5MB each</p>
+                    </div>
+                </div>
+
+                <div class="mh-modal__foot">
+                    <button type="button" class="mh-btn-cancel" onclick="closeMhModal()">Cancel</button>
+                    <button type="submit" class="mh-btn-save">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                            <polyline points="20 6 9 17 4 12" />
+                        </svg>
+                        Save Record
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Holds all selected File objects across multiple picks
+        let mhSelectedFiles = [];
+
+        function openMhModal() {
+            document.getElementById('medicalHistoryModal').classList.add('active');
+        }
+
+        function closeMhModal() {
+            document.getElementById('medicalHistoryModal').classList.remove('active');
+        }
+
+        function handleMhOverlayClick(e) {
+            if (e.target === document.getElementById('medicalHistoryModal')) closeMhModal();
+        }
+
+        function triggerMhInput(source) {
+            const map = {
+                camera: 'mhInputCamera',
+                gallery: 'mhInputGallery',
+                file: 'mhInputFile'
+            };
+            document.getElementById(map[source]).click();
+        }
+
+        function handleMhFiles(input) {
+            const files = Array.from(input.files);
+            files.forEach(file => {
+                // Avoid exact duplicates by name+size
+                const exists = mhSelectedFiles.some(f => f.name === file.name && f.size === file.size);
+                if (!exists) mhSelectedFiles.push(file);
+            });
+            input.value = ''; // reset so same file can be re-picked if removed
+            renderMhPreviews();
+            syncMhFilesToForm();
+        }
+
+        function renderMhPreviews() {
+            const grid = document.getElementById('mhPreviewGrid');
+            grid.innerHTML = '';
+
+            mhSelectedFiles.forEach((file, idx) => {
+                const item = document.createElement('div');
+                item.className = 'mh-preview-item';
+
+                if (file.type === 'application/pdf') {
+                    item.innerHTML = `
                 <div class="mh-pdf-thumb">
                     <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
                         <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V9z"/>
@@ -1527,167 +2652,432 @@
                     PDF
                 </div>
                 <button type="button" class="mh-remove-btn" onclick="removeMhFile(${idx})">✕</button>`;
-            } else {
-                const url = URL.createObjectURL(file);
-                item.innerHTML = `
+                } else {
+                    const url = URL.createObjectURL(file);
+                    item.innerHTML = `
                 <img src="${url}" alt="Preview" onload="URL.revokeObjectURL(this.src)">
                 <button type="button" class="mh-remove-btn" onclick="removeMhFile(${idx})">✕</button>`;
+                }
+                grid.appendChild(item);
+            });
+
+            const addMoreBtn = document.getElementById('mhAddMoreBtn');
+            addMoreBtn.style.display = mhSelectedFiles.length > 0 ? 'flex' : 'none';
+        }
+
+        function removeMhFile(idx) {
+            mhSelectedFiles.splice(idx, 1);
+            renderMhPreviews();
+            syncMhFilesToForm();
+            if (mhSelectedFiles.length === 0) hideMhAddMoreOptions();
+        }
+
+        function syncMhFilesToForm() {
+            // Build a fresh DataTransfer to attach all files to a single <input name="images[]">
+            const dt = new DataTransfer();
+            mhSelectedFiles.forEach(f => dt.items.add(f));
+
+            // Use the gallery input as the canonical submission input
+            const canonical = document.getElementById('mhInputGallery');
+            canonical.files = dt.files;
+            // Give it a stable name for the form
+            canonical.name = 'images[]';
+        }
+
+        function showMhAddMoreOptions() {
+            document.getElementById('mhAddMoreSources').style.display = 'flex';
+            document.getElementById('mhAddMoreBtn').style.display = 'none';
+        }
+
+        function hideMhAddMoreOptions() {
+            document.getElementById('mhAddMoreSources').style.display = 'none';
+            if (mhSelectedFiles.length > 0)
+                document.getElementById('mhAddMoreBtn').style.display = 'flex';
+        }
+
+        // Reset state when modal opens fresh
+        function openMhModal() {
+            mhSelectedFiles = [];
+            renderMhPreviews();
+            document.getElementById('medicalHistoryForm').reset();
+            hideMhAddMoreOptions();
+            document.getElementById('medicalHistoryModal').classList.add('active');
+        }
+    </script>
+
+
+    <!-- {{-- ════════════════ JS (Edit modal helpers) ════════════════ --}} -->
+    <script>
+        let editNewFiles = []; // newly picked files
+        let editDeletedPaths = []; // existing paths marked for removal
+
+        // ── Open modal ────────────────────────────────────────────────
+        // Call from table row:
+        // openEditMhModal({{ $rec->id }}, '{{ $rec->type }}', '{{ $rec->date_of_report->format('Y-m-d') }}', '{{ addslashes($rec->heading) }}', {!! json_encode($rec->images ?? []) !!})
+        function openEditMhModal(id, type, date, heading, existingImages) {
+            editNewFiles = [];
+            editDeletedPaths = [];
+
+            // Set form action
+            document.getElementById('editMhForm').action =
+                '/dw/medical-history/' + id + '/update'; // adjust prefix if needed
+
+            // Populate text fields
+            document.getElementById('editMhType').value = type;
+            document.getElementById('editMhDate').value = date;
+            document.getElementById('editMhHeading').value = heading;
+
+            // Clear new-file preview & deleted inputs
+            document.getElementById('editNewPreviewGrid').innerHTML = '';
+            document.getElementById('editDeletedImagesInputs').innerHTML = '';
+
+            // Render existing images
+            renderEditExistingImages(existingImages || []);
+
+            document.getElementById('editMhModal').classList.add('active');
+        }
+
+        // ── Render existing files ─────────────────────────────────────
+        function renderEditExistingImages(paths) {
+            const grid = document.getElementById('editExistingGrid');
+            const noMsg = document.getElementById('editNoExistingMsg');
+            grid.innerHTML = '';
+
+            // Filter out already-deleted ones
+            const visible = paths.filter(p => !editDeletedPaths.includes(p));
+
+            if (!visible.length) {
+                noMsg.style.display = 'block';
+                return;
             }
-            grid.appendChild(item);
-        });
+            noMsg.style.display = 'none';
 
-        const addMoreBtn = document.getElementById('mhAddMoreBtn');
-        addMoreBtn.style.display = mhSelectedFiles.length > 0 ? 'flex' : 'none';
-    }
+            visible.forEach(path => {
+                const isPdf = path.toLowerCase().endsWith('.pdf');
+                const url = '/storage/' + path; // adjust if your APP_URL differs
+                const name = path.split('/').pop();
 
-    function removeMhFile(idx) {
-        mhSelectedFiles.splice(idx, 1);
-        renderMhPreviews();
-        syncMhFilesToForm();
-        if (mhSelectedFiles.length === 0) hideMhAddMoreOptions();
-    }
+                const item = document.createElement('div');
+                item.className = 'mh-preview-item';
+                item.dataset.path = path;
 
-    function syncMhFilesToForm() {
-        // Build a fresh DataTransfer to attach all files to a single <input name="images[]">
-        const dt = new DataTransfer();
-        mhSelectedFiles.forEach(f => dt.items.add(f));
+                if (isPdf) {
+                    item.innerHTML = `
+                <a href="${url}" target="_blank" style="display:flex;width:100%;height:100%;align-items:center;justify-content:center;flex-direction:column;gap:4px;color:#e53e3e;font-size:10px;font-weight:700;text-decoration:none;">
+                    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V9z"/><polyline points="13 2 13 9 20 9"/></svg>
+                    PDF
+                </a>
+                <button type="button" class="mh-remove-btn" onclick="removeExistingFile('${path}', this)" title="Remove">✕</button>`;
+                } else {
+                    item.innerHTML = `
+                <img src="${url}" alt="${name}" style="width:100%;height:100%;object-fit:cover;">
+                <button type="button" class="mh-remove-btn" onclick="removeExistingFile('${path}', this)" title="Remove">✕</button>`;
+                }
 
-        // Use the gallery input as the canonical submission input
-        const canonical = document.getElementById('mhInputGallery');
-        canonical.files = dt.files;
-        // Give it a stable name for the form
-        canonical.name = 'images[]';
-    }
+                grid.appendChild(item);
+            });
+        }
 
-    function showMhAddMoreOptions() {
-        document.getElementById('mhAddMoreSources').style.display = 'flex';
-        document.getElementById('mhAddMoreBtn').style.display = 'none';
-    }
+        // ── Remove an existing file (marks for deletion on submit) ────
+        function removeExistingFile(path, btn) {
+            editDeletedPaths.push(path);
 
-    function hideMhAddMoreOptions() {
-        document.getElementById('mhAddMoreSources').style.display = 'none';
-        if (mhSelectedFiles.length > 0)
-            document.getElementById('mhAddMoreBtn').style.display = 'flex';
-    }
+            // Add hidden input so controller knows what to delete
+            const container = document.getElementById('editDeletedImagesInputs');
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'deleted_images[]';
+            input.value = path;
+            container.appendChild(input);
 
-    // Reset state when modal opens fresh
-    function openMhModal() {
-        mhSelectedFiles = [];
-        renderMhPreviews();
-        document.getElementById('medicalHistoryForm').reset();
-        hideMhAddMoreOptions();
-        document.getElementById('medicalHistoryModal').classList.add('active');
-    }
-</script>
+            // Animate & remove card
+            const card = btn.closest('.mh-preview-item');
+            card.style.transition = 'opacity .2s, transform .2s';
+            card.style.opacity = '0';
+            card.style.transform = 'scale(.85)';
+            setTimeout(() => card.remove(), 200);
 
-
-
-<script>
-    /* ── Modal ── */
-    function openModal() {
-        document.getElementById('profileModal').classList.add('open');
-        document.body.style.overflow = 'hidden';
-    }
-
-    function closeModal() {
-        document.getElementById('profileModal').classList.remove('open');
-        document.body.style.overflow = '';
-    }
-
-    function handleOverlayClick(e) {
-        if (e.target === document.getElementById('profileModal')) closeModal();
-    }
-    document.addEventListener('keydown', e => {
-        if (e.key === 'Escape') closeModal();
-    });
-
-    /* ── Tabs ── */
-    function switchTab(name) {
-        document.querySelectorAll('.up-tab').forEach(t => t.classList.remove('active'));
-        document.querySelectorAll('.up-tab-content').forEach(c => c.classList.remove('active'));
-        document.getElementById('tab-' + name).classList.add('active');
-        document.getElementById('content-' + name).classList.add('active');
-    }
-
-    /* ── Filter appointments by status ── */
-    function filterAppts(clickedBtn, filter) {
-        // Update active button
-        document.querySelectorAll('.up-appt-filters .up-filter-btn').forEach(b => b.classList.remove('active'));
-        clickedBtn.classList.add('active');
-
-        // Show/hide rows
-        document.querySelectorAll('#apptTableBody .appt-row').forEach(row => {
-            if (filter === 'all') {
-                row.classList.remove('is-hidden');
-            } else {
-                const rowStatus = row.getAttribute('data-status');
-                row.classList.toggle('is-hidden', rowStatus !== filter);
-            }
-        });
-
-        // Show empty state if no visible rows
-        const visibleRows = document.querySelectorAll('#apptTableBody .appt-row:not(.is-hidden)');
-        const emptyEl = document.querySelector('.up-appt-empty');
-        const tableWrap = document.querySelector('.up-appt-table-wrap');
-
-        if (emptyEl && tableWrap) {
-            if (visibleRows.length === 0) {
-                tableWrap.style.display = 'none';
-                emptyEl.style.display = 'flex';
-                emptyEl.querySelector('p').textContent = 'No ' + (filter === 'all' ? '' : filter.toLowerCase() + ' ') + 'appointments found';
-            } else {
-                tableWrap.style.display = '';
-                emptyEl.style.display = 'none';
+            // Show "no existing files" if all removed
+            if (!document.getElementById('editExistingGrid').children.length) {
+                document.getElementById('editNoExistingMsg').style.display = 'block';
             }
         }
-    }
-</script>
 
-
-<script>
-    /* ── COMPLETE MODAL ── */
-    function openCompleteModal(bookingId) {
-        document.getElementById('completeForm').action = '/dw/profile/appointment-complete/' + bookingId;
-        document.getElementById('completeApptId').textContent = bookingId;
-        document.getElementById('completeModalOverlay').classList.add('is-open');
-        document.body.style.overflow = 'hidden';
-    }
-
-    function closeCompleteModal() {
-        document.getElementById('completeModalOverlay').classList.remove('is-open');
-        document.body.style.overflow = '';
-    }
-
-    /* ── CANCEL MODAL ── */
-    function openCancelModal(bookingId) {
-        document.getElementById('cancelForm').action = '/dw/profile/appointment-cancel/' + bookingId;
-        document.getElementById('cancelApptId').textContent = bookingId;
-        document.getElementById('cancelModalOverlay').classList.add('is-open');
-        document.body.style.overflow = 'hidden';
-    }
-
-    function closeCancelModal() {
-        document.getElementById('cancelModalOverlay').classList.remove('is-open');
-        document.getElementById('cancelReason').value = '';
-        document.body.style.overflow = '';
-    }
-
-    /* ── CLOSE ON BACKDROP CLICK ── */
-    document.getElementById('completeModalOverlay').addEventListener('click', function(e) {
-        if (e.target === this) closeCompleteModal();
-    });
-    document.getElementById('cancelModalOverlay').addEventListener('click', function(e) {
-        if (e.target === this) closeCancelModal();
-    });
-
-    /* ── CLOSE ON ESCAPE KEY ── */
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape') {
-            closeCompleteModal();
-            closeCancelModal();
+        // ── New file pickers ──────────────────────────────────────────
+        function triggerEditInput(source) {
+            const map = {
+                camera: 'editInputCamera',
+                gallery: 'editInputGallery',
+                file: 'editInputFile'
+            };
+            document.getElementById(map[source]).click();
         }
-    });
-</script>
+
+        function handleEditFiles(input) {
+            Array.from(input.files).forEach(f => {
+                if (!editNewFiles.some(x => x.name === f.name && x.size === f.size))
+                    editNewFiles.push(f);
+            });
+            input.value = '';
+            renderEditNewPreviews();
+            syncEditNewFiles();
+        }
+
+        function renderEditNewPreviews() {
+            const grid = document.getElementById('editNewPreviewGrid');
+            grid.innerHTML = '';
+            editNewFiles.forEach((file, idx) => {
+                const item = document.createElement('div');
+                item.className = 'mh-preview-item';
+                if (file.type === 'application/pdf') {
+                    item.innerHTML = `
+                <div class="mh-pdf-thumb">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V9z"/><polyline points="13 2 13 9 20 9"/></svg>
+                    PDF
+                </div>
+                <button type="button" class="mh-remove-btn" onclick="removeEditNewFile(${idx})">✕</button>`;
+                } else {
+                    const url = URL.createObjectURL(file);
+                    item.innerHTML = `
+                <img src="${url}" onload="URL.revokeObjectURL(this.src)">
+                <button type="button" class="mh-remove-btn" onclick="removeEditNewFile(${idx})">✕</button>`;
+                }
+                grid.appendChild(item);
+            });
+        }
+
+        function removeEditNewFile(idx) {
+            editNewFiles.splice(idx, 1);
+            renderEditNewPreviews();
+            syncEditNewFiles();
+        }
+
+        function syncEditNewFiles() {
+            const dt = new DataTransfer();
+            editNewFiles.forEach(f => dt.items.add(f));
+            const gallery = document.getElementById('editInputGallery');
+            gallery.files = dt.files;
+            gallery.name = 'new_images[]';
+        }
+
+        // ── Close ─────────────────────────────────────────────────────
+        function closeEditMhModal() {
+            document.getElementById('editMhModal').classList.remove('active');
+        }
+
+        function handleEditMhOverlay(e) {
+            if (e.target === document.getElementById('editMhModal')) closeEditMhModal();
+        }
+    </script>
 
 
-@endsection
+
+    <script>
+        /* ── Modal ── */
+        function openModal() {
+            document.getElementById('profileModal').classList.add('open');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            document.getElementById('profileModal').classList.remove('open');
+            document.body.style.overflow = '';
+        }
+
+        function handleOverlayClick(e) {
+            if (e.target === document.getElementById('profileModal')) closeModal();
+        }
+        document.addEventListener('keydown', e => {
+            if (e.key === 'Escape') closeModal();
+        });
+
+        /* ── Tabs ── */
+        function switchTab(name) {
+            document.querySelectorAll('.up-tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.up-tab-content').forEach(c => c.classList.remove('active'));
+            document.getElementById('tab-' + name).classList.add('active');
+            document.getElementById('content-' + name).classList.add('active');
+        }
+
+        /* ── Filter appointments by status ── */
+        function filterAppts(clickedBtn, filter) {
+            // Update active button
+            document.querySelectorAll('.up-appt-filters .up-filter-btn').forEach(b => b.classList.remove('active'));
+            clickedBtn.classList.add('active');
+
+            // Show/hide rows
+            document.querySelectorAll('#apptTableBody .appt-row').forEach(row => {
+                if (filter === 'all') {
+                    row.classList.remove('is-hidden');
+                } else {
+                    const rowStatus = row.getAttribute('data-status');
+                    row.classList.toggle('is-hidden', rowStatus !== filter);
+                }
+            });
+
+            // Show empty state if no visible rows
+            const visibleRows = document.querySelectorAll('#apptTableBody .appt-row:not(.is-hidden)');
+            const emptyEl = document.querySelector('.up-appt-empty');
+            const tableWrap = document.querySelector('.up-appt-table-wrap');
+
+            if (emptyEl && tableWrap) {
+                if (visibleRows.length === 0) {
+                    tableWrap.style.display = 'none';
+                    emptyEl.style.display = 'flex';
+                    emptyEl.querySelector('p').textContent = 'No ' + (filter === 'all' ? '' : filter.toLowerCase() + ' ') + 'appointments found';
+                } else {
+                    tableWrap.style.display = '';
+                    emptyEl.style.display = 'none';
+                }
+            }
+        }
+    </script>
+
+
+    <script>
+        /* ── COMPLETE MODAL ── */
+        function openCompleteModal(bookingId) {
+            document.getElementById('completeForm').action = '/dw/profile/appointment-complete/' + bookingId;
+            document.getElementById('completeApptId').textContent = bookingId;
+            document.getElementById('completeModalOverlay').classList.add('is-open');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeCompleteModal() {
+            document.getElementById('completeModalOverlay').classList.remove('is-open');
+            document.body.style.overflow = '';
+        }
+
+        /* ── CANCEL MODAL ── */
+        function openCancelModal(bookingId) {
+            document.getElementById('cancelForm').action = '/dw/profile/appointment-cancel/' + bookingId;
+            document.getElementById('cancelApptId').textContent = bookingId;
+            document.getElementById('cancelModalOverlay').classList.add('is-open');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeCancelModal() {
+            document.getElementById('cancelModalOverlay').classList.remove('is-open');
+            document.getElementById('cancelReason').value = '';
+            document.body.style.overflow = '';
+        }
+
+        /* ── CLOSE ON BACKDROP CLICK ── */
+        document.getElementById('completeModalOverlay').addEventListener('click', function(e) {
+            if (e.target === this) closeCompleteModal();
+        });
+        document.getElementById('cancelModalOverlay').addEventListener('click', function(e) {
+            if (e.target === this) closeCancelModal();
+        });
+
+        /* ── CLOSE ON ESCAPE KEY ── */
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeCompleteModal();
+                closeCancelModal();
+            }
+        });
+    </script>
+
+    <!-- {{-- ════════════════ Vitals JS ════════════════ --}} -->
+    <script>
+        // ── Add modal ───────────────────────────────────────────
+        function openVitalsModal() {
+            document.getElementById('vitalsModal').classList.add('active');
+        }
+
+        function closeVitalsModal() {
+            document.getElementById('vitalsModal').classList.remove('active');
+        }
+
+        function handleVmOverlay(e) {
+            if (e.target === document.getElementById('vitalsModal')) closeVitalsModal();
+        }
+
+        // ── Edit modal ──────────────────────────────────────────
+        // Call: openEditVitalsModal({{ Js::from($vital) }})
+        function openEditVitalsModal(v) {
+            const form = document.getElementById('editVitalsForm');
+            form.action = '/dw/vitals/' + v.id + '/update'; // adjust prefix
+
+            document.getElementById('evHeartRate').value = v.heart_rate ?? '';
+            document.getElementById('evBloodPressure').value = v.blood_pressure ?? '';
+            document.getElementById('evTemparature').value = v.temparature ?? '';
+            document.getElementById('evSpo').value = v.spo ?? '';
+            document.getElementById('evBloodSugar').value = v.blood_sugar ?? '';
+            document.getElementById('evBloodGroup').value = v.blood_group ?? '';
+            document.getElementById('evWeight').value = v.weight ?? '';
+            document.getElementById('evHeight').value = v.height ?? '';
+            document.getElementById('evBmi').value = v.bmi ?? '';
+
+            // Show BMI tag for existing value
+            setBmiTag(parseFloat(v.bmi), document.getElementById('evBmi'), document.getElementById('evBmiTag'));
+
+            document.getElementById('editVitalsModal').classList.add('active');
+        }
+
+        function closeEditVitalsModal() {
+            document.getElementById('editVitalsModal').classList.remove('active');
+        }
+
+        function handleEditVmOverlay(e) {
+            if (e.target === document.getElementById('editVitalsModal')) closeEditVitalsModal();
+        }
+
+        // ── BMI calculator ───────────────────────────────────────
+        function calcVmBmi() {
+            const w = parseFloat(document.getElementById('vmWeight').value);
+            const h = parseFloat(document.getElementById('vmHeight').value) / 100;
+            const bmiInput = document.getElementById('vmBmi');
+            const bmiTag = document.getElementById('vmBmiTag');
+            if (w > 0 && h > 0) {
+                const bmi = (w / (h * h)).toFixed(1);
+                bmiInput.value = bmi;
+                setBmiTag(parseFloat(bmi), bmiInput, bmiTag);
+            } else {
+                bmiInput.value = '';
+                bmiTag.className = 'vm-bmi-tag';
+                bmiTag.textContent = '';
+            }
+        }
+
+        function calcEvBmi() {
+            const w = parseFloat(document.getElementById('evWeight').value);
+            const h = parseFloat(document.getElementById('evHeight').value) / 100;
+            const bmiInput = document.getElementById('evBmi');
+            const bmiTag = document.getElementById('evBmiTag');
+            if (w > 0 && h > 0) {
+                const bmi = (w / (h * h)).toFixed(1);
+                bmiInput.value = bmi;
+                setBmiTag(parseFloat(bmi), bmiInput, bmiTag);
+            } else {
+                bmiInput.value = '';
+                bmiTag.className = 'vm-bmi-tag';
+                bmiTag.textContent = '';
+            }
+        }
+
+        function setBmiTag(bmi, input, tag) {
+            tag.className = 'vm-bmi-tag';
+            if (!bmi || isNaN(bmi)) {
+                tag.textContent = '';
+                return;
+            }
+            if (bmi < 18.5) {
+                tag.classList.add('underweight');
+                tag.textContent = 'Underweight';
+            } else if (bmi < 25) {
+                tag.classList.add('normal');
+                tag.textContent = 'Normal';
+            } else if (bmi < 30) {
+                tag.classList.add('overweight');
+                tag.textContent = 'Overweight';
+            } else {
+                tag.classList.add('obese');
+                tag.textContent = 'Obese';
+            }
+        }
+    </script>
+
+
+    @endsection

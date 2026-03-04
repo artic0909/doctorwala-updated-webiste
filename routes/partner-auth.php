@@ -16,6 +16,7 @@ use App\Http\Controllers\Partnerpanel\PartnerPatientInquiryController;
 use App\Http\Controllers\Partnerpanel\PartnerProfileBannerController;
 use App\Http\Controllers\Partnerpanel\PartnerServiceListController;
 use App\Http\Controllers\Partnerpanel\PartnerSubscriptionController;
+use App\Http\Controllers\Partnerpanel\PatientProfileAccessController;
 use App\Http\Controllers\Partnerpanel\ProfileEditController;
 use Illuminate\Support\Facades\Route;
 
@@ -70,14 +71,14 @@ Route::middleware(['auth:partner', 'verified'])->group(function () {
     Route::post('/partnerpanel/payment-callback', [PartnerSubscriptionController::class, 'paymentCallback'])->name('partnerpanel.payment.callback');
 
 
-    
+
     Route::get('/partnerpanel/partner-dashboard', [DwPartnerController::class, 'partnerdashboardview'])->name('partnerpanel.partner-dashboard');
 
     Route::get('/partnerpanel/partner-coupon', [DwPartnerController::class, 'partnerCouponCodeAddView'])->name('partnerpanel.partner-coupon');
-    
 
 
-    
+
+
     // Failed Payment Route
     Route::get('/partnerpanel/failed', function () {
         return view('subscription_failed');
@@ -262,6 +263,17 @@ Route::middleware(['auth:partner', 'verified'])->group(function () {
     // Coupon Code Get Route
     Route::post('/partnerpanel/get-coupon-details', [DwPartnerController::class, 'getCouponDetails'])->name('get.coupon.details');
     Route::post('/partnerpanel/add-coupon-details', [DwPartnerController::class, 'partnerCouponCodeAdd'])->name('partner.coupon.code.add');
+
+
+
+    // Patient Profile Request
+    Route::get('/partnerpanel/partner-patient-profile-request', [PatientProfileAccessController::class, 'index'])->name('partner.patient.profile.request.index');
+    Route::get('/partnerpanel/patient-profile-request', [PatientProfileAccessController::class, 'index'])->name('partner.patient.profile.request');
+    Route::get('/partnerpanel/patient-profile-all-request', [PatientProfileAccessController::class, 'allRequests'])->name('partner.patient.profile.all.request');
+
+    // AJAX lookup
+    Route::post('/partnerpanel/patient/lookup', [PatientProfileAccessController::class, 'patientLookup'])->name('partner.patient.lookup');
+    Route::post('/partnerpanel/patient-profile-request/send',[PatientProfileAccessController::class, 'sendRequest'])->name('partner.patient.request.send');
 
 
 

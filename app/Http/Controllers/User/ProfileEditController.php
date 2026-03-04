@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
+use App\Models\AccessRequest;
 use App\Models\MedicalHistory;
 use App\Models\PartnerAllOPDDoctorModel;
 use Illuminate\Http\Request;
@@ -18,6 +19,7 @@ use App\Models\PartnerPatientInquiry;
 use App\Models\SuperAboutusModel;
 use App\Models\SuperHomeBannerModel;
 use App\Models\SuperOtherBannerModel;
+use App\Models\Vital;
 use Illuminate\Support\Facades\Storage;
 
 class ProfileEditController extends Controller
@@ -61,7 +63,22 @@ class ProfileEditController extends Controller
             ->latest()
             ->get();
 
-        return view('user-profile', compact('user', 'aboutDetails', 'otherBanners', 'latestSingleBooking', 'bookings'));
+        $histories = MedicalHistory::where('dw_user_id', Auth::id())
+            ->latest('date_of_report')
+            ->paginate(10);
+
+        $noOfPrescription = MedicalHistory::where('dw_user_id', Auth::id())
+            ->where('type', 'prescription')
+            ->count();
+        $noOfReport = MedicalHistory::where('dw_user_id', Auth::id())
+            ->where('type', 'report')
+            ->count();
+
+        $vital = Vital::where('dw_user_id', Auth::id())->latest()->first();
+
+        $noOfRequest = AccessRequest::where('dw_user_id', Auth::id())->count();
+
+        return view('user-profile', compact('user', 'aboutDetails', 'otherBanners', 'latestSingleBooking', 'bookings', 'histories', 'noOfPrescription', 'noOfReport', 'vital', 'noOfRequest'));
     }
 
 
@@ -135,38 +152,30 @@ class ProfileEditController extends Controller
 
     public function updatePassword(Request $request)
     {
-
         $request->validate([
-            'user_password' => 'required|string|min:8',
+            'current_password' => 'required',
+            'password'         => 'required|string|min:8|confirmed',
         ]);
 
+        $user = Auth::guard('dwuser')->user();
 
-
-
-        $userId = Auth::guard('dwuser')->id();
-
-        if (!$userId) {
-            return back()->withErrors(['message' => 'User not found or not logged in']);
+        if (!$user) {
+            return back()->with('password_error', 'User not found or not logged in.');
         }
 
+        // Check current password against existing hash
+        if (!Hash::check($request->current_password, $user->user_password)) {
+            return back()->with('password_error', 'Current password is incorrect.');
+        }
 
-        $newPassword = Hash::make($request->user_password);
-
-
-
-        $updateResult = DB::table('dw_user_models')
-            ->where('id', $userId)
+        DB::table('dw_user_models')
+            ->where('id', $user->id)
             ->update([
-                'user_password' => $newPassword,
+                'user_password' => Hash::make($request->password),
             ]);
 
-        if ($updateResult) {
-            return back()->with('password_update_status', 'success');
-        } else {
-            return back()->with('password_update_status', 'failure');
-        }
+        return back()->with('password_success', 'Password updated successfully.');
     }
-
 
     public function updatePatientEnquiryStatusIntoComplete($id)
     {
@@ -196,7 +205,6 @@ class ProfileEditController extends Controller
         return back()->with('success', 'Inquiry has been cancelled.');
     }
 
-
     public function medicalHistory()
     {
         $aboutDetails = SuperAboutusModel::get();
@@ -213,7 +221,20 @@ class ProfileEditController extends Controller
             ->latest()
             ->get();
 
-        return view('user-medical-history', compact('user', 'aboutDetails', 'otherBanners', 'latestSingleBooking', 'bookings'));
+        $histories = MedicalHistory::where('dw_user_id', Auth::id())
+            ->latest('date_of_report')
+            ->paginate(10);
+
+        $noOfPrescription = MedicalHistory::where('dw_user_id', Auth::id())
+            ->where('type', 'prescription')
+            ->count();
+        $noOfReport = MedicalHistory::where('dw_user_id', Auth::id())
+            ->where('type', 'report')
+            ->count();
+
+        $vital = Vital::where('dw_user_id', Auth::id())->latest()->first();
+
+        return view('user-medical-history', compact('user', 'aboutDetails', 'otherBanners', 'latestSingleBooking', 'bookings', 'histories', 'noOfPrescription', 'noOfReport', 'vital'));
     }
 
     public function addMedicalHistory(Request $request)
@@ -252,7 +273,65 @@ class ProfileEditController extends Controller
 
         return redirect()->back()->with('success', 'Medical record added successfully.');
     }
-    
+
+    public function editMecicalHistory(Request $request, $id)
+    {
+        $record = MedicalHistory::where('id', $id)
+            ->where('dw_user_id', Auth::id())
+            ->firstOrFail();
+
+        $request->validate([
+            'type'            => 'required|in:report,prescription',
+            'date_of_report'  => 'required|date|before_or_equal:today',
+            'heading'         => 'required|string|max:255',
+            'new_images'      => 'nullable|array|max:20',
+            'new_images.*'    => 'file|mimes:jpg,jpeg,png,webp,pdf|max:5120',
+            'deleted_images'  => 'nullable|array',
+            'deleted_images.*' => 'string',
+        ]);
+
+        $imagePaths = $record->images ?? [];
+
+        // ── 1. Delete removed files from disk & array ─────────────
+        if ($request->filled('deleted_images')) {
+            foreach ($request->deleted_images as $deletedPath) {
+                // Security: make sure the path belongs to this user
+                if (str_starts_with($deletedPath, 'medical_histories/' . Auth::id() . '/')) {
+                    Storage::disk('public')->delete($deletedPath);
+                    $imagePaths = array_filter($imagePaths, fn($p) => $p !== $deletedPath);
+                }
+            }
+            $imagePaths = array_values($imagePaths); // re-index
+        }
+
+        // ── 2. Store newly uploaded files ─────────────────────────
+        if ($request->hasFile('new_images')) {
+            foreach ($request->file('new_images') as $file) {
+                $path = $file->store('medical_histories/' . Auth::id(), 'public');
+                $imagePaths[] = $path;
+            }
+        }
+
+        // ── 3. Save ───────────────────────────────────────────────
+        $record->update([
+            'type'           => $request->type,
+            'date_of_report' => $request->date_of_report,
+            'heading'        => $request->heading,
+            'images'         => $imagePaths,
+        ]);
+
+        return redirect()->back()->with('success', 'Medical record updated successfully.');
+    }
+
+    public function viewReportImagesOrPdf($id)
+    {
+        $record = MedicalHistory::where('id', $id)
+            ->where('dw_user_id', Auth::id())
+            ->firstOrFail();
+
+        return view('user-view-report-images', compact('record'));
+    }
+
     public function destroy($id)
     {
         $record = MedicalHistory::where('id', $id)
@@ -269,5 +348,166 @@ class ProfileEditController extends Controller
         $record->delete();
 
         return redirect()->back()->with('success', 'Record deleted.');
+    }
+
+    public function addVitals(Request $request)
+    {
+        $request->validate([
+            'heart_rate'     => 'nullable|numeric|min:30|max:250',
+            'blood_pressure' => 'nullable|string|max:20',
+            'temparature'    => 'nullable|numeric|min:30',
+            'spo'            => 'nullable|numeric|min:50|max:100',
+            'blood_sugar'    => 'nullable|numeric|min:20|max:600',
+            'weight'         => 'nullable|numeric|min:1|max:300',
+            'height'         => 'nullable|numeric|min:50|max:300',
+            'bmi'            => 'nullable|numeric',
+            'blood_group'    => 'nullable|in:A+,A-,B+,B-,O+,O-,AB+,AB-',
+        ]);
+
+        Vital::create([
+            'dw_user_id'     => Auth::id(),
+            'heart_rate'     => $request->heart_rate,
+            'blood_pressure' => $request->blood_pressure,
+            'temparature'    => $request->temparature,
+            'spo'            => $request->spo,
+            'blood_sugar'    => $request->blood_sugar,
+            'weight'         => $request->weight,
+            'height'         => $request->height,
+            'bmi'            => $request->bmi,
+            'blood_group'    => $request->blood_group,
+        ]);
+
+        return redirect()->back()->with('success', 'Vitals saved successfully.');
+    }
+
+    public function editVitals(Request $request, $id)
+    {
+        $vital = Vital::where('id', $id)
+            ->where('dw_user_id', Auth::id())
+            ->firstOrFail();
+
+        $request->validate([
+            'heart_rate'     => 'nullable|numeric|min:30|max:250',
+            'blood_pressure' => 'nullable|string|max:20',
+            'temparature'    => 'nullable|numeric|min:30',
+            'spo'            => 'nullable|numeric|min:50|max:100',
+            'blood_sugar'    => 'nullable|numeric|min:20|max:600',
+            'weight'         => 'nullable|numeric|min:1|max:300',
+            'height'         => 'nullable|numeric|min:50|max:300',
+            'bmi'            => 'nullable|numeric',
+            'blood_group'    => 'nullable|in:A+,A-,B+,B-,O+,O-,AB+,AB-',
+        ]);
+
+        $vital->update([
+            'heart_rate'     => $request->heart_rate,
+            'blood_pressure' => $request->blood_pressure,
+            'temparature'    => $request->temparature,
+            'spo'            => $request->spo,
+            'blood_sugar'    => $request->blood_sugar,
+            'weight'         => $request->weight,
+            'height'         => $request->height,
+            'bmi'            => $request->bmi,
+            'blood_group'    => $request->blood_group,
+        ]);
+
+        return redirect()->back()->with('success', 'Vitals updated successfully.');
+    }
+
+    public function notification()
+    {
+        $aboutDetails = SuperAboutusModel::get();
+        $otherBanners = SuperOtherBannerModel::get();
+        $user = Auth::guard('dwuser')->user();
+
+        $requests = AccessRequest::where('dw_user_id', $user->id)
+            ->with(['doctor'])
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return view('user-notification', compact('user', 'aboutDetails', 'otherBanners', 'requests'));
+    }
+
+    public function acceptRequest($id)
+    {
+        try {
+            $req = AccessRequest::where('id', $id)
+                ->where('dw_user_id', Auth::guard('dwuser')->id())
+                ->firstOrFail();
+
+            $req->update([
+                'req_status'    => 'accepted',
+                'access_status' => 'on',
+                'read_status'   => 'read',
+            ]);
+
+            return redirect()->back()->with('success', 'Request accepted. The clinic can now view your medical profile.');
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return redirect()->back()->with('error', 'Request not found or unauthorized.');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Something went wrong: ' . $e->getMessage());
+        }
+    }
+
+    public function rejectRequest($id)
+    {
+        try {
+            $req = AccessRequest::where('id', $id)
+                ->where('dw_user_id', Auth::guard('dwuser')->id())
+                ->firstOrFail();
+
+            $req->update([
+                'req_status'    => 'rejected',
+                'access_status' => 'off',
+                'read_status'   => 'read',
+            ]);
+
+            return redirect()->back()->with('success', 'Request rejected successfully.');
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return redirect()->back()->with('error', 'Request not found or unauthorized.');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Something went wrong: ' . $e->getMessage());
+        }
+    }
+
+    public function permissionOffRequest($id)
+    {
+        try {
+            $req = AccessRequest::where('id', $id)
+                ->where('dw_user_id', Auth::guard('dwuser')->id())
+                ->firstOrFail();
+
+            $req->update([
+                'req_status'    => 'rejected',
+                'access_status' => 'off',
+                'read_status'   => 'read',
+            ]);
+
+            return redirect()->back()->with('success', 'Access has been revoked for this clinic.');
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return redirect()->back()->with('error', 'Request not found or unauthorized.');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Something went wrong: ' . $e->getMessage());
+        }
+    }
+
+    public function permissionOnRequest($id)
+    {
+        try {
+            $req = AccessRequest::where('id', $id)
+                ->where('dw_user_id', Auth::guard('dwuser')->id())
+                ->firstOrFail();
+
+            $req->update([
+                'req_status'    => 'accepted',
+                'access_status' => 'on',
+                'read_status'   => 'read',
+            ]);
+
+            return redirect()->back()->with('success', 'Access has been granted to this clinic.');
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return redirect()->back()->with('error', 'Request not found or unauthorized.');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Something went wrong: ' . $e->getMessage());
+        }
     }
 }

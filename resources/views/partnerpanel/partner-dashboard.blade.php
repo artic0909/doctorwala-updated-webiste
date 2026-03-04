@@ -459,6 +459,25 @@
                     </li>
                     @endif
 
+                    <!-- Patient profile management -->
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="collapse" href="#ui-req" aria-expanded="false"
+                            aria-controls="ui-req">
+                            <i class="fa-solid fa-ticket"></i>&nbsp; <span class="menu-title">Patient Profile</span><i
+                                class="menu-arrow"></i>
+                        </a>
+                        <div class="collapse" id="ui-req">
+                            <ul class="nav flex-column sub-menu">
+
+                                <li class="nav-item"> <a class="nav-link" href="/partnerpanel/partner-patient-profile-request">Send Request</a></li>
+
+                                <li class="nav-item"> <a class="nav-link" href="/partnerpanel/patient-profile-all-request">All Profiles</a>
+                                </li>
+
+                            </ul>
+                        </div>
+                    </li>
+
 
 
 
@@ -551,7 +570,7 @@
                                 <div class="col-12 col-xl-8 mb-4 mb-xl-0">
                                     <h3 class="font-weight-bold" style="text-transform: capitalize;">Welcome Back {{ $partnerName }} </h3>
                                     <h4 class="font-weight-bold" style="text-transform: capitalize;"><i
-                                    class="fa-solid fa-heart text-danger"></i>&nbsp; {{ $clinicName }} </h4>
+                                            class="fa-solid fa-heart text-danger"></i>&nbsp; {{ $clinicName }} </h4>
 
                                     <h6 class="font-weight-normal mb-0"><i
                                             class="fa-solid fa-heart text-danger"></i>&nbsp;It's great to connect with
