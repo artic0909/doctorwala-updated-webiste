@@ -889,7 +889,7 @@
                     </div>
                 </div>
                 <div class="up-qstat-grid">
-                    
+
                     <div class="up-qstat up-qstat--mint">
                         <div class="up-qstat__ico">💊</div>
                         <div class="up-qstat__num">{{$noOfPrescription}}</div>
@@ -1437,693 +1437,698 @@
                         <div class="up-vital__ico">📊</div>
                         <div class="up-vital__val" style="color:#c2410c">{{$vital->bmi ?? '0'}}</div>
                         <div class="up-vital__unit">
-                            @if($vital->bmi < 18.5) Underweight
-                                @elseif($vital->bmi < 25) Normal
-                                    @elseif($vital->bmi < 30) Overweight
-                                        @else Obese
+                            @if(!is_null(optional($vital)->bmi))
+                            @if($vital->bmi < 18.5)
+                                Underweight
+                                @elseif($vital->bmi < 25)
+                                    Normal
+                                    @elseif($vital->bmi < 30)
+                                        Overweight
+                                        @else
+                                        Obese
+                                        @endif
+                                        @else
+                                        —
                                         @endif
                                         </div>
-                                        <div class="up-vital__lbl">BMI
+                                        <div class="up-vital up-qstat--violet" style="border-color:#ddd6fe;background:var(--violet-lt)">
+                                            <div class="up-vital__ico">🫁</div>
+                                            <div class="up-vital__val" style="color:var(--violet)">{{$vital->spo ?? '0'}}</div>
+                                            <div class="up-vital__unit">SpO₂ %</div>
+                                            <div class="up-vital__lbl">Oxygen</div>
+                                        </div>
+                                        <div class="up-vital up-qstat--amber" style="border-color:#fed7aa">
+                                            <div class="up-vital__ico">🧪</div>
+                                            <div class="up-vital__val" style="color:#c2410c">{{$vital->blood_sugar ?? '0'}}</div>
+                                            <div class="up-vital__unit">mg/dL</div>
+                                            <div class="up-vital__lbl">Blood Sugar</div>
                                         </div>
                         </div>
-                        <div class="up-vital up-qstat--violet" style="border-color:#ddd6fe;background:var(--violet-lt)">
-                            <div class="up-vital__ico">🫁</div>
-                            <div class="up-vital__val" style="color:var(--violet)">{{$vital->spo ?? '0'}}</div>
-                            <div class="up-vital__unit">SpO₂ %</div>
-                            <div class="up-vital__lbl">Oxygen</div>
-                        </div>
-                        <div class="up-vital up-qstat--amber" style="border-color:#fed7aa">
-                            <div class="up-vital__ico">🧪</div>
-                            <div class="up-vital__val" style="color:#c2410c">{{$vital->blood_sugar ?? '0'}}</div>
-                            <div class="up-vital__unit">mg/dL</div>
-                            <div class="up-vital__lbl">Blood Sugar</div>
-                        </div>
-                    </div>
-                </div>
-
-
-                <!-- TABS CARD -->
-                <div class="up-card">
-
-                    <div class="up-tabs">
-                        <button class="up-tab active" onclick="switchTab('appointments')" id="tab-appointments">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <rect x="3" y="4" width="18" height="18" rx="2" />
-                                <path d="M16 2v4M8 2v4M3 10h18" />
-                            </svg>
-                            Appointments
-                            <span class="up-tab-count">{{ $bookings->count() }}</span>
-                        </button>
-                        <button class="up-tab" onclick="switchTab('settings')" id="tab-settings">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <circle cx="12" cy="12" r="3" />
-                                <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z" />
-                            </svg>
-                            Settings
-                        </button>
                     </div>
 
 
-                    {{-- ── TAB: APPOINTMENTS ── --}}
-                    <div id="content-appointments" class="up-tab-content active">
-                        <div class="up-appt-wrap">
+                    <!-- TABS CARD -->
+                    <div class="up-card">
 
-                            <div class="up-appt-filters">
-                                <button class="up-filter-btn active" onclick="filterAppts(this, 'all')">
-                                    All <span class="up-filter-count" id="count-all">{{ $bookings->count() }}</span>
-                                </button>
-                                <button class="up-filter-btn" onclick="filterAppts(this, 'Upcoming')">
-                                    Upcoming <span class="up-filter-count" id="count-upcoming">{{ $bookings->where('status', 'Upcoming')->count() }}</span>
-                                </button>
-                                <button class="up-filter-btn" onclick="filterAppts(this, 'Completed')">
-                                    Completed <span class="up-filter-count" id="count-completed">{{ $bookings->where('status', 'Completed')->count() }}</span>
-                                </button>
-                                <button class="up-filter-btn" onclick="filterAppts(this, 'Cancelled')">
-                                    Cancelled <span class="up-filter-count" id="count-cancelled">{{ $bookings->where('status', 'Cancelled')->count() }}</span>
-                                </button>
-                            </div>
-
-                            @if($bookings->isEmpty())
-                            <div class="up-appt-empty">
-                                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" opacity=".3">
-                                    <rect x="3" y="4" width="18" height="18" rx="3" />
+                        <div class="up-tabs">
+                            <button class="up-tab active" onclick="switchTab('appointments')" id="tab-appointments">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="4" width="18" height="18" rx="2" />
                                     <path d="M16 2v4M8 2v4M3 10h18" />
                                 </svg>
-                                <p>No appointments found</p>
-                            </div>
-                            @else
-                            <div class="up-appt-table-wrap">
-                                <table class="up-appt-table">
-                                    <thead>
-                                        <tr>
-                                            <th>OPD / Test / Doctor</th>
-                                            <th>Date &amp; Time</th>
-                                            <th>Visit</th>
-                                            <th>Status</th>
-                                            <th>Location</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="apptTableBody">
-
-                                        @foreach($bookings as $index => $booking)
-                                        @php
-                                        $status = $booking->status ?? 'Upcoming';
-                                        $statusMap = [
-                                        'Upcoming' => ['class' => 'up-status--upcoming', 'label' => 'Upcoming'],
-                                        'Completed' => ['class' => 'up-status--done', 'label' => 'Completed'],
-                                        'Cancelled' => ['class' => 'up-status--cancelled','label' => 'Cancelled'],
-                                        ];
-                                        $statusInfo = $statusMap[$status] ?? ['class' => 'up-status--upcoming', 'label' => $status];
-                                        @endphp
-
-                                        <tr class="appt-row" data-status="{{ $status }}">
-
-
-                                            <td>
-                                                @if ($booking->clinic_type === 'OPD' && $booking->doctor)
-                                                <div class="up-appt-doc">
-                                                    <div class="up-appt-av">{{ strtoupper(substr($booking->doctor->doctor_name, 0, 1)) }}{{ strtoupper(substr(strstr($booking->doctor->doctor_name, ' '), 1, 1)) }}</div>
-                                                    <div>
-                                                        <div class="up-appt-dname">Dr. {{ $booking->doctor->doctor_name }}</div>
-                                                        <div class="up-appt-dname" style="color: red;">{{ $booking->doctor->doctor_specialist }}</div>
-                                                        <div class="up-appt-subname" style="color: #5E807F;">{{ $booking->opdContact->clinic_name }}</div>
-                                                    </div>
-                                                </div>
-
-                                                @elseif ($booking->clinic_type === 'Pathology' && $booking->test)
-                                                <div class="up-appt-doc">
-                                                    <div class="up-appt-av">{{ strtoupper(substr($booking->test->test_name, 0, 1)) }}{{ strtoupper(substr(strstr($booking->test->test_name, ' '), 1, 1)) }}</div>
-                                                    <div>
-                                                        <div class="up-appt-dname">{{ $booking->test->test_name }}</div>
-                                                        <div class="up-appt-dname" style="color: green;">{{ $booking->test->test_type }}</div>
-                                                        <div class="up-appt-subname" style="color: #5E807F;">{{ $booking->pathologyContact->clinic_name }}</div>
-                                                    </div>
-                                                </div>
-
-                                                @elseif ($booking->clinic_type === 'Doctor' && $booking->doctorContact)
-                                                <div class="up-appt-doc">
-                                                    <div class="up-appt-av">{{ strtoupper(substr($booking->doctorContact->partner_doctor_name, 0, 1)) }}{{ strtoupper(substr(strstr($booking->doctorContact->partner_doctor_name, ' '), 1, 1)) }}</div>
-                                                    <div>
-                                                        <div class="up-appt-dname">Dr. {{ $booking->doctorContact->partner_doctor_name }}</div>
-                                                        <div class="up-appt-dname" style="color: #1B9AAA;">{{ $booking->doctorContact->partner_doctor_specialist }}</div>
-                                                    </div>
-                                                </div>
-                                                @endif
-                                            </td>
-
-
-                                            <td>{{ \Carbon\Carbon::parse($booking->booking_date)->format('d M Y') }}<br><span style="color:var(--muted);font-size:.75rem">{{ \Carbon\Carbon::parse($booking->booking_time)->format('h:i A') }}</span></td>
-
-
-                                            <td><span style="font-size:.74rem;font-weight:700;color:var(--p); text-transform:capitalize">{{ $booking->visit_mode }}</span></td>
-
-
-                                            <td>
-                                                <span class="up-status {{ $statusInfo['class'] }}">
-                                                    <span class="dot"></span>{{ $statusInfo['label'] }}
-                                                </span>
-                                            </td>
-
-
-                                            <td>
-                                                @if ($booking->clinic_type === 'OPD' && $booking->doctor)
-                                                <a href="{{$booking->opdContact->clinic_google_map_link}}" target="_blank" class="up-action-done">
-                                                    Map Link
-                                                </a>
-                                                @elseif ($booking->clinic_type === 'Pathology' && $booking->test)
-                                                <a href="{{$booking->pathologyContact->clinic_google_map_link}}" target="_blank" class="up-action-done">
-                                                    Map Link
-                                                </a>
-                                                @elseif ($booking->clinic_type === 'Doctor' && $booking->doctorContact)
-                                                <a href="{{$booking->doctorContact->partner_doctor_google_map_link}}" target="_blank" class="up-action-done">
-                                                    Map Link
-                                                </a>
-                                                @endif
-                                            </td>
-
-                                        </tr>
-                                        @endforeach
-
-                                    </tbody>
-                                </table>
-                            </div>
-                            @endif
-
+                                Appointments
+                                <span class="up-tab-count">{{ $bookings->count() }}</span>
+                            </button>
+                            <button class="up-tab" onclick="switchTab('settings')" id="tab-settings">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="3" />
+                                    <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z" />
+                                </svg>
+                                Settings
+                            </button>
                         </div>
-                    </div>
 
 
-                    <!-- ── TAB: SETTINGS ── -->
-                    <div id="content-settings" class="up-tab-content">
-                        <div class="up-settings">
+                        {{-- ── TAB: APPOINTMENTS ── --}}
+                        <div id="content-appointments" class="up-tab-content active">
+                            <div class="up-appt-wrap">
 
-                            @if(session('password_success'))
-                            <div class="up-pwd-alert up-pwd-alert--success">
-                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                                    <polyline points="20 6 9 17 4 12" />
-                                </svg>
-                                {{ session('password_success') }}
+                                <div class="up-appt-filters">
+                                    <button class="up-filter-btn active" onclick="filterAppts(this, 'all')">
+                                        All <span class="up-filter-count" id="count-all">{{ $bookings->count() }}</span>
+                                    </button>
+                                    <button class="up-filter-btn" onclick="filterAppts(this, 'Upcoming')">
+                                        Upcoming <span class="up-filter-count" id="count-upcoming">{{ $bookings->where('status', 'Upcoming')->count() }}</span>
+                                    </button>
+                                    <button class="up-filter-btn" onclick="filterAppts(this, 'Completed')">
+                                        Completed <span class="up-filter-count" id="count-completed">{{ $bookings->where('status', 'Completed')->count() }}</span>
+                                    </button>
+                                    <button class="up-filter-btn" onclick="filterAppts(this, 'Cancelled')">
+                                        Cancelled <span class="up-filter-count" id="count-cancelled">{{ $bookings->where('status', 'Cancelled')->count() }}</span>
+                                    </button>
+                                </div>
+
+                                @if($bookings->isEmpty())
+                                <div class="up-appt-empty">
+                                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" opacity=".3">
+                                        <rect x="3" y="4" width="18" height="18" rx="3" />
+                                        <path d="M16 2v4M8 2v4M3 10h18" />
+                                    </svg>
+                                    <p>No appointments found</p>
+                                </div>
+                                @else
+                                <div class="up-appt-table-wrap">
+                                    <table class="up-appt-table">
+                                        <thead>
+                                            <tr>
+                                                <th>OPD / Test / Doctor</th>
+                                                <th>Date &amp; Time</th>
+                                                <th>Visit</th>
+                                                <th>Status</th>
+                                                <th>Location</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="apptTableBody">
+
+                                            @foreach($bookings as $index => $booking)
+                                            @php
+                                            $status = $booking->status ?? 'Upcoming';
+                                            $statusMap = [
+                                            'Upcoming' => ['class' => 'up-status--upcoming', 'label' => 'Upcoming'],
+                                            'Completed' => ['class' => 'up-status--done', 'label' => 'Completed'],
+                                            'Cancelled' => ['class' => 'up-status--cancelled','label' => 'Cancelled'],
+                                            ];
+                                            $statusInfo = $statusMap[$status] ?? ['class' => 'up-status--upcoming', 'label' => $status];
+                                            @endphp
+
+                                            <tr class="appt-row" data-status="{{ $status }}">
+
+
+                                                <td>
+                                                    @if ($booking->clinic_type === 'OPD' && $booking->doctor)
+                                                    <div class="up-appt-doc">
+                                                        <div class="up-appt-av">{{ strtoupper(substr($booking->doctor->doctor_name, 0, 1)) }}{{ strtoupper(substr(strstr($booking->doctor->doctor_name, ' '), 1, 1)) }}</div>
+                                                        <div>
+                                                            <div class="up-appt-dname">Dr. {{ $booking->doctor->doctor_name }}</div>
+                                                            <div class="up-appt-dname" style="color: red;">{{ $booking->doctor->doctor_specialist }}</div>
+                                                            <div class="up-appt-subname" style="color: #5E807F;">{{ $booking->opdContact->clinic_name }}</div>
+                                                        </div>
+                                                    </div>
+
+                                                    @elseif ($booking->clinic_type === 'Pathology' && $booking->test)
+                                                    <div class="up-appt-doc">
+                                                        <div class="up-appt-av">{{ strtoupper(substr($booking->test->test_name, 0, 1)) }}{{ strtoupper(substr(strstr($booking->test->test_name, ' '), 1, 1)) }}</div>
+                                                        <div>
+                                                            <div class="up-appt-dname">{{ $booking->test->test_name }}</div>
+                                                            <div class="up-appt-dname" style="color: green;">{{ $booking->test->test_type }}</div>
+                                                            <div class="up-appt-subname" style="color: #5E807F;">{{ $booking->pathologyContact->clinic_name }}</div>
+                                                        </div>
+                                                    </div>
+
+                                                    @elseif ($booking->clinic_type === 'Doctor' && $booking->doctorContact)
+                                                    <div class="up-appt-doc">
+                                                        <div class="up-appt-av">{{ strtoupper(substr($booking->doctorContact->partner_doctor_name, 0, 1)) }}{{ strtoupper(substr(strstr($booking->doctorContact->partner_doctor_name, ' '), 1, 1)) }}</div>
+                                                        <div>
+                                                            <div class="up-appt-dname">Dr. {{ $booking->doctorContact->partner_doctor_name }}</div>
+                                                            <div class="up-appt-dname" style="color: #1B9AAA;">{{ $booking->doctorContact->partner_doctor_specialist }}</div>
+                                                        </div>
+                                                    </div>
+                                                    @endif
+                                                </td>
+
+
+                                                <td>{{ \Carbon\Carbon::parse($booking->booking_date)->format('d M Y') }}<br><span style="color:var(--muted);font-size:.75rem">{{ \Carbon\Carbon::parse($booking->booking_time)->format('h:i A') }}</span></td>
+
+
+                                                <td><span style="font-size:.74rem;font-weight:700;color:var(--p); text-transform:capitalize">{{ $booking->visit_mode }}</span></td>
+
+
+                                                <td>
+                                                    <span class="up-status {{ $statusInfo['class'] }}">
+                                                        <span class="dot"></span>{{ $statusInfo['label'] }}
+                                                    </span>
+                                                </td>
+
+
+                                                <td>
+                                                    @if ($booking->clinic_type === 'OPD' && $booking->doctor)
+                                                    <a href="{{$booking->opdContact->clinic_google_map_link}}" target="_blank" class="up-action-done">
+                                                        Map Link
+                                                    </a>
+                                                    @elseif ($booking->clinic_type === 'Pathology' && $booking->test)
+                                                    <a href="{{$booking->pathologyContact->clinic_google_map_link}}" target="_blank" class="up-action-done">
+                                                        Map Link
+                                                    </a>
+                                                    @elseif ($booking->clinic_type === 'Doctor' && $booking->doctorContact)
+                                                    <a href="{{$booking->doctorContact->partner_doctor_google_map_link}}" target="_blank" class="up-action-done">
+                                                        Map Link
+                                                    </a>
+                                                    @endif
+                                                </td>
+
+                                            </tr>
+                                            @endforeach
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                                @endif
+
                             </div>
-                            @endif
+                        </div>
 
-                            @if(session('password_error'))
-                            <div class="up-pwd-alert up-pwd-alert--error">
-                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                                    <circle cx="12" cy="12" r="10" />
-                                    <line x1="12" y1="8" x2="12" y2="12" />
-                                    <line x1="12" y1="16" x2="12.01" y2="16" />
-                                </svg>
-                                {{ session('password_error') }}
-                            </div>
-                            @endif
 
-                            <form action="{{ route('dw.password.update') }}" method="POST" class="up-pwd-form">
-                                @csrf @method('PUT')
+                        <!-- ── TAB: SETTINGS ── -->
+                        <div id="content-settings" class="up-tab-content">
+                            <div class="up-settings">
 
-                                <div class="up-pwd-header">
-                                    <div class="up-pwd-header__ico">
-                                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                            <rect x="3" y="11" width="18" height="11" rx="2" />
-                                            <path d="M7 11V7a5 5 0 0110 0v4" />
-                                        </svg>
-                                    </div>
-                                    <div>
-                                        <div class="up-pwd-header__title">Change Password</div>
-                                        <div class="up-pwd-header__sub">Keep your account secure with a strong password</div>
-                                    </div>
-                                </div>
-
-                                <div class="up-pwd-field">
-                                    <label>Current Password</label>
-                                    <div class="up-pwd-input-wrap">
-                                        <input type="password" name="current_password" id="pwdCurrent" placeholder="Enter current password" required>
-                                        <button type="button" class="up-pwd-eye" onclick="togglePwd('pwdCurrent', this)">
-                                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-                                                <circle cx="12" cy="12" r="3" />
-                                            </svg>
-                                        </button>
-                                    </div>
-                                    @error('current_password')
-                                    <span class="up-pwd-err">{{ $message }}</span>
-                                    @enderror
-                                </div>
-
-                                <div class="up-pwd-field">
-                                    <label>New Password</label>
-                                    <div class="up-pwd-input-wrap">
-                                        <input type="password" name="password" id="pwdNew" placeholder="Enter new password" required oninput="checkPwdStrength(this.value)">
-                                        <button type="button" class="up-pwd-eye" onclick="togglePwd('pwdNew', this)">
-                                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-                                                <circle cx="12" cy="12" r="3" />
-                                            </svg>
-                                        </button>
-                                    </div>
-                                    <div class="up-pwd-strength">
-                                        <div class="up-pwd-strength__bars">
-                                            <span id="pwdBar1" class="up-pwd-bar"></span>
-                                            <span id="pwdBar2" class="up-pwd-bar"></span>
-                                            <span id="pwdBar3" class="up-pwd-bar"></span>
-                                            <span id="pwdBar4" class="up-pwd-bar"></span>
-                                        </div>
-                                        <span id="pwdStrengthLabel" class="up-pwd-strength__label"></span>
-                                    </div>
-                                    @error('password')
-                                    <span class="up-pwd-err">{{ $message }}</span>
-                                    @enderror
-                                </div>
-
-                                <div class="up-pwd-field">
-                                    <label>Confirm New Password</label>
-                                    <div class="up-pwd-input-wrap">
-                                        <input type="password" name="password_confirmation" id="pwdConfirm" placeholder="Re-enter new password" required>
-                                        <button type="button" class="up-pwd-eye" onclick="togglePwd('pwdConfirm', this)">
-                                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-                                                <circle cx="12" cy="12" r="3" />
-                                            </svg>
-                                        </button>
-                                    </div>
-                                    @error('password_confirmation')
-                                    <span class="up-pwd-err">{{ $message }}</span>
-                                    @enderror
-                                </div>
-
-                                <button type="submit" class="up-pwd-submit">
-                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                @if(session('password_success'))
+                                <div class="up-pwd-alert up-pwd-alert--success">
+                                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                                         <polyline points="20 6 9 17 4 12" />
                                     </svg>
-                                    Update Password
-                                </button>
-                            </form>
+                                    {{ session('password_success') }}
+                                </div>
+                                @endif
+
+                                @if(session('password_error'))
+                                <div class="up-pwd-alert up-pwd-alert--error">
+                                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                        <circle cx="12" cy="12" r="10" />
+                                        <line x1="12" y1="8" x2="12" y2="12" />
+                                        <line x1="12" y1="16" x2="12.01" y2="16" />
+                                    </svg>
+                                    {{ session('password_error') }}
+                                </div>
+                                @endif
+
+                                <form action="{{ route('dw.password.update') }}" method="POST" class="up-pwd-form">
+                                    @csrf @method('PUT')
+
+                                    <div class="up-pwd-header">
+                                        <div class="up-pwd-header__ico">
+                                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <rect x="3" y="11" width="18" height="11" rx="2" />
+                                                <path d="M7 11V7a5 5 0 0110 0v4" />
+                                            </svg>
+                                        </div>
+                                        <div>
+                                            <div class="up-pwd-header__title">Change Password</div>
+                                            <div class="up-pwd-header__sub">Keep your account secure with a strong password</div>
+                                        </div>
+                                    </div>
+
+                                    <div class="up-pwd-field">
+                                        <label>Current Password</label>
+                                        <div class="up-pwd-input-wrap">
+                                            <input type="password" name="current_password" id="pwdCurrent" placeholder="Enter current password" required>
+                                            <button type="button" class="up-pwd-eye" onclick="togglePwd('pwdCurrent', this)">
+                                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                                                    <circle cx="12" cy="12" r="3" />
+                                                </svg>
+                                            </button>
+                                        </div>
+                                        @error('current_password')
+                                        <span class="up-pwd-err">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+
+                                    <div class="up-pwd-field">
+                                        <label>New Password</label>
+                                        <div class="up-pwd-input-wrap">
+                                            <input type="password" name="password" id="pwdNew" placeholder="Enter new password" required oninput="checkPwdStrength(this.value)">
+                                            <button type="button" class="up-pwd-eye" onclick="togglePwd('pwdNew', this)">
+                                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                                                    <circle cx="12" cy="12" r="3" />
+                                                </svg>
+                                            </button>
+                                        </div>
+                                        <div class="up-pwd-strength">
+                                            <div class="up-pwd-strength__bars">
+                                                <span id="pwdBar1" class="up-pwd-bar"></span>
+                                                <span id="pwdBar2" class="up-pwd-bar"></span>
+                                                <span id="pwdBar3" class="up-pwd-bar"></span>
+                                                <span id="pwdBar4" class="up-pwd-bar"></span>
+                                            </div>
+                                            <span id="pwdStrengthLabel" class="up-pwd-strength__label"></span>
+                                        </div>
+                                        @error('password')
+                                        <span class="up-pwd-err">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+
+                                    <div class="up-pwd-field">
+                                        <label>Confirm New Password</label>
+                                        <div class="up-pwd-input-wrap">
+                                            <input type="password" name="password_confirmation" id="pwdConfirm" placeholder="Re-enter new password" required>
+                                            <button type="button" class="up-pwd-eye" onclick="togglePwd('pwdConfirm', this)">
+                                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                                                    <circle cx="12" cy="12" r="3" />
+                                                </svg>
+                                            </button>
+                                        </div>
+                                        @error('password_confirmation')
+                                        <span class="up-pwd-err">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+
+                                    <button type="submit" class="up-pwd-submit">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                            <polyline points="20 6 9 17 4 12" />
+                                        </svg>
+                                        Update Password
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+
+                    </div><!-- end tabs card -->
+
+                </div>
+
+                <!-- end main -->
+
+            </div><!-- end layout -->
+        </div><!-- end wrap -->
+
+
+        <!-- ════════════════════════════════
+     PROFILE EDIT MODAL
+════════════════════════════════ -->
+        <div class="up-modal-overlay" id="profileModal" onclick="handleOverlayClick(event)">
+            <div class="up-modal">
+                <div class="up-modal__head">
+                    <div class="up-modal__title">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" />
+                            <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" />
+                        </svg>
+                        Edit Profile
+                    </div>
+                    <button class="up-modal__close" onclick="closeModal()">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                            <line x1="18" y1="6" x2="6" y2="18" />
+                            <line x1="6" y1="6" x2="18" y2="18" />
+                        </svg>
+                    </button>
+                </div>
+                <form action="{{ route('user.profile.update', Auth::user()->id) }}" method="POST" enctype="multipart/form-data" class="up-modal__body">
+                    @csrf
+
+                    <!-- Avatar Upload -->
+                    <div class="up-av-upload">
+                        <div class="up-av-upload__prev">
+                            @if(Auth::user()->image)
+                            <img src="{{ asset('storage/' . Auth::user()->image) }}" alt="{{ Auth::user()->user_name }}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">
+                            @else
+                            {{ strtoupper(substr(Auth::user()->user_name, 0, 1)) }}{{ strtoupper(substr(strstr(Auth::user()->user_name, ' '), 1, 1)) }}
+                            @endif
+                        </div>
+                        <div class="up-av-upload__txt" style="cursor: pointer;">
+                            <input type="file" name="image" accept="image/png, image/jpeg" style="display:none;" id="avInput">
+                            <strong>Change Profile Photo</strong>
+                            <label for="avInput">Click to upload JPG or PNG (max 2MB)</label>
                         </div>
                     </div>
 
-                </div><!-- end tabs card -->
+                    <div class="up-section-title">Personal Information</div>
+                    <div class="up-form-row up-form-row--single">
+                        <div class="up-field">
+                            <label>Full Name</label>
+                            <input type="text" value="{{ Auth::user()->user_name }}" name="user_name" placeholder="Full name">
+                        </div>
+                    </div>
+                    <div class="up-form-row">
+                        <div class="up-field">
+                            <label>Email Address</label>
+                            <input type="email" value="{{ Auth::user()->user_email }}" name="user_email" placeholder="Email">
+                        </div>
+                        <div class="up-field">
+                            <label>Phone Number</label>
+                            <input type="tel" value="{{ Auth::user()->user_mobile }}" name="user_mobile" placeholder="Phone">
+                        </div>
+                    </div>
+                    <div class="up-form-row">
+                        <div class="up-field">
+                            <label>Date of Birth</label>
+                            <input type="date" value="{{ Auth::user()->dob }}" name="dob">
+                        </div>
+                        <div class="up-field">
+                            <label>Gender</label>
+                            <select name="gender">
+                                <option value="" {{ !Auth::user()->gender ? 'selected' : '' }}>Choose Gender</option>
+                                <option value="Male" {{ Auth::user()->gender == 'Male'   ? 'selected' : '' }}>Male</option>
+                                <option value="Female" {{ Auth::user()->gender == 'Female' ? 'selected' : '' }}>Female</option>
+                                <option value="Other" {{ Auth::user()->gender == 'Other'  ? 'selected' : '' }}>Other</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="up-form-row up-form-row--single">
+                        <div class="up-field">
+                            <label>Address</label>
+                            <input type="text" value="{{ Auth::user()->address }}" name="address" placeholder="Full address">
+                        </div>
+                    </div>
 
+                    <div class="up-section-title">Medical Information</div>
+                    <div class="up-form-row">
+                        <div class="up-field">
+                            <label>Blood Group</label>
+                            <select name="blood_group">
+                                <option value="" {{ !Auth::user()->blood_group ? 'selected' : '' }}>Choose</option>
+                                <option value="A+" {{ Auth::user()->blood_group == 'A+' ? 'selected' : '' }}>A+</option>
+                                <option value="A-" {{ Auth::user()->blood_group == 'A-' ? 'selected' : '' }}>A-</option>
+                                <option value="B+" {{ Auth::user()->blood_group == 'B+' ? 'selected' : '' }}>B+</option>
+                                <option value="B-" {{ Auth::user()->blood_group == 'B-' ? 'selected' : '' }}>B-</option>
+                                <option value="O+" {{ Auth::user()->blood_group == 'O+' ? 'selected' : '' }}>O+</option>
+                                <option value="O-" {{ Auth::user()->blood_group == 'O-' ? 'selected' : '' }}>O-</option>
+                                <option value="AB+" {{ Auth::user()->blood_group == 'AB+' ? 'selected' : '' }}>AB+</option>
+                                <option value="AB-" {{ Auth::user()->blood_group == 'AB-' ? 'selected' : '' }}>AB-</option>
+                            </select>
+                        </div>
+                        <div class="up-field">
+                            <label>Height (cm)</label>
+                            <input type="number" value="{{ Auth::user()->height }}" name="height" placeholder="Height in cm">
+                        </div>
+                    </div>
+                    <div class="up-form-row">
+                        <div class="up-field">
+                            <label>Weight (kg)</label>
+                            <input type="number" value="{{ Auth::user()->weight }}" name="weight" placeholder="Weight in kg">
+                        </div>
+                        <div class="up-field">
+                            <label>Emergency Contact</label>
+                            <input type="tel" value="{{ Auth::user()->emergency_contact }}" name="emergency_contact" placeholder="Emergency phone">
+                        </div>
+                    </div>
+                    <div class="up-form-row up-form-row--single">
+                        <div class="up-field">
+                            <label>Known Allergies</label>
+                            <textarea name="allergies" placeholder="List any known allergies...">{{ Auth::user()->allergies }}</textarea>
+                        </div>
+                    </div>
+                    <div class="up-form-row up-form-row--single">
+                        <div class="up-field">
+                            <label>Chronic Conditions</label>
+                            <textarea name="chronic_conditions" placeholder="Any chronic health conditions...">{{ Auth::user()->chronic_conditions }}</textarea>
+                        </div>
+                    </div>
+
+                    <div class="up-modal__foot">
+                        <button class="up-btn-cancel" onclick="closeModal()">Cancel</button>
+                        <button class="up-btn-save" type="submit">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                <polyline points="20 6 9 17 4 12" />
+                            </svg>
+                            Save Changes
+                        </button>
+                    </div>
+
+                </form>
             </div>
-
-            <!-- end main -->
-
-        </div><!-- end layout -->
-    </div><!-- end wrap -->
-
-
-    <!-- ════════════════════════════════
-     PROFILE EDIT MODAL
-════════════════════════════════ -->
-    <div class="up-modal-overlay" id="profileModal" onclick="handleOverlayClick(event)">
-        <div class="up-modal">
-            <div class="up-modal__head">
-                <div class="up-modal__title">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" />
-                        <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" />
-                    </svg>
-                    Edit Profile
-                </div>
-                <button class="up-modal__close" onclick="closeModal()">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                        <line x1="18" y1="6" x2="6" y2="18" />
-                        <line x1="6" y1="6" x2="18" y2="18" />
-                    </svg>
-                </button>
-            </div>
-            <form action="{{ route('user.profile.update', Auth::user()->id) }}" method="POST" enctype="multipart/form-data" class="up-modal__body">
-                @csrf
-
-                <!-- Avatar Upload -->
-                <div class="up-av-upload">
-                    <div class="up-av-upload__prev">
-                        @if(Auth::user()->image)
-                        <img src="{{ asset('storage/' . Auth::user()->image) }}" alt="{{ Auth::user()->user_name }}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">
-                        @else
-                        {{ strtoupper(substr(Auth::user()->user_name, 0, 1)) }}{{ strtoupper(substr(strstr(Auth::user()->user_name, ' '), 1, 1)) }}
-                        @endif
-                    </div>
-                    <div class="up-av-upload__txt" style="cursor: pointer;">
-                        <input type="file" name="image" accept="image/png, image/jpeg" style="display:none;" id="avInput">
-                        <strong>Change Profile Photo</strong>
-                        <label for="avInput">Click to upload JPG or PNG (max 2MB)</label>
-                    </div>
-                </div>
-
-                <div class="up-section-title">Personal Information</div>
-                <div class="up-form-row up-form-row--single">
-                    <div class="up-field">
-                        <label>Full Name</label>
-                        <input type="text" value="{{ Auth::user()->user_name }}" name="user_name" placeholder="Full name">
-                    </div>
-                </div>
-                <div class="up-form-row">
-                    <div class="up-field">
-                        <label>Email Address</label>
-                        <input type="email" value="{{ Auth::user()->user_email }}" name="user_email" placeholder="Email">
-                    </div>
-                    <div class="up-field">
-                        <label>Phone Number</label>
-                        <input type="tel" value="{{ Auth::user()->user_mobile }}" name="user_mobile" placeholder="Phone">
-                    </div>
-                </div>
-                <div class="up-form-row">
-                    <div class="up-field">
-                        <label>Date of Birth</label>
-                        <input type="date" value="{{ Auth::user()->dob }}" name="dob">
-                    </div>
-                    <div class="up-field">
-                        <label>Gender</label>
-                        <select name="gender">
-                            <option value="" {{ !Auth::user()->gender ? 'selected' : '' }}>Choose Gender</option>
-                            <option value="Male" {{ Auth::user()->gender == 'Male'   ? 'selected' : '' }}>Male</option>
-                            <option value="Female" {{ Auth::user()->gender == 'Female' ? 'selected' : '' }}>Female</option>
-                            <option value="Other" {{ Auth::user()->gender == 'Other'  ? 'selected' : '' }}>Other</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="up-form-row up-form-row--single">
-                    <div class="up-field">
-                        <label>Address</label>
-                        <input type="text" value="{{ Auth::user()->address }}" name="address" placeholder="Full address">
-                    </div>
-                </div>
-
-                <div class="up-section-title">Medical Information</div>
-                <div class="up-form-row">
-                    <div class="up-field">
-                        <label>Blood Group</label>
-                        <select name="blood_group">
-                            <option value="" {{ !Auth::user()->blood_group ? 'selected' : '' }}>Choose</option>
-                            <option value="A+" {{ Auth::user()->blood_group == 'A+' ? 'selected' : '' }}>A+</option>
-                            <option value="A-" {{ Auth::user()->blood_group == 'A-' ? 'selected' : '' }}>A-</option>
-                            <option value="B+" {{ Auth::user()->blood_group == 'B+' ? 'selected' : '' }}>B+</option>
-                            <option value="B-" {{ Auth::user()->blood_group == 'B-' ? 'selected' : '' }}>B-</option>
-                            <option value="O+" {{ Auth::user()->blood_group == 'O+' ? 'selected' : '' }}>O+</option>
-                            <option value="O-" {{ Auth::user()->blood_group == 'O-' ? 'selected' : '' }}>O-</option>
-                            <option value="AB+" {{ Auth::user()->blood_group == 'AB+' ? 'selected' : '' }}>AB+</option>
-                            <option value="AB-" {{ Auth::user()->blood_group == 'AB-' ? 'selected' : '' }}>AB-</option>
-                        </select>
-                    </div>
-                    <div class="up-field">
-                        <label>Height (cm)</label>
-                        <input type="number" value="{{ Auth::user()->height }}" name="height" placeholder="Height in cm">
-                    </div>
-                </div>
-                <div class="up-form-row">
-                    <div class="up-field">
-                        <label>Weight (kg)</label>
-                        <input type="number" value="{{ Auth::user()->weight }}" name="weight" placeholder="Weight in kg">
-                    </div>
-                    <div class="up-field">
-                        <label>Emergency Contact</label>
-                        <input type="tel" value="{{ Auth::user()->emergency_contact }}" name="emergency_contact" placeholder="Emergency phone">
-                    </div>
-                </div>
-                <div class="up-form-row up-form-row--single">
-                    <div class="up-field">
-                        <label>Known Allergies</label>
-                        <textarea name="allergies" placeholder="List any known allergies...">{{ Auth::user()->allergies }}</textarea>
-                    </div>
-                </div>
-                <div class="up-form-row up-form-row--single">
-                    <div class="up-field">
-                        <label>Chronic Conditions</label>
-                        <textarea name="chronic_conditions" placeholder="Any chronic health conditions...">{{ Auth::user()->chronic_conditions }}</textarea>
-                    </div>
-                </div>
-
-                <div class="up-modal__foot">
-                    <button class="up-btn-cancel" onclick="closeModal()">Cancel</button>
-                    <button class="up-btn-save" type="submit">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                            <polyline points="20 6 9 17 4 12" />
-                        </svg>
-                        Save Changes
-                    </button>
-                </div>
-
-            </form>
         </div>
-    </div>
 
 
 
 
-    <!-- {{-- ============================================================
+        <!-- {{-- ============================================================
      COMPLETE MODAL
 ============================================================ --}} -->
-    <div class="complete-modal-overlay" id="completeModalOverlay" role="dialog" aria-modal="true" aria-labelledby="completeModalTitle">
-        <div class="complete-modal-box">
+        <div class="complete-modal-overlay" id="completeModalOverlay" role="dialog" aria-modal="true" aria-labelledby="completeModalTitle">
+            <div class="complete-modal-box">
 
-            <div class="complete-modal-icon-wrap">
-                <div class="complete-modal-icon-ring"></div>
-                <div class="complete-modal-icon-ring complete-modal-icon-ring--2"></div>
-                <div class="complete-modal-icon-circle">
-                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                        <path d="M20 6L9 17l-5-5" />
-                    </svg>
-                </div>
-            </div>
-
-            <h2 class="complete-modal-title" id="completeModalTitle">Mark as Completed?</h2>
-            <p class="complete-modal-desc">
-                This will mark the appointment as <strong>Completed</strong>. This action cannot be undone.
-            </p>
-
-            <div class="complete-modal-appt-preview">
-                <i class="fa-solid fa-calendar-check"></i>
-                <span>Appointment #<strong id="completeApptId">—</strong></span>
-            </div>
-
-            <form
-                action=""
-                method="POST"
-                id="completeForm"
-                novalidate>
-                @csrf
-                <input type="hidden" name="status" value="Completed">
-
-                <div class="complete-modal-actions">
-                    <button type="button" class="complete-modal-btn complete-modal-btn--cancel" onclick="closeCompleteModal()">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                            <path d="M18 6L6 18M6 6l12 12" />
-                        </svg>
-                        Cancel
-                    </button>
-                    <button type="submit" class="complete-modal-btn complete-modal-btn--confirm">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <div class="complete-modal-icon-wrap">
+                    <div class="complete-modal-icon-ring"></div>
+                    <div class="complete-modal-icon-ring complete-modal-icon-ring--2"></div>
+                    <div class="complete-modal-icon-circle">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                             <path d="M20 6L9 17l-5-5" />
                         </svg>
-                        Yes, Complete It
-                    </button>
+                    </div>
                 </div>
-            </form>
 
+                <h2 class="complete-modal-title" id="completeModalTitle">Mark as Completed?</h2>
+                <p class="complete-modal-desc">
+                    This will mark the appointment as <strong>Completed</strong>. This action cannot be undone.
+                </p>
+
+                <div class="complete-modal-appt-preview">
+                    <i class="fa-solid fa-calendar-check"></i>
+                    <span>Appointment #<strong id="completeApptId">—</strong></span>
+                </div>
+
+                <form
+                    action=""
+                    method="POST"
+                    id="completeForm"
+                    novalidate>
+                    @csrf
+                    <input type="hidden" name="status" value="Completed">
+
+                    <div class="complete-modal-actions">
+                        <button type="button" class="complete-modal-btn complete-modal-btn--cancel" onclick="closeCompleteModal()">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                <path d="M18 6L6 18M6 6l12 12" />
+                            </svg>
+                            Cancel
+                        </button>
+                        <button type="submit" class="complete-modal-btn complete-modal-btn--confirm">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                <path d="M20 6L9 17l-5-5" />
+                            </svg>
+                            Yes, Complete It
+                        </button>
+                    </div>
+                </form>
+
+            </div>
         </div>
-    </div>
 
 
-    <!-- {{-- ============================================================
+        <!-- {{-- ============================================================
      CANCEL MODAL
 ============================================================ --}} -->
-    <div class="cancel-modal-overlay" id="cancelModalOverlay" role="dialog" aria-modal="true" aria-labelledby="cancelModalTitle">
-        <div class="cancel-modal-box">
+        <div class="cancel-modal-overlay" id="cancelModalOverlay" role="dialog" aria-modal="true" aria-labelledby="cancelModalTitle">
+            <div class="cancel-modal-box">
 
-            <div class="cancel-modal-icon-wrap">
-                <div class="cancel-modal-icon-ring"></div>
-                <div class="cancel-modal-icon-ring cancel-modal-icon-ring--2"></div>
-                <div class="cancel-modal-icon-circle">
-                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                        <circle cx="12" cy="12" r="9"></circle>
-                        <line x1="5" y1="5" x2="19" y2="19"></line>
-                    </svg>
-                </div>
-            </div>
-
-            <h2 class="cancel-modal-title" id="cancelModalTitle">Cancel Appointment?</h2>
-            <p class="cancel-modal-desc">
-                This will mark the appointment as <strong>Cancelled</strong>. The patient will be notified. This action cannot be undone.
-            </p>
-
-            <div class="cancel-modal-appt-preview">
-                <i class="fa-solid fa-calendar-xmark"></i>
-                <span>Appointment #<strong id="cancelApptId">—</strong></span>
-            </div>
-
-            <form
-                action=""
-                method="POST"
-                id="cancelForm"
-                novalidate>
-                @csrf
-                <input type="hidden" name="status" value="Cancelled">
-
-                <div class="cancel-modal-actions">
-                    <button type="button" class="cancel-modal-btn cancel-modal-btn--keep" onclick="closeCancelModal()">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                            <path d="M18 6L6 18M6 6l12 12" />
-                        </svg>
-                        Cancel
-                    </button>
-                    <button type="submit" class="cancel-modal-btn cancel-modal-btn--confirm">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <div class="cancel-modal-icon-wrap">
+                    <div class="cancel-modal-icon-ring"></div>
+                    <div class="cancel-modal-icon-ring cancel-modal-icon-ring--2"></div>
+                    <div class="cancel-modal-icon-circle">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                             <circle cx="12" cy="12" r="9"></circle>
                             <line x1="5" y1="5" x2="19" y2="19"></line>
                         </svg>
-                        Yes, Cancel It
-                    </button>
+                    </div>
                 </div>
-            </form>
 
+                <h2 class="cancel-modal-title" id="cancelModalTitle">Cancel Appointment?</h2>
+                <p class="cancel-modal-desc">
+                    This will mark the appointment as <strong>Cancelled</strong>. The patient will be notified. This action cannot be undone.
+                </p>
+
+                <div class="cancel-modal-appt-preview">
+                    <i class="fa-solid fa-calendar-xmark"></i>
+                    <span>Appointment #<strong id="cancelApptId">—</strong></span>
+                </div>
+
+                <form
+                    action=""
+                    method="POST"
+                    id="cancelForm"
+                    novalidate>
+                    @csrf
+                    <input type="hidden" name="status" value="Cancelled">
+
+                    <div class="cancel-modal-actions">
+                        <button type="button" class="cancel-modal-btn cancel-modal-btn--keep" onclick="closeCancelModal()">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                <path d="M18 6L6 18M6 6l12 12" />
+                            </svg>
+                            Cancel
+                        </button>
+                        <button type="submit" class="cancel-modal-btn cancel-modal-btn--confirm">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                <circle cx="12" cy="12" r="9"></circle>
+                                <line x1="5" y1="5" x2="19" y2="19"></line>
+                            </svg>
+                            Yes, Cancel It
+                        </button>
+                    </div>
+                </form>
+
+            </div>
         </div>
-    </div>
 
 
 
-    <script>
-        /* ── Modal ── */
-        function openModal() {
-            document.getElementById('profileModal').classList.add('open');
-            document.body.style.overflow = 'hidden';
-        }
+        <script>
+            /* ── Modal ── */
+            function openModal() {
+                document.getElementById('profileModal').classList.add('open');
+                document.body.style.overflow = 'hidden';
+            }
 
-        function closeModal() {
-            document.getElementById('profileModal').classList.remove('open');
-            document.body.style.overflow = '';
-        }
+            function closeModal() {
+                document.getElementById('profileModal').classList.remove('open');
+                document.body.style.overflow = '';
+            }
 
-        function handleOverlayClick(e) {
-            if (e.target === document.getElementById('profileModal')) closeModal();
-        }
-        document.addEventListener('keydown', e => {
-            if (e.key === 'Escape') closeModal();
-        });
-
-        /* ── Tabs ── */
-        function switchTab(name) {
-            document.querySelectorAll('.up-tab').forEach(t => t.classList.remove('active'));
-            document.querySelectorAll('.up-tab-content').forEach(c => c.classList.remove('active'));
-            document.getElementById('tab-' + name).classList.add('active');
-            document.getElementById('content-' + name).classList.add('active');
-        }
-
-        /* ── Filter appointments by status ── */
-        function filterAppts(clickedBtn, filter) {
-            // Update active button
-            document.querySelectorAll('.up-appt-filters .up-filter-btn').forEach(b => b.classList.remove('active'));
-            clickedBtn.classList.add('active');
-
-            // Show/hide rows
-            document.querySelectorAll('#apptTableBody .appt-row').forEach(row => {
-                if (filter === 'all') {
-                    row.classList.remove('is-hidden');
-                } else {
-                    const rowStatus = row.getAttribute('data-status');
-                    row.classList.toggle('is-hidden', rowStatus !== filter);
-                }
+            function handleOverlayClick(e) {
+                if (e.target === document.getElementById('profileModal')) closeModal();
+            }
+            document.addEventListener('keydown', e => {
+                if (e.key === 'Escape') closeModal();
             });
 
-            // Show empty state if no visible rows
-            const visibleRows = document.querySelectorAll('#apptTableBody .appt-row:not(.is-hidden)');
-            const emptyEl = document.querySelector('.up-appt-empty');
-            const tableWrap = document.querySelector('.up-appt-table-wrap');
+            /* ── Tabs ── */
+            function switchTab(name) {
+                document.querySelectorAll('.up-tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.up-tab-content').forEach(c => c.classList.remove('active'));
+                document.getElementById('tab-' + name).classList.add('active');
+                document.getElementById('content-' + name).classList.add('active');
+            }
 
-            if (emptyEl && tableWrap) {
-                if (visibleRows.length === 0) {
-                    tableWrap.style.display = 'none';
-                    emptyEl.style.display = 'flex';
-                    emptyEl.querySelector('p').textContent = 'No ' + (filter === 'all' ? '' : filter.toLowerCase() + ' ') + 'appointments found';
-                } else {
-                    tableWrap.style.display = '';
-                    emptyEl.style.display = 'none';
+            /* ── Filter appointments by status ── */
+            function filterAppts(clickedBtn, filter) {
+                // Update active button
+                document.querySelectorAll('.up-appt-filters .up-filter-btn').forEach(b => b.classList.remove('active'));
+                clickedBtn.classList.add('active');
+
+                // Show/hide rows
+                document.querySelectorAll('#apptTableBody .appt-row').forEach(row => {
+                    if (filter === 'all') {
+                        row.classList.remove('is-hidden');
+                    } else {
+                        const rowStatus = row.getAttribute('data-status');
+                        row.classList.toggle('is-hidden', rowStatus !== filter);
+                    }
+                });
+
+                // Show empty state if no visible rows
+                const visibleRows = document.querySelectorAll('#apptTableBody .appt-row:not(.is-hidden)');
+                const emptyEl = document.querySelector('.up-appt-empty');
+                const tableWrap = document.querySelector('.up-appt-table-wrap');
+
+                if (emptyEl && tableWrap) {
+                    if (visibleRows.length === 0) {
+                        tableWrap.style.display = 'none';
+                        emptyEl.style.display = 'flex';
+                        emptyEl.querySelector('p').textContent = 'No ' + (filter === 'all' ? '' : filter.toLowerCase() + ' ') + 'appointments found';
+                    } else {
+                        tableWrap.style.display = '';
+                        emptyEl.style.display = 'none';
+                    }
                 }
             }
-        }
-    </script>
+        </script>
 
 
-    <script>
-        /* ── COMPLETE MODAL ── */
-        function openCompleteModal(bookingId) {
-            document.getElementById('completeForm').action = '/dw/profile/appointment-complete/' + bookingId;
-            document.getElementById('completeApptId').textContent = bookingId;
-            document.getElementById('completeModalOverlay').classList.add('is-open');
-            document.body.style.overflow = 'hidden';
-        }
-
-        function closeCompleteModal() {
-            document.getElementById('completeModalOverlay').classList.remove('is-open');
-            document.body.style.overflow = '';
-        }
-
-        /* ── CANCEL MODAL ── */
-        function openCancelModal(bookingId) {
-            document.getElementById('cancelForm').action = '/dw/profile/appointment-cancel/' + bookingId;
-            document.getElementById('cancelApptId').textContent = bookingId;
-            document.getElementById('cancelModalOverlay').classList.add('is-open');
-            document.body.style.overflow = 'hidden';
-        }
-
-        function closeCancelModal() {
-            document.getElementById('cancelModalOverlay').classList.remove('is-open');
-            document.getElementById('cancelReason').value = '';
-            document.body.style.overflow = '';
-        }
-
-        /* ── CLOSE ON BACKDROP CLICK ── */
-        document.getElementById('completeModalOverlay').addEventListener('click', function(e) {
-            if (e.target === this) closeCompleteModal();
-        });
-        document.getElementById('cancelModalOverlay').addEventListener('click', function(e) {
-            if (e.target === this) closeCancelModal();
-        });
-
-        /* ── CLOSE ON ESCAPE KEY ── */
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') {
-                closeCompleteModal();
-                closeCancelModal();
+        <script>
+            /* ── COMPLETE MODAL ── */
+            function openCompleteModal(bookingId) {
+                document.getElementById('completeForm').action = '/dw/profile/appointment-complete/' + bookingId;
+                document.getElementById('completeApptId').textContent = bookingId;
+                document.getElementById('completeModalOverlay').classList.add('is-open');
+                document.body.style.overflow = 'hidden';
             }
-        });
-    </script>
 
-    <script>
-        function togglePwd(id, btn) {
-            const input = document.getElementById(id);
-            const isText = input.type === 'text';
-            input.type = isText ? 'password' : 'text';
-            btn.classList.toggle('active', !isText);
-        }
+            function closeCompleteModal() {
+                document.getElementById('completeModalOverlay').classList.remove('is-open');
+                document.body.style.overflow = '';
+            }
 
-        function checkPwdStrength(val) {
-            const bars = [1, 2, 3, 4].map(i => document.getElementById('pwdBar' + i));
-            const label = document.getElementById('pwdStrengthLabel');
-            const colors = {
-                1: '#e53e3e',
-                2: '#f59e0b',
-                3: '#3b82f6',
-                4: '#10b981'
-            };
-            const labels = {
-                1: 'Weak',
-                2: 'Fair',
-                3: 'Good',
-                4: 'Strong'
-            };
+            /* ── CANCEL MODAL ── */
+            function openCancelModal(bookingId) {
+                document.getElementById('cancelForm').action = '/dw/profile/appointment-cancel/' + bookingId;
+                document.getElementById('cancelApptId').textContent = bookingId;
+                document.getElementById('cancelModalOverlay').classList.add('is-open');
+                document.body.style.overflow = 'hidden';
+            }
 
-            let score = 0;
-            if (val.length >= 8) score++;
-            if (/[A-Z]/.test(val)) score++;
-            if (/[0-9]/.test(val)) score++;
-            if (/[^A-Za-z0-9]/.test(val)) score++;
+            function closeCancelModal() {
+                document.getElementById('cancelModalOverlay').classList.remove('is-open');
+                document.getElementById('cancelReason').value = '';
+                document.body.style.overflow = '';
+            }
 
-            bars.forEach((b, i) => {
-                b.style.background = i < score ? colors[score] : '#e8ecf4';
+            /* ── CLOSE ON BACKDROP CLICK ── */
+            document.getElementById('completeModalOverlay').addEventListener('click', function(e) {
+                if (e.target === this) closeCompleteModal();
             });
-            label.textContent = val.length ? labels[score] || '' : '';
-            label.style.color = colors[score] || '#aaa';
-        }
-    </script>
+            document.getElementById('cancelModalOverlay').addEventListener('click', function(e) {
+                if (e.target === this) closeCancelModal();
+            });
+
+            /* ── CLOSE ON ESCAPE KEY ── */
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    closeCompleteModal();
+                    closeCancelModal();
+                }
+            });
+        </script>
+
+        <script>
+            function togglePwd(id, btn) {
+                const input = document.getElementById(id);
+                const isText = input.type === 'text';
+                input.type = isText ? 'password' : 'text';
+                btn.classList.toggle('active', !isText);
+            }
+
+            function checkPwdStrength(val) {
+                const bars = [1, 2, 3, 4].map(i => document.getElementById('pwdBar' + i));
+                const label = document.getElementById('pwdStrengthLabel');
+                const colors = {
+                    1: '#e53e3e',
+                    2: '#f59e0b',
+                    3: '#3b82f6',
+                    4: '#10b981'
+                };
+                const labels = {
+                    1: 'Weak',
+                    2: 'Fair',
+                    3: 'Good',
+                    4: 'Strong'
+                };
+
+                let score = 0;
+                if (val.length >= 8) score++;
+                if (/[A-Z]/.test(val)) score++;
+                if (/[0-9]/.test(val)) score++;
+                if (/[^A-Za-z0-9]/.test(val)) score++;
+
+                bars.forEach((b, i) => {
+                    b.style.background = i < score ? colors[score] : '#e8ecf4';
+                });
+                label.textContent = val.length ? labels[score] || '' : '';
+                label.style.color = colors[score] || '#aaa';
+            }
+        </script>
 
 
-    @endsection
+        @endsection
