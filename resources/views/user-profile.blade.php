@@ -1394,48 +1394,48 @@
                         </svg>
                         Latest Vitals
                     </div>
-                    <span style="font-size:.7rem;color:var(--muted);font-weight:700">Updated: {{ \Carbon\Carbon::parse($vital->updated_at)->format('d M Y') }}</span>
+                    <span style="font-size:.7rem;color:var(--muted);font-weight:700">Updated: {{ \Carbon\Carbon::parse($vital->updated_at ?? 'N/A')->format('d M Y') }}</span>
                 </div>
                 <div class="up-vitals">
                     <div class="up-vital up-qstat--coral" style="border-color:#fed7aa">
                         <div class="up-vital__ico">🔴</div>
-                        <div class="up-vital__val" style="color:#c2410c">{{$vital->blood_group}}</div>
+                        <div class="up-vital__val" style="color:#c2410c">{{$vital->blood_group ?? '0'}}</div>
                         <div class="up-vital__unit">mg/dL</div>
                         <div class="up-vital__lbl">Blood Group</div>
                     </div>
                     <div class="up-vital up-qstat--teal" style="border-color:#bae6fd">
                         <div class="up-vital__ico">❤️</div>
-                        <div class="up-vital__val" style="color:var(--p-dk)">{{$vital->heart_rate}}</div>
+                        <div class="up-vital__val" style="color:var(--p-dk)">{{$vital->heart_rate ?? '0'}}</div>
                         <div class="up-vital__unit">bpm</div>
                         <div class="up-vital__lbl">Heart Rate</div>
                     </div>
                     <div class="up-vital up-qstat--rose" style="border-color:#fecdd3;background:var(--rose-lt)">
                         <div class="up-vital__ico">🩸</div>
-                        <div class="up-vital__val" style="color:var(--rose)">{{$vital->blood_pressure}}</div>
+                        <div class="up-vital__val" style="color:var(--rose)">{{$vital->blood_pressure ?? '0'}}</div>
                         <div class="up-vital__unit">mmHg</div>
                         <div class="up-vital__lbl">Blood Pressure</div>
                     </div>
                     <div class="up-vital up-qstat--mint" style="border-color:#a7f3d0">
                         <div class="up-vital__ico">🌡️</div>
-                        <div class="up-vital__val" style="color:#047857">{{$vital->temparature}}</div>
+                        <div class="up-vital__val" style="color:#047857">{{$vital->temparature ?? '0'}}</div>
                         <div class="up-vital__unit">°C</div>
                         <div class="up-vital__lbl">Temperature</div>
                     </div>
                     <div class="up-vital up-qstat--amber" style="border-color:#fde68a">
                         <div class="up-vital__ico">⚖️</div>
-                        <div class="up-vital__val" style="color:#b45309">{{$vital->weight}}</div>
+                        <div class="up-vital__val" style="color:#b45309">{{$vital->weight ?? '0'}}</div>
                         <div class="up-vital__unit">kg</div>
                         <div class="up-vital__lbl">Weight</div>
                     </div>
                     <div class="up-vital up-qstat--mint" style="border-color:#fde68a">
                         <div class="up-vital__ico">📏</div>
-                        <div class="up-vital__val" style="color:#b45309">{{$vital->weight}}</div>
+                        <div class="up-vital__val" style="color:#b45309">{{$vital->weight ?? '0'}}</div>
                         <div class="up-vital__unit">cm</div>
                         <div class="up-vital__lbl">Height</div>
                     </div>
                     <div class="up-vital up-qstat--coral" style="border-color:#fed7aa">
                         <div class="up-vital__ico">📊</div>
-                        <div class="up-vital__val" style="color:#c2410c">{{$vital->bmi}}</div>
+                        <div class="up-vital__val" style="color:#c2410c">{{$vital->bmi ?? '0'}}</div>
                         <div class="up-vital__unit">
                             @if($vital->bmi < 18.5) Underweight
                                 @elseif($vital->bmi < 25) Normal
@@ -1448,13 +1448,13 @@
                         </div>
                         <div class="up-vital up-qstat--violet" style="border-color:#ddd6fe;background:var(--violet-lt)">
                             <div class="up-vital__ico">🫁</div>
-                            <div class="up-vital__val" style="color:var(--violet)">{{$vital->spo}}</div>
+                            <div class="up-vital__val" style="color:var(--violet)">{{$vital->spo ?? '0'}}</div>
                             <div class="up-vital__unit">SpO₂ %</div>
                             <div class="up-vital__lbl">Oxygen</div>
                         </div>
                         <div class="up-vital up-qstat--amber" style="border-color:#fed7aa">
                             <div class="up-vital__ico">🧪</div>
-                            <div class="up-vital__val" style="color:#c2410c">{{$vital->blood_sugar}}</div>
+                            <div class="up-vital__val" style="color:#c2410c">{{$vital->blood_sugar ?? '0'}}</div>
                             <div class="up-vital__unit">mg/dL</div>
                             <div class="up-vital__lbl">Blood Sugar</div>
                         </div>
