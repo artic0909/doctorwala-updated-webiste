@@ -2793,7 +2793,6 @@
 
         // ── Open modal ────────────────────────────────────────────────
         // Call from table row:
-        // openEditMhModal({{ $rec->id }}, '{{ $rec->type }}', '{{ $rec->date_of_report->format('Y-m-d') }}', '{{ addslashes($rec->heading) }}', {!! json_encode($rec->images ?? []) !!})
         function openEditMhModal(id, type, date, heading, existingImages) {
             editNewFiles = [];
             editDeletedPaths = [];
