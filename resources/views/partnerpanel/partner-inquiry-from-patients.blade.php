@@ -271,6 +271,24 @@
                     @endif
 
 
+                    <!-- Patient profile management -->
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="collapse" href="#ui-req" aria-expanded="false"
+                            aria-controls="ui-req">
+                            <i class="fa-solid fa-ticket"></i>&nbsp; <span class="menu-title">Patient Profile</span><i
+                                class="menu-arrow"></i>
+                        </a>
+                        <div class="collapse" id="ui-req">
+                            <ul class="nav flex-column sub-menu">
+
+                                <li class="nav-item"> <a class="nav-link" href="/partnerpanel/partner-patient-profile-request">Send Request</a></li>
+
+                                <li class="nav-item"> <a class="nav-link" href="/partnerpanel/patient-profile-all-request">All Profiles</a>
+                                </li>
+
+                            </ul>
+                        </div>
+                    </li>
 
 
                     <!-- Inquiry from patients/user -->
