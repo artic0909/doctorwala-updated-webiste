@@ -6,12 +6,17 @@ use App\Http\Controllers\Controller;
 use App\Models\AccessRequest;
 use App\Models\DwPartnerModel;
 use App\Models\DwUserModel;
+use App\Models\MedicalHistory;
 use App\Models\PartnerAllOPDDoctorModel;
 use App\Models\PartnerDoctorBannerModel;
 use App\Models\PartnerOPDBannerModel;
 use App\Models\PartnerOPDContactModel;
 use App\Models\PartnerPathologyBannerModel;
+use App\Models\PartnerPatientInquiry;
+use App\Models\Vital;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Crypt;
+use Illuminate\Contracts\Encryption\DecryptException;
 
 use Illuminate\Http\Request;
 
@@ -144,5 +149,301 @@ class PatientProfileAccessController extends Controller
         return view('partnerpanel.patient-all-profiles', compact('requests', 'opdBanner', 'pathologyBanner', 'doctorBanner', 'registrationTypes'));
     }
 
-    public function viewPatientProfile() {}
+    // ─── shared: decrypt ID & verify access ───────────────────────
+    private function resolvePatient(string $encryptedId): array
+    {
+        try {
+            $dwUserId = Crypt::decryptString($encryptedId);
+        } catch (DecryptException) {
+            abort(403, 'Invalid link.');
+        }
+
+        $partner   = Auth::guard('partner')->user();
+        $partnerId = $partner->partner_id;
+
+        $access = AccessRequest::where('dw_user_id', $dwUserId)
+            ->where('currently_loggedin_partner_id', $partnerId)
+            ->first();
+
+        $blocked = !$access
+            || $access->req_status    !== 'accepted'
+            || $access->access_status !== 'on';
+
+        $patient = DwUserModel::findOrFail($dwUserId);
+
+        return [$dwUserId, $patient, $blocked, $partner, $partnerId];
+    }
+
+    // ─── shared: partner meta ─────────────────────────────────────
+    private function partnerMeta($partnerId): array
+    {
+        return [
+            'opdBanner'       => PartnerOPDBannerModel::where('currently_loggedin_partner_id', $partnerId)->first(),
+            'pathologyBanner' => PartnerPathologyBannerModel::where('currently_loggedin_partner_id', $partnerId)->first(),
+            'doctorBanner'    => PartnerDoctorBannerModel::where('currently_loggedin_partner_id', $partnerId)->first(),
+        ];
+    }
+
+    // ─── VIEW PATIENT PROFILE ──────────────────────────────────────
+    public function viewPatientProfile(string $encryptedId)
+    {
+        [$dwUserId, $patient, $blocked, $partner, $partnerId] = $this->resolvePatient($encryptedId);
+
+        if ($blocked) {
+            return view('partnerpanel.block', compact('patient'));
+        }
+
+        extract($this->partnerMeta($partnerId));
+
+        $registrationTypes = is_string($partner->registration_type)
+            ? json_decode($partner->registration_type, true)
+            : $partner->registration_type;
+
+        $latestSingleBooking = PartnerPatientInquiry::where('dw_user_id', $dwUserId)
+            ->where('status', 'Upcoming')
+            ->with(['opdContact.banner', 'pathologyContact.banner', 'doctorContact.banner', 'user', 'doctor', 'test'])
+            ->latest()
+            ->first();
+
+        $bookings = PartnerPatientInquiry::where('dw_user_id', $dwUserId)
+            ->with(['opdContact.banner', 'pathologyContact.banner', 'doctorContact.banner', 'user', 'doctor', 'test'])
+            ->latest()
+            ->get();
+
+        $noOfPrescription = MedicalHistory::where('dw_user_id', $dwUserId)
+            ->where('type', 'prescription')
+            ->count();
+
+        $noOfReport = MedicalHistory::where('dw_user_id', $dwUserId)
+            ->where('type', 'report')
+            ->count();
+
+        $vital       = Vital::where('dw_user_id', $dwUserId)->latest()->first();
+        $noOfRequest = AccessRequest::where('dw_user_id', $dwUserId)->count();
+
+        $encryptedPatientId = Crypt::encryptString((string) $dwUserId);
+
+        return view('partnerpanel.partner-user-profile-view', compact(
+            'partner',
+            'patient',
+            'opdBanner',
+            'pathologyBanner',
+            'doctorBanner',
+            'registrationTypes',
+            'latestSingleBooking',
+            'bookings',
+            'noOfPrescription',
+            'noOfReport',
+            'vital',
+            'noOfRequest',
+            'encryptedPatientId'
+        ));
+    }
+
+    // ─── VIEW MEDICAL HISTORY ──────────────────────────────────────
+    public function viewMedicalHistory(string $encryptedId)
+    {
+        [$dwUserId, $patient, $blocked, $partner, $partnerId] = $this->resolvePatient($encryptedId);
+
+        if ($blocked) {
+            return view('partnerpanel.block', compact('patient'));
+        }
+
+        extract($this->partnerMeta($partnerId));
+
+        $registrationTypes = is_string($partner->registration_type)
+            ? json_decode($partner->registration_type, true)
+            : $partner->registration_type;
+
+        $histories = MedicalHistory::where('dw_user_id', $dwUserId)
+            ->latest('date_of_report')
+            ->paginate(10);
+
+        $noOfPrescription = MedicalHistory::where('dw_user_id', $dwUserId)
+            ->where('type', 'prescription')
+            ->count();
+
+        $noOfReport = MedicalHistory::where('dw_user_id', $dwUserId)
+            ->where('type', 'report')
+            ->count();
+
+        $vital = Vital::where('dw_user_id', $dwUserId)->latest()->first();
+
+        $encryptedPatientId = Crypt::encryptString((string) $dwUserId);
+
+        return view('partnerpanel.patient-user-medical-history-view', compact(
+            'partner',
+            'patient',
+            'opdBanner',
+            'pathologyBanner',
+            'doctorBanner',
+            'registrationTypes',
+            'histories',
+            'noOfPrescription',
+            'noOfReport',
+            'vital',
+            'encryptedPatientId'
+        ));
+    }
+
+    // ─── VIEW REPORT FILES ─────────────────────────────────────────
+    public function viewPatientReportImagesOrPdf(string $encryptedId)
+    {
+        try {
+            $recordId = Crypt::decryptString($encryptedId);
+        } catch (DecryptException) {
+            abort(403, 'Invalid link.');
+        }
+
+        $record   = MedicalHistory::findOrFail($recordId);
+        $dwUserId = $record->dw_user_id;
+
+        $partner   = Auth::guard('partner')->user();
+        $partnerId = $partner->partner_id;
+
+        $access = AccessRequest::where('dw_user_id', $dwUserId)
+            ->where('currently_loggedin_partner_id', $partnerId)
+            ->first();
+
+        $blocked = !$access
+            || $access->req_status    !== 'accepted'
+            || $access->access_status !== 'on';
+
+        if ($blocked) {
+            $patient = DwUserModel::findOrFail($dwUserId);
+            return view('partnerpanel.block', compact('patient'));
+        }
+
+        return view('partnerpanel.patient-view-report-images', compact('record'));
+    }
+
+
+
+    // public function viewPatientProfile($dwUserId)
+    // {
+    //     $partner   = Auth::guard('partner')->user();
+    //     $partnerId = Auth::guard('partner')->id();
+
+    //     // Partner banners / meta
+    //     $opdBanner       = PartnerOPDBannerModel::where('currently_loggedin_partner_id', $partnerId)->first();
+    //     $pathologyBanner = PartnerPathologyBannerModel::where('currently_loggedin_partner_id', $partnerId)->first();
+    //     $doctorBanner    = PartnerDoctorBannerModel::where('currently_loggedin_partner_id', $partnerId)->first();
+
+    //     $registrationTypes = $partner->registration_type;
+    //     if (is_string($registrationTypes)) {
+    //         $registrationTypes = json_decode($registrationTypes, true);
+    //     }
+
+    //     // The patient (dw user)
+    //     $patient = DwUserModel::findOrFail($dwUserId);
+
+    //     // Latest upcoming appointment for this patient
+    //     $latestSingleBooking = PartnerPatientInquiry::where('dw_user_id', $dwUserId)
+    //         ->where('status', 'Upcoming')
+    //         ->with([
+    //             'opdContact.banner',
+    //             'pathologyContact.banner',
+    //             'doctorContact.banner',
+    //             'user',
+    //             'doctor',
+    //             'test',
+    //         ])
+    //         ->latest()
+    //         ->first();
+
+    //     // All bookings for this patient
+    //     $bookings = PartnerPatientInquiry::where('dw_user_id', $dwUserId)
+    //         ->with([
+    //             'opdContact.banner',
+    //             'pathologyContact.banner',
+    //             'doctorContact.banner',
+    //             'user',
+    //             'doctor',
+    //             'test',
+    //         ])
+    //         ->latest()
+    //         ->get();
+
+    //     // Medical history
+    //     $noOfPrescription = MedicalHistory::where('dw_user_id', $dwUserId)
+    //         ->where('type', 'prescription')
+    //         ->count();
+
+    //     $noOfReport = MedicalHistory::where('dw_user_id', $dwUserId)
+    //         ->where('type', 'report')
+    //         ->count();
+
+    //     // Latest vitals
+    //     $vital = Vital::where('dw_user_id', $dwUserId)->latest()->first();
+
+    //     // Notifications / access requests count
+    //     $noOfRequest = AccessRequest::where('dw_user_id', $dwUserId)->count();
+
+    //     return view('partnerpanel.partner-user-profile-view', compact(
+    //         'partner',
+    //         'patient',
+    //         'opdBanner',
+    //         'pathologyBanner',
+    //         'doctorBanner',
+    //         'registrationTypes',
+    //         'latestSingleBooking',
+    //         'bookings',
+    //         'noOfPrescription',
+    //         'noOfReport',
+    //         'vital',
+    //         'noOfRequest'
+    //     ));
+    // }
+
+    // public function viewMedicalHistory($dwUserId)
+    // {
+    //     $partner   = Auth::guard('partner')->user();
+    //     $partnerId = Auth::guard('partner')->id();
+
+    //     $opdBanner       = PartnerOPDBannerModel::where('currently_loggedin_partner_id', $partnerId)->first();
+    //     $pathologyBanner = PartnerPathologyBannerModel::where('currently_loggedin_partner_id', $partnerId)->first();
+    //     $doctorBanner    = PartnerDoctorBannerModel::where('currently_loggedin_partner_id', $partnerId)->first();
+
+    //     $registrationTypes = $partner->registration_type;
+    //     if (is_string($registrationTypes)) {
+    //         $registrationTypes = json_decode($registrationTypes, true);
+    //     }
+
+    //     // The patient
+    //     $patient = DwUserModel::findOrFail($dwUserId);
+
+    //     $histories = MedicalHistory::where('dw_user_id', $dwUserId)
+    //         ->latest('date_of_report')
+    //         ->paginate(10);
+
+    //     $noOfPrescription = MedicalHistory::where('dw_user_id', $dwUserId)
+    //         ->where('type', 'prescription')
+    //         ->count();
+
+    //     $noOfReport = MedicalHistory::where('dw_user_id', $dwUserId)
+    //         ->where('type', 'report')
+    //         ->count();
+
+    //     $vital = Vital::where('dw_user_id', $dwUserId)->latest()->first();
+
+    //     return view('partnerpanel.patient-user-medical-history-view', compact(
+    //         'partner',
+    //         'patient',
+    //         'opdBanner',
+    //         'pathologyBanner',
+    //         'doctorBanner',
+    //         'registrationTypes',
+    //         'histories',
+    //         'noOfPrescription',
+    //         'noOfReport',
+    //         'vital'
+    //     ));
+    // }
+
+    // public function viewPatientReportImagesOrPdf($id)
+    // {
+    //     $record = MedicalHistory::findOrFail($id);
+
+    //     return view('partnerpanel.patient-view-report-images', compact('record'));
+    // }
 }

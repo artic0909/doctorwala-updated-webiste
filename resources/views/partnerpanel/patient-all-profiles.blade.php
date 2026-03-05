@@ -5,7 +5,7 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Get Ticket</title>
+    <title>All Requested Patient Profiles</title>
     <!-- plugins:css -->
     <link rel="stylesheet" href="../partner-assets">
     <link rel="stylesheet" href="../partner-assets/vendors/ti-icons/css/themify-icons.css">
@@ -325,9 +325,9 @@
         }
 
         .arp-view-btn:hover {
-            background: #f0f4ff;
-            border-color: #c7d2fe;
-            color: #4361ee;
+            background: yellow;
+            border-color: yellow;
+            color: black !important;
             text-decoration: none;
         }
 
@@ -773,7 +773,7 @@
                                                 $accepted = $req->req_status === 'accepted';
                                                 $patient = $req->patient; // relation
 
-                                            
+
                                                 $rawName = $patient->user_name ?? '—';
                                                 $rawEmail = $patient->user_email ?? '—';
                                                 $rawMobile = $patient->user_mobile ?? '—';
@@ -781,7 +781,7 @@
                                                 $rawMem = $req->dw_member_id ?? '—';
 
                                                 if (!$accepted) {
-                                            
+
                                                 $dispName = implode(' ', array_map(function($w) {
                                                 return strlen($w) <= 2 ? $w : substr($w,0,3).str_repeat('*', max(2, strlen($w)-3));
                                                     }, explode(' ', $rawName)));
@@ -798,7 +798,7 @@
                                                     ? substr($m,0,3).str_repeat('*', max(4, strlen($m)-6)).substr($m,-3)
                                                     : $rawMobile;
 
-                                                  
+
                                                     $dispCard = substr($rawCard,0,4).' **** '.substr($rawCard,-2);
                                                     $dispMem = substr($rawMem,0,3).str_repeat('*', max(3, strlen($rawMem)-5)).substr($rawMem,-2);
                                                     } else {
@@ -903,7 +903,7 @@
 
                                                         {{-- Action --}}
                                                         <td class="arp-td">
-                                                            <a href=""
+                                                            <a href="{{ route('partner.patient.profile', ['encryptedId' => Crypt::encryptString($req->dw_user_id)]) }}"
                                                                 class="arp-view-btn {{ $accepted ? 'arp-view-btn--active' : '' }}">
                                                                 <i class="fa fa-eye"></i>
                                                                 {{ $accepted ? 'View Profile' : 'View Details' }}

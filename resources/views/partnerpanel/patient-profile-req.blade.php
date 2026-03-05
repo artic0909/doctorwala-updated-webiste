@@ -5,7 +5,7 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Get Ticket</title>
+    <title>Request Patient Profile</title>
     <!-- plugins:css -->
     <link rel="stylesheet" href="../partner-assets">
     <link rel="stylesheet" href="../partner-assets/vendors/ti-icons/css/themify-icons.css">

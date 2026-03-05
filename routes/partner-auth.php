@@ -18,6 +18,7 @@ use App\Http\Controllers\Partnerpanel\PartnerServiceListController;
 use App\Http\Controllers\Partnerpanel\PartnerSubscriptionController;
 use App\Http\Controllers\Partnerpanel\PatientProfileAccessController;
 use App\Http\Controllers\Partnerpanel\ProfileEditController;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('guest:partner')->group(function () {
@@ -271,9 +272,28 @@ Route::middleware(['auth:partner', 'verified'])->group(function () {
     Route::get('/partnerpanel/patient-profile-request', [PatientProfileAccessController::class, 'index'])->name('partner.patient.profile.request');
     Route::get('/partnerpanel/patient-profile-all-request', [PatientProfileAccessController::class, 'allRequests'])->name('partner.patient.profile.all.request');
 
+    // Crypt
+    Route::get(
+        '/partner/patients/{encryptedId}/profile',
+        [PatientProfileAccessController::class, 'viewPatientProfile']
+    )
+        ->name('partner.patient.profile');
+
+    Route::get(
+        '/partner/patients/{encryptedId}/medical-history',
+        [PatientProfileAccessController::class, 'viewMedicalHistory']
+    )
+        ->name('partner.patient.medical-history');
+
+    Route::get(
+        '/partner/patients/record/{encryptedId}/files',
+        [PatientProfileAccessController::class, 'viewPatientReportImagesOrPdf']
+    )
+        ->name('partner.patient.report.files');
+
     // AJAX lookup
     Route::post('/partnerpanel/patient/lookup', [PatientProfileAccessController::class, 'patientLookup'])->name('partner.patient.lookup');
-    Route::post('/partnerpanel/patient-profile-request/send',[PatientProfileAccessController::class, 'sendRequest'])->name('partner.patient.request.send');
+    Route::post('/partnerpanel/patient-profile-request/send', [PatientProfileAccessController::class, 'sendRequest'])->name('partner.patient.request.send');
 
 
 

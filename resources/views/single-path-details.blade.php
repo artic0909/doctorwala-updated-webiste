@@ -445,7 +445,7 @@
                 <input type="hidden" name="currently_loggedin_partner_id" value="{{ $path->currently_loggedin_partner_id }}">
                 <input type="hidden" name="clinic_type" value="Pathology">
                 <input type="hidden" name="dw_user_id" value="{{ $user->id ?? '' }}">
-                <input type="text" name="test_id" id="test_id_field">
+                <input type="hidden" name="test_id" id="test_id_field">
                 <div class="fg">
                     <div class="fgrp">
                         <label class="flbl">Inquiry About</label>
