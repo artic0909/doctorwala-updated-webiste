@@ -372,16 +372,18 @@
             }
 
             .mp-tabs-header {
-                flex-direction: column;
+                flex-direction: row;
             }
 
             .mp-tab-btn {
-                border-bottom: none;
-                border-left: 3px solid transparent;
+                padding: 14px 10px;
+                font-size: 13px;
+                gap: 6px;
             }
 
-            .mp-tab-btn.active {
-                border-left-color: #4338ca;
+            .mp-tab-btn svg {
+                width: 16px;
+                height: 16px;
             }
 
             .mp-tab-content {
