@@ -325,6 +325,95 @@
                 background: #3451d1;
             }
 
+            @media (max-width: 768px) {
+                .mht-table-wrap {
+                    display: none;
+                }
+
+                .mht-mobile-cards {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 16px;
+                    margin-top: 20px;
+                }
+
+                .mht-card {
+                    background: #fff;
+                    border-radius: 16px;
+                    padding: 18px;
+                    border: 1px solid #eef2ff;
+                    box-shadow: 0 4px 12px rgba(67, 97, 238, 0.05);
+                    animation: mhtRowIn .3s ease both;
+                }
+
+                .mht-card-top {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    margin-bottom: 12px;
+                }
+
+                .mht-card-heading {
+                    margin-bottom: 0px;
+                }
+
+                .mht-card-meta {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 10px;
+                }
+
+                .mht-card-actions {
+                    display: flex;
+                    justify-content: flex-end;
+                    gap: 12px;
+                    margin-top: 0;
+                    padding-top: 0;
+                    border-top: none;
+                }
+
+                /* Optimize Vitals Grid for Mobile */
+                .up-vitals {
+                    grid-template-columns: repeat(2, 1fr) !important;
+                    gap: 12px !important;
+                    padding: 0 16px 24px !important;
+                }
+
+                .up-vital {
+                    padding: 15px 10px !important;
+                    height: auto !important;
+                }
+
+                .up-vital__ico {
+                    font-size: 1.2rem !important;
+                    margin-bottom: 6px !important;
+                }
+
+                .up-vital__val {
+                    font-size: 1.1rem !important;
+                }
+
+                .up-vital__unit {
+                    font-size: 0.6rem !important;
+                }
+
+                .up-vital__lbl {
+                    font-size: 0.65rem !important;
+                }
+
+                .up-hero__btn {
+                    padding: 9px 12px !important;
+                    font-size: 0.72rem !important;
+                    width: 100%;
+                    justify-content: center;
+                }
+            }
+
+            @media (min-width: 769px) {
+                .mht-mobile-cards {
+                    display: none;
+                }
+            }
             @media (max-width: 460px) {
                 .vm-row {
                     grid-template-columns: 1fr;
@@ -1461,9 +1550,48 @@
             }
 
             .mht-td--heading {
-                font-weight: 600;
+                padding: 16px !important;
+                max-width: 300px;
+            }
+
+            .mht-heading-val {
+                display: block;
+                font-size: 14px;
+                font-weight: 700;
                 color: #1a1f36;
-                max-width: 220px;
+                margin-bottom: 6px;
+                text-transform: capitalize;
+            }
+
+            .mht-tags {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 6px;
+                margin-top: 4px;
+            }
+
+            .mht-tag {
+                display: inline-flex;
+                align-items: center;
+                gap: 4px;
+                padding: 3px 10px;
+                border-radius: 6px;
+                font-size: 11px;
+                font-weight: 600;
+                white-space: nowrap;
+                border: 1px solid transparent;
+            }
+
+            .mht-tag--clinic {
+                background: #fff1f2;
+                color: #e11d48;
+                border-color: #fecaca;
+            }
+
+            .mht-tag--doctor {
+                background: #eff6ff;
+                color: #2563eb;
+                border-color: #bfdbfe;
             }
 
             .mht-td--date {
@@ -1820,16 +1948,29 @@
                                                 </span>
                                             </td>
 
-                                            <td class="mht-td--heading" style="text-transform:capitalize;">
-                                                {{ $rec->heading ?? '—' }}
-                                                @if( !empty($rec->opd->partner_clinic_name))
-                                                <br>
-                                                <span style="color:red;">{{ $rec->opd->partner_clinic_name ?? '' }}</span>
-                                                @endif
-                                                @if( !empty($rec->doctor->doctor_name))
-                                                <br>
-                                                <span style="color:blue;">{{ $rec->doctor->doctor_name ?? '' }}-{{ $rec->doctor->doctor_specialist ?? '' }}</span>
-                                                @endif
+                                            <td class="mht-td--heading">
+                                                <span class="mht-heading-val">{{ $rec->heading ?? '—' }}</span>
+                                                <div class="mht-tags">
+                                                    @if(!empty($rec->opd->partner_clinic_name))
+                                                        <span class="mht-tag mht-tag--clinic">
+                                                            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                                                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                                                                <polyline points="9 22 9 12 15 12 15 22" />
+                                                            </svg>
+                                                            {{ $rec->opd->partner_clinic_name }}
+                                                        </span>
+                                                    @endif
+                                                    @if(!empty($rec->doctor->doctor_name))
+                                                        <span class="mht-tag mht-tag--doctor">
+                                                            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                                                                <circle cx="12" cy="7" r="4" />
+                                                            </svg>
+                                                            {{ $rec->doctor->doctor_name }} 
+                                                            <span style="opacity:0.7; font-weight:400; margin-left:2px;">({{ $rec->doctor->doctor_specialist ?? 'Gen.' }})</span>
+                                                        </span>
+                                                    @endif
+                                                </div>
                                             </td>
 
                                             <td class="mht-td--date">
@@ -1863,7 +2004,7 @@
                                                 <button class="mht-action-btn mht-action-btn--edit" onclick="openEditMhModal(
                                                                                 {{ $rec->id }},
                                                                                 '{{ $rec->type ?? '' }}',
-                                                                                '{{ $rec->date_of_report ? $rec->date_of_report->format('Y-m-d') : '' }}',
+                                                                                '{{ $rec->date_of_report ? \Carbon\Carbon::parse($rec->date_of_report)->format('Y-m-d') : '' }}',
                                                                                 '{{ htmlspecialchars(addslashes($rec->heading ?? ''), ENT_QUOTES) }}',
                                                                                 {{ Js::from($rec->images ?? []) }}
                                                                             )" title="Edit">
@@ -1907,6 +2048,92 @@
                     </div>
 
                     {{-- ── Pagination ── --}}
+                    {{-- ── Mobile Cards (Visible only on <768px) ── --}}
+                    <div class="mht-mobile-cards">
+                        @if(isset($histories) && $histories->count())
+                            @foreach($histories as $i => $rec)
+                                <div class="mht-card" style="--row-delay:{{ $i * 40 }}ms">
+                                    <div class="mht-card-top">
+                                        <span class="mht-badge mht-badge--{{ $rec->type ?? 'report' }}">
+                                            @if(($rec->type ?? '') === 'report')
+                                                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                                    <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
+                                                    <polyline points="14 2 14 8 20 8" />
+                                                </svg> Report
+                                            @else
+                                                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                                    <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
+                                                    <polyline points="9 22 9 12 15 12 15 22" />
+                                                </svg> Prescription
+                                            @endif
+                                        </span>
+                                        <div class="mht-td--date">
+                                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <rect x="3" y="4" width="18" height="18" rx="2" />
+                                                <line x1="16" y1="2" x2="16" y2="6" /><line x1="8" y1="2" x2="8" y2="6" /><line x1="3" y1="10" x2="21" y2="10" />
+                                            </svg>
+                                            {{ $rec->date_of_report ? \Carbon\Carbon::parse($rec->date_of_report)->format('d M Y') : '—' }}
+                                        </div>
+                                    </div>
+
+                                    <div class="mht-card-heading">
+                                        <span class="mht-heading-val">{{ $rec->heading ?? '—' }}</span>
+                                        <div class="mht-tags">
+                                            @if(!empty($rec->opd->partner_clinic_name))
+                                                <span class="mht-tag mht-tag--clinic">
+                                                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" /><polyline points="9 22 9 12 15 12 15 22" />
+                                                    </svg>
+                                                    {{ $rec->opd->partner_clinic_name }}
+                                                </span>
+                                            @endif
+                                            @if(!empty($rec->doctor->doctor_name))
+                                                <span class="mht-tag mht-tag--doctor">
+                                                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" />
+                                                    </svg>
+                                                    {{ $rec->doctor->doctor_name }}
+                                                </span>
+                                            @endif
+                                        </div>
+                                    </div>
+
+                                    <div class="mht-card-bottom" style="display:flex; justify-content: space-between; align-items: center; margin-top: 15px;">
+                                        <div class="mht-td--files">
+                                            @if(($rec->images ?? null) && count($rec->images))
+                                                <a href="{{ route('dw.medical-history.view', $rec->id) }}" class="mht-files-pill">
+                                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                        <path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66l-9.2 9.19a2 2 0 01-2.83-2.83l8.49-8.48" />
+                                                    </svg>
+                                                    {{ count($rec->images) }} file{{ count($rec->images) > 1 ? 's' : '' }}
+                                                </a>
+                                            @else
+                                                <span class="mht-no-files">— No Files</span>
+                                            @endif
+                                        </div>
+
+                                        <div class="mht-card-actions" style="margin-top:0; padding-top:0; border:none;">
+                                            <button class="mht-action-btn mht-action-btn--edit" onclick="openEditMhModal({{ $rec->id }},'{{ $rec->type ?? '' }}','{{ $rec->date_of_report ? \Carbon\Carbon::parse($rec->date_of_report)->format('Y-m-d') : '' }}','{{ htmlspecialchars(addslashes($rec->heading ?? ''), ENT_QUOTES) }}',{{ Js::from($rec->images ?? []) }})" title="Edit">
+                                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                                    <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" /><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" />
+                                                </svg>
+                                            </button>
+
+                                            <form action="{{ route('dw.medical-history.destroy', $rec->id) }}" method="POST" onsubmit="return confirm('Delete this record?')" style="display:inline;">
+                                                @csrf @method('DELETE')
+                                                <button type="submit" class="mht-action-btn mht-action-btn--del" title="Delete">
+                                                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                                        <polyline points="3 6 5 6 21 6" /><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6" /><path d="M10 11v6M14 11v6" /><path d="M9 6V4h6v2" />
+                                                    </svg>
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endforeach
+                        @endif
+                    </div>
+
                     @if(isset($histories) && $histories->lastPage() > 1)
                         <div class="mht-pagination">
                             @if($histories->onFirstPage())
