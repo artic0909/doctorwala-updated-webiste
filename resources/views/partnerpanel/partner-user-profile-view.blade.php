@@ -664,16 +664,28 @@
                     </div>
                 </div>
 
-                <a href="{{ route('partner.patient.medical-history', ['encryptedId' => $encryptedPatientId]) }}"
-                    class="up-hero__actions" style="text-decoration:none;">
-                    <span class="up-hero__btn up-hero__btn--white" style="cursor:pointer;">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <rect x="3" y="11" width="18" height="11" rx="2" />
-                            <path d="M7 11V7a5 5 0 0110 0v4" />
-                        </svg>
-                        View Medical History
-                    </span>
-                </a>
+                <div class="up-hero__actions" style="display:flex; gap:10px;">
+                    <a href="{{ route('partner.patient.medical-history', ['encryptedId' => $encryptedPatientId]) }}"
+                        style="text-decoration:none;">
+                        <span class="up-hero__btn up-hero__btn--white" style="cursor:pointer;">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="11" width="18" height="11" rx="2" />
+                                <path d="M7 11V7a5 5 0 0110 0v4" />
+                            </svg>
+                            View Medical History
+                        </span>
+                    </a>
+                    <a href="{{ route('partner.patient.prescription', ['encryptedId' => $encryptedPatientId]) }}"
+                        style="text-decoration:none;">
+                        <span class="up-hero__btn up-hero__btn--white" style="cursor:pointer; background:#10b981; color:#fff; border-color:#10b981;">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 20h9"></path>
+                                <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+                            </svg>
+                            Create Prescription
+                        </span>
+                    </a>
+                </div>
             </div>
         </div>
     </div>

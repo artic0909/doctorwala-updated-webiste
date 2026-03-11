@@ -392,13 +392,24 @@
                 <span class="vf-date">{{ count($record->images ?? []) }} file{{ count($record->images ?? []) !== 1 ? 's' : '' }}</span>
             </div>
         </div>
-        <span class="vf-readonly-chip">
-            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                <rect x="3" y="11" width="18" height="11" rx="2" />
-                <path d="M7 11V7a5 5 0 0110 0v4" />
-            </svg>
-            Partner View
-        </span>
+        <div style="display:flex; gap:10px; align-items:center;">
+            <a href="{{ route('partner.patient.prescription', ['encryptedId' => Crypt::encryptString($record->dw_user_id)]) }}" style="text-decoration:none;">
+                <span class="vf-readonly-chip" style="background:#10b981; border-color:#10b981; color:#fff; cursor:pointer;">
+                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <path d="M12 20h9"></path>
+                        <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+                    </svg>
+                    Create Prescription
+                </span>
+            </a>
+            <span class="vf-readonly-chip">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <rect x="3" y="11" width="18" height="11" rx="2" />
+                    <path d="M7 11V7a5 5 0 0110 0v4" />
+                </svg>
+                Partner View
+            </span>
+        </div>
     </div>
 
     {{-- ─── BODY ─── --}}

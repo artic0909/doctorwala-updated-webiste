@@ -17,6 +17,7 @@ use App\Http\Controllers\Partnerpanel\PartnerProfileBannerController;
 use App\Http\Controllers\Partnerpanel\PartnerServiceListController;
 use App\Http\Controllers\Partnerpanel\PartnerSubscriptionController;
 use App\Http\Controllers\Partnerpanel\PatientProfileAccessController;
+use App\Http\Controllers\Partnerpanel\PrescriptionController;
 use App\Http\Controllers\Partnerpanel\ProfileEditController;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Route;
@@ -290,6 +291,13 @@ Route::middleware(['auth:partner', 'verified'])->group(function () {
         [PatientProfileAccessController::class, 'viewPatientReportImagesOrPdf']
     )
         ->name('partner.patient.report.files');
+
+
+    Route::get(
+        '/partner/patients/record/{encryptedId}/prescription',
+        [PrescriptionController::class, 'index']
+    )
+        ->name('partner.patient.prescription');
 
     // AJAX lookup
     Route::post('/partnerpanel/patient/lookup', [PatientProfileAccessController::class, 'patientLookup'])->name('partner.patient.lookup');
