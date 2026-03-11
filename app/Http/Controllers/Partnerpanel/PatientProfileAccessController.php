@@ -26,11 +26,11 @@ class PatientProfileAccessController extends Controller
 
     public function index()
     {
-        $partner           = Auth::guard('partner')->user();
-        $partnerId         = Auth::guard('partner')->id();
-        $opdBanner         = PartnerOPDBannerModel::where('currently_loggedin_partner_id', $partnerId)->first();
-        $pathologyBanner   = PartnerPathologyBannerModel::where('currently_loggedin_partner_id', $partnerId)->first();
-        $doctorBanner      = PartnerDoctorBannerModel::where('currently_loggedin_partner_id', $partnerId)->first();
+        $partner = Auth::guard('partner')->user();
+        $partnerId = Auth::guard('partner')->id();
+        $opdBanner = PartnerOPDBannerModel::where('currently_loggedin_partner_id', $partnerId)->first();
+        $pathologyBanner = PartnerPathologyBannerModel::where('currently_loggedin_partner_id', $partnerId)->first();
+        $doctorBanner = PartnerDoctorBannerModel::where('currently_loggedin_partner_id', $partnerId)->first();
         $registrationTypes = $partner->registration_type;
 
         if (is_string($registrationTypes)) {
@@ -60,7 +60,7 @@ class PatientProfileAccessController extends Controller
     {
         $request->validate([
             'dw_medical_id' => 'required|string|max:50',
-            'dw_member_id'  => 'required|string|max:50',
+            'dw_member_id' => 'required|string|max:50',
         ]);
 
         // DB stores 'DW26 7211 03' so match directly
@@ -70,20 +70,20 @@ class PatientProfileAccessController extends Controller
 
         if (!$patient) {
             return response()->json([
-                'found'   => false,
+                'found' => false,
                 'message' => 'No patient found. Please check the IDs and try again.',
             ]);
         }
 
         return response()->json([
-            'found'   => true,
+            'found' => true,
             'patient' => [
-                'id'              => $patient->id,
-                'user_name'       => $patient->user_name,
-                'user_email'      => $patient->user_email,
-                'user_mobile'     => $patient->user_mobile,
+                'id' => $patient->id,
+                'user_name' => $patient->user_name,
+                'user_email' => $patient->user_email,
+                'user_mobile' => $patient->user_mobile,
                 'medical_card_no' => $patient->medical_card_no,
-                'is_verified'     => (bool) ($patient->is_verified ?? false),
+                'is_verified' => (bool) ($patient->is_verified ?? false),
             ],
         ]);
     }
@@ -92,8 +92,8 @@ class PatientProfileAccessController extends Controller
     public function sendRequest(Request $request)
     {
         $request->validate([
-            'doctor_id'    => 'required|integer|exists:partner_all_o_p_d_doctor_models,id',
-            'dw_user_id'   => 'required|integer|exists:dw_user_models,id',
+            'doctor_id' => 'required|integer|exists:partner_all_o_p_d_doctor_models,id',
+            'dw_user_id' => 'required|integer|exists:dw_user_models,id',
             'dw_medical_id' => 'required|string|max:50',
             'dw_member_id' => 'required|string|max:50',
         ]);
@@ -109,19 +109,19 @@ class PatientProfileAccessController extends Controller
         }
 
         AccessRequest::create([
-            'dw_user_id'                    => $request->dw_user_id,
-            'doctor_id'                     => $request->doctor_id,
+            'dw_user_id' => $request->dw_user_id,
+            'doctor_id' => $request->doctor_id,
             'currently_loggedin_partner_id' => $request->currently_loggedin_partner_id,
-            'partner_clinic_name'           => $request->partner_clinic_name,
-            'partner_contact_person_name'   => $request->partner_contact_person_name,
-            'partner_mobile_number'         => $request->partner_mobile_number,
-            'partner_email'                 => $request->partner_email,
-            'partner_state'                 => $request->partner_state,
-            'partner_city'                  => $request->partner_city,
-            'partner_landmark'              => $request->partner_landmark,
-            'partner_pincode'               => $request->partner_pincode,
-            'dw_medical_id'                 => $request->dw_medical_id,
-            'dw_member_id'                  => $request->dw_member_id,
+            'partner_clinic_name' => $request->partner_clinic_name,
+            'partner_contact_person_name' => $request->partner_contact_person_name,
+            'partner_mobile_number' => $request->partner_mobile_number,
+            'partner_email' => $request->partner_email,
+            'partner_state' => $request->partner_state,
+            'partner_city' => $request->partner_city,
+            'partner_landmark' => $request->partner_landmark,
+            'partner_pincode' => $request->partner_pincode,
+            'dw_medical_id' => $request->dw_medical_id,
+            'dw_member_id' => $request->dw_member_id,
             // read_status, req_status, access_status use model defaults
         ]);
 
@@ -130,11 +130,11 @@ class PatientProfileAccessController extends Controller
 
     public function allRequests()
     {
-        $partner           = Auth::guard('partner')->user();
-        $partnerId         = Auth::guard('partner')->id();
-        $opdBanner         = PartnerOPDBannerModel::where('currently_loggedin_partner_id', $partnerId)->first();
-        $pathologyBanner   = PartnerPathologyBannerModel::where('currently_loggedin_partner_id', $partnerId)->first();
-        $doctorBanner      = PartnerDoctorBannerModel::where('currently_loggedin_partner_id', $partnerId)->first();
+        $partner = Auth::guard('partner')->user();
+        $partnerId = Auth::guard('partner')->id();
+        $opdBanner = PartnerOPDBannerModel::where('currently_loggedin_partner_id', $partnerId)->first();
+        $pathologyBanner = PartnerPathologyBannerModel::where('currently_loggedin_partner_id', $partnerId)->first();
+        $doctorBanner = PartnerDoctorBannerModel::where('currently_loggedin_partner_id', $partnerId)->first();
         $registrationTypes = $partner->registration_type;
 
         if (is_string($registrationTypes)) {
@@ -158,7 +158,7 @@ class PatientProfileAccessController extends Controller
             abort(403, 'Invalid link.');
         }
 
-        $partner   = Auth::guard('partner')->user();
+        $partner = Auth::guard('partner')->user();
         $partnerId = $partner->partner_id;
 
         $access = AccessRequest::where('dw_user_id', $dwUserId)
@@ -166,7 +166,7 @@ class PatientProfileAccessController extends Controller
             ->first();
 
         $blocked = !$access
-            || $access->req_status    !== 'accepted'
+            || $access->req_status !== 'accepted'
             || $access->access_status !== 'on';
 
         $patient = DwUserModel::findOrFail($dwUserId);
@@ -178,9 +178,9 @@ class PatientProfileAccessController extends Controller
     private function partnerMeta($partnerId): array
     {
         return [
-            'opdBanner'       => PartnerOPDBannerModel::where('currently_loggedin_partner_id', $partnerId)->first(),
+            'opdBanner' => PartnerOPDBannerModel::where('currently_loggedin_partner_id', $partnerId)->first(),
             'pathologyBanner' => PartnerPathologyBannerModel::where('currently_loggedin_partner_id', $partnerId)->first(),
-            'doctorBanner'    => PartnerDoctorBannerModel::where('currently_loggedin_partner_id', $partnerId)->first(),
+            'doctorBanner' => PartnerDoctorBannerModel::where('currently_loggedin_partner_id', $partnerId)->first(),
         ];
     }
 
@@ -218,7 +218,7 @@ class PatientProfileAccessController extends Controller
             ->where('type', 'report')
             ->count();
 
-        $vital       = Vital::where('dw_user_id', $dwUserId)->latest()->first();
+        $vital = Vital::where('dw_user_id', $dwUserId)->latest()->first();
         $noOfRequest = AccessRequest::where('dw_user_id', $dwUserId)->count();
 
         $encryptedPatientId = Crypt::encryptString((string) $dwUserId);
@@ -256,8 +256,10 @@ class PatientProfileAccessController extends Controller
             : $partner->registration_type;
 
         $histories = MedicalHistory::where('dw_user_id', $dwUserId)
-            ->latest('date_of_report')
+            ->orderBy('date_of_report', 'desc')
+            ->orderBy('id', 'desc')
             ->paginate(10);
+        ;
 
         $noOfPrescription = MedicalHistory::where('dw_user_id', $dwUserId)
             ->where('type', 'prescription')
@@ -295,10 +297,10 @@ class PatientProfileAccessController extends Controller
             abort(403, 'Invalid link.');
         }
 
-        $record   = MedicalHistory::findOrFail($recordId);
+        $record = MedicalHistory::findOrFail($recordId);
         $dwUserId = $record->dw_user_id;
 
-        $partner   = Auth::guard('partner')->user();
+        $partner = Auth::guard('partner')->user();
         $partnerId = $partner->partner_id;
 
         $access = AccessRequest::where('dw_user_id', $dwUserId)
@@ -306,7 +308,7 @@ class PatientProfileAccessController extends Controller
             ->first();
 
         $blocked = !$access
-            || $access->req_status    !== 'accepted'
+            || $access->req_status !== 'accepted'
             || $access->access_status !== 'on';
 
         if ($blocked) {

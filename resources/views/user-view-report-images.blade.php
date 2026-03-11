@@ -293,71 +293,81 @@
                 <span class="vf-date">{{ \Carbon\Carbon::parse($record->date_of_report)->format('d M Y') }}</span>
             </div>
         </div>
+        <div class="vf-header__info">
+            <h1>{{ $record->opd->partner_clinic_name ?? '' }}</h1>
+            <div class="vf-header__meta">
+                <span class="vf-badge vf-badge--{{ $record->type }}">{{ $record->doctor->doctor_name ?? '' }} - {{ $record->doctor->doctor_specialist ?? '' }}</span>
+            </div>
+        </div>
     </div>
 
     <div class="vf-body">
         @if($record->images && count($record->images))
-        <div class="vf-grid">
-            @foreach($record->images as $i => $path)
-            @php
-            $isPdf = str_ends_with(strtolower($path), '.pdf');
-            $url = asset('storage/' . $path);
-            $name = basename($path);
-            @endphp
+            <div class="vf-grid">
+                @foreach($record->images as $i => $path)
+                    @php
+                        $isPdf = str_ends_with(strtolower($path), '.pdf');
+                        $url = asset('storage/' . $path);
+                        $name = basename($path);
+                    @endphp
 
-            <div class="vf-card" style="animation-delay: {{ $i * 60 }}ms">
-                @if($isPdf)
-                <a href="{{ $url }}" target="_blank">
-                    <div class="vf-card__thumb">
-                        <div class="vf-card__pdf-thumb">
-                            <svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4">
-                                <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V9z" />
-                                <polyline points="13 2 13 9 20 9" />
-                                <line x1="16" y1="13" x2="8" y2="13" />
-                                <line x1="16" y1="17" x2="8" y2="17" />
-                            </svg>
-                            <span>PDF Document</span>
-                        </div>
+                    <div class="vf-card" style="animation-delay: {{ $i * 60 }}ms">
+                        @if($isPdf)
+                            <a href="{{ $url }}" target="_blank">
+                                <div class="vf-card__thumb">
+                                    <div class="vf-card__pdf-thumb">
+                                        <svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                            stroke-width="1.4">
+                                            <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V9z" />
+                                            <polyline points="13 2 13 9 20 9" />
+                                            <line x1="16" y1="13" x2="8" y2="13" />
+                                            <line x1="16" y1="17" x2="8" y2="17" />
+                                        </svg>
+                                        <span>PDF Document</span>
+                                    </div>
+                                </div>
+                                <div class="vf-card__foot">
+                                    <span class="vf-card__name">{{ $name }}</span>
+                                    <span class="vf-card__open">
+                                        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                            stroke-width="2.5">
+                                            <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6" />
+                                            <polyline points="15 3 21 3 21 9" />
+                                            <line x1="10" y1="14" x2="21" y2="3" />
+                                        </svg>
+                                        Open
+                                    </span>
+                                </div>
+                            </a>
+                        @else
+                            <div onclick="openLightbox('{{ $url }}', '{{ $name }}')" style="cursor:zoom-in;">
+                                <div class="vf-card__thumb">
+                                    <img src="{{ $url }}" alt="{{ $name }}" loading="lazy">
+                                </div>
+                                <div class="vf-card__foot">
+                                    <span class="vf-card__name">{{ $name }}</span>
+                                    <span class="vf-card__open">
+                                        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                            stroke-width="2.5">
+                                            <circle cx="11" cy="11" r="8" />
+                                            <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                                        </svg>
+                                        View
+                                    </span>
+                                </div>
+                            </div>
+                        @endif
                     </div>
-                    <div class="vf-card__foot">
-                        <span class="vf-card__name">{{ $name }}</span>
-                        <span class="vf-card__open">
-                            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                                <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6" />
-                                <polyline points="15 3 21 3 21 9" />
-                                <line x1="10" y1="14" x2="21" y2="3" />
-                            </svg>
-                            Open
-                        </span>
-                    </div>
-                </a>
-                @else
-                <div onclick="openLightbox('{{ $url }}', '{{ $name }}')" style="cursor:zoom-in;">
-                    <div class="vf-card__thumb">
-                        <img src="{{ $url }}" alt="{{ $name }}" loading="lazy">
-                    </div>
-                    <div class="vf-card__foot">
-                        <span class="vf-card__name">{{ $name }}</span>
-                        <span class="vf-card__open">
-                            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                                <circle cx="11" cy="11" r="8" />
-                                <line x1="21" y1="21" x2="16.65" y2="16.65" />
-                            </svg>
-                            View
-                        </span>
-                    </div>
-                </div>
-                @endif
+                @endforeach
             </div>
-            @endforeach
-        </div>
         @else
-        <div class="vf-empty">
-            <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2">
-                <path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66l-9.2 9.19a2 2 0 01-2.83-2.83l8.49-8.48" />
-            </svg>
-            <p>No files attached to this record.</p>
-        </div>
+            <div class="vf-empty">
+                <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2">
+                    <path
+                        d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66l-9.2 9.19a2 2 0 01-2.83-2.83l8.49-8.48" />
+                </svg>
+                <p>No files attached to this record.</p>
+            </div>
         @endif
     </div>
 

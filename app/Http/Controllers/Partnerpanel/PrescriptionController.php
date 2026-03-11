@@ -52,7 +52,9 @@ class PrescriptionController extends Controller
             ->orWhere('currently_loggedin_partner_id', $partner->partner_id)
             ->get();
 
-        return view('partnerpanel.make-prescription', compact('encryptedId', 'patient', 'vital', 'dwUserId', 'clinicName', 'doctors', 'partnerId'));
+        $encryptedPatientId = $encryptedId;
+
+        return view('partnerpanel.make-prescription', compact('encryptedId', 'patient', 'vital', 'dwUserId', 'clinicName', 'doctors', 'partnerId', 'encryptedPatientId'));
     }
 
     public function edit($encryptedId)
@@ -76,7 +78,9 @@ class PrescriptionController extends Controller
             ->orWhere('currently_loggedin_partner_id', $partner->partner_id)
             ->get();
 
-        return view('partnerpanel.make-prescription', compact('encryptedId', 'patient', 'vital', 'dwUserId', 'clinicName', 'doctors', 'partnerIdNum', 'record'));
+        $encryptedPatientId = Crypt::encryptString($record->dw_user_id);
+
+        return view('partnerpanel.make-prescription', compact('encryptedId', 'patient', 'vital', 'dwUserId', 'clinicName', 'doctors', 'partnerIdNum', 'record', 'encryptedPatientId'));
     }
 
     public function storeImageReportOrPrescription(Request $request)

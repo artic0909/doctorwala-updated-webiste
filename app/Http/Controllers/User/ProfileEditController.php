@@ -64,7 +64,8 @@ class ProfileEditController extends Controller
             ->get();
 
         $histories = MedicalHistory::where('dw_user_id', Auth::id())
-            ->latest('date_of_report')
+            ->orderBy('date_of_report', 'desc')
+            ->orderBy('id', 'desc')
             ->paginate(10);
 
         $noOfPrescription = MedicalHistory::where('dw_user_id', Auth::id())
@@ -85,19 +86,19 @@ class ProfileEditController extends Controller
     public function updateProfile(Request $request)
     {
         $request->validate([
-            'user_name'         => 'required|string|max:255',
-            'user_email'        => 'required|email|max:255',
-            'user_mobile'       => 'required|string|max:15',
-            'dob'               => 'nullable|date',
-            'gender'            => 'nullable|string|max:10',
-            'address'           => 'nullable|string|max:500',
-            'blood_group'       => 'nullable|string|max:5',
-            'height'            => 'nullable|numeric',
-            'weight'            => 'nullable|numeric',
+            'user_name' => 'required|string|max:255',
+            'user_email' => 'required|email|max:255',
+            'user_mobile' => 'required|string|max:15',
+            'dob' => 'nullable|date',
+            'gender' => 'nullable|string|max:10',
+            'address' => 'nullable|string|max:500',
+            'blood_group' => 'nullable|string|max:5',
+            'height' => 'nullable|numeric',
+            'weight' => 'nullable|numeric',
             'emergency_contact' => 'nullable|string|max:15',
-            'allergies'         => 'nullable|string',
+            'allergies' => 'nullable|string',
             'chronic_conditions' => 'nullable|string',
-            'image'             => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
 
         try {
@@ -105,17 +106,17 @@ class ProfileEditController extends Controller
             $userId = Auth::guard('dwuser')->id();
 
             $data = [
-                'user_name'          => $request->user_name,
-                'user_email'         => $request->user_email,
-                'user_mobile'        => $request->user_mobile,
-                'dob'                => $request->dob,
-                'gender'             => $request->gender,
-                'address'            => $request->address,
-                'blood_group'        => $request->blood_group,
-                'height'             => $request->height,
-                'weight'             => $request->weight,
-                'emergency_contact'  => $request->emergency_contact,
-                'allergies'          => $request->allergies,
+                'user_name' => $request->user_name,
+                'user_email' => $request->user_email,
+                'user_mobile' => $request->user_mobile,
+                'dob' => $request->dob,
+                'gender' => $request->gender,
+                'address' => $request->address,
+                'blood_group' => $request->blood_group,
+                'height' => $request->height,
+                'weight' => $request->weight,
+                'emergency_contact' => $request->emergency_contact,
+                'allergies' => $request->allergies,
                 'chronic_conditions' => $request->chronic_conditions,
             ];
 
@@ -128,8 +129,8 @@ class ProfileEditController extends Controller
                     unlink(public_path('storage/' . $oldImage));
                 }
 
-                $file      = $request->file('image');
-                $fileName  = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+                $file = $request->file('image');
+                $fileName = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
                 $file->move(public_path('storage/images'), $fileName);
 
                 $data['image'] = 'images/' . $fileName;
@@ -154,7 +155,7 @@ class ProfileEditController extends Controller
     {
         $request->validate([
             'current_password' => 'required',
-            'password'         => 'required|string|min:8|confirmed',
+            'password' => 'required|string|min:8|confirmed',
         ]);
 
         $user = Auth::guard('dwuser')->user();
@@ -221,8 +222,9 @@ class ProfileEditController extends Controller
             ->latest()
             ->get();
 
-        $histories = MedicalHistory::where('dw_user_id', Auth::id())
-            ->latest('date_of_report')
+        $histories = MedicalHistory::with('doctor', 'opd')->where('dw_user_id', Auth::id())
+            ->orderBy('date_of_report', 'desc')
+            ->orderBy('id', 'desc')
             ->paginate(10);
 
         $noOfPrescription = MedicalHistory::where('dw_user_id', Auth::id())
@@ -240,12 +242,12 @@ class ProfileEditController extends Controller
     public function addMedicalHistory(Request $request)
     {
         $request->validate([
-            'dw_user_id'     => 'required|integer|exists:dw_user_models,id',
-            'type'           => 'required|in:report,prescription',
+            'dw_user_id' => 'required|integer|exists:dw_user_models,id',
+            'type' => 'required|in:report,prescription',
             'date_of_report' => 'required|date|before_or_equal:today',
-            'heading'        => 'required|string|max:255',
-            'images'         => 'nullable|array|max:20',
-            'images.*'       => 'file|mimes:jpg,jpeg,png,webp,pdf|max:5120', // 5 MB each
+            'heading' => 'required|string|max:255',
+            'images' => 'nullable|array|max:20',
+            'images.*' => 'file|mimes:jpg,jpeg,png,webp,pdf|max:5120', // 5 MB each
         ]);
 
         // ── Store images ──────────────────────────────────────────
@@ -264,11 +266,11 @@ class ProfileEditController extends Controller
 
         // ── Create record ─────────────────────────────────────────
         MedicalHistory::create([
-            'dw_user_id'     => Auth::id(), // always use authenticated ID, ignore user-supplied value
-            'type'           => $request->type,
+            'dw_user_id' => Auth::id(), // always use authenticated ID, ignore user-supplied value
+            'type' => $request->type,
             'date_of_report' => $request->date_of_report,
-            'heading'        => $request->heading,
-            'images'         => $imagePaths, // cast to JSON via model
+            'heading' => $request->heading,
+            'images' => $imagePaths, // cast to JSON via model
         ]);
 
         return redirect()->back()->with('success', 'Medical record added successfully.');
@@ -281,12 +283,12 @@ class ProfileEditController extends Controller
             ->firstOrFail();
 
         $request->validate([
-            'type'            => 'required|in:report,prescription',
-            'date_of_report'  => 'required|date|before_or_equal:today',
-            'heading'         => 'required|string|max:255',
-            'new_images'      => 'nullable|array|max:20',
-            'new_images.*'    => 'file|mimes:jpg,jpeg,png,webp,pdf|max:5120',
-            'deleted_images'  => 'nullable|array',
+            'type' => 'required|in:report,prescription',
+            'date_of_report' => 'required|date|before_or_equal:today',
+            'heading' => 'required|string|max:255',
+            'new_images' => 'nullable|array|max:20',
+            'new_images.*' => 'file|mimes:jpg,jpeg,png,webp,pdf|max:5120',
+            'deleted_images' => 'nullable|array',
             'deleted_images.*' => 'string',
         ]);
 
@@ -314,10 +316,10 @@ class ProfileEditController extends Controller
 
         // ── 3. Save ───────────────────────────────────────────────
         $record->update([
-            'type'           => $request->type,
+            'type' => $request->type,
             'date_of_report' => $request->date_of_report,
-            'heading'        => $request->heading,
-            'images'         => $imagePaths,
+            'heading' => $request->heading,
+            'images' => $imagePaths,
         ]);
 
         return redirect()->back()->with('success', 'Medical record updated successfully.');
@@ -353,28 +355,28 @@ class ProfileEditController extends Controller
     public function addVitals(Request $request)
     {
         $request->validate([
-            'heart_rate'     => 'nullable|numeric|min:30|max:250',
+            'heart_rate' => 'nullable|numeric|min:30|max:250',
             'blood_pressure' => 'nullable|string|max:20',
-            'temparature'    => 'nullable|numeric|min:30',
-            'spo'            => 'nullable|numeric|min:50|max:100',
-            'blood_sugar'    => 'nullable|numeric|min:20|max:600',
-            'weight'         => 'nullable|numeric|min:1|max:300',
-            'height'         => 'nullable|numeric|min:50|max:300',
-            'bmi'            => 'nullable|numeric',
-            'blood_group'    => 'nullable|in:A+,A-,B+,B-,O+,O-,AB+,AB-',
+            'temparature' => 'nullable|numeric|min:30',
+            'spo' => 'nullable|numeric|min:50|max:100',
+            'blood_sugar' => 'nullable|numeric|min:20|max:600',
+            'weight' => 'nullable|numeric|min:1|max:300',
+            'height' => 'nullable|numeric|min:50|max:300',
+            'bmi' => 'nullable|numeric',
+            'blood_group' => 'nullable|in:A+,A-,B+,B-,O+,O-,AB+,AB-',
         ]);
 
         Vital::create([
-            'dw_user_id'     => Auth::id(),
-            'heart_rate'     => $request->heart_rate,
+            'dw_user_id' => Auth::id(),
+            'heart_rate' => $request->heart_rate,
             'blood_pressure' => $request->blood_pressure,
-            'temparature'    => $request->temparature,
-            'spo'            => $request->spo,
-            'blood_sugar'    => $request->blood_sugar,
-            'weight'         => $request->weight,
-            'height'         => $request->height,
-            'bmi'            => $request->bmi,
-            'blood_group'    => $request->blood_group,
+            'temparature' => $request->temparature,
+            'spo' => $request->spo,
+            'blood_sugar' => $request->blood_sugar,
+            'weight' => $request->weight,
+            'height' => $request->height,
+            'bmi' => $request->bmi,
+            'blood_group' => $request->blood_group,
         ]);
 
         return redirect()->back()->with('success', 'Vitals saved successfully.');
@@ -387,27 +389,27 @@ class ProfileEditController extends Controller
             ->firstOrFail();
 
         $request->validate([
-            'heart_rate'     => 'nullable|numeric|min:30|max:250',
+            'heart_rate' => 'nullable|numeric|min:30|max:250',
             'blood_pressure' => 'nullable|string|max:20',
-            'temparature'    => 'nullable|numeric|min:30',
-            'spo'            => 'nullable|numeric|min:50|max:100',
-            'blood_sugar'    => 'nullable|numeric|min:20|max:600',
-            'weight'         => 'nullable|numeric|min:1|max:300',
-            'height'         => 'nullable|numeric|min:50|max:300',
-            'bmi'            => 'nullable|numeric',
-            'blood_group'    => 'nullable|in:A+,A-,B+,B-,O+,O-,AB+,AB-',
+            'temparature' => 'nullable|numeric|min:30',
+            'spo' => 'nullable|numeric|min:50|max:100',
+            'blood_sugar' => 'nullable|numeric|min:20|max:600',
+            'weight' => 'nullable|numeric|min:1|max:300',
+            'height' => 'nullable|numeric|min:50|max:300',
+            'bmi' => 'nullable|numeric',
+            'blood_group' => 'nullable|in:A+,A-,B+,B-,O+,O-,AB+,AB-',
         ]);
 
         $vital->update([
-            'heart_rate'     => $request->heart_rate,
+            'heart_rate' => $request->heart_rate,
             'blood_pressure' => $request->blood_pressure,
-            'temparature'    => $request->temparature,
-            'spo'            => $request->spo,
-            'blood_sugar'    => $request->blood_sugar,
-            'weight'         => $request->weight,
-            'height'         => $request->height,
-            'bmi'            => $request->bmi,
-            'blood_group'    => $request->blood_group,
+            'temparature' => $request->temparature,
+            'spo' => $request->spo,
+            'blood_sugar' => $request->blood_sugar,
+            'weight' => $request->weight,
+            'height' => $request->height,
+            'bmi' => $request->bmi,
+            'blood_group' => $request->blood_group,
         ]);
 
         return redirect()->back()->with('success', 'Vitals updated successfully.');
@@ -435,9 +437,9 @@ class ProfileEditController extends Controller
                 ->firstOrFail();
 
             $req->update([
-                'req_status'    => 'accepted',
+                'req_status' => 'accepted',
                 'access_status' => 'on',
-                'read_status'   => 'read',
+                'read_status' => 'read',
             ]);
 
             return redirect()->back()->with('success', 'Request accepted. The clinic can now view your medical profile.');
@@ -447,7 +449,7 @@ class ProfileEditController extends Controller
             return redirect()->back()->with('error', 'Something went wrong: ' . $e->getMessage());
         }
     }
-    
+
     public function rejectRequest($id)
     {
         try {
@@ -456,9 +458,9 @@ class ProfileEditController extends Controller
                 ->firstOrFail();
 
             $req->update([
-                'req_status'    => 'rejected',
+                'req_status' => 'rejected',
                 'access_status' => 'off',
-                'read_status'   => 'read',
+                'read_status' => 'read',
             ]);
 
             return redirect()->back()->with('success', 'Request rejected successfully.');
@@ -476,9 +478,9 @@ class ProfileEditController extends Controller
                 ->firstOrFail();
 
             $req->update([
-                'req_status'    => 'rejected',
+                'req_status' => 'rejected',
                 'access_status' => 'off',
-                'read_status'   => 'read',
+                'read_status' => 'read',
             ]);
 
             return redirect()->back()->with('success', 'Access has been revoked for this clinic.');
@@ -497,9 +499,9 @@ class ProfileEditController extends Controller
                 ->firstOrFail();
 
             $req->update([
-                'req_status'    => 'accepted',
+                'req_status' => 'accepted',
                 'access_status' => 'on',
-                'read_status'   => 'read',
+                'read_status' => 'read',
             ]);
 
             return redirect()->back()->with('success', 'Access has been granted to this clinic.');

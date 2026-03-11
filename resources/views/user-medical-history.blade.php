@@ -878,8 +878,8 @@
             }
 
             /* ════════════════════════════════
-       COMPLETE MODAL
-    ════════════════════════════════ */
+               COMPLETE MODAL
+            ════════════════════════════════ */
             .complete-modal-box {
                 background: #fff;
                 border-radius: 22px;
@@ -1062,8 +1062,8 @@
 
 
             /* ════════════════════════════════
-       CANCEL MODAL
-    ════════════════════════════════ */
+               CANCEL MODAL
+            ════════════════════════════════ */
             .cancel-modal-box {
                 background: #fff;
                 border-radius: 22px;
@@ -1702,8 +1702,8 @@
 
 
     <!-- ══════════════════════════════════════
-         MAIN LAYOUT
-    ══════════════════════════════════════ -->
+                 MAIN LAYOUT
+            ══════════════════════════════════════ -->
     <div class="up-wrap">
         <div class="up-layout">
 
@@ -1821,7 +1821,16 @@
                                             </td>
 
                                             <td class="mht-td--heading" style="text-transform:capitalize;">
-                                                {{ $rec->heading ?? '—' }}</td>
+                                                {{ $rec->heading ?? '—' }}
+                                                @if( !empty($rec->opd->partner_clinic_name))
+                                                <br>
+                                                <span style="color:red;">{{ $rec->opd->partner_clinic_name ?? '' }}</span>
+                                                @endif
+                                                @if( !empty($rec->doctor->doctor_name))
+                                                <br>
+                                                <span style="color:blue;">{{ $rec->doctor->doctor_name ?? '' }}-{{ $rec->doctor->doctor_specialist ?? '' }}</span>
+                                                @endif
+                                            </td>
 
                                             <td class="mht-td--date">
                                                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -1852,12 +1861,12 @@
 
                                             <td class="mht-td--actions">
                                                 <button class="mht-action-btn mht-action-btn--edit" onclick="openEditMhModal(
-                                                        {{ $rec->id }},
-                                                        '{{ $rec->type ?? '' }}',
-                                                        '{{ $rec->date_of_report ? $rec->date_of_report->format('Y-m-d') : '' }}',
-                                                        '{{ htmlspecialchars(addslashes($rec->heading ?? ''), ENT_QUOTES) }}',
-                                                        {{ Js::from($rec->images ?? []) }}
-                                                    )" title="Edit">
+                                                                                {{ $rec->id }},
+                                                                                '{{ $rec->type ?? '' }}',
+                                                                                '{{ $rec->date_of_report ? $rec->date_of_report->format('Y-m-d') : '' }}',
+                                                                                '{{ htmlspecialchars(addslashes($rec->heading ?? ''), ENT_QUOTES) }}',
+                                                                                {{ Js::from($rec->images ?? []) }}
+                                                                            )" title="Edit">
                                                     <svg width="13" height="13" viewBox="0 0 24 24" fill="none"
                                                         stroke="currentColor" stroke-width="2.5">
                                                         <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" />
@@ -2191,8 +2200,8 @@
 
 
     <!-- ════════════════════════════════════════════════
-         ADD VITALS MODAL
-    ════════════════════════════════════════════════ -->
+                 ADD VITALS MODAL
+            ════════════════════════════════════════════════ -->
     <div class="vm-overlay" id="vitalsModal" onclick="handleVmOverlay(event)">
         <div class="vm-modal">
             <div class="vm-head">
@@ -2301,7 +2310,8 @@
                                 <option value="" disabled selected>Choose</option>
                                 @foreach(['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-'] as $bg)
                                     <option value="{{ $bg }}" {{ (Auth::user()->blood_group ?? '') == $bg ? 'selected' : '' }}>
-                                        {{ $bg }}</option>
+                                        {{ $bg }}
+                                    </option>
                                 @endforeach
                             </select>
                             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -2379,8 +2389,8 @@
 
 
     <!-- ════════════════════════════════════════════════
-         EDIT VITALS MODAL
-    ════════════════════════════════════════════════ -->
+                 EDIT VITALS MODAL
+            ════════════════════════════════════════════════ -->
     <div class="vm-overlay" id="editVitalsModal" onclick="handleEditVmOverlay(event)">
         <div class="vm-modal">
             <div class="vm-head">
@@ -2522,8 +2532,8 @@
 
 
     <!-- ════════════════════════════════
-         ADD MEDICAL HISTORY MODAL
-    ════════════════════════════════ -->
+                 ADD MEDICAL HISTORY MODAL
+            ════════════════════════════════ -->
     <div class="mh-modal-overlay" id="medicalHistoryModal" onclick="handleMhOverlayClick(event)">
         <div class="mh-modal">
             <div class="mh-modal__head">
@@ -2724,19 +2734,19 @@
 
                 if (file.type === 'application/pdf') {
                     item.innerHTML = `
-                    <div class="mh-pdf-thumb">
-                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                            <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V9z"/>
-                            <polyline points="14 2 14 9 20 9"/>
-                        </svg>
-                        PDF
-                    </div>
-                    <button type="button" class="mh-remove-btn" onclick="removeMhFile(${idx})">✕</button>`;
+                            <div class="mh-pdf-thumb">
+                                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                    <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V9z"/>
+                                    <polyline points="14 2 14 9 20 9"/>
+                                </svg>
+                                PDF
+                            </div>
+                            <button type="button" class="mh-remove-btn" onclick="removeMhFile(${idx})">✕</button>`;
                 } else {
                     const url = URL.createObjectURL(file);
                     item.innerHTML = `
-                    <img src="${url}" alt="Preview" onload="URL.revokeObjectURL(this.src)">
-                    <button type="button" class="mh-remove-btn" onclick="removeMhFile(${idx})">✕</button>`;
+                            <img src="${url}" alt="Preview" onload="URL.revokeObjectURL(this.src)">
+                            <button type="button" class="mh-remove-btn" onclick="removeMhFile(${idx})">✕</button>`;
                 }
                 grid.appendChild(item);
             });
@@ -2842,15 +2852,15 @@
 
                 if (isPdf) {
                     item.innerHTML = `
-                    <a href="${url}" target="_blank" style="display:flex;width:100%;height:100%;align-items:center;justify-content:center;flex-direction:column;gap:4px;color:#e53e3e;font-size:10px;font-weight:700;text-decoration:none;">
-                        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V9z"/><polyline points="13 2 13 9 20 9"/></svg>
-                        PDF
-                    </a>
-                    <button type="button" class="mh-remove-btn" onclick="removeExistingFile('${path}', this)" title="Remove">✕</button>`;
+                            <a href="${url}" target="_blank" style="display:flex;width:100%;height:100%;align-items:center;justify-content:center;flex-direction:column;gap:4px;color:#e53e3e;font-size:10px;font-weight:700;text-decoration:none;">
+                                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V9z"/><polyline points="13 2 13 9 20 9"/></svg>
+                                PDF
+                            </a>
+                            <button type="button" class="mh-remove-btn" onclick="removeExistingFile('${path}', this)" title="Remove">✕</button>`;
                 } else {
                     item.innerHTML = `
-                    <img src="${url}" alt="${name}" style="width:100%;height:100%;object-fit:cover;">
-                    <button type="button" class="mh-remove-btn" onclick="removeExistingFile('${path}', this)" title="Remove">✕</button>`;
+                            <img src="${url}" alt="${name}" style="width:100%;height:100%;object-fit:cover;">
+                            <button type="button" class="mh-remove-btn" onclick="removeExistingFile('${path}', this)" title="Remove">✕</button>`;
                 }
 
                 grid.appendChild(item);
@@ -2910,16 +2920,16 @@
                 item.className = 'mh-preview-item';
                 if (file.type === 'application/pdf') {
                     item.innerHTML = `
-                    <div class="mh-pdf-thumb">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V9z"/><polyline points="13 2 13 9 20 9"/></svg>
-                        PDF
-                    </div>
-                    <button type="button" class="mh-remove-btn" onclick="removeEditNewFile(${idx})">✕</button>`;
+                            <div class="mh-pdf-thumb">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V9z"/><polyline points="13 2 13 9 20 9"/></svg>
+                                PDF
+                            </div>
+                            <button type="button" class="mh-remove-btn" onclick="removeEditNewFile(${idx})">✕</button>`;
                 } else {
                     const url = URL.createObjectURL(file);
                     item.innerHTML = `
-                    <img src="${url}" onload="URL.revokeObjectURL(this.src)">
-                    <button type="button" class="mh-remove-btn" onclick="removeEditNewFile(${idx})">✕</button>`;
+                            <img src="${url}" onload="URL.revokeObjectURL(this.src)">
+                            <button type="button" class="mh-remove-btn" onclick="removeEditNewFile(${idx})">✕</button>`;
                 }
                 grid.appendChild(item);
             });

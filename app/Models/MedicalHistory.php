@@ -30,4 +30,14 @@ class MedicalHistory extends Model
     {
         return $this->belongsTo(\App\Models\DwUserModel::class, 'dw_user_id');
     }
+
+    public function doctor()
+    {
+        return $this->belongsTo(PartnerAllOPDDoctorModel::class, 'opd_doctor_id');
+    }
+
+    public function opd()
+    {
+        return $this->belongsTo(DwPartnerModel::class, 'partner_id');
+    }
 }
