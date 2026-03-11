@@ -10,6 +10,10 @@ class MedicalHistory extends Model
 
     protected $fillable = [
         'dw_user_id',
+        'partner_id',
+        'clinic_name',
+        'opd_doctor_id',
+        'doctor_name',
         'type',
         'date_of_report',
         'heading',

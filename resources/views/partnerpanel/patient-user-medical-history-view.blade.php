@@ -181,6 +181,27 @@
             background: #dcfce7;
         }
 
+        .mht-edit-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 4px 10px;
+            border-radius: 20px;
+            background: #f8fafc;
+            color: #4338ca;
+            font-size: 12px;
+            font-weight: 700;
+            text-decoration: none;
+            border: 1px solid #e0e7ff;
+            transition: all .15s;
+        }
+
+        .mht-edit-btn:hover {
+            background: #eef2ff;
+            border-color: #c7d2fe;
+            transform: translateY(-1px);
+        }
+
         .mht-no-files {
             color: #cbd5e1;
             font-size: 13px;
@@ -520,6 +541,7 @@
                                     <th>Heading</th>
                                     <th>Date</th>
                                     <th>Files</th>
+                                    <th>Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -576,8 +598,20 @@
                                         @endif
                                     </td>
 
-                                    {{-- NO action column — partner cannot edit/delete --}}
-
+                                    <td class="mht-td--actions">
+                                        @if(Auth::guard('partner')->user() && $rec->partner_id == Auth::guard('partner')->user()->partner_id)
+                                        <a href="{{ route('partner.patient.prescription.edit', ['encryptedId' => Crypt::encryptString($rec->id)]) }}" 
+                                           class="mht-edit-btn" title="Edit this record">
+                                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <path d="M12 20h9"></path>
+                                                <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+                                            </svg>
+                                            Edit
+                                        </a>
+                                        @else
+                                        <span style="color:#cbd5e1; font-size:11px;">View Only</span>
+                                        @endif
+                                    </td>
                                 </tr>
                                 @endforeach
                             </tbody>

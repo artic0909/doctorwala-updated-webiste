@@ -299,6 +299,26 @@ Route::middleware(['auth:partner', 'verified'])->group(function () {
     )
         ->name('partner.patient.prescription');
 
+    Route::get(
+        '/partner/patients/prescription/{encryptedId}/edit',
+        [PrescriptionController::class, 'edit']
+    )->name('partner.patient.prescription.edit');
+
+    Route::post(
+        '/partner/patients/prescription/store-image',
+        [PrescriptionController::class, 'storeImageReportOrPrescription']
+    )->name('partner.patient.prescription.store.image');
+
+    Route::post(
+        '/partner/patients/prescription/update/{id}',
+        [PrescriptionController::class, 'editImageReportOrPrescription']
+    )->name('partner.patient.prescription.update.image');
+
+    Route::post(
+        '/partner/patients/prescription/store-system',
+        [PrescriptionController::class, 'systemFormPrescription']
+    )->name('partner.patient.prescription.store.system');
+
     // AJAX lookup
     Route::post('/partnerpanel/patient/lookup', [PatientProfileAccessController::class, 'patientLookup'])->name('partner.patient.lookup');
     Route::post('/partnerpanel/patient-profile-request/send', [PatientProfileAccessController::class, 'sendRequest'])->name('partner.patient.request.send');
