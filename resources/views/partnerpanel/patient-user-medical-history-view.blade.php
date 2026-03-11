@@ -132,6 +132,37 @@
             max-width: 220px;
         }
 
+        .mht-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 4px;
+        }
+
+        .mht-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 3px 10px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 600;
+            white-space: nowrap;
+            border: 1px solid transparent;
+        }
+
+        .mht-tag--clinic {
+            background: #fff1f2;
+            color: #e11d48;
+            border-color: #fecaca;
+        }
+
+        .mht-tag--doctor {
+            background: #eff6ff;
+            color: #2563eb;
+            border-color: #bfdbfe;
+        }
+
         .mht-td--date {
             display: flex;
             align-items: center;
@@ -450,7 +481,8 @@
         </div>
 
         <div class="up-wrap">
-            <a href="{{ route('partner.patient.profile', ['encryptedId' => $encryptedPatientId]) }}" class="pp-back-btn">
+            <a href="{{ route('partner.patient.profile', ['encryptedId' => $encryptedPatientId]) }}"
+                class="pp-back-btn">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                     <path d="M19 12H5M12 5l-7 7 7 7" />
                 </svg>
@@ -462,18 +494,20 @@
                     <div class="up-hero__av-wrap">
                         <div class="up-hero__av">
                             @if($patient->image)
-                            <img src="{{ asset('storage/' . $patient->image) }}" alt="{{ $patient->user_name }}">
+                                <img src="{{ asset('storage/' . $patient->image) }}" alt="{{ $patient->user_name }}">
                             @else
-                            {{ strtoupper(substr($patient->user_name, 0, 1)) }}{{ strtoupper(substr(strstr($patient->user_name, ' '), 1, 1)) }}
+                                {{ strtoupper(substr($patient->user_name, 0, 1)) }}{{ strtoupper(substr(strstr($patient->user_name, ' '), 1, 1)) }}
                             @endif
                         </div>
                         <span class="up-hero__status-dot"></span>
                     </div>
                     <div class="up-hero__info">
-                        <h1 class="up-hero__name" style="text-transform:capitalize;color:#fff">{{ $patient->user_name }}</h1>
+                        <h1 class="up-hero__name" style="text-transform:capitalize;color:#fff">{{ $patient->user_name }}
+                        </h1>
                         <p class="up-hero__email" style="color:rgba(255,255,255,.72)">{{ $patient->user_email }}</p>
                         <div class="up-hero__badges">
-                            <span class="up-hero__badge" style="background:rgba(255,255,255,.15);border-color:rgba(255,255,255,.3);color:#fff">
+                            <span class="up-hero__badge"
+                                style="background:rgba(255,255,255,.15);border-color:rgba(255,255,255,.3);color:#fff">
                                 <span class="dot" style="background:#a5f3fc"></span>
                                 Medical History — Read Only
                             </span>
@@ -485,15 +519,17 @@
                 <div class="up-hero__actions" style="display:flex; gap:10px;">
                     <a href="{{ route('partner.patient.prescription', ['encryptedId' => $encryptedPatientId]) }}"
                         style="text-decoration:none;">
-                        <span class="up-hero__btn up-hero__btn--white" style="cursor:pointer; background:#10b981; color:#fff; border-color:#10b981;">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <span class="up-hero__btn up-hero__btn--white"
+                            style="cursor:pointer; background:#10b981; color:#fff; border-color:#10b981;">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
                                 <path d="M12 20h9"></path>
                                 <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
                             </svg>
                             Create Prescription
                         </span>
                     </a>
-                    
+
                 </div>
             </div>
         </div>
@@ -510,7 +546,8 @@
                 <div class="up-card">
                     <div class="up-card__head">
                         <div class="up-card__title">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
                                 <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
                             </svg>
                             Health Overview
@@ -542,97 +579,106 @@
 
                 {{-- Vitals Summary (read-only) --}}
                 @if($vital)
-                <div class="up-card">
-                    <div class="up-card__head">
-                        <div class="up-card__title">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
-                            </svg>
-                            Latest Vitals
-                        </div>
-                        <span style="font-size:.68rem;color:var(--muted);font-weight:700">
-                            {{ \Carbon\Carbon::parse($vital->updated_at)->format('d M Y') }}
-                        </span>
-                    </div>
-                    <div class="up-info-list">
-                        <div class="up-info-row">
-                            <div class="up-info-ico">❤️</div>
-                            <div>
-                                <div class="up-info-lbl">Heart Rate</div>
-                                <div class="up-info-val">{{ $vital->heart_rate ?? '—' }} <small style="color:var(--muted)">bpm</small></div>
+                    <div class="up-card">
+                        <div class="up-card__head">
+                            <div class="up-card__title">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+                                </svg>
+                                Latest Vitals
                             </div>
+                            <span style="font-size:.68rem;color:var(--muted);font-weight:700">
+                                {{ \Carbon\Carbon::parse($vital->updated_at)->format('d M Y') }}
+                            </span>
                         </div>
-                        <div class="up-info-row">
-                            <div class="up-info-ico">🩸</div>
-                            <div>
-                                <div class="up-info-lbl">Blood Pressure</div>
-                                <div class="up-info-val">{{ $vital->blood_pressure ?? '—' }} <small style="color:var(--muted)">mmHg</small></div>
+                        <div class="up-info-list">
+                            <div class="up-info-row">
+                                <div class="up-info-ico">❤️</div>
+                                <div>
+                                    <div class="up-info-lbl">Heart Rate</div>
+                                    <div class="up-info-val">{{ $vital->heart_rate ?? '—' }} <small
+                                            style="color:var(--muted)">bpm</small></div>
+                                </div>
                             </div>
-                        </div>
-                        <div class="up-info-row">
-                            <div class="up-info-ico">🌡️</div>
-                            <div>
-                                <div class="up-info-lbl">Temperature</div>
-                                <div class="up-info-val">{{ $vital->temparature ?? '—' }} <small style="color:var(--muted)">°C</small></div>
+                            <div class="up-info-row">
+                                <div class="up-info-ico">🩸</div>
+                                <div>
+                                    <div class="up-info-lbl">Blood Pressure</div>
+                                    <div class="up-info-val">{{ $vital->blood_pressure ?? '—' }} <small
+                                            style="color:var(--muted)">mmHg</small></div>
+                                </div>
                             </div>
-                        </div>
-                        <div class="up-info-row">
-                            <div class="up-info-ico">🫁</div>
-                            <div>
-                                <div class="up-info-lbl">SpO₂</div>
-                                <div class="up-info-val">{{ $vital->spo ?? '—' }} <small style="color:var(--muted)">%</small></div>
+                            <div class="up-info-row">
+                                <div class="up-info-ico">🌡️</div>
+                                <div>
+                                    <div class="up-info-lbl">Temperature</div>
+                                    <div class="up-info-val">{{ $vital->temparature ?? '—' }} <small
+                                            style="color:var(--muted)">°C</small></div>
+                                </div>
                             </div>
-                        </div>
-                        <div class="up-info-row">
-                            <div class="up-info-ico">🧪</div>
-                            <div>
-                                <div class="up-info-lbl">Blood Sugar</div>
-                                <div class="up-info-val">{{ $vital->blood_sugar ?? '—' }} <small style="color:var(--muted)">mg/dL</small></div>
+                            <div class="up-info-row">
+                                <div class="up-info-ico">🫁</div>
+                                <div>
+                                    <div class="up-info-lbl">SpO₂</div>
+                                    <div class="up-info-val">{{ $vital->spo ?? '—' }} <small
+                                            style="color:var(--muted)">%</small></div>
+                                </div>
                             </div>
-                        </div>
-                        <div class="up-info-row">
-                            <div class="up-info-ico">📊</div>
-                            <div>
-                                <div class="up-info-lbl">BMI</div>
-                                <div class="up-info-val">
-                                    {{ $vital->bmi ?? '—' }}
-                                    @if($vital->bmi)
-                                    <small style="color:var(--muted)">
-                                        @if($vital->bmi < 18.5) · Underweight
-                                            @elseif($vital->bmi < 25) · Normal
+                            <div class="up-info-row">
+                                <div class="up-info-ico">🧪</div>
+                                <div>
+                                    <div class="up-info-lbl">Blood Sugar</div>
+                                    <div class="up-info-val">{{ $vital->blood_sugar ?? '—' }} <small
+                                            style="color:var(--muted)">mg/dL</small></div>
+                                </div>
+                            </div>
+                            <div class="up-info-row">
+                                <div class="up-info-ico">📊</div>
+                                <div>
+                                    <div class="up-info-lbl">BMI</div>
+                                    <div class="up-info-val">
+                                        {{ $vital->bmi ?? '—' }}
+                                        @if($vital->bmi)
+                                            <small style="color:var(--muted)">
+                                                @if($vital->bmi < 18.5) · Underweight
+                                                @elseif($vital->bmi < 25) · Normal
                                                 @elseif($vital->bmi < 30) · Overweight
-                                                    @else · Obese
-                                                    @endif
-                                                    </small>
-                                                    @endif
+                                                @else · Obese
+                                                @endif
+                                            </small>
+                                        @endif
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="up-info-row">
+                                <div class="up-info-ico">⚖️</div>
+                                <div>
+                                    <div class="up-info-lbl">Weight / Height</div>
+                                    <div class="up-info-val">{{ $vital->weight ?? '—' }} kg / {{ $vital->height ?? '—' }} cm
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="up-info-row">
+                                <div class="up-info-ico">🔴</div>
+                                <div>
+                                    <div class="up-info-lbl">Blood Group</div>
+                                    <div class="up-info-val" style="color:var(--rose)">{{ $vital->blood_group ?? '—' }}
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="up-info-row">
-                            <div class="up-info-ico">⚖️</div>
-                            <div>
-                                <div class="up-info-lbl">Weight / Height</div>
-                                <div class="up-info-val">{{ $vital->weight ?? '—' }} kg / {{ $vital->height ?? '—' }} cm</div>
-                            </div>
-                        </div>
-                        <div class="up-info-row">
-                            <div class="up-info-ico">🔴</div>
-                            <div>
-                                <div class="up-info-lbl">Blood Group</div>
-                                <div class="up-info-val" style="color:var(--rose)">{{ $vital->blood_group ?? '—' }}</div>
-                            </div>
-                        </div>
                     </div>
-                </div>
                 @else
-                <div class="up-card">
-                    <div style="padding:22px;text-align:center;color:#94a3b8;font-size:13px;">
-                        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" opacity=".4" style="display:block;margin:0 auto 10px">
-                            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
-                        </svg>
-                        No vitals recorded for this patient.
+                    <div class="up-card">
+                        <div style="padding:22px;text-align:center;color:#94a3b8;font-size:13px;">
+                            <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="1.2" opacity=".4" style="display:block;margin:0 auto 10px">
+                                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+                            </svg>
+                            No vitals recorded for this patient.
+                        </div>
                     </div>
-                </div>
                 @endif
             </aside>
 
@@ -641,100 +687,131 @@
                 <div class="mht-wrap">
 
                     @if(session('success'))
-                    <div class="mht-alert mht-alert--success">
-                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                            <polyline points="20 6 9 17 4 12" />
-                        </svg>
-                        {{ session('success') }}
-                    </div>
+                        <div class="mht-alert mht-alert--success">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2.5">
+                                <polyline points="20 6 9 17 4 12" />
+                            </svg>
+                            {{ session('success') }}
+                        </div>
                     @endif
 
                     {{-- ── Table ── --}}
                     <div class="mht-table-wrap">
                         @if($histories->count())
-                        <table class="mht-table">
-                            <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>Type</th>
-                                    <th>Heading</th>
-                                    <th>Date</th>
-                                    <th>Files</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach($histories as $i => $rec)
-                                <tr class="mht-row" style="--row-delay:{{ $i * 40 }}ms">
+                            <table class="mht-table">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Type</th>
+                                        <th>Heading</th>
+                                        <th>Date</th>
+                                        <th>Files</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach($histories as $i => $rec)
+                                        <tr class="mht-row" style="--row-delay:{{ $i * 40 }}ms">
 
-                                    <td class="mht-td--num">{{ $histories->firstItem() + $i }}</td>
+                                            <td class="mht-td--num">{{ $histories->firstItem() + $i }}</td>
 
-                                    <td>
-                                        <span class="mht-badge mht-badge--{{ $rec->type ?? 'report' }}">
-                                            @if(($rec->type ?? '') === 'report')
-                                            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                                                <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
-                                                <polyline points="14 2 14 8 20 8" />
-                                            </svg>
-                                            Report
-                                            @else
-                                            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                                                <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
-                                                <polyline points="9 22 9 12 15 12 15 22" />
-                                            </svg>
-                                            Prescription
-                                            @endif
-                                        </span>
-                                    </td>
+                                            <td>
+                                                <span class="mht-badge mht-badge--{{ $rec->type ?? 'report' }}">
+                                                    @if(($rec->type ?? '') === 'report')
+                                                        <svg width="11" height="11" viewBox="0 0 24 24" fill="none"
+                                                            stroke="currentColor" stroke-width="2.5">
+                                                            <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
+                                                            <polyline points="14 2 14 8 20 8" />
+                                                        </svg>
+                                                        Report
+                                                    @else
+                                                        <svg width="11" height="11" viewBox="0 0 24 24" fill="none"
+                                                            stroke="currentColor" stroke-width="2.5">
+                                                            <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
+                                                            <polyline points="9 22 9 12 15 12 15 22" />
+                                                        </svg>
+                                                        Prescription
+                                                    @endif
+                                                </span>
+                                            </td>
 
-                                    <td class="mht-td--heading" style="text-transform:capitalize">
-                                        {{ $rec->heading ?? '—' }}
-                                    </td>
+                                            <td class="mht-td--heading" style="text-transform:capitalize">
+                                                {{ $rec->heading ?? '—' }}
+                                                <div class="mht-tags">
+                                                    @if(!empty($rec->opd->partner_clinic_name))
+                                                        <span class="mht-tag mht-tag--clinic">
+                                                            <svg width="10" height="10" viewBox="0 0 24 24" fill="none"
+                                                                stroke="currentColor" stroke-width="2.5">
+                                                                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                                                                <polyline points="9 22 9 12 15 12 15 22" />
+                                                            </svg>
+                                                            {{ $rec->opd->partner_clinic_name }}
+                                                        </span>
+                                                    @endif
+                                                    @if(!empty($rec->doctor->doctor_name))
+                                                        <span class="mht-tag mht-tag--doctor">
+                                                            <svg width="10" height="10" viewBox="0 0 24 24" fill="none"
+                                                                stroke="currentColor" stroke-width="2.5">
+                                                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                                                                <circle cx="12" cy="7" r="4" />
+                                                            </svg>
+                                                            {{ $rec->doctor->doctor_name }}
+                                                            <span
+                                                                style="opacity:0.7; font-weight:400; margin-left:2px;">({{ $rec->doctor->doctor_specialist ?? 'Gen.' }})</span>
+                                                        </span>
+                                                    @endif
+                                                </div>
+                                            </td>
 
-                                    <td class="mht-td--date">
-                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                            <rect x="3" y="4" width="18" height="18" rx="2" />
-                                            <line x1="16" y1="2" x2="16" y2="6" />
-                                            <line x1="8" y1="2" x2="8" y2="6" />
-                                            <line x1="3" y1="10" x2="21" y2="10" />
-                                        </svg>
-                                        {{ $rec->date_of_report ? \Carbon\Carbon::parse($rec->date_of_report)->format('d M Y') : '—' }}
-                                    </td>
+                                            <td class="mht-td--date">
+                                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
+                                                    stroke="currentColor" stroke-width="2">
+                                                    <rect x="3" y="4" width="18" height="18" rx="2" />
+                                                    <line x1="16" y1="2" x2="16" y2="6" />
+                                                    <line x1="8" y1="2" x2="8" y2="6" />
+                                                    <line x1="3" y1="10" x2="21" y2="10" />
+                                                </svg>
+                                                {{ $rec->date_of_report ? \Carbon\Carbon::parse($rec->date_of_report)->format('d M Y') : '—' }}
+                                            </td>
 
-                                    <td class="mht-td--files">
-                                        @if(($rec->images ?? null) && count($rec->images))
-                                        <a href="{{ route('partner.patient.report.files', ['encryptedId' => Crypt::encryptString($rec->id)]) }}"
-                                            class="mht-files-pill"
-                                            title="View {{ count($rec->images) }} file(s)"
-                                            target="_blank">
-                                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                                <path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66l-9.2 9.19a2 2 0 01-2.83-2.83l8.49-8.48" />
-                                            </svg>
-                                            {{ count($rec->images) }} file{{ count($rec->images) > 1 ? 's' : '' }}
-                                        </a>
-                                        @else
-                                        <span class="mht-no-files">—</span>
-                                        @endif
-                                    </td>
+                                            <td class="mht-td--files">
+                                                @if(($rec->images ?? null) && count($rec->images))
+                                                    <a href="{{ route('partner.patient.report.files', ['encryptedId' => Crypt::encryptString($rec->id)]) }}"
+                                                        class="mht-files-pill" title="View {{ count($rec->images) }} file(s)"
+                                                        target="_blank">
+                                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
+                                                            stroke="currentColor" stroke-width="2">
+                                                            <path
+                                                                d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66l-9.2 9.19a2 2 0 01-2.83-2.83l8.49-8.48" />
+                                                        </svg>
+                                                        {{ count($rec->images) }} file{{ count($rec->images) > 1 ? 's' : '' }}
+                                                    </a>
+                                                @else
+                                                    <span class="mht-no-files">—</span>
+                                                @endif
+                                            </td>
 
-                                    <td class="mht-td--actions">
-                                        @if(Auth::guard('partner')->user() && $rec->partner_id == Auth::guard('partner')->user()->partner_id)
-                                        <a href="{{ route('partner.patient.prescription.edit', ['encryptedId' => Crypt::encryptString($rec->id)]) }}" 
-                                           class="mht-edit-btn" title="Edit this record">
-                                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                                <path d="M12 20h9"></path>
-                                                <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
-                                            </svg>
-                                            Edit
-                                        </a>
-                                        @else
-                                        <span style="color:#cbd5e1; font-size:11px;">View Only</span>
-                                        @endif
-                                    </td>
-                                </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
+                                            <td class="mht-td--actions">
+                                                @if(Auth::guard('partner')->user() && $rec->partner_id == Auth::guard('partner')->user()->partner_id)
+                                                    <a href="{{ route('partner.patient.prescription.edit', ['encryptedId' => Crypt::encryptString($rec->id)]) }}"
+                                                        class="mht-edit-btn" title="Edit this record">
+                                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                                                            stroke="currentColor" stroke-width="2">
+                                                            <path d="M12 20h9"></path>
+                                                            <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z">
+                                                            </path>
+                                                        </svg>
+                                                        Edit
+                                                    </a>
+                                                @else
+                                                    <span style="color:#cbd5e1; font-size:11px;">View Only</span>
+                                                @endif
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
                         @endif
                     </div>
 
@@ -755,11 +832,36 @@
 
                                 <h3 class="mht-card-heading" style="text-transform:capitalize">
                                     {{ $rec->heading ?? '—' }}
+                                    <div class="mht-tags">
+                                        @if(!empty($rec->opd->partner_clinic_name))
+                                            <span class="mht-tag mht-tag--clinic">
+                                                <svg width="10" height="10" viewBox="0 0 24 24" fill="none"
+                                                    stroke="currentColor" stroke-width="2.5">
+                                                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                                                    <polyline points="9 22 9 12 15 12 15 22" />
+                                                </svg>
+                                                {{ $rec->opd->partner_clinic_name }}
+                                            </span>
+                                        @endif
+                                        @if(!empty($rec->doctor->doctor_name))
+                                            <span class="mht-tag mht-tag--doctor">
+                                                <svg width="10" height="10" viewBox="0 0 24 24" fill="none"
+                                                    stroke="currentColor" stroke-width="2.5">
+                                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                                                    <circle cx="12" cy="7" r="4" />
+                                                </svg>
+                                                {{ $rec->doctor->doctor_name }}
+                                                <span
+                                                    style="opacity:0.7; font-weight:400; margin-left:2px;">({{ $rec->doctor->doctor_specialist ?? 'Gen.' }})</span>
+                                            </span>
+                                        @endif
+                                    </div>
                                 </h3>
 
                                 <div class="mht-card-meta">
                                     <div class="mht-card-info-item">
-                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                            stroke-width="2">
                                             <rect x="3" y="4" width="18" height="18" rx="2" />
                                             <path d="M16 2v4M8 2v4M3 10h18" />
                                         </svg>
@@ -768,12 +870,15 @@
 
                                     @if(($rec->images ?? null) && count($rec->images))
                                         <div class="mht-card-info-item">
-                                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                                <path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66l-9.2 9.19a2 2 0 01-2.83-2.83l8.49-8.48" />
+                                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                stroke-width="2">
+                                                <path
+                                                    d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66l-9.2 9.19a2 2 0 01-2.83-2.83l8.49-8.48" />
                                             </svg>
                                             <a href="{{ route('partner.patient.report.files', ['encryptedId' => Crypt::encryptString($rec->id)]) }}"
-                                               style="color: #16a34a; font-weight: 600; text-decoration: none;" target="_blank">
-                                               {{ count($rec->images) }} file{{ count($rec->images) > 1 ? 's' : '' }}
+                                                style="color: #16a34a; font-weight: 600; text-decoration: none;"
+                                                target="_blank">
+                                                {{ count($rec->images) }} file{{ count($rec->images) > 1 ? 's' : '' }}
                                             </a>
                                         </div>
                                     @endif
@@ -781,9 +886,10 @@
 
                                 <div class="mht-card-actions">
                                     @if(Auth::guard('partner')->user() && $rec->partner_id == Auth::guard('partner')->user()->partner_id)
-                                        <a href="{{ route('partner.patient.prescription.edit', ['encryptedId' => Crypt::encryptString($rec->id)]) }}" 
-                                           class="mht-edit-btn">
-                                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                        <a href="{{ route('partner.patient.prescription.edit', ['encryptedId' => Crypt::encryptString($rec->id)]) }}"
+                                            class="mht-edit-btn">
+                                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                stroke-width="2.5">
                                                 <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" />
                                                 <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" />
                                             </svg>
@@ -796,7 +902,8 @@
                             </div>
                         @empty
                             <div class="mht-empty">
-                                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2">
+                                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="1.2">
                                     <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
                                     <polyline points="14 2 14 8 20 8" />
                                 </svg>
@@ -807,56 +914,64 @@
 
                     {{-- ── Pagination ── --}}
                     @if($histories->lastPage() > 1)
-                    <div class="mht-pagination">
-                        @if($histories->onFirstPage())
-                        <span class="mht-page-btn mht-page-btn--disabled">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                                <polyline points="15 18 9 12 15 6" />
-                            </svg>
-                        </span>
-                        @else
-                        <a href="{{ $histories->previousPageUrl() }}" class="mht-page-btn">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                                <polyline points="15 18 9 12 15 6" />
-                            </svg>
-                        </a>
-                        @endif
+                        <div class="mht-pagination">
+                            @if($histories->onFirstPage())
+                                <span class="mht-page-btn mht-page-btn--disabled">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2.5">
+                                        <polyline points="15 18 9 12 15 6" />
+                                    </svg>
+                                </span>
+                            @else
+                                <a href="{{ $histories->previousPageUrl() }}" class="mht-page-btn">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2.5">
+                                        <polyline points="15 18 9 12 15 6" />
+                                    </svg>
+                                </a>
+                            @endif
 
-                        @php
-                        $current = $histories->currentPage();
-                        $last = $histories->lastPage();
-                        $pages = [];
-                        $pages[] = 1;
-                        if ($current > 4) $pages[] = '...';
-                        for ($p = max(2, $current - 1); $p <= min($last - 1, $current + 1); $p++) $pages[]=$p;
-                            if ($current < $last - 3) $pages[]='...' ;
-                            if ($last> 1) $pages[] = $last;
+                            @php
+                                $current = $histories->currentPage();
+                                $last = $histories->lastPage();
+                                $pages = [];
+                                $pages[] = 1;
+                                if ($current > 4)
+                                    $pages[] = '...';
+                                for ($p = max(2, $current - 1); $p <= min($last - 1, $current + 1); $p++)
+                                    $pages[] = $p;
+                                if ($current < $last - 3)
+                                    $pages[] = '...';
+                                if ($last > 1)
+                                    $pages[] = $last;
                             @endphp
 
                             @foreach($pages as $page)
-                            @if($page === '...')
-                            <span class="mht-page-ellipsis">…</span>
-                            @elseif($page == $current)
-                            <span class="mht-page-btn mht-page-btn--active">{{ $page }}</span>
-                            @else
-                            <a href="{{ $histories->url($page) }}" class="mht-page-btn">{{ $page }}</a>
-                            @endif
+                                @if($page === '...')
+                                    <span class="mht-page-ellipsis">…</span>
+                                @elseif($page == $current)
+                                    <span class="mht-page-btn mht-page-btn--active">{{ $page }}</span>
+                                @else
+                                    <a href="{{ $histories->url($page) }}" class="mht-page-btn">{{ $page }}</a>
+                                @endif
                             @endforeach
 
                             @if($histories->hasMorePages())
-                            <a href="{{ $histories->nextPageUrl() }}" class="mht-page-btn">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                                    <polyline points="9 18 15 12 9 6" />
-                                </svg>
-                            </a>
+                                <a href="{{ $histories->nextPageUrl() }}" class="mht-page-btn">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2.5">
+                                        <polyline points="9 18 15 12 9 6" />
+                                    </svg>
+                                </a>
                             @else
-                            <span class="mht-page-btn mht-page-btn--disabled">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                                    <polyline points="9 18 15 12 9 6" />
-                                </svg>
-                            </span>
+                                <span class="mht-page-btn mht-page-btn--disabled">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2.5">
+                                        <polyline points="9 18 15 12 9 6" />
+                                    </svg>
+                                </span>
                             @endif
-                    </div>
+                        </div>
                     @endif
 
                 </div>{{-- end mht-wrap --}}
@@ -866,68 +981,71 @@
                 <div class="up-card" style="margin-top:20px">
                     <div class="up-card__head">
                         <div class="up-card__title">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
                                 <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
                             </svg>
                             Patient Vitals (Full View)
                         </div>
                         <span style="font-size:.7rem;color:var(--muted);font-weight:700">
-                            Updated: {{ ($vital && $vital->updated_at) ? \Carbon\Carbon::parse($vital->updated_at)->format('d M Y') : 'N/A' }}
+                            Updated:
+                            {{ ($vital && $vital->updated_at) ? \Carbon\Carbon::parse($vital->updated_at)->format('d M Y') : 'N/A' }}
                         </span>
                     </div>
 
                     @if($vital)
-                    <div class="up-vitals">
-                        <div class="up-vital up-qstat--coral" style="border-color:#fed7aa">
-                            <div class="up-vital__ico">🔴</div>
-                            <div class="up-vital__val" style="color:#c2410c">{{ $vital->blood_group ?? '—' }}</div>
-                            <div class="up-vital__unit">Blood Type</div>
-                            <div class="up-vital__lbl">Blood Group</div>
-                        </div>
-                        <div class="up-vital up-qstat--teal" style="border-color:#bae6fd">
-                            <div class="up-vital__ico">❤️</div>
-                            <div class="up-vital__val" style="color:var(--p-dk)">{{ $vital->heart_rate ?? '—' }}</div>
-                            <div class="up-vital__unit">bpm</div>
-                            <div class="up-vital__lbl">Heart Rate</div>
-                        </div>
-                        <div class="up-vital up-qstat--rose" style="border-color:#fecdd3;background:var(--rose-lt)">
-                            <div class="up-vital__ico">🩸</div>
-                            <div class="up-vital__val" style="color:var(--rose)">{{ $vital->blood_pressure ?? '—' }}</div>
-                            <div class="up-vital__unit">mmHg</div>
-                            <div class="up-vital__lbl">Blood Pressure</div>
-                        </div>
-                        <div class="up-vital up-qstat--mint" style="border-color:#a7f3d0">
-                            <div class="up-vital__ico">🌡️</div>
-                            <div class="up-vital__val" style="color:#047857">{{ $vital->temparature ?? '—' }}</div>
-                            <div class="up-vital__unit">°C</div>
-                            <div class="up-vital__lbl">Temperature</div>
-                        </div>
-                        <div class="up-vital up-qstat--amber" style="border-color:#fde68a">
-                            <div class="up-vital__ico">⚖️</div>
-                            <div class="up-vital__val" style="color:#b45309">{{ $vital->weight ?? '—' }}</div>
-                            <div class="up-vital__unit">kg</div>
-                            <div class="up-vital__lbl">Weight</div>
-                        </div>
-                        <div class="up-vital up-qstat--mint" style="border-color:#fde68a">
-                            <div class="up-vital__ico">📏</div>
-                            <div class="up-vital__val" style="color:#b45309">{{ $vital->height ?? '—' }}</div>
-                            <div class="up-vital__unit">cm</div>
-                            <div class="up-vital__lbl">Height</div>
-                        </div>
-                        <div class="up-vital up-qstat--coral" style="border-color:#fed7aa">
-                            <div class="up-vital__ico">📊</div>
-                            <div class="up-vital__val" style="color:#c2410c">{{ $vital->bmi ?? '—' }}</div>
-                            <div class="up-vital__unit">
-                                @if($vital->bmi)
-                                @if($vital->bmi < 18.5) Underweight
-                                    @elseif($vital->bmi < 25) Normal
+                        <div class="up-vitals">
+                            <div class="up-vital up-qstat--coral" style="border-color:#fed7aa">
+                                <div class="up-vital__ico">🔴</div>
+                                <div class="up-vital__val" style="color:#c2410c">{{ $vital->blood_group ?? '—' }}</div>
+                                <div class="up-vital__unit">Blood Type</div>
+                                <div class="up-vital__lbl">Blood Group</div>
+                            </div>
+                            <div class="up-vital up-qstat--teal" style="border-color:#bae6fd">
+                                <div class="up-vital__ico">❤️</div>
+                                <div class="up-vital__val" style="color:var(--p-dk)">{{ $vital->heart_rate ?? '—' }}</div>
+                                <div class="up-vital__unit">bpm</div>
+                                <div class="up-vital__lbl">Heart Rate</div>
+                            </div>
+                            <div class="up-vital up-qstat--rose" style="border-color:#fecdd3;background:var(--rose-lt)">
+                                <div class="up-vital__ico">🩸</div>
+                                <div class="up-vital__val" style="color:var(--rose)">{{ $vital->blood_pressure ?? '—' }}
+                                </div>
+                                <div class="up-vital__unit">mmHg</div>
+                                <div class="up-vital__lbl">Blood Pressure</div>
+                            </div>
+                            <div class="up-vital up-qstat--mint" style="border-color:#a7f3d0">
+                                <div class="up-vital__ico">🌡️</div>
+                                <div class="up-vital__val" style="color:#047857">{{ $vital->temparature ?? '—' }}</div>
+                                <div class="up-vital__unit">°C</div>
+                                <div class="up-vital__lbl">Temperature</div>
+                            </div>
+                            <div class="up-vital up-qstat--amber" style="border-color:#fde68a">
+                                <div class="up-vital__ico">⚖️</div>
+                                <div class="up-vital__val" style="color:#b45309">{{ $vital->weight ?? '—' }}</div>
+                                <div class="up-vital__unit">kg</div>
+                                <div class="up-vital__lbl">Weight</div>
+                            </div>
+                            <div class="up-vital up-qstat--mint" style="border-color:#fde68a">
+                                <div class="up-vital__ico">📏</div>
+                                <div class="up-vital__val" style="color:#b45309">{{ $vital->height ?? '—' }}</div>
+                                <div class="up-vital__unit">cm</div>
+                                <div class="up-vital__lbl">Height</div>
+                            </div>
+                            <div class="up-vital up-qstat--coral" style="border-color:#fed7aa">
+                                <div class="up-vital__ico">📊</div>
+                                <div class="up-vital__val" style="color:#c2410c">{{ $vital->bmi ?? '—' }}</div>
+                                <div class="up-vital__unit">
+                                    @if($vital->bmi)
+                                        @if($vital->bmi < 18.5) Underweight
+                                        @elseif($vital->bmi < 25) Normal
                                         @elseif($vital->bmi < 30) Overweight
-                                            @else Obese
-                                            @endif
-                                            @else —
-                                            @endif
-                                            </div>
-                                            <div class="up-vital__lbl">BMI</div>
+                                        @else Obese
+                                        @endif
+                                    @else —
+                                    @endif
+                                </div>
+                                <div class="up-vital__lbl">BMI</div>
                             </div>
                             <div class="up-vital up-qstat--violet" style="border-color:#ddd6fe;background:var(--violet-lt)">
                                 <div class="up-vital__ico">🫁</div>
@@ -942,16 +1060,16 @@
                                 <div class="up-vital__lbl">Blood Sugar</div>
                             </div>
                         </div>
-                        @else
+                    @else
                         <div style="padding:28px 20px;text-align:center;color:#94a3b8;font-size:13.5px;">
                             No vitals recorded for this patient.
                         </div>
-                        @endif
-                    </div>
+                    @endif
+                </div>
 
-                </div>{{-- end up-main --}}
-            </div>{{-- end up-layout --}}
-        </div>{{-- end up-wrap --}}
+            </div>{{-- end up-main --}}
+        </div>{{-- end up-layout --}}
+    </div>{{-- end up-wrap --}}
 </body>
 
 </html>

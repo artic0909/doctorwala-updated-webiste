@@ -255,7 +255,7 @@ class PatientProfileAccessController extends Controller
             ? json_decode($partner->registration_type, true)
             : $partner->registration_type;
 
-        $histories = MedicalHistory::where('dw_user_id', $dwUserId)
+        $histories = MedicalHistory::with('doctor', 'opd')->where('dw_user_id', $dwUserId)
             ->orderBy('date_of_report', 'desc')
             ->orderBy('id', 'desc')
             ->paginate(10);
