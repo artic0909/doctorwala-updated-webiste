@@ -295,18 +295,137 @@
         }
 
         /* ─── RESPONSIVE ─── */
-        @media (max-width: 640px) {
+        @media (max-width: 768px) {
+            .up-hero {
+                padding-bottom: 20px !important;
+            }
 
-            .mht-table th:nth-child(4),
-            .mht-table td:nth-child(4) {
+            .up-hero__inner {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+                gap: 20px;
+            }
+
+            .up-hero__actions {
+                flex-direction: column;
+                width: 100%;
+                gap: 12px !important;
+            }
+
+            .up-hero__btn {
+                width: 100% !important;
+                justify-content: center;
+                padding: 10px 14px !important;
+                font-size: 0.75rem !important;
+            }
+
+            .up-layout {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .up-sidebar {
+                order: 2;
+            }
+
+            .up-main {
+                order: 1;
+            }
+
+            /* Hide Desktop Table */
+            .mht-table-wrap {
                 display: none;
             }
 
-            .mht-td--heading {
-                max-width: 120px;
-                overflow: hidden;
-                text-overflow: ellipsis;
-                white-space: nowrap;
+            /* Mobile Cards */
+            .mht-mobile-cards {
+                display: flex;
+                flex-direction: column;
+                gap: 16px;
+                margin-top: 20px;
+            }
+
+            .mht-card {
+                background: #fff;
+                border-radius: 16px;
+                padding: 18px;
+                border: 1px solid #eef2ff;
+                box-shadow: 0 4px 12px rgba(67, 97, 238, 0.05);
+                animation: mhtRowIn .3s ease both;
+            }
+
+            .mht-card-top {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 12px;
+            }
+
+            .mht-card-heading {
+                font-weight: 700;
+                color: #1a1f36;
+                font-size: 14px;
+                line-height: 1.4;
+                margin-bottom: 0px;
+            }
+
+            .mht-card-meta {
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+                margin-bottom: 14px;
+            }
+
+            .mht-card-info-item {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                color: #5a6282;
+                font-size: 12.5px;
+            }
+
+            .mht-card-actions {
+                display: flex;
+                justify-content: flex-end;
+                gap: 12px;
+                border-top: 1px solid #f8fafc;
+                padding-top: 14px;
+            }
+
+            /* Vitals Optimization */
+            .up-vitals {
+                grid-template-columns: repeat(2, 1fr) !important;
+                gap: 12px !important;
+                padding: 16px !important;
+            }
+
+            .up-vital {
+                padding: 12px 8px !important;
+                height: auto !important;
+            }
+
+            .up-vital__val {
+                font-size: 1rem !important;
+            }
+
+            .up-vital__lbl {
+                font-size: 0.62rem !important;
+            }
+
+            .up-vital__unit {
+                font-size: 0.58rem !important;
+            }
+
+            .pp-readonly-banner {
+                font-size: 0.72rem;
+                padding: 8px 12px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .up-vitals {
+                grid-template-columns: repeat(2, 1fr) !important;
             }
         }
     </style>
@@ -616,15 +735,74 @@
                                 @endforeach
                             </tbody>
                         </table>
-                        @else
-                        <div class="mht-empty">
-                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2">
-                                <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
-                                <polyline points="14 2 14 8 20 8" />
-                            </svg>
-                            <p>No medical records found for this patient.</p>
-                        </div>
                         @endif
+                    </div>
+
+                    {{-- ── Mobile Cards ── --}}
+                    <div class="mht-mobile-cards">
+                        @forelse($histories as $i => $rec)
+                            <div class="mht-card" style="--row-delay:{{ $i * 50 }}ms">
+                                <div class="mht-card-top">
+                                    <span class="mht-badge mht-badge--{{ $rec->type ?? 'report' }}">
+                                        @if(($rec->type ?? '') === 'report')
+                                            Report
+                                        @else
+                                            Prescription
+                                        @endif
+                                    </span>
+                                    <span class="mht-td--num">#{{ $histories->firstItem() + $i }}</span>
+                                </div>
+
+                                <h3 class="mht-card-heading" style="text-transform:capitalize">
+                                    {{ $rec->heading ?? '—' }}
+                                </h3>
+
+                                <div class="mht-card-meta">
+                                    <div class="mht-card-info-item">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <rect x="3" y="4" width="18" height="18" rx="2" />
+                                            <path d="M16 2v4M8 2v4M3 10h18" />
+                                        </svg>
+                                        {{ $rec->date_of_report ? \Carbon\Carbon::parse($rec->date_of_report)->format('d M Y') : '—' }}
+                                    </div>
+
+                                    @if(($rec->images ?? null) && count($rec->images))
+                                        <div class="mht-card-info-item">
+                                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66l-9.2 9.19a2 2 0 01-2.83-2.83l8.49-8.48" />
+                                            </svg>
+                                            <a href="{{ route('partner.patient.report.files', ['encryptedId' => Crypt::encryptString($rec->id)]) }}"
+                                               style="color: #16a34a; font-weight: 600; text-decoration: none;" target="_blank">
+                                               {{ count($rec->images) }} file{{ count($rec->images) > 1 ? 's' : '' }}
+                                            </a>
+                                        </div>
+                                    @endif
+                                </div>
+
+                                <div class="mht-card-actions">
+                                    @if(Auth::guard('partner')->user() && $rec->partner_id == Auth::guard('partner')->user()->partner_id)
+                                        <a href="{{ route('partner.patient.prescription.edit', ['encryptedId' => Crypt::encryptString($rec->id)]) }}" 
+                                           class="mht-edit-btn">
+                                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                                <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" />
+                                                <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" />
+                                            </svg>
+                                            Edit Record
+                                        </a>
+                                    @else
+                                        <span style="color:#cbd5e1; font-size:12px; font-weight: 600;">View Only</span>
+                                    @endif
+                                </div>
+                            </div>
+                        @empty
+                            <div class="mht-empty">
+                                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2">
+                                    <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
+                                    <polyline points="14 2 14 8 20 8" />
+                                </svg>
+                                <p>No medical records found for this patient.</p>
+                            </div>
+                        @endforelse
                     </div>
 
                     {{-- ── Pagination ── --}}
