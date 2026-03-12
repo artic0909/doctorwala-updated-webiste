@@ -563,6 +563,84 @@
             color: #fff;
         }
 
+        /* Mobile Responsive Enhancements */
+        @media screen and (max-width: 768px) {
+            .prescription-table thead {
+                display: none;
+            }
+            .prescription-table, .prescription-table tbody, .prescription-table tr, .prescription-table td {
+                display: block;
+                width: 100%;
+            }
+            .prescription-table tr {
+                margin-bottom: 20px;
+                border: 1px solid #e2e8f0;
+                border-radius: 12px;
+                background: #fff;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+                padding: 15px;
+            }
+            .prescription-table td {
+                border: none;
+                padding: 8px 0;
+                display: flex;
+                flex-direction: column;
+                gap: 5px;
+            }
+            .prescription-table td::before {
+                content: attr(data-label);
+                font-size: 11px;
+                font-weight: 800;
+                color: #64748b;
+                text-transform: uppercase;
+            }
+            .prescription-table td:first-child {
+                border-bottom: 2px solid #f1f5f9;
+                margin-bottom: 10px;
+                padding-bottom: 10px;
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+                font-size: 16px;
+                color: #4338ca;
+            }
+            .prescription-table td:first-child::before {
+                content: "Item #";
+                font-size: 14px;
+            }
+            .prescription-table td:last-child {
+                border-top: 1px solid #f1f5f9;
+                padding-top: 15px;
+                align-items: flex-end;
+            }
+            
+            .symptoms-grid {
+                grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+                padding: 12px;
+                gap: 8px;
+            }
+            
+            .mp-tab-btn {
+                padding: 10px 12px;
+                font-size: 12px;
+            }
+
+            .mp-header-content h1 {
+                font-size: 1.5rem;
+            }
+            
+            .dose-helper {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 5px;
+            }
+            
+            .dose-chip {
+                text-align: center;
+                padding: 6px;
+            }
+        }
+
         /* Print Styles */
         @media print {
             body * {
@@ -1034,10 +1112,6 @@
                     </div>
 
                     <div style="text-align: right; margin-top: 32px; border-top: 1px solid #e2e8f0; padding-top: 20px; display: flex; justify-content: flex-end; gap: 12px;">
-                        <button type="button" class="mp-btn" onclick="window.print()" style="width: auto; background: #64748b;">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-right: 8px;"><path d="M6 9V2h12v7"></path><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
-                            PRINT PREVIEW
-                        </button>
                         <button type="submit" class="mp-btn mp-btn-primary" style="width: auto; padding-left: 40px; padding-right: 40px; background: #059669; border-color: #059669;">
                             SAVE PRESCRIPTION
                         </button>
@@ -1304,20 +1378,20 @@
             const row = document.createElement('tr');
             row.innerHTML = `
                 <td style="font-weight: 700;">${testCount}</td>
-                <td>
+                <td data-label="Test Name">
                     <select name="tests[${testCount}][name]" class="mp-input test-select" required style="width: 100%;">
                         <option value=""></option>
                     </select>
                 </td>
-                <td>
+                <td data-label="Priority">
                     <select name="tests[${testCount}][priority]" class="mp-input">
                         <option value="Normal">Normal</option>
                         <option value="Urgent">Urgent</option>
                         <option value="Critical">Critical</option>
                     </select>
                 </td>
-                <td><input type="text" name="tests[${testCount}][notes]" class="mp-input" placeholder="Notes"></td>
-                <td>
+                <td data-label="Notes"><input type="text" name="tests[${testCount}][notes]" class="mp-input" placeholder="Notes"></td>
+                <td data-label="Action">
                     <button type="button" class="remove-row-btn" onclick="this.closest('tr').remove(); reorderRows('testsTable');">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
                     </button>
@@ -1329,7 +1403,7 @@
                 data: testList,
                 placeholder: "Search Test...",
                 allowClear: true,
-                tags: true // Allow custom tests
+                tags: true
             });
         }
 
@@ -1340,12 +1414,12 @@
             const row = document.createElement('tr');
             row.innerHTML = `
                 <td style="font-weight: 700;">${medicineCount}</td>
-                <td>
+                <td data-label="Medicine Name">
                     <input type="text" name="medicines[${medicineCount}][name]" class="mp-input" placeholder="Medicine Name" required>
                 </td>
-                <td><input type="text" name="medicines[${medicineCount}][chemical]" class="mp-input" placeholder="Chemical"></td>
-                <td><input type="text" name="medicines[${medicineCount}][brand]" class="mp-input" placeholder="Brand"></td>
-                <td>
+                <td data-label="Chemical"><input type="text" name="medicines[${medicineCount}][chemical]" class="mp-input" placeholder="Chemical"></td>
+                <td data-label="Brand"><input type="text" name="medicines[${medicineCount}][brand]" class="mp-input" placeholder="Brand"></td>
+                <td data-label="Dose">
                     <input type="text" name="medicines[${medicineCount}][dose]" class="mp-input dose-input" placeholder="e.g. 1-0-1">
                     <div class="dose-helper">
                         <span class="dose-chip" onclick="setDose(this, '1-0-1')">1-0-1</span>
@@ -1353,7 +1427,7 @@
                         <span class="dose-chip" onclick="setDose(this, '0-0-1')">0-0-1</span>
                     </div>
                 </td>
-                <td>
+                <td data-label="Timing / Eating">
                     <div style="display: flex; flex-direction: column; gap: 8px;">
                         <select name="medicines[${medicineCount}][timing][]" class="mp-input select2-timing" multiple style="width: 100%;">
                             <option value="Morning">Morning</option>
@@ -1367,8 +1441,8 @@
                         </select>
                     </div>
                 </td>
-                <td><input type="text" name="medicines[${medicineCount}][days]" class="mp-input" placeholder="7"></td>
-                <td>
+                <td data-label="Days"><input type="text" name="medicines[${medicineCount}][days]" class="mp-input" placeholder="7"></td>
+                <td data-label="Action">
                     <button type="button" class="remove-row-btn" onclick="this.closest('tr').remove(); reorderRows('medicinesTable');">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
                     </button>
