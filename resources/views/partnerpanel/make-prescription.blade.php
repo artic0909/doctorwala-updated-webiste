@@ -390,6 +390,210 @@
                 padding: 24px 16px;
             }
         }
+
+        /* Prescription Table Styles */
+        .prescription-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 15px;
+            background: #fff;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid #e2e8f0;
+        }
+
+        .prescription-table th {
+            background: #f8fafc;
+            padding: 12px 15px;
+            text-align: left;
+            font-size: 11px;
+            font-weight: 800;
+            color: #64748b;
+            text-transform: uppercase;
+            border-bottom: 2px solid #f1f5f9;
+        }
+
+        .prescription-table td {
+            padding: 10px 15px;
+            border-bottom: 1px solid #f1f5f9;
+            vertical-align: middle;
+        }
+
+        .prescription-table .mp-input {
+            padding: 8px 12px;
+            border-width: 1px;
+            font-size: 13px;
+        }
+
+        .add-row-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 16px;
+            background: #4338ca;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .add-row-btn:hover {
+            background: #3730a3;
+            transform: translateY(-1px);
+        }
+
+        .remove-row-btn {
+            color: #ef4444;
+            background: #fef2f2;
+            border: 1.5px solid #fee2e2;
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .remove-row-btn:hover {
+            background: #ef4444;
+            color: #fff;
+        }
+
+        /* Advanced Symptoms Styles */
+        .symptoms-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 12px;
+            margin-bottom: 20px;
+            background: #f8fafc;
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .symptom-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            padding: 8px 12px;
+            border-radius: 8px;
+            transition: all 0.2s;
+            background: #fff;
+            border: 1px solid #e2e8f0;
+        }
+
+        .symptom-item:hover {
+            border-color: #4338ca;
+            background: #f5f3ff;
+        }
+
+        .symptom-item input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+            accent-color: #4338ca;
+        }
+
+        .symptom-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #334155;
+            cursor: pointer;
+        }
+
+        .other-symptoms-wrapper {
+            display: none;
+            margin-top: 15px;
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .timing-select-grid {
+            display: flex;
+            gap: 5px;
+            flex-wrap: wrap;
+        }
+
+        .timing-box {
+            font-size: 10px;
+            font-weight: 800;
+            padding: 4px 6px;
+            background: #f1f5f9;
+            border: 1px solid #cbd5e1;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .timing-box.selected {
+            background: #4338ca;
+            color: #fff;
+            border-color: #4338ca;
+        }
+
+        .dose-helper {
+            display: flex;
+            gap: 4px;
+            margin-top: 5px;
+        }
+
+        .dose-chip {
+            font-size: 10px;
+            padding: 2px 6px;
+            background: #eef2ff;
+            color: #4338ca;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 700;
+            border: 1px solid #c7d2fe;
+        }
+
+        .dose-chip:hover {
+            background: #4338ca;
+            color: #fff;
+        }
+
+        /* Print Styles */
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            #tab-system, #tab-system * {
+                visibility: visible;
+            }
+            #tab-system {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+            }
+            .add-row-btn, .remove-row-btn, .mp-btn, .mp-tab-btn, header, nav, footer {
+                display: none !important;
+            }
+            .prescription-table th, .prescription-table td {
+                border: 1px solid #cbd5e1 !important;
+            }
+            .mp-input {
+                border: none !important;
+                background: none !important;
+                padding: 0 !important;
+            }
+            select {
+                appearance: none;
+                -webkit-appearance: none;
+                background: none !important;
+            }
+        }
     </style>
 </head>
 
@@ -640,23 +844,203 @@
                 </form>
             </div>
 
-            {{-- System Prescription Content (Coming Soon Placeholder) --}}
+            {{-- System Prescription Content --}}
             <div id="tab-system" class="mp-tab-content">
-                <form action="{{ route('partner.patient.prescription.store.system') }}" method="POST">
+                <form action="{{ route('partner.patient.prescription.store.system') }}" method="POST" id="systemPrescriptionForm">
                     @csrf
-                    <div class="mp-coming-soon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-                        </svg>
-                        <h3>System Prescription Builder</h3>
-                        <p>This feature will allow you to dynamically build digital prescriptions, add medicines,
-                            dosages, and notes. Coming soon in the next update!</p>
-
-                        <div style="margin-top:30px;">
-                            <button type="submit" class="mp-btn" style="background:#f1f5f9; color:#475569;"
-                                disabled>Create Built-in Form (TBD)</button>
+                    <input type="hidden" name="dw_user_id" value="{{ $dwUserId }}">
+                    
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; border-bottom: 2px solid #f1f5f9; padding-bottom: 12px;">
+                        <h2 style="margin: 0; font-size: 1.2rem; font-weight: 800; color: #1e1b4b;">DOCTORWALA – DIGITAL PRESCRIPTION PANEL</h2>
+                        <div class="mp-form-group" style="margin: 0; min-width: 200px;">
+                            <label class="mp-form-label">Prescription Date</label>
+                            <input type="date" name="prescription_date" class="mp-input" value="{{ date('Y-m-d') }}" required>
                         </div>
+                    </div>
+                    
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-bottom: 24px;">
+                        <div class="mp-form-group" style="margin: 0;">
+                            <label class="mp-form-label">Clinic Name (Readonly)</label>
+                            <input type="text" class="mp-input" value="{{ $clinicName }}" readonly style="background-color: #f1f5f9; cursor: not-allowed;">
+                        </div>
+                        <div class="mp-form-group" style="margin: 0;">
+                            <label class="mp-form-label">OPD Doctor <span style="color:#e11d48">*</span></label>
+                            <select name="opd_doctor_id" class="mp-input select2-doctor" required style="width: 100%;">
+                                <option value="" disabled selected>Select Doctor</option>
+                                @foreach($doctors as $doc)
+                                    <option value="{{ $doc->id }}">
+                                        {{ $doc->doctor_name }} - {{ $doc->doctor_specialist }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+
+                    {{-- Health Parameters --}}
+                    <div style="background: #f8fafc; padding: 20px; border-radius: 12px; margin-bottom: 24px;">
+                        <h3 style="margin: 0 0 16px 0; font-size: 0.9rem; font-weight: 800; color: #4338ca; text-transform: uppercase; letter-spacing: 0.05em; display: flex; align-items: center; gap: 8px;">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg>
+                            Health PARAMETERS
+                        </h3>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px;">
+                            <div class="mp-form-group" style="margin: 0;">
+                                <label class="mp-form-label">BP (mmHg)</label>
+                                <input type="text" name="bp" class="mp-input" placeholder="120/80" value="{{ $vital->blood_pressure ?? '' }}">
+                            </div>
+                            <div class="mp-form-group" style="margin: 0;">
+                                <label class="mp-form-label">Pulse (bpm)</label>
+                                <input type="text" name="pulse" class="mp-input" placeholder="72" value="{{ $vital->heart_rate ?? '' }}">
+                            </div>
+                            <div class="mp-form-group" style="margin: 0;">
+                                <label class="mp-form-label">Oxygen (SpO2 %)</label>
+                                <input type="text" name="spo2" class="mp-input" placeholder="98" value="{{ $vital->spo ?? '' }}">
+                            </div>
+                            <div class="mp-form-group" style="margin: 0;">
+                                <label class="mp-form-label">Temperature (°F)</label>
+                                <input type="text" name="temperature" class="mp-input" placeholder="98.6">
+                            </div>
+                            <div class="mp-form-group" style="margin: 0;">
+                                <label class="mp-form-label">Weight (kg)</label>
+                                <input type="text" name="weight" class="mp-input" placeholder="70" value="{{ $vital->weight ?? '' }}">
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- Symptoms/Complaints --}}
+                    <div class="mp-form-group">
+                        <label class="mp-form-label" style="display: flex; align-items: center; gap: 8px;">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2v20M2 12h20"></path><path d="m19 9-7 7-7-7"></path></svg>
+                            SYMPTOMS / COMPLAINT
+                            <span style="font-size: 11px; color: #64748b; font-weight: 500;">(Select common or type other)</span>
+                        </label>
+                        <div class="symptoms-grid">
+                            @php
+                                $commonSymptoms = ['Fever', 'Cough', 'Cold', 'Headache', 'Body Pain', 'Weakness', 'Dizziness', 'Nausea', 'Vomiting', 'Sore Throat', 'Abdominal Pain', 'Shortness of Breath'];
+                            @endphp
+                            @foreach($commonSymptoms as $symptom)
+                                <label class="symptom-item">
+                                    <input type="checkbox" name="symptoms[]" value="{{ $symptom }}">
+                                    <span class="symptom-label">{{ $symptom }}</span>
+                                </label>
+                            @endforeach
+                            <label class="symptom-item" style="border-style: dashed; border-color: #4338ca;">
+                                <input type="checkbox" id="otherSymptomCheck" onclick="toggleOtherSymptoms()">
+                                <span class="symptom-label" style="color: #4338ca;">Other...</span>
+                            </label>
+                        </div>
+                        <div class="other-symptoms-wrapper" id="otherSymptomsDiv">
+                            <textarea name="other_symptoms" class="mp-input" rows="3" placeholder="Specify other symptoms here..."></textarea>
+                        </div>
+                    </div>
+
+                    {{-- Recommended Tests --}}
+                    <div style="margin-bottom: 32px;">
+                        <h3 style="margin: 0 0 12px 0; font-size: 0.9rem; font-weight: 800; color: #4338ca; text-transform: uppercase; display: flex; align-items: center; gap: 8px;">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                            RECOMMENDED TESTS
+                        </h3>
+                        <div style="overflow-x: auto;">
+                            <table class="prescription-table" id="testsTable">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 50px;">SL</th>
+                                        <th>Test Name</th>
+                                        <th style="width: 150px;">Priority</th>
+                                        <th>Notes</th>
+                                        <th style="width: 50px;"></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {{-- Dynamic Rows --}}
+                                </tbody>
+                            </table>
+                        </div>
+                        <button type="button" class="add-row-btn" onclick="addTestRow()">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                            Add Test
+                        </button>
+                    </div>
+
+                    {{-- Medicine Prescription --}}
+                    <div style="margin-bottom: 32px;">
+                        <h3 style="margin: 0 0 12px 0; font-size: 0.9rem; font-weight: 800; color: #4338ca; text-transform: uppercase; display: flex; align-items: center; gap: 8px;">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7Z"></path><path d="m8.5 8.5 7 7"></path></svg>
+                            MEDICINE PRESCRIPTION
+                        </h3>
+                        <div style="overflow-x: auto;">
+                            <table class="prescription-table" id="medicinesTable">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 50px;">SL</th>
+                                        <th>Medicine Name</th>
+                                        <th>Chemical</th>
+                                        <th>Brand</th>
+                                        <th style="width: 120px;">Dose (1-0-1)</th>
+                                        <th style="width: 180px;">Timing / Eating</th>
+                                        <th style="width: 80px;">Days</th>
+                                        <th style="width: 50px;"></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {{-- Dynamic Rows --}}
+                                </tbody>
+                            </table>
+                        </div>
+                        <button type="button" class="add-row-btn" onclick="addMedicineRow()">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                            Add Medicine
+                        </button>
+                        <div style="margin-top: 10px; font-size: 11px; color: #64748b; font-weight: 600;">
+                            Time Codes: M=Morning, A=Afternoon, E=Evening, N=Night
+                        </div>
+                    </div>
+
+                    {{-- Instructions --}}
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 24px;">
+                        <div class="mp-form-group" style="margin: 0;">
+                            <label class="mp-form-label">MEDICAL INSTRUCTIONS</label>
+                            <textarea name="medical_instructions" class="mp-input" rows="4" placeholder="- Take complete rest&#10;- Drink warm water&#10;- Monitor temperature twice daily"></textarea>
+                        </div>
+                        <div class="mp-form-group" style="margin: 0;">
+                            <label class="mp-form-label">DIET INSTRUCTIONS</label>
+                            <textarea name="diet_instructions" class="mp-input" rows="4" placeholder="- Light food&#10;- Avoid oily food&#10;- Drink sufficient fluids"></textarea>
+                        </div>
+                    </div>
+
+                    {{-- Follow up --}}
+                    <div style="background: #f1f5f9; padding: 20px; border-radius: 12px;">
+                        <h3 style="margin: 0 0 16px 0; font-size: 0.9rem; font-weight: 800; color: #1e293b; text-transform: uppercase;">FOLLOW UP</h3>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; align-items: end;">
+                            <div class="mp-form-group" style="margin: 0;">
+                                <label class="mp-form-label">Next Visit Date</label>
+                                <input type="date" name="next_visit_date" class="mp-input">
+                            </div>
+                            <div class="mp-form-group" style="margin: 0;">
+                                <label class="mp-form-label">Repeat Tests Required?</label>
+                                <div style="display: flex; gap: 20px; padding: 10px 0;">
+                                    <label style="display: flex; align-items: center; gap: 8px; font-weight: 600; cursor: pointer;">
+                                        <input type="radio" name="repeat_tests_required" value="yes" style="width: 18px; height: 18px;"> Yes
+                                    </label>
+                                    <label style="display: flex; align-items: center; gap: 8px; font-weight: 600; cursor: pointer;">
+                                        <input type="radio" name="repeat_tests_required" value="no" checked style="width: 18px; height: 18px;"> No
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mp-form-group" style="margin-top: 20px;">
+                            <label class="mp-form-label" style="color: #be123c;">EMERGENCY NOTE</label>
+                            <textarea name="emergency_note" class="mp-input" rows="2" style="border-color: #fecaca;" placeholder="If fever > 103°F contact doctor immediately"></textarea>
+                        </div>
+                    </div>
+
+                    <div style="text-align: right; margin-top: 32px; border-top: 1px solid #e2e8f0; padding-top: 20px; display: flex; justify-content: flex-end; gap: 12px;">
+                        <button type="button" class="mp-btn" onclick="window.print()" style="width: auto; background: #64748b;">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-right: 8px;"><path d="M6 9V2h12v7"></path><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+                            PRINT PREVIEW
+                        </button>
+                        <button type="submit" class="mp-btn mp-btn-primary" style="width: auto; padding-left: 40px; padding-right: 40px; background: #059669; border-color: #059669;">
+                            SAVE & PRINT PRESCRIPTION
+                        </button>
                     </div>
                 </form>
             </div>
@@ -847,14 +1231,191 @@
         document.getElementById('galleryInput').addEventListener('change', function() { handleFiles(this.files); this.value = ''; });
         document.getElementById('pdfInput').addEventListener('change', function() { handleFiles(this.files); this.value = ''; });
 
-        document.getElementById('prescriptionForm').addEventListener('submit', function(e) {
-            const hasNewFiles = document.getElementById('finalFileInput').files.length > 0;
-            const hasExistingFiles = document.querySelectorAll('.preview-card.existing-img').length > 0;
+        const testList = [
+            { text: "Blood Tests (Pathology/Hematology)", children: [
+                { id: "CBC (Complete Blood Count)", text: "CBC (Complete Blood Count): (Hb, TLC, DLC, Platelets, MCV, MCH, MCHC, RDW)" },
+                { id: "ESR (Erythrocyte Sedimentation Rate)", text: "ESR (Erythrocyte Sedimentation Rate)" },
+                { id: "Absolute Eosinophil Count (AEC)", text: "Absolute Eosinophil Count (AEC)" },
+                { id: "Peripheral Blood Smear (P/S)", text: "Peripheral Blood Smear (P/S)" },
+                { id: "Reticulocyte Count", text: "Reticulocyte Count" },
+                { id: "Blood Grouping & Rh Typing", text: "Blood Grouping & Rh Typing" },
+                { id: "Bleeding Time & Clotting Time (BT/CT)", text: "Bleeding Time & Clotting Time (BT/CT)" },
+                { id: "PT / INR", text: "PT / INR" },
+                { id: "Liver Function Test (LFT)", text: "Liver Function Test (LFT)" },
+                { id: "Kidney Function Test (KFT/RFT)", text: "Kidney Function Test (KFT/RFT)" },
+                { id: "Lipid Profile (Heart)", text: "Lipid Profile (Heart)" },
+                { id: "Thyroid Profile", text: "Thyroid Profile" },
+                { id: "Diabetic Profile", text: "Diabetic Profile" },
+                { id: "Electrolytes", text: "Electrolytes" },
+                { id: "Vitamins", text: "Vitamins" },
+                { id: "Iron Profile", text: "Iron Profile" },
+                { id: "Widal Test", text: "Widal Test" },
+                { id: "Dengue Profile", text: "Dengue Profile" },
+                { id: "Malaria", text: "Malaria" },
+                { id: "CRP (C-Reactive Protein)", text: "CRP (C-Reactive Protein)" },
+                { id: "RA Factor", text: "RA Factor" },
+                { id: "Viral Markers", text: "Viral Markers" }
+            ]},
+            { text: "Urine Tests (Urinalysis)", children: [
+                { id: "Urine RE/ME", text: "Urine RE/ME" },
+                { id: "Urine Culture & Sensitivity", text: "Urine Culture & Sensitivity" },
+                { id: "Urine Pregnancy Test (UPT)", text: "Urine Pregnancy Test (UPT)" },
+                { id: "Microalbuminuria", text: "Microalbuminuria" },
+                { id: "24-Hour Urine Protein", text: "24-Hour Urine Protein" },
+                { id: "Urine Ketones", text: "Urine Ketones" }
+            ]},
+            { text: "Stool & Body Fluids", children: [
+                { id: "Stool RE/ME", text: "Stool RE/ME" },
+                { id: "Stool Occult Blood", text: "Stool Occult Blood" },
+                { id: "Sputum for AFB", text: "Sputum for AFB" },
+                { id: "Semen Analysis", text: "Semen Analysis" },
+                { id: "FNAC / Biopsy", text: "FNAC / Biopsy" }
+            ]},
+            { text: "Radiology (Imaging)", children: [
+                { id: "Chest X-Ray (PA/Lateral)", text: "Chest X-Ray (PA/Lateral)" },
+                { id: "KUB X-Ray", text: "KUB X-Ray" },
+                { id: "Spine X-Ray", text: "Spine X-Ray" },
+                { id: "USG Whole Abdomen", text: "USG Whole Abdomen" },
+                { id: "USG KUB & Prostate", text: "USG KUB & Prostate" },
+                { id: "Obstetric USG", text: "Obstetric USG" },
+                { id: "CT Brain / Head", text: "CT Brain / Head" },
+                { id: "MRI Brain / Spine", text: "MRI Brain / Spine" }
+            ]},
+            { text: "Cardiology (Heart)", children: [
+                { id: "ECG", text: "ECG" },
+                { id: "Echocardiography (2D Echo)", text: "Echocardiography (2D Echo)" },
+                { id: "TMT (Treadmill Test)", text: "TMT (Treadmill Test)" }
+            ]},
+            { text: "Pulmonary (Lungs) & ENT", children: [
+                { id: "PFT (Pulmonary Function Test)", text: "PFT (Pulmonary Function Test)" },
+                { id: "Audiometry", text: "Audiometry" }
+            ]},
+            { text: "Specialized Cancer & Hormone Tests", children: [
+                { id: "PSA", text: "PSA" },
+                { id: "CA-125", text: "CA-125" },
+                { id: "AMH (Anti-Müllerian Hormone)", text: "AMH (Anti-Müllerian Hormone)" }
+            ]}
+        ];
+
+        let testCount = 0;
+        function addTestRow() {
+            testCount++;
+            const tbody = document.querySelector('#testsTable tbody');
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td style="font-weight: 700;">${testCount}</td>
+                <td>
+                    <select name="tests[${testCount}][name]" class="mp-input test-select" required style="width: 100%;">
+                        <option value=""></option>
+                    </select>
+                </td>
+                <td>
+                    <select name="tests[${testCount}][priority]" class="mp-input">
+                        <option value="Normal">Normal</option>
+                        <option value="Urgent">Urgent</option>
+                        <option value="Critical">Critical</option>
+                    </select>
+                </td>
+                <td><input type="text" name="tests[${testCount}][notes]" class="mp-input" placeholder="Notes"></td>
+                <td>
+                    <button type="button" class="remove-row-btn" onclick="this.closest('tr').remove(); reorderRows('testsTable');">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                    </button>
+                </td>
+            `;
+            tbody.appendChild(row);
             
-            if(!hasNewFiles && !hasExistingFiles) {
-                e.preventDefault();
-                alert('Please upload at least one image or PDF.');
-            }
+            $(row).find('.test-select').select2({
+                data: testList,
+                placeholder: "Search Test...",
+                allowClear: true,
+                tags: true // Allow custom tests
+            });
+        }
+
+        let medicineCount = 0;
+        function addMedicineRow() {
+            medicineCount++;
+            const tbody = document.querySelector('#medicinesTable tbody');
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td style="font-weight: 700;">${medicineCount}</td>
+                <td>
+                    <input type="text" name="medicines[${medicineCount}][name]" class="mp-input" placeholder="Medicine Name" required>
+                </td>
+                <td><input type="text" name="medicines[${medicineCount}][chemical]" class="mp-input" placeholder="Chemical"></td>
+                <td><input type="text" name="medicines[${medicineCount}][brand]" class="mp-input" placeholder="Brand"></td>
+                <td>
+                    <input type="text" name="medicines[${medicineCount}][dose]" class="mp-input dose-input" placeholder="e.g. 1-0-1">
+                    <div class="dose-helper">
+                        <span class="dose-chip" onclick="setDose(this, '1-0-1')">1-0-1</span>
+                        <span class="dose-chip" onclick="setDose(this, '1-1-1')">1-1-1</span>
+                        <span class="dose-chip" onclick="setDose(this, '0-0-1')">0-0-1</span>
+                    </div>
+                </td>
+                <td>
+                    <div style="display: flex; flex-direction: column; gap: 8px;">
+                        <select name="medicines[${medicineCount}][timing][]" class="mp-input select2-timing" multiple style="width: 100%;">
+                            <option value="Morning">Morning</option>
+                            <option value="Afternoon">Afternoon</option>
+                            <option value="Evening">Evening</option>
+                            <option value="Night">Night</option>
+                        </select>
+                        <select name="medicines[${medicineCount}][eating]" class="mp-input">
+                            <option value="After Food">After Food</option>
+                            <option value="Before Food">Before Food</option>
+                        </select>
+                    </div>
+                </td>
+                <td><input type="text" name="medicines[${medicineCount}][days]" class="mp-input" placeholder="7"></td>
+                <td>
+                    <button type="button" class="remove-row-btn" onclick="this.closest('tr').remove(); reorderRows('medicinesTable');">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                    </button>
+                </td>
+            `;
+            tbody.appendChild(row);
+            
+            $(row).find('.select2-timing').select2({
+                placeholder: "Timing",
+                allowClear: true
+            });
+        }
+
+        function setDose(el, val) {
+            const input = el.closest('td').querySelector('.dose-input');
+            input.value = val;
+        }
+
+        function toggleOtherSymptoms() {
+            const check = document.getElementById('otherSymptomCheck');
+            const div = document.getElementById('otherSymptomsDiv');
+            div.style.display = check.checked ? 'block' : 'none';
+        }
+
+        function reorderRows(tableId) {
+            const tbody = document.querySelector(`#${tableId} tbody`);
+            Array.from(tbody.rows).forEach((row, index) => {
+                row.cells[0].textContent = index + 1;
+            });
+            if(tableId === 'testsTable') testCount = tbody.rows.length;
+            if(tableId === 'medicinesTable') medicineCount = tbody.rows.length;
+        }
+
+        // Initialize first rows
+        $(document).ready(function() {
+            addTestRow();
+            addMedicineRow();
+
+            @if(session('print_prescription'))
+                setTimeout(() => {
+                    window.print();
+                }, 1000);
+            @endif
+        });
+
+        document.getElementById('prescriptionForm').addEventListener('submit', function(e) {
+            // ... existing validation ...
         });
     </script>
 </body>

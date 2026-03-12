@@ -9,6 +9,8 @@ use App\Models\DwUserModel;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use App\Models\SystemPrescription;
+use Carbon\Carbon;
 
 class PrescriptionController extends Controller
 {
@@ -200,7 +202,75 @@ class PrescriptionController extends Controller
         return redirect()->back()->with('success', 'Medical record updated successfully.');
     }
 
-    public function systemFormPrescription(){
-        // basically a form 
+    public function systemFormPrescription(Request $request)
+    {
+        $request->validate([
+            'dw_user_id' => 'required|exists:dw_user_models,id',
+            'opd_doctor_id' => 'nullable|integer',
+            'prescription_date' => 'required|date',
+            'bp' => 'nullable|string',
+            'pulse' => 'nullable|string',
+            'spo2' => 'nullable|string',
+            'temperature' => 'nullable|string',
+            'weight' => 'nullable|string',
+            'symptoms' => 'nullable|array',
+            'other_symptoms' => 'nullable|string',
+            'tests' => 'nullable|array',
+            'tests.*.name' => 'required|string',
+            'tests.*.priority' => 'nullable|string',
+            'tests.*.notes' => 'nullable|string',
+            'medicines' => 'nullable|array',
+            'medicines.*.name' => 'required|string',
+            'medicines.*.chemical' => 'nullable|string',
+            'medicines.*.brand' => 'nullable|string',
+            'medicines.*.dose' => 'nullable|string',
+            'medicines.*.timing' => 'nullable|array',
+            'medicines.*.eating' => 'nullable|string',
+            'medicines.*.days' => 'nullable|string',
+            'medical_instructions' => 'nullable|string',
+            'diet_instructions' => 'nullable|string',
+            'next_visit_date' => 'nullable|date',
+            'repeat_tests_required' => 'nullable|string',
+            'emergency_note' => 'nullable|string',
+        ]);
+
+        $partner = Auth::guard('partner')->user();
+        $doctorName = null;
+        if ($request->opd_doctor_id) {
+            $doc = \App\Models\PartnerAllOPDDoctorModel::find($request->opd_doctor_id);
+            if ($doc) {
+                $doctorName = $doc->doctor_name;
+            }
+        }
+
+        $symptomsData = $request->symptoms ?? [];
+        if ($request->other_symptoms) {
+            $symptomsData[] = $request->other_symptoms;
+        }
+
+        SystemPrescription::create([
+            'dw_user_id' => $request->dw_user_id,
+            'partner_id' => $partner->id,
+            'opd_doctor_id' => $request->opd_doctor_id,
+            'doctor_name' => $doctorName,
+            'prescription_date' => Carbon::parse($request->prescription_date),
+            'bp' => $request->bp,
+            'pulse' => $request->pulse,
+            'spo2' => $request->spo2,
+            'temperature' => $request->temperature,
+            'weight' => $request->weight,
+            'symptoms' => $symptomsData,
+            'recommended_tests' => $request->tests,
+            'medicines' => $request->medicines,
+            'medical_instructions' => $request->medical_instructions,
+            'diet_instructions' => $request->diet_instructions,
+            'next_visit_date' => $request->next_visit_date ? Carbon::parse($request->next_visit_date) : null,
+            'repeat_tests_required' => $request->repeat_tests_required === 'yes',
+            'emergency_note' => $request->emergency_note,
+        ]);
+
+        return redirect()->back()
+            ->with('success', 'Digital prescription saved successfully.')
+            ->with('print_prescription', true);
     }
 }
