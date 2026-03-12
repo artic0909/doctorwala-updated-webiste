@@ -269,8 +269,9 @@ class PrescriptionController extends Controller
             'emergency_note' => $request->emergency_note,
         ]);
 
-        return redirect()->back()
-            ->with('success', 'Digital prescription saved successfully.')
-            ->with('print_prescription', true);
+        $encryptedId = Crypt::encryptString($request->dw_user_id);
+
+        return redirect()->route('partner.patient.medical-history', $encryptedId)
+            ->with('success', 'Digital prescription saved successfully.');
     }
 }

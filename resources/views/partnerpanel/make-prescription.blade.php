@@ -1039,7 +1039,7 @@
                             PRINT PREVIEW
                         </button>
                         <button type="submit" class="mp-btn mp-btn-primary" style="width: auto; padding-left: 40px; padding-right: 40px; background: #059669; border-color: #059669;">
-                            SAVE & PRINT PRESCRIPTION
+                            SAVE PRESCRIPTION
                         </button>
                     </div>
                 </form>
@@ -1406,12 +1406,6 @@
         $(document).ready(function() {
             addTestRow();
             addMedicineRow();
-
-            @if(session('print_prescription'))
-                setTimeout(() => {
-                    window.print();
-                }, 1000);
-            @endif
         });
 
         document.getElementById('prescriptionForm').addEventListener('submit', function(e) {
