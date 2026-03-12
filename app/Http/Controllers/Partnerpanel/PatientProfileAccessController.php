@@ -13,6 +13,7 @@ use App\Models\PartnerOPDBannerModel;
 use App\Models\PartnerOPDContactModel;
 use App\Models\PartnerPathologyBannerModel;
 use App\Models\PartnerPatientInquiry;
+use App\Models\SystemPrescription;
 use App\Models\Vital;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
@@ -259,7 +260,11 @@ class PatientProfileAccessController extends Controller
             ->orderBy('date_of_report', 'desc')
             ->orderBy('id', 'desc')
             ->paginate(10);
-        ;
+        
+        $systemPrescriptions = SystemPrescription::where('dw_user_id', $dwUserId)
+            ->orderBy('prescription_date', 'desc')
+            ->orderBy('id', 'desc')
+            ->get();
 
         $noOfPrescription = MedicalHistory::where('dw_user_id', $dwUserId)
             ->where('type', 'prescription')
@@ -281,6 +286,7 @@ class PatientProfileAccessController extends Controller
             'doctorBanner',
             'registrationTypes',
             'histories',
+            'systemPrescriptions',
             'noOfPrescription',
             'noOfReport',
             'vital',

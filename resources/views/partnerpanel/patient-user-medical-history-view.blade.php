@@ -465,6 +465,66 @@
                 display: none;
             }
         }
+
+        /* ─── TABS STYLES ─── */
+        .mht-tabs-container {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 6px;
+            margin-bottom: 24px;
+            display: inline-flex;
+            border: 1px solid #e2e8f0;
+        }
+
+        .mht-tab {
+            padding: 10px 24px;
+            font-size: 14px;
+            font-weight: 700;
+            color: #64748b;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.2s;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .mht-tab:hover {
+            color: #1e40af;
+            background: rgba(255,255,255,0.5);
+        }
+
+        .mht-tab.active {
+            color: #fff;
+            background: #2563eb;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+
+        @media screen and (max-width: 768px) {
+            .mht-tabs-container {
+                display: flex;
+                width: 100%;
+            }
+            .mht-tab {
+                padding: 10px 10px;
+                font-size: 11px;
+                flex: 1;
+                justify-content: center;
+                gap: 5px;
+            }
+            .mht-tab svg {
+                width: 14px;
+                height: 14px;
+            }
+        }
     </style>
 </head>
 
@@ -696,8 +756,21 @@
                         </div>
                     @endif
 
-                    {{-- ── Table ── --}}
-                    <div class="mht-table-wrap">
+                    {{-- ── Tabs Header ── --}}
+                    <div class="mht-tabs-container">
+                        <div class="mht-tab active" onclick="switchTab(event, 'uploaded')">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                            Uploaded Records
+                        </div>
+                        <div class="mht-tab" onclick="switchTab(event, 'generated')">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                            System Generated
+                        </div>
+                    </div>
+
+                    {{-- ── TAB 1: Uploaded ── --}}
+                    <div id="uploadedRecords" class="tab-content active">
+                        <div class="mht-table-wrap">
                         @if($histories->count())
                             <table class="mht-table">
                                 <thead>
@@ -707,7 +780,6 @@
                                         <th>Heading</th>
                                         <th>Date</th>
                                         <th>Files</th>
-                                        <th>Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -789,23 +861,6 @@
                                                     </a>
                                                 @else
                                                     <span class="mht-no-files">—</span>
-                                                @endif
-                                            </td>
-
-                                            <td class="mht-td--actions">
-                                                @if(Auth::guard('partner')->user() && $rec->partner_id == Auth::guard('partner')->user()->partner_id)
-                                                    <a href="{{ route('partner.patient.prescription.edit', ['encryptedId' => Crypt::encryptString($rec->id)]) }}"
-                                                        class="mht-edit-btn" title="Edit this record">
-                                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
-                                                            stroke="currentColor" stroke-width="2">
-                                                            <path d="M12 20h9"></path>
-                                                            <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z">
-                                                            </path>
-                                                        </svg>
-                                                        Edit
-                                                    </a>
-                                                @else
-                                                    <span style="color:#cbd5e1; font-size:11px;">View Only</span>
                                                 @endif
                                             </td>
                                         </tr>
@@ -973,6 +1028,85 @@
                             @endif
                         </div>
                     @endif
+                    </div>{{-- Close uploadedRecords --}}
+
+                    {{-- ── TAB 2: Generated ── --}}
+                    <div id="generatedRecords" class="tab-content">
+                        <div class="mht-table-wrap">
+                            @if($systemPrescriptions->count())
+                                <table class="mht-table">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Type</th>
+                                            <th>Doctor Name</th>
+                                            <th>Date</th>
+                                            <th>Vitals</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach($systemPrescriptions as $i => $rec)
+                                            <tr class="mht-row" style="--row-delay:{{ $i * 40 }}ms">
+                                                <td class="mht-td--num">{{ $i + 1 }}</td>
+                                                <td>
+                                                    <span class="mht-badge mht-badge--prescription">
+                                                        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg>
+                                                        Digital
+                                                    </span>
+                                                </td>
+                                                <td class="mht-td--heading">
+                                                    Dr. {{ $rec->doctor_name ?? 'N/A' }}
+                                                </td>
+                                                <td class="mht-td--date">
+                                                    {{ \Carbon\Carbon::parse($rec->prescription_date)->format('d M Y') }}
+                                                </td>
+                                                <td>
+                                                    <div style="font-size: 11px; color: #64748b;">
+                                                        BP: {{ $rec->bp ?? '-' }} | SpO2: {{ $rec->spo2 ?? '-' }}
+                                                    </div>
+                                                </td>
+                                                <td class="mht-td--actions">
+                                                    <a href="{{ route('partner.digital.prescription.view', Crypt::encryptString($rec->id)) }}" target="_blank" class="mht-edit-btn" style="background: #2563eb; color: #fff; border-color: #2563eb; box-shadow: 0 2px 6px rgba(37, 99, 235, 0.2);">
+                                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-right: 4px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                                                        Download
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            @else
+                                <div class="mht-empty">
+                                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2">
+                                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line>
+                                    </svg>
+                                    <p>No system generated prescriptions available yet.</p>
+                                </div>
+                            @endif
+                        </div>
+
+                        {{-- Mobile Cards for Generated --}}
+                        <div class="mht-mobile-cards">
+                            @foreach($systemPrescriptions as $rec)
+                                <div class="mht-card">
+                                    <div class="mht-card-top">
+                                        <div class="mht-card-heading">Dr. {{ $rec->doctor_name }}</div>
+                                        <span class="mht-badge mht-badge--prescription">Digital</span>
+                                    </div>
+                                    <div class="mht-card-meta">
+                                        <div class="mht-card-info-item">
+                                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" /><line x1="16" y1="2" x2="16" y2="6" /><line x1="8" y1="2" x2="8" y2="6" /><line x1="3" y1="10" x2="21" y2="10" /></svg>
+                                            {{ \Carbon\Carbon::parse($rec->prescription_date)->format('d M Y') }}
+                                        </div>
+                                    </div>
+                                    <div class="mht-card-actions">
+                                        <a href="{{ route('partner.digital.prescription.view', Crypt::encryptString($rec->id)) }}" target="_blank" class="mht-edit-btn" style="background: #2563eb; color: #fff; width: 100%; justify-content: center;">Download PDF</a>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
 
                 </div>{{-- end mht-wrap --}}
 
@@ -1070,6 +1204,26 @@
             </div>{{-- end up-main --}}
         </div>{{-- end up-layout --}}
     </div>{{-- end up-wrap --}}
+    <script>
+        function switchTab(event, tabId) {
+            // Update tabs
+            document.querySelectorAll('.mht-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            event.currentTarget.classList.add('active');
+
+            // Update content
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            if (tabId === 'uploaded') {
+                document.getElementById('uploadedRecords').classList.add('active');
+            } else {
+                document.getElementById('generatedRecords').classList.add('active');
+            }
+        }
+    </script>
 </body>
 
 </html>

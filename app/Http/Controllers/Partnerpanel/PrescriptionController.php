@@ -274,4 +274,28 @@ class PrescriptionController extends Controller
         return redirect()->route('partner.patient.medical-history', $encryptedId)
             ->with('success', 'Digital prescription saved successfully.');
     }
+
+    public function viewPrescription($encryptedId)
+    {
+        try {
+            $id = Crypt::decryptString($encryptedId);
+        } catch (\Exception $e) {
+            abort(403, 'Invalid link.');
+        }
+
+        $prescription = SystemPrescription::findOrFail($id);
+        $patient = DwUserModel::findOrFail($prescription->dw_user_id);
+        $partner = Auth::guard('partner')->user();
+
+        // Check if partner has access to this patient
+        $access = \App\Models\AccessRequest::where('dw_user_id', $patient->id)
+            ->where('currently_loggedin_partner_id', $partner->partner_id)
+            ->first();
+
+        if (!$access || $access->req_status !== 'accepted' || $access->access_status !== 'on') {
+            abort(403, 'Unauthorized access to this prescription.');
+        }
+
+        return view('partnerpanel.view-digital-prescription', compact('prescription', 'patient', 'partner'));
+    }
 }

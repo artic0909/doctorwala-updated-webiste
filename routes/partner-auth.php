@@ -278,8 +278,10 @@ Route::middleware(['auth:partner', 'verified'])->group(function () {
         Route::get('/partnerpanel/partner-feedbacks', [PartnerPatientFeedbackController::class , 'index'])->name('partner.patient.feddback.index');
 
 
-        // Coupon Code Get Route
-        Route::post('/partnerpanel/get-coupon-details', [DwPartnerController::class , 'getCouponDetails'])->name('get.coupon.details');
+        Route::get('/partner/patients/prescription/{encryptedId}/view', [PrescriptionController::class, 'viewPrescription'])->name('partner.digital.prescription.view');
+
+
+        Route::get('/partnerpanel/get-clinic-vitals', [PrescriptionController::class , 'getClinicVitals'])->name('partner.get.clinic.vitals');
         Route::post('/partnerpanel/add-coupon-details', [DwPartnerController::class , 'partnerCouponCodeAdd'])->name('partner.coupon.code.add');
 
 
