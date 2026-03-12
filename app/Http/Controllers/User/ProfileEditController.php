@@ -5,6 +5,7 @@ namespace App\Http\Controllers\User;
 use App\Http\Controllers\Controller;
 use App\Models\AccessRequest;
 use App\Models\MedicalHistory;
+use App\Models\SystemPrescription;
 use App\Models\PartnerAllOPDDoctorModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -236,7 +237,18 @@ class ProfileEditController extends Controller
 
         $vital = Vital::where('dw_user_id', Auth::id())->latest()->first();
 
-        return view('user-medical-history', compact('user', 'aboutDetails', 'otherBanners', 'latestSingleBooking', 'bookings', 'histories', 'noOfPrescription', 'noOfReport', 'vital'));
+        // Fetch system-generated prescriptions
+        $systemPrescriptions = collect();
+        try {
+            $systemPrescriptions = SystemPrescription::where('dw_user_id', Auth::id())
+                ->orderBy('prescription_date', 'desc')
+                ->orderBy('id', 'desc')
+                ->get();
+        } catch (\Exception $e) {
+            // Log error if needed: \Log::error("User system prescriptions fetch error: " . $e->getMessage());
+        }
+
+        return view('user-medical-history', compact('user', 'aboutDetails', 'otherBanners', 'latestSingleBooking', 'bookings', 'histories', 'noOfPrescription', 'noOfReport', 'vital', 'systemPrescriptions'));
     }
 
     public function addMedicalHistory(Request $request)

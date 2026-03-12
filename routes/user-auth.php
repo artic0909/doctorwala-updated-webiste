@@ -146,6 +146,7 @@ Route::middleware(['auth:dwuser', 'verified'])->group(function () {
     Route::delete('/dw/medical-history/{id}', [ProfileEditController::class, 'destroy'])->name('dw.medical-history.destroy');
     Route::put('/dw/medical-history/{id}/update', [ProfileEditController::class, 'editMecicalHistory'])->name('dw.medical-history.update');
     Route::get('/dw/medical-history/{id}/files', [ProfileEditController::class, 'viewReportImagesOrPdf'])->name('dw.medical-history.view');
+    Route::get('/dw/digital-prescription/{id}/view', [\App\Http\Controllers\Partnerpanel\PrescriptionController::class, 'viewPrescriptionUser'])->name('dw.digital.prescription.view');
     Route::post('/dw/vitals/add',[ProfileEditController::class, 'addVitals'])->name('dw.vitals.add');
     Route::put('/dw/vitals/{id}/update',[ProfileEditController::class, 'editVitals'])->name('dw.vitals.update');
 

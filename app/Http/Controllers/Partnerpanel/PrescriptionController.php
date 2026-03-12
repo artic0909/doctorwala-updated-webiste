@@ -304,4 +304,18 @@ class PrescriptionController extends Controller
 
         return view('partnerpanel.view-digital-prescription', compact('prescription', 'patient', 'partner'));
     }
+
+    public function viewPrescriptionUser($id)
+    {
+        $prescription = SystemPrescription::where('id', $id)
+            ->where('dw_user_id', Auth::guard('dwuser')->id())
+            ->firstOrFail();
+
+        $patient = DwUserModel::findOrFail($prescription->dw_user_id);
+        
+        // Find the partner info for the header
+        $partner = \App\Models\PartnerOPDContactModel::where('id', $prescription->partner_id)->first();
+
+        return view('partnerpanel.view-digital-prescription', compact('prescription', 'patient', 'partner'));
+    }
 }
