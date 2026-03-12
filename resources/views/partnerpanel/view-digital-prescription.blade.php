@@ -131,6 +131,7 @@
     <a href="javascript:void(0)" onclick="window.print()" class="download-btn no-print">Print / Save as PDF</a>
 
     <div class="prescription-container">
+        <h4><span style="color: green;">Doctorwala</span>| Your Medical Ecosystem</h4>
         <div class="header">
             <div class="clinic-info">
                 <h1>{{ $partner->partner_clinic_name }}</h1>
