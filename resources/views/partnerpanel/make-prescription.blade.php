@@ -992,9 +992,26 @@
                     <div style="background: #f8fafc; padding: 20px; border-radius: 12px; margin-bottom: 24px;">
                         <h3 style="margin: 0 0 16px 0; font-size: 0.9rem; font-weight: 800; color: #4338ca; text-transform: uppercase; letter-spacing: 0.05em; display: flex; align-items: center; gap: 8px;">
                             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg>
-                            Health PARAMETERS
+                            Patient Details & Health PARAMETERS
                         </h3>
                         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px;">
+                            <div class="mp-form-group" style="margin: 0;">
+                                <label class="mp-form-label">Patient Age</label>
+                                <input type="text" name="user_age" class="mp-input" placeholder="e.g. 25 Yrs" value="{{ $patient->dob ? \Carbon\Carbon::parse($patient->dob)->age . ' Yrs' : '' }}">
+                            </div>
+                            <div class="mp-form-group" style="margin: 0;">
+                                <label class="mp-form-label">Gender</label>
+                                <select name="user_gender" class="mp-input">
+                                    <option value="" disabled {{ !$patient->gender ? 'selected' : '' }}>Select Gender</option>
+                                    <option value="Male" {{ (isset($patient->gender) && $patient->gender == 'Male') ? 'selected' : '' }}>Male</option>
+                                    <option value="Female" {{ (isset($patient->gender) && $patient->gender == 'Female') ? 'selected' : '' }}>Female</option>
+                                    <option value="Other" {{ (isset($patient->gender) && $patient->gender == 'Other') ? 'selected' : '' }}>Other</option>
+                                </select>
+                            </div>
+                            <div class="mp-form-group" style="margin: 0;">
+                                <label class="mp-form-label">Blood Group</label>
+                                <input type="text" name="blood_group" class="mp-input" placeholder="e.g. O+" value="{{ $patient->blood_group ?? ($vital->blood_group ?? '') }}">
+                            </div>
                             <div class="mp-form-group" style="margin: 0;">
                                 <label class="mp-form-label">BP (mmHg)</label>
                                 <input type="text" name="bp" class="mp-input" placeholder="120/80" value="{{ $vital->blood_pressure ?? '' }}">

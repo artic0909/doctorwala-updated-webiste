@@ -261,10 +261,14 @@ class PatientProfileAccessController extends Controller
             ->orderBy('id', 'desc')
             ->paginate(10);
         
-        $systemPrescriptions = SystemPrescription::where('dw_user_id', $dwUserId)
-            ->orderBy('prescription_date', 'desc')
-            ->orderBy('id', 'desc')
-            ->get();
+        try {
+            $systemPrescriptions = SystemPrescription::where('dw_user_id', $dwUserId)
+                ->orderBy('prescription_date', 'desc')
+                ->orderBy('id', 'desc')
+                ->get();
+        } catch (\Exception $e) {
+            $systemPrescriptions = collect();
+        }
 
         $noOfPrescription = MedicalHistory::where('dw_user_id', $dwUserId)
             ->where('type', 'prescription')

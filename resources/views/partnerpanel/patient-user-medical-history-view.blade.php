@@ -1033,7 +1033,7 @@
                     {{-- ── TAB 2: Generated ── --}}
                     <div id="generatedRecords" class="tab-content">
                         <div class="mht-table-wrap">
-                            @if($systemPrescriptions->count())
+                            @if(isset($systemPrescriptions) && $systemPrescriptions->count())
                                 <table class="mht-table">
                                     <thead>
                                         <tr>
@@ -1088,6 +1088,7 @@
 
                         {{-- Mobile Cards for Generated --}}
                         <div class="mht-mobile-cards">
+                            @if(isset($systemPrescriptions) && $systemPrescriptions->count())
                             @foreach($systemPrescriptions as $rec)
                                 <div class="mht-card">
                                     <div class="mht-card-top">
@@ -1105,6 +1106,7 @@
                                     </div>
                                 </div>
                             @endforeach
+                            @endif
                         </div>
                     </div>
 

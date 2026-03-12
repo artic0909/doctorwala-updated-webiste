@@ -19,7 +19,12 @@ return new class extends Migration
             $blueprint->string('doctor_name')->nullable();
             $blueprint->date('prescription_date')->nullable();
             
+            // User
+            $blueprint->string('user_age')->nullable();
+            $blueprint->string('user_gender')->nullable();
+
             // Health Parameters
+            $blueprint->string('blood_group')->nullable();
             $blueprint->string('bp')->nullable();
             $blueprint->string('pulse')->nullable();
             $blueprint->string('spo2')->nullable();

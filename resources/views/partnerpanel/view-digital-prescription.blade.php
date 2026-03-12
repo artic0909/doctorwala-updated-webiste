@@ -150,7 +150,10 @@
             </div>
             <div class="meta-item">
                 <div class="meta-label">Age / Gender</div>
-                <div style="font-weight: 600;">{{ $patient->user_age ?? 'N/A' }} / {{ $patient->user_gender ?? 'N/A' }}</div>
+                <div style="font-weight: 600;">
+                    {{ $prescription->user_age ?? ($patient->dob ? \Carbon\Carbon::parse($patient->dob)->age . ' Yrs' : 'N/A') }} /
+                    {{ $prescription->user_gender ?? ($patient->gender ?? 'N/A') }}
+                </div>
             </div>
             <div class="meta-item">
                 <div class="meta-label">Contact</div>
@@ -162,9 +165,10 @@
             </div>
         </div>
 
-        @if($prescription->bp || $prescription->temperature || $prescription->weight)
-            <div class="section-title">Vitals</div>
+        @if($prescription->blood_group || $prescription->bp || $prescription->temperature || $prescription->weight)
+            <div class="section-title">Health Parameters</div>
             <div class="vitals-grid">
+                @if($prescription->blood_group) <div class="vital-chip"><b>Blood Group:</b> {{ $prescription->blood_group }}</div> @endif
                 @if($prescription->bp) <div class="vital-chip"><b>BP:</b> {{ $prescription->bp }} mmHg</div> @endif
                 @if($prescription->temperature) <div class="vital-chip"><b>Temp:</b> {{ $prescription->temperature }} °C</div> @endif
                 @if($prescription->weight) <div class="vital-chip"><b>Weight:</b> {{ $prescription->weight }} kg</div> @endif
@@ -248,7 +252,7 @@
                 @endif
             </div>
             <div class="signature-box">
-                <div class="signature-line">Doctor's Signature</div>
+                <div class="signature-line">Generated From Doctorwala</div>
             </div>
         </div>
     </div>
