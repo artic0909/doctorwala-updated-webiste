@@ -626,7 +626,7 @@
             }
 
             .mp-header-content h1 {
-                font-size: 1.5rem;
+                font-size: 1.3rem;
             }
             
             .dose-helper {
@@ -638,6 +638,40 @@
             .dose-chip {
                 text-align: center;
                 padding: 6px;
+                font-size: 9px;
+            }
+
+            .mp-header-flex {
+                flex-direction: column !important;
+                align-items: stretch !important;
+                gap: 15px !important;
+            }
+
+            .mp-header-flex h2 {
+                font-size: 1rem !important;
+                line-height: 1.4;
+            }
+
+            .mp-instruction-grid {
+                grid-template-columns: 1fr !important;
+            }
+
+            .symptoms-grid {
+                grid-template-columns: 1fr !important;
+                background: #fff !important;
+                padding: 10px !important;
+            }
+
+            .symptom-item {
+                padding: 12px 15px !important;
+            }
+
+            .mp-form-group {
+                margin-bottom: 20px !important;
+            }
+
+            .mp-tab-content {
+                padding: 15px 10px !important;
             }
         }
 
@@ -928,9 +962,9 @@
                     @csrf
                     <input type="hidden" name="dw_user_id" value="{{ $dwUserId }}">
                     
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; border-bottom: 2px solid #f1f5f9; padding-bottom: 12px;">
+                    <div class="mp-header-flex" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; border-bottom: 2px solid #f1f5f9; padding-bottom: 12px;">
                         <h2 style="margin: 0; font-size: 1.2rem; font-weight: 800; color: #1e1b4b;">DOCTORWALA – DIGITAL PRESCRIPTION PANEL</h2>
-                        <div class="mp-form-group" style="margin: 0; min-width: 200px;">
+                        <div class="mp-form-group" style="margin: 0; min-width: 200px; width: auto;">
                             <label class="mp-form-label">Prescription Date</label>
                             <input type="date" name="prescription_date" class="mp-input" value="{{ date('Y-m-d') }}" required>
                         </div>
@@ -1074,7 +1108,7 @@
                     </div>
 
                     {{-- Instructions --}}
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 24px;">
+                    <div class="mp-instruction-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 24px;">
                         <div class="mp-form-group" style="margin: 0;">
                             <label class="mp-form-label">MEDICAL INSTRUCTIONS</label>
                             <textarea name="medical_instructions" class="mp-input" rows="4" placeholder="- Take complete rest&#10;- Drink warm water&#10;- Monitor temperature twice daily"></textarea>
