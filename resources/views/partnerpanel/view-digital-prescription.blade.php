@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Prescription - {{ $patient->user_name }}</title>
+    <link href="{{ asset('fav5.png') }}" rel="icon">
     <style>
         body {
             font-family: 'Outfit', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;

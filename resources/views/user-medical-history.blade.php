@@ -5,6 +5,7 @@
 @section('content')
 
     <head>
+        <link href="{{ asset('fav5.png') }}" rel="icon">
         <link rel="stylesheet" href="{{ asset('./css/user-profile.css') }}">
         <style>
             .vm-overlay {
@@ -414,6 +415,7 @@
                     display: none;
                 }
             }
+
             @media (max-width: 460px) {
                 .vm-row {
                     grid-template-columns: 1fr;
@@ -967,8 +969,8 @@
             }
 
             /* ════════════════════════════════
-               COMPLETE MODAL
-            ════════════════════════════════ */
+                       COMPLETE MODAL
+                    ════════════════════════════════ */
             .complete-modal-box {
                 background: #fff;
                 border-radius: 22px;
@@ -1151,8 +1153,8 @@
 
 
             /* ════════════════════════════════
-               CANCEL MODAL
-            ════════════════════════════════ */
+                       CANCEL MODAL
+                    ════════════════════════════════ */
             .cancel-modal-box {
                 background: #fff;
                 border-radius: 22px;
@@ -1778,6 +1780,65 @@
                 .mht-header__left span.mht-header__count {
                     display: none;
                 }
+
+                /* Show/Hide Table vs Cards */
+                .mht-table-wrap {
+                    display: none;
+                }
+
+                .mht-mobile-cards {
+                    display: block;
+                }
+
+                /* Card Styling */
+                .mht-card {
+                    background: #fff;
+                    border: 1.5px solid #e8ecf8;
+                    border-radius: 16px;
+                    padding: 18px;
+                    margin-bottom: 16px;
+                    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+                }
+
+                .mht-card-top {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: flex-start;
+                    margin-bottom: 12px;
+                }
+
+                .mht-card-heading {
+                    font-weight: 700;
+                    color: #1e293b;
+                    font-size: 15px;
+                }
+
+                .mht-card-meta {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 8px;
+                    margin-bottom: 16px;
+                }
+
+                .mht-card-info-item {
+                    display: flex;
+                    align-items: center;
+                    gap: 8px;
+                    color: #64748b;
+                    font-size: 13px;
+                }
+
+                .mht-card-actions {
+                    padding-top: 14px;
+                    border-top: 1px solid #f1f5f9;
+                }
+            }
+
+            /* Desktop defaults */
+            @media (min-width: 641px) {
+                .mht-mobile-cards {
+                    display: none;
+                }
             }
 
             /* ── TABS ── */
@@ -1790,7 +1851,11 @@
                 overflow-x: auto;
                 scrollbar-width: none;
             }
-            .mht-tabs::-webkit-scrollbar { display: none; }
+
+            .mht-tabs::-webkit-scrollbar {
+                display: none;
+            }
+
             .mht-tab {
                 padding: 12px 20px;
                 font-size: 14px;
@@ -1804,17 +1869,37 @@
                 align-items: center;
                 gap: 8px;
             }
-            .mht-tab:hover { color: #4361ee; background: #f8fafc; }
+
+            .mht-tab:hover {
+                color: #4361ee;
+                background: #f8fafc;
+            }
+
             .mht-tab.active {
                 color: #4361ee;
                 border-bottom-color: #4361ee;
             }
-            .tab-content { display: none; width: 100%; animation: mhtFadeIn 0.3s ease; }
-            .tab-content.active { display: block; }
+
+            .tab-content {
+                display: none;
+                width: 100%;
+                animation: mhtFadeIn 0.3s ease;
+            }
+
+            .tab-content.active {
+                display: block;
+            }
 
             @keyframes mhtFadeIn {
-                from { opacity: 0; transform: translateY(5px); }
-                to { opacity: 1; transform: translateY(0); }
+                from {
+                    opacity: 0;
+                    transform: translateY(5px);
+                }
+
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
             }
         </style>
     </head>
@@ -1867,8 +1952,8 @@
 
 
     <!-- ══════════════════════════════════════
-                 MAIN LAYOUT
-            ══════════════════════════════════════ -->
+                         MAIN LAYOUT
+                    ══════════════════════════════════════ -->
     <div class="up-wrap">
         <div class="up-layout">
 
@@ -1948,82 +2033,189 @@
                     {{-- ── TABS ── --}}
                     <div class="mht-tabs" style="margin-top: 20px;">
                         <div class="mht-tab active" onclick="switchTab(event, 'uploaded')">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2.5">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                <polyline points="17 8 12 3 7 8"></polyline>
+                                <line x1="12" y1="3" x2="12" y2="15"></line>
+                            </svg>
                             Uploaded Records
                         </div>
                         <div class="mht-tab" onclick="switchTab(event, 'generated')">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg>
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2.5">
+                                <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+                            </svg>
                             Generated Prescription
                         </div>
                     </div>
 
                     {{-- ── TAB 1: Uploaded ── --}}
                     <div id="uploadedRecords" class="tab-content active">
-                    <div class="mht-table-wrap">
-                        @if(isset($histories) && $histories->count())
-                            <table class="mht-table">
-                                <thead>
-                                    <tr>
-                                        <th>#</th>
-                                        <th>Type</th>
-                                        <th>Heading</th>
-                                        <th>Date</th>
-                                        <th>Files</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach($histories as $i => $rec)
-                                        <tr class="mht-row" style="--row-delay:{{ $i * 40 }}ms">
+                        <div class="mht-table-wrap">
+                            @if(isset($histories) && $histories->count())
+                                <table class="mht-table">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Type</th>
+                                            <th>Heading</th>
+                                            <th>Date</th>
+                                            <th>Files</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach($histories as $i => $rec)
+                                            <tr class="mht-row" style="--row-delay:{{ $i * 40 }}ms">
 
-                                            <td class="mht-td--num">{{ $histories->firstItem() + $i }}</td>
+                                                <td class="mht-td--num">{{ $histories->firstItem() + $i }}</td>
 
-                                            <td>
-                                                <span class="mht-badge mht-badge--{{ $rec->type ?? 'report' }}">
-                                                    @if(($rec->type ?? '') === 'report')
-                                                        <svg width="11" height="11" viewBox="0 0 24 24" fill="none"
-                                                            stroke="currentColor" stroke-width="2.5">
-                                                            <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
-                                                            <polyline points="14 2 14 8 20 8" />
-                                                        </svg>
-                                                        Report
-                                                    @else
-                                                        <svg width="11" height="11" viewBox="0 0 24 24" fill="none"
-                                                            stroke="currentColor" stroke-width="2.5">
-                                                            <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
-                                                            <polyline points="9 22 9 12 15 12 15 22" />
-                                                        </svg>
-                                                        Prescription
-                                                    @endif
-                                                </span>
-                                            </td>
-
-                                            <td class="mht-td--heading">
-                                                <span class="mht-heading-val">{{ $rec->heading ?? '—' }}</span>
-                                                <div class="mht-tags">
-                                                    @if(!empty($rec->opd->partner_clinic_name))
-                                                        <span class="mht-tag mht-tag--clinic">
-                                                            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                                                                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                                                <td>
+                                                    <span class="mht-badge mht-badge--{{ $rec->type ?? 'report' }}">
+                                                        @if(($rec->type ?? '') === 'report')
+                                                            <svg width="11" height="11" viewBox="0 0 24 24" fill="none"
+                                                                stroke="currentColor" stroke-width="2.5">
+                                                                <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
+                                                                <polyline points="14 2 14 8 20 8" />
+                                                            </svg>
+                                                            Report
+                                                        @else
+                                                            <svg width="11" height="11" viewBox="0 0 24 24" fill="none"
+                                                                stroke="currentColor" stroke-width="2.5">
+                                                                <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
                                                                 <polyline points="9 22 9 12 15 12 15 22" />
                                                             </svg>
-                                                            {{ $rec->opd->partner_clinic_name }}
-                                                        </span>
-                                                    @endif
-                                                    @if(!empty($rec->doctor->doctor_name))
-                                                        <span class="mht-tag mht-tag--doctor">
-                                                            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                                                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-                                                                <circle cx="12" cy="7" r="4" />
-                                                            </svg>
-                                                            {{ $rec->doctor->doctor_name }} 
-                                                            <span style="opacity:0.7; font-weight:400; margin-left:2px;">({{ $rec->doctor->doctor_specialist ?? 'Gen.' }})</span>
-                                                        </span>
-                                                    @endif
-                                                </div>
-                                            </td>
+                                                            Prescription
+                                                        @endif
+                                                    </span>
+                                                </td>
 
-                                            <td class="mht-td--date">
+                                                <td class="mht-td--heading">
+                                                    <span class="mht-heading-val">{{ $rec->heading ?? '—' }}</span>
+                                                    <div class="mht-tags">
+                                                        @if(!empty($rec->opd->partner_clinic_name))
+                                                            <span class="mht-tag mht-tag--clinic">
+                                                                <svg width="10" height="10" viewBox="0 0 24 24" fill="none"
+                                                                    stroke="currentColor" stroke-width="2.5">
+                                                                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                                                                    <polyline points="9 22 9 12 15 12 15 22" />
+                                                                </svg>
+                                                                {{ $rec->opd->partner_clinic_name }}
+                                                            </span>
+                                                        @endif
+                                                        @if(!empty($rec->doctor->doctor_name))
+                                                            <span class="mht-tag mht-tag--doctor">
+                                                                <svg width="10" height="10" viewBox="0 0 24 24" fill="none"
+                                                                    stroke="currentColor" stroke-width="2.5">
+                                                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                                                                    <circle cx="12" cy="7" r="4" />
+                                                                </svg>
+                                                                {{ $rec->doctor->doctor_name }}
+                                                                <span
+                                                                    style="opacity:0.7; font-weight:400; margin-left:2px;">({{ $rec->doctor->doctor_specialist ?? 'Gen.' }})</span>
+                                                            </span>
+                                                        @endif
+                                                    </div>
+                                                </td>
+
+                                                <td class="mht-td--date">
+                                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
+                                                        stroke="currentColor" stroke-width="2">
+                                                        <rect x="3" y="4" width="18" height="18" rx="2" />
+                                                        <line x1="16" y1="2" x2="16" y2="6" />
+                                                        <line x1="8" y1="2" x2="8" y2="6" />
+                                                        <line x1="3" y1="10" x2="21" y2="10" />
+                                                    </svg>
+                                                    {{ $rec->date_of_report ? \Carbon\Carbon::parse($rec->date_of_report)->format('d M Y') : '—' }}
+                                                </td>
+
+                                                <td class="mht-td--files">
+                                                    @if(($rec->images ?? null) && count($rec->images))
+                                                        <a href="{{ route('dw.medical-history.view', $rec->id) }}"
+                                                            class="mht-files-pill" title="View {{ count($rec->images) }} file(s)">
+                                                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
+                                                                stroke="currentColor" stroke-width="2">
+                                                                <path
+                                                                    d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66l-9.2 9.19a2 2 0 01-2.83-2.83l8.49-8.48" />
+                                                            </svg>
+                                                            {{ count($rec->images) }} file{{ count($rec->images) > 1 ? 's' : '' }}
+                                                        </a>
+                                                    @else
+                                                        <span class="mht-no-files">—</span>
+                                                    @endif
+                                                </td>
+
+                                                <td class="mht-td--actions">
+                                                    <button class="mht-action-btn mht-action-btn--edit" onclick="openEditMhModal(
+                                                                                                        {{ $rec->id }},
+                                                                                                        '{{ $rec->type ?? '' }}',
+                                                                                                        '{{ $rec->date_of_report ? \Carbon\Carbon::parse($rec->date_of_report)->format('Y-m-d') : '' }}',
+                                                                                                        '{{ htmlspecialchars(addslashes($rec->heading ?? ''), ENT_QUOTES) }}',
+                                                                                                        {{ Js::from($rec->images ?? []) }}
+                                                                                                    )" title="Edit">
+                                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none"
+                                                            stroke="currentColor" stroke-width="2.5">
+                                                            <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" />
+                                                            <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" />
+                                                        </svg>
+                                                    </button>
+
+                                                    <form action="{{ route('dw.medical-history.destroy', $rec->id) }}" method="POST"
+                                                        onsubmit="return confirm('Delete this record?')" style="display:inline;">
+                                                        @csrf @method('DELETE')
+                                                        <button type="submit" class="mht-action-btn mht-action-btn--del"
+                                                            title="Delete">
+                                                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none"
+                                                                stroke="currentColor" stroke-width="2.5">
+                                                                <polyline points="3 6 5 6 21 6" />
+                                                                <path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6" />
+                                                                <path d="M10 11v6M14 11v6" />
+                                                                <path d="M9 6V4h6v2" />
+                                                            </svg>
+                                                        </button>
+                                                    </form>
+                                                </td>
+
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            @else
+                                <div class="mht-empty">
+                                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="1.2">
+                                        <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
+                                        <polyline points="14 2 14 8 20 8" />
+                                    </svg>
+                                    <p>No medical records yet.</p>
+                                    <button onclick="openMhModal()" class="mht-add-btn">Add your first record</button>
+                                </div>
+                            @endif
+                        </div>
+
+                        {{-- ── Pagination ── --}}
+                        {{-- ── Mobile Cards (Visible only on <768px) ── --}} <div class="mht-mobile-cards">
+                            @if(isset($histories) && $histories->count())
+                                @foreach($histories as $i => $rec)
+                                    <div class="mht-card" style="--row-delay:{{ $i * 40 }}ms">
+                                        <div class="mht-card-top">
+                                            <span class="mht-badge mht-badge--{{ $rec->type ?? 'report' }}">
+                                                @if(($rec->type ?? '') === 'report')
+                                                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                        stroke-width="2.5">
+                                                        <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
+                                                        <polyline points="14 2 14 8 20 8" />
+                                                    </svg> Report
+                                                @else
+                                                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                        stroke-width="2.5">
+                                                        <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
+                                                        <polyline points="9 22 9 12 15 12 15 22" />
+                                                    </svg> Prescription
+                                                @endif
+                                            </span>
+                                            <div class="mht-td--date">
                                                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                                     stroke-width="2">
                                                     <rect x="3" y="4" width="18" height="18" rx="2" />
@@ -2032,12 +2224,40 @@
                                                     <line x1="3" y1="10" x2="21" y2="10" />
                                                 </svg>
                                                 {{ $rec->date_of_report ? \Carbon\Carbon::parse($rec->date_of_report)->format('d M Y') : '—' }}
-                                            </td>
+                                            </div>
+                                        </div>
 
-                                            <td class="mht-td--files">
+                                        <div class="mht-card-heading">
+                                            <span class="mht-heading-val">{{ $rec->heading ?? '—' }}</span>
+                                            <div class="mht-tags">
+                                                @if(!empty($rec->opd->partner_clinic_name))
+                                                    <span class="mht-tag mht-tag--clinic">
+                                                        <svg width="10" height="10" viewBox="0 0 24 24" fill="none"
+                                                            stroke="currentColor" stroke-width="2.5">
+                                                            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                                                            <polyline points="9 22 9 12 15 12 15 22" />
+                                                        </svg>
+                                                        {{ $rec->opd->partner_clinic_name }}
+                                                    </span>
+                                                @endif
+                                                @if(!empty($rec->doctor->doctor_name))
+                                                    <span class="mht-tag mht-tag--doctor">
+                                                        <svg width="10" height="10" viewBox="0 0 24 24" fill="none"
+                                                            stroke="currentColor" stroke-width="2.5">
+                                                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                                                            <circle cx="12" cy="7" r="4" />
+                                                        </svg>
+                                                        {{ $rec->doctor->doctor_name }}
+                                                    </span>
+                                                @endif
+                                            </div>
+                                        </div>
+
+                                        <div class="mht-card-bottom"
+                                            style="display:flex; justify-content: space-between; align-items: center; margin-top: 15px;">
+                                            <div class="mht-td--files">
                                                 @if(($rec->images ?? null) && count($rec->images))
-                                                    <a href="{{ route('dw.medical-history.view', $rec->id) }}" class="mht-files-pill"
-                                                        title="View {{ count($rec->images) }} file(s)">
+                                                    <a href="{{ route('dw.medical-history.view', $rec->id) }}" class="mht-files-pill">
                                                         <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
                                                             stroke="currentColor" stroke-width="2">
                                                             <path
@@ -2046,18 +2266,14 @@
                                                         {{ count($rec->images) }} file{{ count($rec->images) > 1 ? 's' : '' }}
                                                     </a>
                                                 @else
-                                                    <span class="mht-no-files">—</span>
+                                                    <span class="mht-no-files">— No Files</span>
                                                 @endif
-                                            </td>
+                                            </div>
 
-                                            <td class="mht-td--actions">
-                                                <button class="mht-action-btn mht-action-btn--edit" onclick="openEditMhModal(
-                                                                                {{ $rec->id }},
-                                                                                '{{ $rec->type ?? '' }}',
-                                                                                '{{ $rec->date_of_report ? \Carbon\Carbon::parse($rec->date_of_report)->format('Y-m-d') : '' }}',
-                                                                                '{{ htmlspecialchars(addslashes($rec->heading ?? ''), ENT_QUOTES) }}',
-                                                                                {{ Js::from($rec->images ?? []) }}
-                                                                            )" title="Edit">
+                                            <div class="mht-card-actions" style="margin-top:0; padding-top:0; border:none;">
+                                                <button class="mht-action-btn mht-action-btn--edit"
+                                                    onclick="openEditMhModal({{ $rec->id }},'{{ $rec->type ?? '' }}','{{ $rec->date_of_report ? \Carbon\Carbon::parse($rec->date_of_report)->format('Y-m-d') : '' }}','{{ htmlspecialchars(addslashes($rec->heading ?? ''), ENT_QUOTES) }}',{{ Js::from($rec->images ?? []) }})"
+                                                    title="Edit">
                                                     <svg width="13" height="13" viewBox="0 0 24 24" fill="none"
                                                         stroke="currentColor" stroke-width="2.5">
                                                         <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" />
@@ -2078,110 +2294,11 @@
                                                         </svg>
                                                     </button>
                                                 </form>
-                                            </td>
-
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        @else
-                            <div class="mht-empty">
-                                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                    stroke-width="1.2">
-                                    <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
-                                    <polyline points="14 2 14 8 20 8" />
-                                </svg>
-                                <p>No medical records yet.</p>
-                                <button onclick="openMhModal()" class="mht-add-btn">Add your first record</button>
-                            </div>
-                        @endif
-                    </div>
-
-                    {{-- ── Pagination ── --}}
-                    {{-- ── Mobile Cards (Visible only on <768px) ── --}}
-                    <div class="mht-mobile-cards">
-                        @if(isset($histories) && $histories->count())
-                            @foreach($histories as $i => $rec)
-                                <div class="mht-card" style="--row-delay:{{ $i * 40 }}ms">
-                                    <div class="mht-card-top">
-                                        <span class="mht-badge mht-badge--{{ $rec->type ?? 'report' }}">
-                                            @if(($rec->type ?? '') === 'report')
-                                                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                                                    <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
-                                                    <polyline points="14 2 14 8 20 8" />
-                                                </svg> Report
-                                            @else
-                                                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                                                    <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
-                                                    <polyline points="9 22 9 12 15 12 15 22" />
-                                                </svg> Prescription
-                                            @endif
-                                        </span>
-                                        <div class="mht-td--date">
-                                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                                <rect x="3" y="4" width="18" height="18" rx="2" />
-                                                <line x1="16" y1="2" x2="16" y2="6" /><line x1="8" y1="2" x2="8" y2="6" /><line x1="3" y1="10" x2="21" y2="10" />
-                                            </svg>
-                                            {{ $rec->date_of_report ? \Carbon\Carbon::parse($rec->date_of_report)->format('d M Y') : '—' }}
+                                            </div>
                                         </div>
                                     </div>
-
-                                    <div class="mht-card-heading">
-                                        <span class="mht-heading-val">{{ $rec->heading ?? '—' }}</span>
-                                        <div class="mht-tags">
-                                            @if(!empty($rec->opd->partner_clinic_name))
-                                                <span class="mht-tag mht-tag--clinic">
-                                                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                                                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" /><polyline points="9 22 9 12 15 12 15 22" />
-                                                    </svg>
-                                                    {{ $rec->opd->partner_clinic_name }}
-                                                </span>
-                                            @endif
-                                            @if(!empty($rec->doctor->doctor_name))
-                                                <span class="mht-tag mht-tag--doctor">
-                                                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                                                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" />
-                                                    </svg>
-                                                    {{ $rec->doctor->doctor_name }}
-                                                </span>
-                                            @endif
-                                        </div>
-                                    </div>
-
-                                    <div class="mht-card-bottom" style="display:flex; justify-content: space-between; align-items: center; margin-top: 15px;">
-                                        <div class="mht-td--files">
-                                            @if(($rec->images ?? null) && count($rec->images))
-                                                <a href="{{ route('dw.medical-history.view', $rec->id) }}" class="mht-files-pill">
-                                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                                        <path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66l-9.2 9.19a2 2 0 01-2.83-2.83l8.49-8.48" />
-                                                    </svg>
-                                                    {{ count($rec->images) }} file{{ count($rec->images) > 1 ? 's' : '' }}
-                                                </a>
-                                            @else
-                                                <span class="mht-no-files">— No Files</span>
-                                            @endif
-                                        </div>
-
-                                        <div class="mht-card-actions" style="margin-top:0; padding-top:0; border:none;">
-                                            <button class="mht-action-btn mht-action-btn--edit" onclick="openEditMhModal({{ $rec->id }},'{{ $rec->type ?? '' }}','{{ $rec->date_of_report ? \Carbon\Carbon::parse($rec->date_of_report)->format('Y-m-d') : '' }}','{{ htmlspecialchars(addslashes($rec->heading ?? ''), ENT_QUOTES) }}',{{ Js::from($rec->images ?? []) }})" title="Edit">
-                                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                                                    <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" /><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" />
-                                                </svg>
-                                            </button>
-
-                                            <form action="{{ route('dw.medical-history.destroy', $rec->id) }}" method="POST" onsubmit="return confirm('Delete this record?')" style="display:inline;">
-                                                @csrf @method('DELETE')
-                                                <button type="submit" class="mht-action-btn mht-action-btn--del" title="Delete">
-                                                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                                                        <polyline points="3 6 5 6 21 6" /><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6" /><path d="M10 11v6M14 11v6" /><path d="M9 6V4h6v2" />
-                                                    </svg>
-                                                </button>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
-                            @endforeach
-                        @endif
+                                @endforeach
+                            @endif
                     </div>
 
                     @if(isset($histories) && $histories->lastPage() > 1)
@@ -2244,322 +2361,342 @@
                             @endif
                         </div>
                     @endif
-                    </div>{{-- end uploadedRecords tab --}}
+                </div>{{-- end uploadedRecords tab --}}
 
-                    {{-- ── TAB 2: Generated ── --}}
-                    <div id="generatedRecords" class="tab-content">
-                        <div class="mht-table-wrap">
-                            @if(isset($systemPrescriptions) && $systemPrescriptions->count())
-                                <table class="mht-table">
-                                    <thead>
-                                        <tr>
-                                            <th>#</th>
-                                            <th>Type</th>
-                                            <th>Doctor Name</th>
-                                            <th>Date</th>
-                                            <th>Vitals</th>
-                                            <th>Actions</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach($systemPrescriptions as $i => $rec)
-                                            <tr class="mht-row" style="--row-delay:{{ $i * 40 }}ms">
-                                                <td class="mht-td--num">{{ $i + 1 }}</td>
-                                                <td>
-                                                    <span class="mht-badge mht-badge--prescription">
-                                                        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg>
-                                                        Digital
-                                                    </span>
-                                                </td>
-                                                <td class="mht-td--heading">
-                                                    Dr. {{ $rec->doctor_name ?? 'N/A' }}
-                                                </td>
-                                                <td class="mht-td--date">
-                                                    {{ \Carbon\Carbon::parse($rec->prescription_date)->format('d M Y') }}
-                                                </td>
-                                                <td>
-                                                    <div style="font-size: 11px; color: #64748b;">
-                                                        BP: {{ $rec->bp ?? '-' }} | SpO2: {{ $rec->spo2 ?? '-' }}
-                                                    </div>
-                                                </td>
-                                                <td class="mht-td--actions">
-                                                    <a href="{{ route('dw.digital.prescription.view', $rec->id) }}" target="_blank" class="mht-files-pill" style="background: #2563eb; color: #fff; border-color: #2563eb; text-decoration: none;">
-                                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 4px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-                                                        Download
-                                                    </a>
-                                                </td>
-                                            </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                            @else
-                                <div class="mht-empty">
-                                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2">
-                                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line>
-                                    </svg>
-                                    <p>No system generated prescriptions available yet.</p>
-                                </div>
-                            @endif
-                        </div>
-
-                        {{-- Mobile Cards for Generated --}}
-                        <div class="mht-mobile-cards">
-                            @if(isset($systemPrescriptions) && $systemPrescriptions->count())
-                                @foreach($systemPrescriptions as $rec)
-                                    <div class="mht-card">
-                                        <div class="mht-card-top">
-                                            <div class="mht-card-heading">Dr. {{ $rec->doctor_name }}</div>
-                                            <span class="mht-badge mht-badge--prescription">Digital</span>
-                                        </div>
-                                        <div class="mht-card-meta">
-                                            <div class="mht-card-info-item">
-                                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" /><line x1="16" y1="2" x2="16" y2="6" /><line x1="8" y1="2" x2="8" y2="6" /><line x1="3" y1="10" x2="21" y2="10" /></svg>
+                {{-- ── TAB 2: Generated ── --}}
+                <div id="generatedRecords" class="tab-content">
+                    <div class="mht-table-wrap">
+                        @if(isset($systemPrescriptions) && $systemPrescriptions->count())
+                            <table class="mht-table">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Type</th>
+                                        <th>Doctor Name</th>
+                                        <th>Date</th>
+                                        <th>Vitals</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach($systemPrescriptions as $i => $rec)
+                                        <tr class="mht-row" style="--row-delay:{{ $i * 40 }}ms">
+                                            <td class="mht-td--num">{{ $i + 1 }}</td>
+                                            <td>
+                                                <span class="mht-badge mht-badge--prescription">
+                                                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none"
+                                                        stroke="currentColor" stroke-width="2.5">
+                                                        <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+                                                    </svg>
+                                                    Digital
+                                                </span>
+                                            </td>
+                                            <td class="mht-td--heading">
+                                                Dr. {{ $rec->doctor_name ?? 'N/A' }}
+                                            </td>
+                                            <td class="mht-td--date">
                                                 {{ \Carbon\Carbon::parse($rec->prescription_date)->format('d M Y') }}
-                                            </div>
-                                        </div>
-                                        <div class="mht-card-actions">
-                                            <a href="{{ route('dw.digital.prescription.view', $rec->id) }}" target="_blank" class="mht-files-pill" style="background: #2563eb; color: #fff; width: 100%; justify-content: center; text-decoration: none;">Download PDF</a>
+                                            </td>
+                                            <td>
+                                                <div style="font-size: 11px; color: #64748b;">
+                                                    BP: {{ $rec->bp ?? '-' }} | SpO2: {{ $rec->spo2 ?? '-' }}
+                                                </div>
+                                            </td>
+                                            <td class="mht-td--actions">
+                                                <a href="{{ route('dw.digital.prescription.view', $rec->id) }}" target="_blank"
+                                                    class="mht-files-pill"
+                                                    style="background: #2563eb; color: #fff; border-color: #2563eb; text-decoration: none;">
+                                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
+                                                        stroke="currentColor" stroke-width="2" style="margin-right: 4px;">
+                                                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                                        <polyline points="7 10 12 15 17 10"></polyline>
+                                                        <line x1="12" y1="15" x2="12" y2="3"></line>
+                                                    </svg>
+                                                    Download
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        @else
+                            <div class="mht-empty">
+                                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="1.2">
+                                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                    <line x1="16" y1="2" x2="16" y2="6"></line>
+                                    <line x1="8" y1="2" x2="8" y2="6"></line>
+                                    <line x1="3" y1="10" x2="21" y2="10"></line>
+                                </svg>
+                                <p>No system generated prescriptions available yet.</p>
+                            </div>
+                        @endif
+                    </div>
+
+                    {{-- Mobile Cards for Generated --}}
+                    <div class="mht-mobile-cards">
+                        @if(isset($systemPrescriptions) && $systemPrescriptions->count())
+                            @foreach($systemPrescriptions as $rec)
+                                <div class="mht-card">
+                                    <div class="mht-card-top">
+                                        <div class="mht-card-heading">Dr. {{ $rec->doctor_name }}</div>
+                                        <span class="mht-badge mht-badge--prescription">Digital</span>
+                                    </div>
+                                    <div class="mht-card-meta">
+                                        <div class="mht-card-info-item">
+                                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                stroke-width="2">
+                                                <rect x="3" y="4" width="18" height="18" rx="2" />
+                                                <line x1="16" y1="2" x2="16" y2="6" />
+                                                <line x1="8" y1="2" x2="8" y2="6" />
+                                                <line x1="3" y1="10" x2="21" y2="10" />
+                                            </svg>
+                                            {{ \Carbon\Carbon::parse($rec->prescription_date)->format('d M Y') }}
                                         </div>
                                     </div>
-                                @endforeach
-                            @endif
+                                    <div class="mht-card-actions">
+                                        <a href="{{ route('dw.digital.prescription.view', $rec->id) }}" target="_blank"
+                                            class="mht-files-pill"
+                                            style="background: #2563eb; color: #fff; width: 100%; justify-content: center; text-decoration: none;">Download
+                                            PDF</a>
+                                    </div>
+                                </div>
+                            @endforeach
+                        @endif
+                    </div>
+                </div>{{-- end generatedRecords tab --}}
+            </div>
+
+
+            <!-- ════════════════ EDIT MEDICAL RECORD MODAL ════════════════ -->
+            <div class="mh-modal-overlay" id="editMhModal" onclick="handleEditMhOverlay(event)">
+                <div class="mh-modal">
+                    <div class="mh-modal__head">
+                        <div class="mh-modal__title">
+                            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" />
+                                <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" />
+                            </svg>
+                            Edit Medical Record
                         </div>
-                    </div>{{-- end generatedRecords tab --}}
-                </div>
+                        <button class="mh-modal__close" onclick="closeEditMhModal()" type="button">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2.5">
+                                <line x1="18" y1="6" x2="6" y2="18" />
+                                <line x1="6" y1="6" x2="18" y2="18" />
+                            </svg>
+                        </button>
+                    </div>
 
+                    <form id="editMhForm" action="" method="POST" enctype="multipart/form-data" class="mh-modal__body">
+                        @csrf @method('PUT')
+                        <input type="hidden" name="dw_user_id" value="{{ Auth::user()->id ?? '' }}">
+                        <div id="editDeletedImagesInputs"></div>
 
-                <!-- ════════════════ EDIT MEDICAL RECORD MODAL ════════════════ -->
-                <div class="mh-modal-overlay" id="editMhModal" onclick="handleEditMhOverlay(event)">
-                    <div class="mh-modal">
-                        <div class="mh-modal__head">
-                            <div class="mh-modal__title">
-                                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                    stroke-width="2">
-                                    <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" />
-                                    <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" />
-                                </svg>
-                                Edit Medical Record
+                        <div class="mh-form-row">
+                            <div class="mh-field">
+                                <label>Type <span class="mh-req">*</span></label>
+                                <div class="mh-select-wrap">
+                                    <select name="type" id="editMhType" required>
+                                        <option value="report">Medical Report</option>
+                                        <option value="prescription">Prescription</option>
+                                    </select>
+                                    <svg class="mh-select-icon" width="14" height="14" viewBox="0 0 24 24" fill="none"
+                                        stroke="currentColor" stroke-width="2.5">
+                                        <polyline points="6 9 12 15 18 9" />
+                                    </svg>
+                                </div>
                             </div>
-                            <button class="mh-modal__close" onclick="closeEditMhModal()" type="button">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            <div class="mh-field">
+                                <label>Date of Report <span class="mh-req">*</span></label>
+                                <input type="date" name="date_of_report" id="editMhDate" required max="{{ date('Y-m-d') }}">
+                            </div>
+                        </div>
+
+                        <div class="mh-form-row mh-form-row--single">
+                            <div class="mh-field">
+                                <label>Heading / Title <span class="mh-req">*</span></label>
+                                <input type="text" name="heading" id="editMhHeading" placeholder="e.g. Blood Test Report"
+                                    required>
+                            </div>
+                        </div>
+
+                        <div class="mh-form-row mh-form-row--single">
+                            <div class="mh-field">
+                                <label>Existing Files <span style="font-weight:400;color:#aaa;font-size:11px;"> — click
+                                        ✕ to remove</span></label>
+                                <div class="mh-preview-grid" id="editExistingGrid"></div>
+                                <p class="mh-upload-hint" id="editNoExistingMsg" style="display:none;">No existing
+                                    files.</p>
+                            </div>
+                        </div>
+
+                        <div class="mh-form-row mh-form-row--single">
+                            <div class="mh-field">
+                                <label>Add More Files <span style="font-weight:400;color:#999;">(optional)</span></label>
+                                <div class="mh-upload-sources">
+                                    <button type="button" class="mh-src-btn" onclick="triggerEditInput('camera')">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                            stroke-width="2">
+                                            <path
+                                                d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z" />
+                                            <circle cx="12" cy="13" r="4" />
+                                        </svg>
+                                        Camera
+                                    </button>
+                                    <button type="button" class="mh-src-btn" onclick="triggerEditInput('gallery')">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                            stroke-width="2">
+                                            <rect x="3" y="3" width="18" height="18" rx="2" />
+                                            <circle cx="8.5" cy="8.5" r="1.5" />
+                                            <polyline points="21 15 16 10 5 21" />
+                                        </svg>
+                                        Gallery
+                                    </button>
+                                    <button type="button" class="mh-src-btn" onclick="triggerEditInput('file')">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                            stroke-width="2">
+                                            <path d="M13 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V9z" />
+                                            <polyline points="13 2 13 9 20 9" />
+                                        </svg>
+                                        File
+                                    </button>
+                                </div>
+                                <input type="file" id="editInputCamera" name="new_images[]" accept="image/*"
+                                    capture="environment" style="display:none;" onchange="handleEditFiles(this)">
+                                <input type="file" id="editInputGallery" name="new_images[]"
+                                    accept="image/jpeg,image/png,image/webp" multiple style="display:none;"
+                                    onchange="handleEditFiles(this)">
+                                <input type="file" id="editInputFile" name="new_images[]"
+                                    accept="image/jpeg,image/png,image/webp,application/pdf" multiple style="display:none;"
+                                    onchange="handleEditFiles(this)">
+                                <div class="mh-preview-grid" id="editNewPreviewGrid"></div>
+                                <p class="mh-upload-hint">Accepted: JPG, PNG, WEBP, PDF — max 5MB each</p>
+                            </div>
+                        </div>
+
+                        <div class="mh-modal__foot">
+                            <button type="button" class="mh-btn-cancel" onclick="closeEditMhModal()">Cancel</button>
+                            <button type="submit" class="mh-btn-save">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                     stroke-width="2.5">
-                                    <line x1="18" y1="6" x2="6" y2="18" />
-                                    <line x1="6" y1="6" x2="18" y2="18" />
+                                    <polyline points="20 6 9 17 4 12" />
                                 </svg>
+                                Update Record
                             </button>
                         </div>
+                    </form>
+                </div>
+            </div>
 
-                        <form id="editMhForm" action="" method="POST" enctype="multipart/form-data" class="mh-modal__body">
-                            @csrf @method('PUT')
-                            <input type="hidden" name="dw_user_id" value="{{ Auth::user()->id ?? '' }}">
-                            <div id="editDeletedImagesInputs"></div>
 
-                            <div class="mh-form-row">
-                                <div class="mh-field">
-                                    <label>Type <span class="mh-req">*</span></label>
-                                    <div class="mh-select-wrap">
-                                        <select name="type" id="editMhType" required>
-                                            <option value="report">Medical Report</option>
-                                            <option value="prescription">Prescription</option>
-                                        </select>
-                                        <svg class="mh-select-icon" width="14" height="14" viewBox="0 0 24 24" fill="none"
-                                            stroke="currentColor" stroke-width="2.5">
-                                            <polyline points="6 9 12 15 18 9" />
-                                        </svg>
-                                    </div>
-                                </div>
-                                <div class="mh-field">
-                                    <label>Date of Report <span class="mh-req">*</span></label>
-                                    <input type="date" name="date_of_report" id="editMhDate" required
-                                        max="{{ date('Y-m-d') }}">
-                                </div>
-                            </div>
-
-                            <div class="mh-form-row mh-form-row--single">
-                                <div class="mh-field">
-                                    <label>Heading / Title <span class="mh-req">*</span></label>
-                                    <input type="text" name="heading" id="editMhHeading"
-                                        placeholder="e.g. Blood Test Report" required>
-                                </div>
-                            </div>
-
-                            <div class="mh-form-row mh-form-row--single">
-                                <div class="mh-field">
-                                    <label>Existing Files <span style="font-weight:400;color:#aaa;font-size:11px;"> — click
-                                            ✕ to remove</span></label>
-                                    <div class="mh-preview-grid" id="editExistingGrid"></div>
-                                    <p class="mh-upload-hint" id="editNoExistingMsg" style="display:none;">No existing
-                                        files.</p>
-                                </div>
-                            </div>
-
-                            <div class="mh-form-row mh-form-row--single">
-                                <div class="mh-field">
-                                    <label>Add More Files <span
-                                            style="font-weight:400;color:#999;">(optional)</span></label>
-                                    <div class="mh-upload-sources">
-                                        <button type="button" class="mh-src-btn" onclick="triggerEditInput('camera')">
-                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
-                                                stroke="currentColor" stroke-width="2">
-                                                <path
-                                                    d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z" />
-                                                <circle cx="12" cy="13" r="4" />
-                                            </svg>
-                                            Camera
-                                        </button>
-                                        <button type="button" class="mh-src-btn" onclick="triggerEditInput('gallery')">
-                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
-                                                stroke="currentColor" stroke-width="2">
-                                                <rect x="3" y="3" width="18" height="18" rx="2" />
-                                                <circle cx="8.5" cy="8.5" r="1.5" />
-                                                <polyline points="21 15 16 10 5 21" />
-                                            </svg>
-                                            Gallery
-                                        </button>
-                                        <button type="button" class="mh-src-btn" onclick="triggerEditInput('file')">
-                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
-                                                stroke="currentColor" stroke-width="2">
-                                                <path d="M13 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V9z" />
-                                                <polyline points="13 2 13 9 20 9" />
-                                            </svg>
-                                            File
-                                        </button>
-                                    </div>
-                                    <input type="file" id="editInputCamera" name="new_images[]" accept="image/*"
-                                        capture="environment" style="display:none;" onchange="handleEditFiles(this)">
-                                    <input type="file" id="editInputGallery" name="new_images[]"
-                                        accept="image/jpeg,image/png,image/webp" multiple style="display:none;"
-                                        onchange="handleEditFiles(this)">
-                                    <input type="file" id="editInputFile" name="new_images[]"
-                                        accept="image/jpeg,image/png,image/webp,application/pdf" multiple
-                                        style="display:none;" onchange="handleEditFiles(this)">
-                                    <div class="mh-preview-grid" id="editNewPreviewGrid"></div>
-                                    <p class="mh-upload-hint">Accepted: JPG, PNG, WEBP, PDF — max 5MB each</p>
-                                </div>
-                            </div>
-
-                            <div class="mh-modal__foot">
-                                <button type="button" class="mh-btn-cancel" onclick="closeEditMhModal()">Cancel</button>
-                                <button type="submit" class="mh-btn-save">
-                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                        stroke-width="2.5">
-                                        <polyline points="20 6 9 17 4 12" />
-                                    </svg>
-                                    Update Record
-                                </button>
-                            </div>
-                        </form>
+            <!-- ════════════════ VITALS SECTION ════════════════ -->
+            <div class="up-card">
+                <div class="up-card__head">
+                    <div class="up-card__title">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+                        </svg>
+                        Latest Vitals
                     </div>
+                    <span style="font-size:.7rem;color:var(--muted);font-weight:700">
+                        Updated:
+                        {{ ($vital && $vital->updated_at) ? \Carbon\Carbon::parse($vital->updated_at)->format('d M Y') : 'N/A' }}
+                    </span>
                 </div>
 
+                @if($vital ?? null)
+                    <div class="up-vitals">
 
-                <!-- ════════════════ VITALS SECTION ════════════════ -->
-                <div class="up-card">
-                    <div class="up-card__head">
-                        <div class="up-card__title">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                stroke-width="2">
-                                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
-                            </svg>
-                            Latest Vitals
+                        <div class="up-vital up-qstat--coral" style="border-color:#fed7aa">
+                            <div class="up-vital__ico">🔴</div>
+                            <div class="up-vital__val" style="color:#c2410c">{{ $vital->blood_group ?? '—' }}</div>
+                            <div class="up-vital__unit">Blood Type</div>
+                            <div class="up-vital__lbl">Blood Group</div>
                         </div>
-                        <span style="font-size:.7rem;color:var(--muted);font-weight:700">
-                            Updated:
-                            {{ ($vital && $vital->updated_at) ? \Carbon\Carbon::parse($vital->updated_at)->format('d M Y') : 'N/A' }}
-                        </span>
-                    </div>
 
-                    @if($vital ?? null)
-                        <div class="up-vitals">
+                        <div class="up-vital up-qstat--teal" style="border-color:#bae6fd">
+                            <div class="up-vital__ico">❤️</div>
+                            <div class="up-vital__val" style="color:var(--p-dk)">{{ $vital->heart_rate ?? '—' }}</div>
+                            <div class="up-vital__unit">bpm</div>
+                            <div class="up-vital__lbl">Heart Rate</div>
+                        </div>
 
-                            <div class="up-vital up-qstat--coral" style="border-color:#fed7aa">
-                                <div class="up-vital__ico">🔴</div>
-                                <div class="up-vital__val" style="color:#c2410c">{{ $vital->blood_group ?? '—' }}</div>
-                                <div class="up-vital__unit">Blood Type</div>
-                                <div class="up-vital__lbl">Blood Group</div>
-                            </div>
+                        <div class="up-vital up-qstat--rose" style="border-color:#fecdd3;background:var(--rose-lt)">
+                            <div class="up-vital__ico">🩸</div>
+                            <div class="up-vital__val" style="color:var(--rose)">{{ $vital->blood_pressure ?? '—' }}</div>
+                            <div class="up-vital__unit">mmHg</div>
+                            <div class="up-vital__lbl">Blood Pressure</div>
+                        </div>
 
-                            <div class="up-vital up-qstat--teal" style="border-color:#bae6fd">
-                                <div class="up-vital__ico">❤️</div>
-                                <div class="up-vital__val" style="color:var(--p-dk)">{{ $vital->heart_rate ?? '—' }}</div>
-                                <div class="up-vital__unit">bpm</div>
-                                <div class="up-vital__lbl">Heart Rate</div>
-                            </div>
+                        <div class="up-vital up-qstat--mint" style="border-color:#a7f3d0">
+                            <div class="up-vital__ico">🌡️</div>
+                            <div class="up-vital__val" style="color:#047857">{{ $vital->temparature ?? '—' }}</div>
+                            <div class="up-vital__unit">°C</div>
+                            <div class="up-vital__lbl">Temperature</div>
+                        </div>
 
-                            <div class="up-vital up-qstat--rose" style="border-color:#fecdd3;background:var(--rose-lt)">
-                                <div class="up-vital__ico">🩸</div>
-                                <div class="up-vital__val" style="color:var(--rose)">{{ $vital->blood_pressure ?? '—' }}</div>
-                                <div class="up-vital__unit">mmHg</div>
-                                <div class="up-vital__lbl">Blood Pressure</div>
-                            </div>
+                        <div class="up-vital up-qstat--amber" style="border-color:#fde68a">
+                            <div class="up-vital__ico">⚖️</div>
+                            <div class="up-vital__val" style="color:#b45309">{{ $vital->weight ?? '—' }}</div>
+                            <div class="up-vital__unit">kg</div>
+                            <div class="up-vital__lbl">Weight</div>
+                        </div>
 
-                            <div class="up-vital up-qstat--mint" style="border-color:#a7f3d0">
-                                <div class="up-vital__ico">🌡️</div>
-                                <div class="up-vital__val" style="color:#047857">{{ $vital->temparature ?? '—' }}</div>
-                                <div class="up-vital__unit">°C</div>
-                                <div class="up-vital__lbl">Temperature</div>
-                            </div>
+                        <div class="up-vital up-qstat--mint" style="border-color:#fde68a">
+                            <div class="up-vital__ico">📏</div>
+                            <div class="up-vital__val" style="color:#b45309">{{ $vital->height ?? '—' }}</div>
+                            <div class="up-vital__unit">cm</div>
+                            <div class="up-vital__lbl">Height</div>
+                        </div>
 
-                            <div class="up-vital up-qstat--amber" style="border-color:#fde68a">
-                                <div class="up-vital__ico">⚖️</div>
-                                <div class="up-vital__val" style="color:#b45309">{{ $vital->weight ?? '—' }}</div>
-                                <div class="up-vital__unit">kg</div>
-                                <div class="up-vital__lbl">Weight</div>
-                            </div>
-
-                            <div class="up-vital up-qstat--mint" style="border-color:#fde68a">
-                                <div class="up-vital__ico">📏</div>
-                                <div class="up-vital__val" style="color:#b45309">{{ $vital->height ?? '—' }}</div>
-                                <div class="up-vital__unit">cm</div>
-                                <div class="up-vital__lbl">Height</div>
-                            </div>
-
-                            <div class="up-vital up-qstat--coral" style="border-color:#fed7aa">
-                                <div class="up-vital__ico">📊</div>
-                                <div class="up-vital__val" style="color:#c2410c">{{ $vital->bmi ?? '—' }}</div>
-                                <div class="up-vital__unit">
-                                    @if($vital->bmi ?? null)
-                                        @if($vital->bmi < 18.5) Underweight
-                                        @elseif($vital->bmi < 25) Normal
-                                        @elseif($vital->bmi < 30) Overweight
-                                        @else Obese
-                                        @endif
-                                    @else —
+                        <div class="up-vital up-qstat--coral" style="border-color:#fed7aa">
+                            <div class="up-vital__ico">📊</div>
+                            <div class="up-vital__val" style="color:#c2410c">{{ $vital->bmi ?? '—' }}</div>
+                            <div class="up-vital__unit">
+                                @if($vital->bmi ?? null)
+                                    @if($vital->bmi < 18.5) Underweight
+                                    @elseif($vital->bmi < 25) Normal
+                                    @elseif($vital->bmi < 30) Overweight
+                                    @else Obese
                                     @endif
-                                </div>
-                                <div class="up-vital__lbl">BMI</div>
+                                @else —
+                                @endif
                             </div>
-
-                            <div class="up-vital up-qstat--violet" style="border-color:#ddd6fe;background:var(--violet-lt)">
-                                <div class="up-vital__ico">🫁</div>
-                                <div class="up-vital__val" style="color:var(--violet)">{{ $vital->spo ?? '—' }}</div>
-                                <div class="up-vital__unit">SpO₂ %</div>
-                                <div class="up-vital__lbl">Oxygen</div>
-                            </div>
-
-                            <div class="up-vital up-qstat--amber" style="border-color:#fed7aa">
-                                <div class="up-vital__ico">🧪</div>
-                                <div class="up-vital__val" style="color:#c2410c">{{ $vital->blood_sugar ?? '—' }}</div>
-                                <div class="up-vital__unit">mg/dL</div>
-                                <div class="up-vital__lbl">Blood Sugar</div>
-                            </div>
-
+                            <div class="up-vital__lbl">BMI</div>
                         </div>
-                    @else
-                        <div style="padding:28px 20px;text-align:center;color:#94a3b8;font-size:13.5px;">
-                            No vitals recorded yet. Click <strong>Add Vitals</strong> to get started.
-                        </div>
-                    @endif
-                </div>
 
-            </div><!-- end main -->
-        </div><!-- end layout -->
+                        <div class="up-vital up-qstat--violet" style="border-color:#ddd6fe;background:var(--violet-lt)">
+                            <div class="up-vital__ico">🫁</div>
+                            <div class="up-vital__val" style="color:var(--violet)">{{ $vital->spo ?? '—' }}</div>
+                            <div class="up-vital__unit">SpO₂ %</div>
+                            <div class="up-vital__lbl">Oxygen</div>
+                        </div>
+
+                        <div class="up-vital up-qstat--amber" style="border-color:#fed7aa">
+                            <div class="up-vital__ico">🧪</div>
+                            <div class="up-vital__val" style="color:#c2410c">{{ $vital->blood_sugar ?? '—' }}</div>
+                            <div class="up-vital__unit">mg/dL</div>
+                            <div class="up-vital__lbl">Blood Sugar</div>
+                        </div>
+
+                    </div>
+                @else
+                    <div style="padding:28px 20px;text-align:center;color:#94a3b8;font-size:13.5px;">
+                        No vitals recorded yet. Click <strong>Add Vitals</strong> to get started.
+                    </div>
+                @endif
+            </div>
+
+        </div><!-- end main -->
+    </div><!-- end layout -->
     </div><!-- end wrap -->
 
 
     <!-- ════════════════════════════════════════════════
-                 ADD VITALS MODAL
-            ════════════════════════════════════════════════ -->
+                         ADD VITALS MODAL
+                    ════════════════════════════════════════════════ -->
     <div class="vm-overlay" id="vitalsModal" onclick="handleVmOverlay(event)">
         <div class="vm-modal">
             <div class="vm-head">
@@ -2747,8 +2884,8 @@
 
 
     <!-- ════════════════════════════════════════════════
-                 EDIT VITALS MODAL
-            ════════════════════════════════════════════════ -->
+                         EDIT VITALS MODAL
+                    ════════════════════════════════════════════════ -->
     <div class="vm-overlay" id="editVitalsModal" onclick="handleEditVmOverlay(event)">
         <div class="vm-modal">
             <div class="vm-head">
@@ -2890,8 +3027,8 @@
 
 
     <!-- ════════════════════════════════
-                 ADD MEDICAL HISTORY MODAL
-            ════════════════════════════════ -->
+                         ADD MEDICAL HISTORY MODAL
+                    ════════════════════════════════ -->
     <div class="mh-modal-overlay" id="medicalHistoryModal" onclick="handleMhOverlayClick(event)">
         <div class="mh-modal">
             <div class="mh-modal__head">
@@ -3092,19 +3229,19 @@
 
                 if (file.type === 'application/pdf') {
                     item.innerHTML = `
-                            <div class="mh-pdf-thumb">
-                                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                                    <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V9z"/>
-                                    <polyline points="14 2 14 9 20 9"/>
-                                </svg>
-                                PDF
-                            </div>
-                            <button type="button" class="mh-remove-btn" onclick="removeMhFile(${idx})">✕</button>`;
+                                    <div class="mh-pdf-thumb">
+                                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                            <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V9z"/>
+                                            <polyline points="14 2 14 9 20 9"/>
+                                        </svg>
+                                        PDF
+                                    </div>
+                                    <button type="button" class="mh-remove-btn" onclick="removeMhFile(${idx})">✕</button>`;
                 } else {
                     const url = URL.createObjectURL(file);
                     item.innerHTML = `
-                            <img src="${url}" alt="Preview" onload="URL.revokeObjectURL(this.src)">
-                            <button type="button" class="mh-remove-btn" onclick="removeMhFile(${idx})">✕</button>`;
+                                    <img src="${url}" alt="Preview" onload="URL.revokeObjectURL(this.src)">
+                                    <button type="button" class="mh-remove-btn" onclick="removeMhFile(${idx})">✕</button>`;
                 }
                 grid.appendChild(item);
             });
@@ -3210,15 +3347,15 @@
 
                 if (isPdf) {
                     item.innerHTML = `
-                            <a href="${url}" target="_blank" style="display:flex;width:100%;height:100%;align-items:center;justify-content:center;flex-direction:column;gap:4px;color:#e53e3e;font-size:10px;font-weight:700;text-decoration:none;">
-                                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V9z"/><polyline points="13 2 13 9 20 9"/></svg>
-                                PDF
-                            </a>
-                            <button type="button" class="mh-remove-btn" onclick="removeExistingFile('${path}', this)" title="Remove">✕</button>`;
+                                    <a href="${url}" target="_blank" style="display:flex;width:100%;height:100%;align-items:center;justify-content:center;flex-direction:column;gap:4px;color:#e53e3e;font-size:10px;font-weight:700;text-decoration:none;">
+                                        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V9z"/><polyline points="13 2 13 9 20 9"/></svg>
+                                        PDF
+                                    </a>
+                                    <button type="button" class="mh-remove-btn" onclick="removeExistingFile('${path}', this)" title="Remove">✕</button>`;
                 } else {
                     item.innerHTML = `
-                            <img src="${url}" alt="${name}" style="width:100%;height:100%;object-fit:cover;">
-                            <button type="button" class="mh-remove-btn" onclick="removeExistingFile('${path}', this)" title="Remove">✕</button>`;
+                                    <img src="${url}" alt="${name}" style="width:100%;height:100%;object-fit:cover;">
+                                    <button type="button" class="mh-remove-btn" onclick="removeExistingFile('${path}', this)" title="Remove">✕</button>`;
                 }
 
                 grid.appendChild(item);
@@ -3278,16 +3415,16 @@
                 item.className = 'mh-preview-item';
                 if (file.type === 'application/pdf') {
                     item.innerHTML = `
-                            <div class="mh-pdf-thumb">
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V9z"/><polyline points="13 2 13 9 20 9"/></svg>
-                                PDF
-                            </div>
-                            <button type="button" class="mh-remove-btn" onclick="removeEditNewFile(${idx})">✕</button>`;
+                                    <div class="mh-pdf-thumb">
+                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V9z"/><polyline points="13 2 13 9 20 9"/></svg>
+                                        PDF
+                                    </div>
+                                    <button type="button" class="mh-remove-btn" onclick="removeEditNewFile(${idx})">✕</button>`;
                 } else {
                     const url = URL.createObjectURL(file);
                     item.innerHTML = `
-                            <img src="${url}" onload="URL.revokeObjectURL(this.src)">
-                            <button type="button" class="mh-remove-btn" onclick="removeEditNewFile(${idx})">✕</button>`;
+                                    <img src="${url}" onload="URL.revokeObjectURL(this.src)">
+                                    <button type="button" class="mh-remove-btn" onclick="removeEditNewFile(${idx})">✕</button>`;
                 }
                 grid.appendChild(item);
             });
