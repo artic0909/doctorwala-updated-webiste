@@ -923,7 +923,7 @@
                                                         {{-- Action --}}
                                                         <td class="arp-td">
                                                             <a href="{{ route('partner.patient.profile', ['encryptedId' => Crypt::encryptString($req->dw_user_id)]) }}"
-                                                                class="arp-view-btn {{ $accepted ? 'arp-view-btn--active' : '' }}">
+                                                                class="arp-view-btn {{ $accepted ? 'arp-view-btn--active' : '' }}" target="_blank">
                                                                 <i class="fa fa-eye"></i>
                                                                 {{ $accepted ? 'View Profile' : 'View Details' }}
                                                             </a>
