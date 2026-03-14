@@ -757,7 +757,7 @@
                     @endif
 
                     {{-- ── Tabs Header ── --}}
-                    <div class="mht-tabs-container">
+                    <div class="mht-tabs-container" style="margin-top: 15px;">
                         <div class="mht-tab active" onclick="switchTab(event, 'uploaded')">
                             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
                             Uploaded Records
@@ -1085,8 +1085,8 @@
                                                     {{ \Carbon\Carbon::parse($rec->prescription_date)->format('d M Y') }}
                                                 </td>
                                                 <td>
-                                                    <div style="font-size: 11px; color: #64748b;">
-                                                        BP: {{ $rec->bp ?? '-' }} | SpO2: {{ $rec->spo2 ?? '-' }}
+                                                    <div style="font-size: 14px; font-weight: 500; color: #000000ff;">
+                                                        <span class="mht-heading-val"><strong>{{ $rec->heading ?? '—' }}</strong></span>
                                                     </div>
                                                 </td>
                                                 <td class="mht-td--actions">
@@ -1116,6 +1116,7 @@
                                 <div class="mht-card">
                                     <div class="mht-card-top">
                                         <div class="mht-card-heading">
+                                            <span class="mht-heading-val">{{ $rec->heading ?? '—' }}</span> <br>
                                             <span class="mht-heading-val">Dr. {{ $rec->doctor_name }}</span>
                                             <div class="mht-tags">
                                                 @php $cNameMobile = $rec->clinic_name ?? $rec->opd->clinic_name ?? null; @endphp

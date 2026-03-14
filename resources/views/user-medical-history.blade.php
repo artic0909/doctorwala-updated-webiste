@@ -2494,7 +2494,7 @@
                                         <th>Type</th>
                                         <th>Details</th>
                                         <th>Date</th>
-                                        <th>Vitals</th>
+                                        <th>Heading</th>
                                         <th>Actions</th>
                                     </tr>
                                 </thead>
@@ -2541,7 +2541,7 @@
                                             </td>
                                             <td>
                                                 <div style="font-size: 11px; color: #64748b;">
-                                                    BP: {{ $rec->bp ?? '-' }} | SpO2: {{ $rec->spo2 ?? '-' }}
+                                                    <span class="mht-heading-val">{{ $rec->heading ?? '—' }}</span>
                                                 </div>
                                             </td>
                                             <td class="mht-td--actions">
@@ -2582,6 +2582,7 @@
                                 <div class="mht-card">
                                     <div class="mht-card-top">
                                         <div class="mht-card-heading">
+                                            <span class="mht-heading-val">{{ $rec->heading ?? '—' }}</span>
                                             <span class="mht-heading-val">Dr. {{ $rec->doctor_name }}</span>
                                             <div class="mht-tags">
                                                 @if(!empty($rec->opd->partner_clinic_name))
