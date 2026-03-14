@@ -8,6 +8,18 @@
         <link href="{{ asset('fav5.png') }}" rel="icon">
         <link rel="stylesheet" href="{{ asset('./css/user-profile.css') }}">
         <style>
+            .up-wrap {
+                max-width: 1200px;
+                margin: 0 auto;
+                padding: 0 40px;
+            }
+
+            @media (max-width: 768px) {
+                .up-wrap {
+                    padding: 0 16px;
+                }
+            }
+
             .vm-overlay {
                 display: none;
                 position: fixed;
@@ -326,6 +338,12 @@
                 background: #3451d1;
             }
 
+            @media (max-width: 991px) {
+                .up-layout {
+                    grid-template-columns: 1fr !important;
+                }
+            }
+
             @media (max-width: 768px) {
                 .mht-table-wrap {
                     display: none;
@@ -373,31 +391,39 @@
                     border-top: none;
                 }
 
-                /* Optimize Vitals Grid for Mobile */
-                .up-vitals {
+                /* Optimize Vitals Grids for Mobile */
+                .up-qstat-grid,
+                .up-vitals,
+                .up-vit-grid {
                     grid-template-columns: repeat(2, 1fr) !important;
-                    gap: 12px !important;
-                    padding: 0 16px 24px !important;
+                    gap: 10px !important;
+                    padding: 12px !important;
+                    display: grid !important;
                 }
 
+                .up-qstat,
                 .up-vital {
-                    padding: 15px 10px !important;
+                    padding: 12px 8px !important;
                     height: auto !important;
+                    width: 100% !important;
+                    box-sizing: border-box !important;
+                    display: flex !important;
+                    flex-direction: column !important;
+                    align-items: center !important;
                 }
 
+                .up-qstat__ico,
                 .up-vital__ico {
                     font-size: 1.2rem !important;
                     margin-bottom: 6px !important;
                 }
 
+                .up-qstat__num,
                 .up-vital__val {
                     font-size: 1.1rem !important;
                 }
 
-                .up-vital__unit {
-                    font-size: 0.6rem !important;
-                }
-
+                .up-qstat__lbl,
                 .up-vital__lbl {
                     font-size: 0.65rem !important;
                 }
@@ -408,6 +434,95 @@
                     width: 100%;
                     justify-content: center;
                 }
+
+                .up-main {
+                    padding-bottom: 100px !important;
+                }
+
+                .mht-tabs-container {
+                    display: flex;
+                    width: 100%;
+                }
+
+                .mht-tab {
+                    padding: 10px 10px;
+                    font-size: 11px;
+                    flex: 1;
+                    justify-content: center;
+                    gap: 5px;
+                }
+
+                .mht-tab svg {
+                    width: 14px;
+                    height: 14px;
+                }
+
+                /* --- AGGRESSIVE DOWNSIZING & OVERFLOW FIXES --- */
+                body { overflow-x: hidden; position: relative; }
+                .up-wrap { padding: 0 12px !important; overflow-x: hidden; width: 100% !important; box-sizing: border-box; }
+
+                /* Hero Section Slim Down */
+                .up-hero { padding: 30px 0 80px !important; text-align: center; }
+                .up-hero__inner { flex-direction: column !important; align-items: center !important; gap: 18px !important; padding: 0 12px !important; }
+                .up-hero__left { flex-direction: column !important; text-align: center; gap: 10px !important; }
+                .up-hero__av { width: 72px !important; height: 72px !important; border-width: 2px !important; }
+                .up-hero__name { font-size: 1.3rem !important; margin-bottom: 2px !important; }
+                .up-hero__email { font-size: 0.75rem !important; margin-bottom: 6px !important; }
+                .up-hero__badge { padding: 2px 10px !important; font-size: 0.6rem !important; }
+                .up-hero__btn { font-size: 0.75rem !important; padding: 10px 16px !important; width: 100%; justify-content: center; }
+
+                /* Health Overview (Stats) Grid Slim Down */
+                .up-qstat-grid {
+                    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+                    gap: 8px !important;
+                    padding: 12px !important;
+                    display: grid !important;
+                }
+                .up-qstat {
+                    padding: 10px 6px !important;
+                    min-width: 0 !important;
+                }
+                .up-qstat__num { font-size: 1.1rem !important; margin-bottom: 2px !important; }
+                .up-qstat__lbl { font-size: 0.6rem !important; }
+                .up-qstat__ico { width: 34px !important; height: 34px !important; font-size: 1rem !important; margin-bottom: 4px !important; }
+
+                /* Action Buttons inside Stats Grid */
+                .up-qstat-grid button.up-qstat {
+                    width: 100% !important;
+                    box-sizing: border-box !important;
+                }
+
+                /* Vitals Grid Slim Down */
+                .up-vitals {
+                    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+                    gap: 10px !important;
+                    padding: 14px !important;
+                    display: grid !important;
+                }
+                .up-vital {
+                    padding: 10px 8px !important;
+                    width: 100% !important;
+                    box-sizing: border-box !important;
+                }
+                .up-vital__ico { font-size: 0.9rem !important; margin-bottom: 4px !important; }
+                .up-vital__val { font-size: 0.95rem !important; }
+                .up-vital__unit { font-size: 0.6rem !important; font-weight: 500 !important; }
+                .up-vital__lbl { font-size: 0.6rem !important; font-weight: 700 !important; }
+
+                /* Tab Layout Slim Down */
+                .mht-tab {
+                    padding: 8px 6px !important;
+                    font-size: 10px !important;
+                    gap: 4px !important;
+                }
+
+                /* Extra fix for very small screens */
+                @media (max-width: 360px) {
+                    .up-hero__name { font-size: 1.1rem !important; }
+                    .up-qstat__num, .up-vital__val { font-size: 0.9rem !important; }
+                }
+
+                .up-main { padding-bottom: 80px !important; }
             }
 
             @media (min-width: 769px) {
@@ -969,8 +1084,8 @@
             }
 
             /* ════════════════════════════════
-                       COMPLETE MODAL
-                    ════════════════════════════════ */
+                           COMPLETE MODAL
+                        ════════════════════════════════ */
             .complete-modal-box {
                 background: #fff;
                 border-radius: 22px;
@@ -1153,8 +1268,8 @@
 
 
             /* ════════════════════════════════
-                       CANCEL MODAL
-                    ════════════════════════════════ */
+                           CANCEL MODAL
+                        ════════════════════════════════ */
             .cancel-modal-box {
                 background: #fff;
                 border-radius: 22px;
@@ -1842,42 +1957,46 @@
             }
 
             /* ── TABS ── */
-            .mht-tabs {
-                display: flex;
-                gap: 12px;
+            .mht-tabs-container {
+                background: #f8fafc;
+                border-radius: 12px;
+                padding: 6px;
+                margin-top: 20px;
                 margin-bottom: 0;
-                border-bottom: 2px solid #f0f2f8;
-                padding-bottom: 0;
+                display: inline-flex;
+                border: 1px solid #e2e8f0;
                 overflow-x: auto;
                 scrollbar-width: none;
+                max-width: 100%;
             }
 
-            .mht-tabs::-webkit-scrollbar {
+            .mht-tabs-container::-webkit-scrollbar {
                 display: none;
             }
 
             .mht-tab {
-                padding: 12px 20px;
+                padding: 10px 24px;
                 font-size: 14px;
-                font-weight: 600;
+                font-weight: 700;
                 color: #64748b;
                 cursor: pointer;
-                border-bottom: 3px solid transparent;
+                border-radius: 8px;
                 transition: all 0.2s;
                 white-space: nowrap;
                 display: flex;
                 align-items: center;
-                gap: 8px;
+                gap: 10px;
             }
 
             .mht-tab:hover {
                 color: #4361ee;
-                background: #f8fafc;
+                background: rgba(255, 255, 255, 0.5);
             }
 
             .mht-tab.active {
-                color: #4361ee;
-                border-bottom-color: #4361ee;
+                color: #fff;
+                background: #4361ee;
+                box-shadow: 0 4px 12px rgba(67, 97, 238, 0.2);
             }
 
             .tab-content {
@@ -1952,8 +2071,8 @@
 
 
     <!-- ══════════════════════════════════════
-                         MAIN LAYOUT
-                    ══════════════════════════════════════ -->
+                             MAIN LAYOUT
+                        ══════════════════════════════════════ -->
     <div class="up-wrap">
         <div class="up-layout">
 
@@ -2031,7 +2150,7 @@
                     @endif
 
                     {{-- ── TABS ── --}}
-                    <div class="mht-tabs" style="margin-top: 20px;">
+                    <div class="mht-tabs-container">
                         <div class="mht-tab active" onclick="switchTab(event, 'uploaded')">
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                 stroke-width="2.5">
@@ -2059,7 +2178,7 @@
                                         <tr>
                                             <th>#</th>
                                             <th>Type</th>
-                                            <th>Heading</th>
+                                            <th>Details</th>
                                             <th>Date</th>
                                             <th>Files</th>
                                             <th>Actions</th>
@@ -2094,14 +2213,15 @@
                                                 <td class="mht-td--heading">
                                                     <span class="mht-heading-val">{{ $rec->heading ?? '—' }}</span>
                                                     <div class="mht-tags">
-                                                        @if(!empty($rec->opd->partner_clinic_name))
+                                                        @php $cName = $rec->clinic_name ?? $rec->opd->clinic_name ?? null; @endphp
+                                                        @if(!empty($cName))
                                                             <span class="mht-tag mht-tag--clinic">
                                                                 <svg width="10" height="10" viewBox="0 0 24 24" fill="none"
                                                                     stroke="currentColor" stroke-width="2.5">
                                                                     <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
                                                                     <polyline points="9 22 9 12 15 12 15 22" />
                                                                 </svg>
-                                                                {{ $rec->opd->partner_clinic_name }}
+                                                                {{ $cName }}
                                                             </span>
                                                         @endif
                                                         @if(!empty($rec->doctor->doctor_name))
@@ -2148,12 +2268,12 @@
 
                                                 <td class="mht-td--actions">
                                                     <button class="mht-action-btn mht-action-btn--edit" onclick="openEditMhModal(
-                                                                                                        {{ $rec->id }},
-                                                                                                        '{{ $rec->type ?? '' }}',
-                                                                                                        '{{ $rec->date_of_report ? \Carbon\Carbon::parse($rec->date_of_report)->format('Y-m-d') : '' }}',
-                                                                                                        '{{ htmlspecialchars(addslashes($rec->heading ?? ''), ENT_QUOTES) }}',
-                                                                                                        {{ Js::from($rec->images ?? []) }}
-                                                                                                    )" title="Edit">
+                                                                                                                    {{ $rec->id }},
+                                                                                                                    '{{ $rec->type ?? '' }}',
+                                                                                                                    '{{ $rec->date_of_report ? \Carbon\Carbon::parse($rec->date_of_report)->format('Y-m-d') : '' }}',
+                                                                                                                    '{{ htmlspecialchars(addslashes($rec->heading ?? ''), ENT_QUOTES) }}',
+                                                                                                                    {{ Js::from($rec->images ?? []) }}
+                                                                                                                )" title="Edit">
                                                         <svg width="13" height="13" viewBox="0 0 24 24" fill="none"
                                                             stroke="currentColor" stroke-width="2.5">
                                                             <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" />
@@ -2372,7 +2492,7 @@
                                     <tr>
                                         <th>#</th>
                                         <th>Type</th>
-                                        <th>Doctor Name</th>
+                                        <th>Details</th>
                                         <th>Date</th>
                                         <th>Vitals</th>
                                         <th>Actions</th>
@@ -2392,7 +2512,29 @@
                                                 </span>
                                             </td>
                                             <td class="mht-td--heading">
-                                                Dr. {{ $rec->doctor_name ?? 'N/A' }}
+                                                <span class="mht-heading-val">Dr. {{ $rec->doctor_name ?? 'N/A' }}</span>
+                                                <div class="mht-tags">
+                                                    @if(!empty($rec->opd->clinic_name))
+                                                        <span class="mht-tag mht-tag--clinic">
+                                                            <svg width="10" height="10" viewBox="0 0 24 24" fill="none"
+                                                                stroke="currentColor" stroke-width="2.5">
+                                                                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                                                                <polyline points="9 22 9 12 15 12 15 22" />
+                                                            </svg>
+                                                            {{ $rec->opd->clinic_name }}
+                                                        </span>
+                                                    @endif
+                                                    @if(!empty($rec->doctor->doctor_specialist))
+                                                        <span class="mht-tag mht-tag--doctor">
+                                                            <svg width="10" height="10" viewBox="0 0 24 24" fill="none"
+                                                                stroke="currentColor" stroke-width="2.5">
+                                                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                                                                <circle cx="12" cy="7" r="4" />
+                                                            </svg>
+                                                            {{ $rec->doctor->doctor_specialist }}
+                                                        </span>
+                                                    @endif
+                                                </div>
                                             </td>
                                             <td class="mht-td--date">
                                                 {{ \Carbon\Carbon::parse($rec->prescription_date)->format('d M Y') }}
@@ -2439,7 +2581,31 @@
                             @foreach($systemPrescriptions as $rec)
                                 <div class="mht-card">
                                     <div class="mht-card-top">
-                                        <div class="mht-card-heading">Dr. {{ $rec->doctor_name }}</div>
+                                        <div class="mht-card-heading">
+                                            <span class="mht-heading-val">Dr. {{ $rec->doctor_name }}</span>
+                                            <div class="mht-tags">
+                                                @if(!empty($rec->opd->partner_clinic_name))
+                                                    <span class="mht-tag mht-tag--clinic">
+                                                        <svg width="10" height="10" viewBox="0 0 24 24" fill="none"
+                                                            stroke="currentColor" stroke-width="2.5">
+                                                            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                                                            <polyline points="9 22 9 12 15 12 15 22" />
+                                                        </svg>
+                                                        {{ $rec->opd->partner_clinic_name }}
+                                                    </span>
+                                                @endif
+                                                @if(!empty($rec->doctor->doctor_specialist))
+                                                    <span class="mht-tag mht-tag--doctor">
+                                                        <svg width="10" height="10" viewBox="0 0 24 24" fill="none"
+                                                            stroke="currentColor" stroke-width="2.5">
+                                                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                                                            <circle cx="12" cy="7" r="4" />
+                                                        </svg>
+                                                        {{ $rec->doctor->doctor_specialist }}
+                                                    </span>
+                                                @endif
+                                            </div>
+                                        </div>
                                         <span class="mht-badge mht-badge--prescription">Digital</span>
                                     </div>
                                     <div class="mht-card-meta">
@@ -2695,8 +2861,8 @@
 
 
     <!-- ════════════════════════════════════════════════
-                         ADD VITALS MODAL
-                    ════════════════════════════════════════════════ -->
+                             ADD VITALS MODAL
+                        ════════════════════════════════════════════════ -->
     <div class="vm-overlay" id="vitalsModal" onclick="handleVmOverlay(event)">
         <div class="vm-modal">
             <div class="vm-head">
@@ -2884,8 +3050,8 @@
 
 
     <!-- ════════════════════════════════════════════════
-                         EDIT VITALS MODAL
-                    ════════════════════════════════════════════════ -->
+                             EDIT VITALS MODAL
+                        ════════════════════════════════════════════════ -->
     <div class="vm-overlay" id="editVitalsModal" onclick="handleEditVmOverlay(event)">
         <div class="vm-modal">
             <div class="vm-head">
@@ -3027,8 +3193,8 @@
 
 
     <!-- ════════════════════════════════
-                         ADD MEDICAL HISTORY MODAL
-                    ════════════════════════════════ -->
+                             ADD MEDICAL HISTORY MODAL
+                        ════════════════════════════════ -->
     <div class="mh-modal-overlay" id="medicalHistoryModal" onclick="handleMhOverlayClick(event)">
         <div class="mh-modal">
             <div class="mh-modal__head">
@@ -3229,19 +3395,19 @@
 
                 if (file.type === 'application/pdf') {
                     item.innerHTML = `
-                                    <div class="mh-pdf-thumb">
-                                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                                            <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V9z"/>
-                                            <polyline points="14 2 14 9 20 9"/>
-                                        </svg>
-                                        PDF
-                                    </div>
-                                    <button type="button" class="mh-remove-btn" onclick="removeMhFile(${idx})">✕</button>`;
+                                        <div class="mh-pdf-thumb">
+                                            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                                <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V9z"/>
+                                                <polyline points="14 2 14 9 20 9"/>
+                                            </svg>
+                                            PDF
+                                        </div>
+                                        <button type="button" class="mh-remove-btn" onclick="removeMhFile(${idx})">✕</button>`;
                 } else {
                     const url = URL.createObjectURL(file);
                     item.innerHTML = `
-                                    <img src="${url}" alt="Preview" onload="URL.revokeObjectURL(this.src)">
-                                    <button type="button" class="mh-remove-btn" onclick="removeMhFile(${idx})">✕</button>`;
+                                        <img src="${url}" alt="Preview" onload="URL.revokeObjectURL(this.src)">
+                                        <button type="button" class="mh-remove-btn" onclick="removeMhFile(${idx})">✕</button>`;
                 }
                 grid.appendChild(item);
             });
@@ -3347,15 +3513,15 @@
 
                 if (isPdf) {
                     item.innerHTML = `
-                                    <a href="${url}" target="_blank" style="display:flex;width:100%;height:100%;align-items:center;justify-content:center;flex-direction:column;gap:4px;color:#e53e3e;font-size:10px;font-weight:700;text-decoration:none;">
-                                        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V9z"/><polyline points="13 2 13 9 20 9"/></svg>
-                                        PDF
-                                    </a>
-                                    <button type="button" class="mh-remove-btn" onclick="removeExistingFile('${path}', this)" title="Remove">✕</button>`;
+                                        <a href="${url}" target="_blank" style="display:flex;width:100%;height:100%;align-items:center;justify-content:center;flex-direction:column;gap:4px;color:#e53e3e;font-size:10px;font-weight:700;text-decoration:none;">
+                                            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V9z"/><polyline points="13 2 13 9 20 9"/></svg>
+                                            PDF
+                                        </a>
+                                        <button type="button" class="mh-remove-btn" onclick="removeExistingFile('${path}', this)" title="Remove">✕</button>`;
                 } else {
                     item.innerHTML = `
-                                    <img src="${url}" alt="${name}" style="width:100%;height:100%;object-fit:cover;">
-                                    <button type="button" class="mh-remove-btn" onclick="removeExistingFile('${path}', this)" title="Remove">✕</button>`;
+                                        <img src="${url}" alt="${name}" style="width:100%;height:100%;object-fit:cover;">
+                                        <button type="button" class="mh-remove-btn" onclick="removeExistingFile('${path}', this)" title="Remove">✕</button>`;
                 }
 
                 grid.appendChild(item);
@@ -3415,16 +3581,16 @@
                 item.className = 'mh-preview-item';
                 if (file.type === 'application/pdf') {
                     item.innerHTML = `
-                                    <div class="mh-pdf-thumb">
-                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V9z"/><polyline points="13 2 13 9 20 9"/></svg>
-                                        PDF
-                                    </div>
-                                    <button type="button" class="mh-remove-btn" onclick="removeEditNewFile(${idx})">✕</button>`;
+                                        <div class="mh-pdf-thumb">
+                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V9z"/><polyline points="13 2 13 9 20 9"/></svg>
+                                            PDF
+                                        </div>
+                                        <button type="button" class="mh-remove-btn" onclick="removeEditNewFile(${idx})">✕</button>`;
                 } else {
                     const url = URL.createObjectURL(file);
                     item.innerHTML = `
-                                    <img src="${url}" onload="URL.revokeObjectURL(this.src)">
-                                    <button type="button" class="mh-remove-btn" onclick="removeEditNewFile(${idx})">✕</button>`;
+                                        <img src="${url}" onload="URL.revokeObjectURL(this.src)">
+                                        <button type="button" class="mh-remove-btn" onclick="removeEditNewFile(${idx})">✕</button>`;
                 }
                 grid.appendChild(item);
             });

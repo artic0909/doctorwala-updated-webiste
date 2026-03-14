@@ -777,7 +777,7 @@
                                     <tr>
                                         <th>#</th>
                                         <th>Type</th>
-                                        <th>Heading</th>
+                                        <th>Details</th>
                                         <th>Date</th>
                                         <th>Files</th>
                                     </tr>
@@ -1039,7 +1039,7 @@
                                         <tr>
                                             <th>#</th>
                                             <th>Type</th>
-                                            <th>Doctor Name</th>
+                                            <th>Details</th>
                                             <th>Date</th>
                                             <th>Vitals</th>
                                             <th>Actions</th>
@@ -1056,7 +1056,30 @@
                                                     </span>
                                                 </td>
                                                 <td class="mht-td--heading">
-                                                    Dr. {{ $rec->doctor_name ?? 'N/A' }}
+                                                    <span class="mht-heading-val">Dr. {{ $rec->doctor_name ?? 'N/A' }}</span>
+                                                    <div class="mht-tags">
+                                                        @php $cName = $rec->clinic_name ?? $rec->opd->clinic_name ?? null; @endphp
+                                                        @if(!empty($cName))
+                                                            <span class="mht-tag mht-tag--clinic">
+                                                                <svg width="10" height="10" viewBox="0 0 24 24" fill="none"
+                                                                    stroke="currentColor" stroke-width="2.5">
+                                                                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                                                                    <polyline points="9 22 9 12 15 12 15 22" />
+                                                                </svg>
+                                                                {{ $cName }}
+                                                            </span>
+                                                        @endif
+                                                        @if(!empty($rec->doctor->doctor_specialist))
+                                                            <span class="mht-tag mht-tag--doctor">
+                                                                <svg width="10" height="10" viewBox="0 0 24 24" fill="none"
+                                                                    stroke="currentColor" stroke-width="2.5">
+                                                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                                                                    <circle cx="12" cy="7" r="4" />
+                                                                </svg>
+                                                                {{ $rec->doctor->doctor_specialist }}
+                                                            </span>
+                                                        @endif
+                                                    </div>
                                                 </td>
                                                 <td class="mht-td--date">
                                                     {{ \Carbon\Carbon::parse($rec->prescription_date)->format('d M Y') }}
@@ -1092,7 +1115,32 @@
                             @foreach($systemPrescriptions as $rec)
                                 <div class="mht-card">
                                     <div class="mht-card-top">
-                                        <div class="mht-card-heading">Dr. {{ $rec->doctor_name }}</div>
+                                        <div class="mht-card-heading">
+                                            <span class="mht-heading-val">Dr. {{ $rec->doctor_name }}</span>
+                                            <div class="mht-tags">
+                                                @php $cNameMobile = $rec->clinic_name ?? $rec->opd->clinic_name ?? null; @endphp
+                                                @if(!empty($cNameMobile))
+                                                    <span class="mht-tag mht-tag--clinic">
+                                                        <svg width="10" height="10" viewBox="0 0 24 24" fill="none"
+                                                            stroke="currentColor" stroke-width="2.5">
+                                                            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                                                            <polyline points="9 22 9 12 15 12 15 22" />
+                                                        </svg>
+                                                        {{ $cNameMobile }}
+                                                    </span>
+                                                @endif
+                                                @if(!empty($rec->doctor->doctor_specialist))
+                                                    <span class="mht-tag mht-tag--doctor">
+                                                        <svg width="10" height="10" viewBox="0 0 24 24" fill="none"
+                                                            stroke="currentColor" stroke-width="2.5">
+                                                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                                                            <circle cx="12" cy="7" r="4" />
+                                                        </svg>
+                                                        {{ $rec->doctor->doctor_specialist }}
+                                                    </span>
+                                                @endif
+                                            </div>
+                                        </div>
                                         <span class="mht-badge mht-badge--prescription">Digital</span>
                                     </div>
                                     <div class="mht-card-meta">

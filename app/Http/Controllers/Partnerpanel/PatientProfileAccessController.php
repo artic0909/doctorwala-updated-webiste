@@ -262,7 +262,8 @@ class PatientProfileAccessController extends Controller
             ->paginate(10);
         
         try {
-            $systemPrescriptions = SystemPrescription::where('dw_user_id', $dwUserId)
+            $systemPrescriptions = SystemPrescription::with(['opd', 'doctor'])
+                ->where('dw_user_id', $dwUserId)
                 ->orderBy('prescription_date', 'desc')
                 ->orderBy('id', 'desc')
                 ->get();

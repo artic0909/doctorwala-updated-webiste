@@ -45,6 +45,11 @@ class DwPartnerModel extends Authenticatable
         return $this->partner_password;
     }
 
+    public function getClinicNameAttribute()
+    {
+        return $this->partner_clinic_name;
+    }
+
 
 
 

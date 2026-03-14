@@ -240,7 +240,8 @@ class ProfileEditController extends Controller
         // Fetch system-generated prescriptions
         $systemPrescriptions = collect();
         try {
-            $systemPrescriptions = SystemPrescription::where('dw_user_id', Auth::id())
+            $systemPrescriptions = SystemPrescription::with(['opd', 'doctor'])
+                ->where('dw_user_id', Auth::guard('dwuser')->id())
                 ->orderBy('prescription_date', 'desc')
                 ->orderBy('id', 'desc')
                 ->get();

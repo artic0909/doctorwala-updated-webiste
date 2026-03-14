@@ -46,4 +46,14 @@ class SystemPrescription extends Model
     {
         return $this->belongsTo(DwUserModel::class, 'dw_user_id');
     }
+
+    public function opd()
+    {
+        return $this->belongsTo(DwPartnerModel::class, 'partner_id', 'partner_id');
+    }
+
+    public function doctor()
+    {
+        return $this->belongsTo(PartnerAllOPDDoctorModel::class, 'opd_doctor_id');
+    }
 }
