@@ -205,6 +205,10 @@
                 <div style="font-weight: 600;">{{ $patient->user_name }}</div>
             </div>
             <div class="meta-item">
+                <div class="meta-label">Prescription Heading</div>
+                <div style="font-weight: 600;">{{ $prescription->heading ?? 'General Checkup' }}</div>
+            </div>
+            <div class="meta-item">
                 <div class="meta-label">Age / Gender</div>
                 <div style="font-weight: 600;">
                     {{ $prescription->user_age ?? ($patient->dob ? \Carbon\Carbon::parse($patient->dob)->age . ' Yrs' : 'N/A') }} /
@@ -248,8 +252,8 @@
                     <thead>
                         <tr>
                             <th>Medicine</th>
-                            <th>Dose</th>
-                            <th>Timing</th>
+                            <th>Frequency (How Many Times a Day)</th>
+                            <th>Time & Relation to Meals</th>
                             <th>Duration</th>
                         </tr>
                     </thead>
@@ -260,10 +264,11 @@
                                     <b>{{ $med['name'] }}</b><br>
                                     <small style="color: #64748b;">{{ $med['chemical'] ?? '' }}</small>
                                 </td>
-                                <td>{{ $med['dose'] ?? '-' }}</td>
                                 <td>
-                                    {{ is_array($med['timing'] ?? null) ? implode(', ', $med['timing']) : ($med['timing'] ?? '-') }}<br>
-                                    <small>({{ $med['eating'] ?? '' }})</small>
+                                    {{ is_array($med['timing'] ?? null) ? implode(', ', $med['timing']) : ($med['timing'] ?? '-') }}
+                                </td>
+                                <td>
+                                    {{ is_array($med['eating'] ?? null) ? implode(', ', $med['eating']) : ($med['eating'] ?? '-') }}
                                 </td>
                                 <td>{{ $med['days'] ?? '-' }} Days</td>
                             </tr>

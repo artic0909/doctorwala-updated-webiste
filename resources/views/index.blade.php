@@ -317,7 +317,7 @@
         <div class="opd-controls">
             <div style="background-color: white; padding: 10px; border-radius: 10px;">
                 <div class="section-badge" style="color: red;">Available OPD</div>
-                <h1 style="color: red;">Doctor Siting in OPD/Clinic/Medical Shop</h1>
+                <h1 style="color: red;">Doctor Seating in OPD/Clinic/Medical Shop</h1>
             </div>
             <div class="opd-btn-group">
                 <button class="opd-btn btn-prev-opd" aria-label="Previous" id="opdBtnPrev">

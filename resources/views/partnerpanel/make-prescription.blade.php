@@ -1035,6 +1035,12 @@
                         </div>
                     </div>
 
+                    {{-- Prescription Heading --}}
+                    <div class="mp-form-group">
+                        <label class="mp-form-label">Prescription Heading</label>
+                        <input type="text" name="heading" class="mp-input" placeholder="e.g. Follow-up for Thyroid, Fever Checkup, etc." required>
+                    </div>
+
                     {{-- Symptoms/Complaints --}}
                     <div class="mp-form-group">
                         <label class="mp-form-label" style="display: flex; align-items: center; gap: 8px;">
@@ -1102,10 +1108,8 @@
                                     <tr>
                                         <th style="width: 50px;">SL</th>
                                         <th>Medicine Name</th>
-                                        <th>Chemical</th>
-                                        <th>Brand</th>
-                                        <th style="width: 120px;">Dose (1-0-1)</th>
-                                        <th style="width: 180px;">Timing / Eating</th>
+                                        <th>Frequency (Times a Day)</th>
+                                        <th>Time & Relation to Meals</th>
                                         <th style="width: 80px;">Days</th>
                                         <th style="width: 50px;"></th>
                                     </tr>
@@ -1468,27 +1472,25 @@
                 <td data-label="Medicine Name">
                     <input type="text" name="medicines[${medicineCount}][name]" class="mp-input" placeholder="Medicine Name" required>
                 </td>
-                <td data-label="Chemical"><input type="text" name="medicines[${medicineCount}][chemical]" class="mp-input" placeholder="Chemical"></td>
-                <td data-label="Brand"><input type="text" name="medicines[${medicineCount}][brand]" class="mp-input" placeholder="Brand"></td>
-                <td data-label="Dose">
-                    <input type="text" name="medicines[${medicineCount}][dose]" class="mp-input dose-input" placeholder="e.g. 1-0-1">
-                    <div class="dose-helper">
-                        <span class="dose-chip" onclick="setDose(this, '1-0-1')">1-0-1</span>
-                        <span class="dose-chip" onclick="setDose(this, '1-1-1')">1-1-1</span>
-                        <span class="dose-chip" onclick="setDose(this, '0-0-1')">0-0-1</span>
-                    </div>
-                </td>
-                <td data-label="Timing / Eating">
+                <td data-label="Frequency (Times a Day)">
                     <div style="display: flex; flex-direction: column; gap: 8px;">
                         <select name="medicines[${medicineCount}][timing][]" class="mp-input select2-timing" multiple style="width: 100%;">
-                            <option value="Morning">Morning</option>
-                            <option value="Afternoon">Afternoon</option>
-                            <option value="Evening">Evening</option>
-                            <option value="Night">Night</option>
+                            <option value="OD / OD / QD (Omni Die / Quaque Die): Once a day">OD / OD / QD (Omni Die / Quaque Die): Once a day</option>
+                            <option value="BD / BID (Bis in Die): Twice a day">BD / BID (Bis in Die): Twice a day</option>
+                            <option value="TDS / TID (Ter in Die): Three times a day">TDS / TID (Ter in Die): Three times a day</option>
+                            <option value="QID (Quater in Die): Four times a day">QID (Quater in Die): Four times a day</option>
+                            <option value="Q4H / Q6H / Q8H: Every 4/6/8 hours">Q4H / Q6H / Q8H: Every 4/6/8 hours</option>
+                            <option value="Tw: Three times a week">Tw: Three times a week</option>
                         </select>
-                        <select name="medicines[${medicineCount}][eating]" class="mp-input">
-                            <option value="After Food">After Food</option>
-                            <option value="Before Food">Before Food</option>
+                    </div>
+                </td>
+                <td data-label="Time & Relation to Meals">
+                    <div style="display: flex; flex-direction: column; gap: 8px;">
+                        <select name="medicines[${medicineCount}][eating][]" class="mp-input select2-timing" multiple style="width: 100%;">
+                            <option value="AC / PC: Before or after meals">AC / PC: Before or after meals</option>
+                            <option value="HS / BT: At bedtime">HS / BT: At bedtime</option>
+                            <option value="QAM / QPM: Morning or evening">QAM / QPM: Morning or evening</option>
+                            <option value="Stat / SOS / PRN: Immediately or as needed">Stat / SOS / PRN: Immediately or as needed</option>
                         </select>
                     </div>
                 </td>
@@ -1501,8 +1503,12 @@
             `;
             tbody.appendChild(row);
             
-            $(row).find('.select2-timing').select2({
-                placeholder: "Timing",
+            $(row).find('select[name*="[timing]"]').select2({
+                placeholder: "Frequency",
+                allowClear: true
+            });
+            $(row).find('select[name*="[eating]"]').select2({
+                placeholder: "Time & Relation",
                 allowClear: true
             });
         }

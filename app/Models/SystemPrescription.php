@@ -23,6 +23,7 @@ class SystemPrescription extends Model
         'spo2',
         'temperature',
         'weight',
+        'heading',
         'symptoms',
         'recommended_tests',
         'medicines',
