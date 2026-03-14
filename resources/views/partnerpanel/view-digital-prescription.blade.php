@@ -11,13 +11,13 @@
             background: #f4f7fa;
             color: #333;
             margin: 0;
-            padding: 40px 20px;
+            padding: 20px 10px;
         }
         .prescription-container {
             max-width: 850px;
             margin: 0 auto;
             background: #fff;
-            padding: 40px;
+            padding: 30px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.05);
             border-radius: 12px;
             position: relative;
@@ -27,56 +27,56 @@
             justify-content: space-between;
             align-items: flex-start;
             border-bottom: 2px solid #3b82f6;
-            padding-bottom: 20px;
-            margin-bottom: 30px;
+            padding-bottom: 15px;
+            margin-bottom: 20px;
             gap: 20px;
         }
         .clinic-info h1 {
             margin: 0;
             color: #1e3a8a;
-            font-size: 24px;
+            font-size: 22px;
             line-height: 1.2;
         }
         .patient-meta {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 20px;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
             background: #f8fafc;
-            padding: 20px;
+            padding: 15px;
             border-radius: 10px;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
         }
         .meta-item {
-            font-size: 14px;
+            font-size: 13px;
         }
         .meta-label {
             font-weight: 700;
             color: #64748b;
             text-transform: uppercase;
-            font-size: 11px;
-            margin-bottom: 4px;
+            font-size: 10px;
+            margin-bottom: 2px;
         }
         .section-title {
-            font-size: 16px;
+            font-size: 15px;
             font-weight: 800;
             color: #1e40af;
-            border-left: 4px solid #3b82f6;
-            padding-left: 12px;
-            margin: 32px 0 16px;
+            border-left: 3px solid #3b82f6;
+            padding-left: 10px;
+            margin: 20px 0 12px;
             text-transform: uppercase;
             letter-spacing: 0.05em;
         }
         .vitals-grid {
             display: flex;
             flex-wrap: wrap;
-            gap: 12px;
-            margin-bottom: 24px;
+            gap: 10px;
+            margin-bottom: 15px;
         }
         .vital-chip {
             background: #eff6ff;
-            padding: 8px 14px;
+            padding: 6px 12px;
             border-radius: 8px;
-            font-size: 13px;
+            font-size: 12px;
             border: 1px solid #dbeafe;
             color: #1e40af;
         }
@@ -88,66 +88,71 @@
         .medicine-table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 10px;
+            margin-top: 5px;
             min-width: 500px;
         }
         .medicine-table th {
             text-align: left;
             background: #f8fafc;
-            padding: 14px;
-            font-size: 12px;
+            padding: 10px;
+            font-size: 11px;
             color: #64748b;
             border-bottom: 2px solid #e2e8f0;
             text-transform: uppercase;
             letter-spacing: 0.02em;
         }
         .medicine-table td {
-            padding: 14px;
+            padding: 10px;
             border-bottom: 1px solid #f1f5f9;
-            font-size: 14px;
+            font-size: 13px;
             vertical-align: top;
         }
         .footer {
-            margin-top: 60px;
-            padding-top: 24px;
+            margin-top: 30px;
+            padding-top: 15px;
             border-top: 2px solid #f1f5f9;
             display: flex;
             justify-content: space-between;
             align-items: flex-end;
-            gap: 30px;
+            gap: 20px;
         }
         .signature-box {
             text-align: center;
-            min-width: 180px;
+            min-width: 160px;
         }
         .signature-line {
             border-top: 1.5px solid #1e293b;
-            margin-top: 40px;
-            padding-top: 8px;
-            font-size: 13px;
+            margin-top: 25px;
+            padding-top: 4px;
+            font-size: 12px;
             font-weight: 600;
             color: #1e293b;
         }
 
         /* Responsive Adjustments */
         @media screen and (max-width: 768px) {
-            body { padding: 15px; }
-            .prescription-container { padding: 25px; border-radius: 0; }
+            body { padding: 10px 5px; }
+            .prescription-container { padding: 15px; border-radius: 0; }
             .header { flex-direction: column; text-align: left !important; }
-            .doc-meta { text-align: left !important; margin-top: 10px; border-top: 1px dashed #cbd5e1; padding-top: 15px; width: 100%; }
-            .patient-meta { grid-template-columns: 1fr; gap: 15px; padding: 15px; }
-            .instruction-grid { grid-template-columns: 1fr !important; gap: 20px !important; }
-            .footer { flex-direction: column; align-items: flex-start; gap: 40px; }
+            .doc-meta { text-align: left !important; margin-top: 10px; border-top: 1px dashed #cbd5e1; padding-top: 10px; width: 100%; }
+            .patient-meta { grid-template-columns: 1fr; gap: 10px; padding: 12px; }
+            .instruction-grid { grid-template-columns: 1fr !important; gap: 15px !important; }
+            .footer { flex-direction: column; align-items: flex-start; gap: 30px; }
             .signature-box { width: 100%; text-align: left; }
             .signature-line { width: fit-content; min-width: 150px; }
         }
 
         @media print {
+            @page {
+                margin: 5mm;
+            }
             body { background: #fff; padding: 0; }
-            .prescription-container { box-shadow: none; padding: 30px; max-width: 100%; }
+            .prescription-container { box-shadow: none; padding: 15px; max-width: 100%; border-radius: 0; }
             .no-print { display: none; }
             .download-btn { display: none; }
             .medicine-table { min-width: auto; }
+            .section-title { margin-top: 15px; }
+            .footer { margin-top: 20px; }
         }
 
         .download-btn {
