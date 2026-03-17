@@ -3,74 +3,60 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Doctorwala OTP</title>
+    <title>Verify Your Security Code</title>
 </head>
-<body style="margin:0; padding:0; background-color:#f4f7fb; font-family:Arial, sans-serif;">
-
-    <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#f4f7fb; padding:20px 0;">
+<body style="margin: 0; padding: 0; background-color: #f7fafc; font-family: 'Inter', -apple-system, system-ui, sans-serif;">
+    <table width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color: #f7fafc; padding: 40px 0;">
         <tr>
             <td align="center">
-
-                <!-- Main Container -->
-                <table width="100%" max-width="500px" cellpadding="0" cellspacing="0" style="background:#ffffff; border-radius:10px; overflow:hidden; box-shadow:0 4px 12px rgba(0,0,0,0.08);">
-
-                    <!-- Header -->
+                <table width="100%" max-width="500" border="0" cellspacing="0" cellpadding="0" style="max-width: 500px; background: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.05);">
+                    
+                    <!-- Top Gradient Accent -->
                     <tr>
-                        <td style="background:#0D6EFD; padding:20px; text-align:center; color:#ffffff;">
-                            <h2 style="margin:0;">Doctorwala</h2>
-                            <p style="margin:5px 0 0; font-size:13px;">Your Trusted Healthcare Partner</p>
+                        <td style="height: 6px; background: linear-gradient(to right, #0d6efd, #00d2ff);"></td>
+                    </tr>
+
+                    <!-- Logo Area -->
+                    <tr>
+                        <td style="padding: 40px 40px 20px 40px; text-align: center;">
+                            <h2 style="color: #0d6efd; margin: 0; font-size: 28px; font-weight: 800; letter-spacing: -0.5px;">Doctorwala</h2>
+                            <div style="height: 2px; width: 40px; background: #e2e8f0; margin: 15px auto;"></div>
                         </td>
                     </tr>
 
-                    <!-- Body -->
+                    <!-- Main Message -->
                     <tr>
-                        <td style="padding:30px 25px; text-align:center; color:#333;">
-                            
-                            <h3 style="margin-bottom:10px;">Verify Your Account</h3>
-                            <p style="font-size:14px; color:#555;">
+                        <td style="padding: 0 40px 40px 40px; text-align: center;">
+                            <h3 style="color: #1a202c; font-size: 20px; font-weight: 700; margin-bottom: 10px;">Security Verification</h3>
+                            <p style="color: #4a5568; font-size: 15px; line-height: 1.6; margin-bottom: 30px;">
                                 Hello,<br>
-                                Use the following OTP to complete your registration.
+                                To complete your login, please enter the one-time verification code below.
                             </p>
 
-                            <!-- OTP Box -->
-                            <div style="margin:25px 0;">
-                                <span style="
-                                    display:inline-block;
-                                    padding:15px 30px;
-                                    font-size:24px;
-                                    letter-spacing:4px;
-                                    background:#f1f5ff;
-                                    color:#0D6EFD;
-                                    border-radius:8px;
-                                    font-weight:bold;
-                                ">
-                                    {{ $otp }}
-                                </span>
+                            <!-- Premium OTP Display -->
+                            <div style="background: #f1f5ff; border: 1px dashed #0d6efd; border-radius: 12px; padding: 25px; margin-bottom: 30px;">
+                                <div style="font-size: 11px; text-transform: uppercase; color: #718096; letter-spacing: 2px; margin-bottom: 10px; font-weight: 600;">Your Verification Code</div>
+                                <div style="font-size: 36px; font-weight: 800; color: #0d6efd; letter-spacing: 8px; font-family: 'Courier New', monospace;">{{ $otp }}</div>
                             </div>
 
-                            <p style="font-size:13px; color:#777;">
-                                This OTP is valid for a limited time. Do not share it with anyone.
+                            <p style="color: #a0aec0; font-size: 13px; line-height: 1.6;">
+                                This code will expire in 10 minutes. <br>
+                                If you didn't request this, please ignore this email.
                             </p>
-
                         </td>
                     </tr>
 
                     <!-- Footer -->
                     <tr>
-                        <td style="background:#f9fafc; padding:20px; text-align:center; font-size:12px; color:#888;">
-                            <p style="margin:0;">© {{ date('Y') }} Doctorwala.info</p>
-                            <p style="margin:5px 0 0;">Need help? Contact support</p>
+                        <td style="background: #f8fafc; padding: 25px; text-align: center;">
+                            <p style="color: #cbd5e0; font-size: 12px; margin: 0;">
+                                &copy; {{ date('Y') }} Doctorwala.info &bull; Secure Health Network
+                            </p>
                         </td>
                     </tr>
-
                 </table>
-
-                <!-- Bottom spacing -->
-                <div style="height:20px;"></div>
-
             </td>
         </tr>
     </table>
-
 </body>
 </html>

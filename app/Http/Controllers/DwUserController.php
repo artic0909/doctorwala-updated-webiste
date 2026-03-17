@@ -7,6 +7,8 @@ use App\Models\DwUserModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth as Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\UserRegisterWelcomeMail;
 
 class DwUserController extends Controller
 {
@@ -71,6 +73,9 @@ class DwUserController extends Controller
             $dwuser->medical_card_no = $medicalCardNo;
 
             $dwuser->save();
+
+            // Send Welcome Email
+            Mail::to($dwuser->user_email)->send(new UserRegisterWelcomeMail($dwuser));
 
             return redirect()->route('dw.user-auth')
                 ->with('success', 'Registration successful! Your Medical Card ID is ' . $memberId . '. Please log in.');
