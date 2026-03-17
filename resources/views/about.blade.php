@@ -27,15 +27,18 @@
             <div class="col-lg-7">
                 <div class="section-title mb-4">
                     <h5 class="position-relative d-inline-block text-primary text-uppercase">Jio Ji Bharka</h5>
-                    <h1 class="display-5 mb-0">{{$aboutDetail->ab_title}}</h1>
+                    <h1 class="display-5 mb-0">Doctorwala – Medical Ecosystem</h1>
                 </div>
-                <h4 class="text-body fst-italic mb-4">{{$aboutDetail->ab_b_txt}}</h4>
-                <p class="mb-4">{{$aboutDetail->ab_desc}}</p>
+                <h4 class="text-body fst-italic mb-4">When someone in your family needs a doctor, every second feels important. Searching, calling, waiting — it shouldn’t be this hard.</h4>
+                <p class="mb-4">Doctorwala connects you to nearby doctors, clinics, OPDs, and medical shops across India — from busy cities to the smallest villages. With just a few clicks, patients can find the right doctor and connect instantly.</p>
+                <p class="mb-4">We also provide a secure Personal Medical ID, so your medical history stays organized and accessible whenever you need it. Because better records mean better diagnosis. And better diagnosis means better care.</p>
 
 
-                <p><Strong class="text-danger">Our Mission:</Strong> {{$aboutDetail->ab_mission}}</p>
+                <p><Strong class="text-danger">Our Mission:</Strong> Our mission is simple — to make healthcare reachable, reliable, and timely for everyone.</p>
 
-                <p><Strong class="text-danger">Our Vision:</Strong> {{$aboutDetail->ab_vision}}</p>
+                <p><Strong class="text-danger">We are not just building a platform.</Strong></p>
+                <p><Strong class="text-danger">We are building a healthier future.</Strong></p>
+                <p><Strong class="text-danger">Doctorwala — Your Health. Your Records. Your Lifeline.</Strong></p>
 
 
 

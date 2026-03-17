@@ -682,10 +682,22 @@
             <div class="col-lg-7">
                 <div class="section-title mb-4">
                     <h5 class="position-relative d-inline-block text-primary text-uppercase">Jio Ji Bharka</h5>
-                    <h1 class="display-5 mb-0">{{$aboutDetail->ab_title}}</h1>
+                    <h1 class="display-5 mb-0">Doctorwala – Medical Ecosystem</h1>
                 </div>
-                <h4 class="text-body fst-italic mb-4">{{$aboutDetail->ab_b_txt}}</h4>
-                <p class="mb-4">{{$aboutDetail->ab_desc}}</p>
+                <h4 class="text-body fst-italic mb-4">When someone in your family needs a doctor, every second feels important. Searching, calling, waiting — it shouldn’t be this hard.</h4>
+                <p class="mb-4">Doctorwala connects you to nearby doctors, clinics, OPDs, and medical shops across India — from busy cities to the smallest villages. With just a few clicks, patients can find the right doctor and connect instantly.</p>
+                <p class="mb-4">We also provide a secure Personal Medical ID, so your medical history stays organized and accessible whenever you need it. Because better records mean better diagnosis. And better diagnosis means better care.</p>
+
+
+                <p><Strong class="text-danger">Our Mission:</Strong> Our mission is simple — to make healthcare reachable, reliable, and timely for everyone.</p>
+
+                <p><Strong class="text-danger">We are not just building a platform.</Strong></p>
+                <p><Strong class="text-danger">We are building a healthier future.</Strong></p>
+                <p><Strong class="text-danger">Doctorwala — Your Health. Your Records. Your Lifeline.</Strong></p>
+
+
+
+
                 <div class="row g-3">
                     <div class="col-sm-6 wow zoomIn" data-wow-delay="0.3s">
                         <h5 class="mb-3"><i class="fa fa-check-circle text-primary me-3"></i>Find Best Doctors</h5>
@@ -699,15 +711,89 @@
                         <h5 class="mb-3"><i class="fa fa-check-circle text-primary me-3"></i>Fair Prices</h5>
                     </div>
                 </div>
+
+                <div>
+                    <div style="background:linear-gradient(135deg,#29b6f6 0%,#1976d2 50%,#1565c0 100%);border-radius:14px;padding:18px 20px;box-shadow:0 6px 20px rgba(21,101,192,0.3);">
+
+
+                        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+                            <div style="display:flex;align-items:center;gap:9px;">
+                                <div style="width:30px;height:30px;border-radius:8px;background-color:white;display:flex;align-items:center;justify-content:center;">
+                                    <span style="color:#22c55e;font-weight:900;font-size:14px;"><img src="{{asset('./img/logo.png')}}" alt="" width="20"></span>
+                                </div>
+                                <div>
+                                    <div style="font-size:13px;font-weight:700;color:#fff;">Doctorwala</div>
+                                    <div style="font-size:8px;font-weight:600;color:rgba(255,255,255,0.6);letter-spacing:1.5px;">MEDICAL CARD</div>
+                                </div>
+                            </div>
+                            <div style="display:flex;align-items:center;gap:10px;">
+                                <div style="width:36px;height:26px;border-radius:5px;background:linear-gradient(135deg,#f59e0b,#d97706);"></div>
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="rgba(255,255,255,0.7)">
+                                    <path d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9zm8 8l3 3 3-3c-1.65-1.66-4.34-1.66-6 0zm-4-4l2 2c2.76-2.76 7.24-2.76 10 0l2-2C15.14 9.14 8.87 9.14 5 13z" />
+                                </svg>
+                            </div>
+                        </div>
+
+
+                        <div style="margin-bottom:16px;font-size:17px;letter-spacing:1px;">
+                            <span style="color:rgba(255,255,255,0.55);font-size:11px;">●●●● ●●●●&nbsp;&nbsp;</span>
+                            <span style="color:#fff;font-weight:700;letter-spacing:3px;">DW27&nbsp;&nbsp;5541</span>
+                        </div>
+
+
+                        <div style="display:flex;justify-content:space-between;align-items:flex-end;">
+                            <div>
+                                <div style="font-size:8px;font-weight:600;color:rgba(255,255,255,0.55);letter-spacing:1.5px;margin-bottom:3px;">CARD HOLDER</div>
+                                <div style="font-size:14px;font-weight:700;color:#fff;">YOUR NAME</div>
+                            </div>
+                            <div style="display:flex;gap:20px;">
+                                <div>
+                                    <div style="font-size:8px;font-weight:600;color:rgba(255,255,255,0.55);letter-spacing:1.5px;margin-bottom:3px;">MEMBER ID</div>
+                                    <div style="font-size:12px;font-weight:700;color:#fff;">DW-2024-XXXXX</div>
+                                </div>
+                                <div>
+                                    <div style="font-size:8px;font-weight:600;color:rgba(255,255,255,0.55);letter-spacing:1.5px;margin-bottom:3px;">EXPIRY DATE</div>
+                                    <div style="font-size:14px;font-weight:700;color:#fff;">12/28</div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+
                 @guest
                 <a href="/partner-register" class="btn btn-primary py-3 px-5 mt-4 wow zoomIn"
                     data-wow-delay="0.6s">Join As Partners</a>
+
+                <a href="/contact" class="btn btn-primary py-3 px-5 mt-4 wow zoomIn"
+                    data-wow-delay="0.6s">Contact Us</a>
+
+                <a href="/privacy-policy" class="btn btn-primary py-3 px-5 mt-4 wow zoomIn"
+                    data-wow-delay="0.6s">Privacy Policy</a>
                 @endguest
 
                 @auth
-                <a href="/dw/about" class="btn btn-primary py-3 px-5 mt-4 wow zoomIn"
-                    data-wow-delay="0.6s">About Doctorwala</a>
+                <a href="/dw/contact" class="btn btn-primary py-3 px-5 mt-4 wow zoomIn"
+                    data-wow-delay="0.6s">Contact Us</a>
+
+                <a href="/dw/blog" class="btn btn-primary py-3 px-5 mt-4 wow zoomIn"
+                    data-wow-delay="0.6s">Blogs</a>
+
+                <a href="/dw/privacy-policy" class="btn btn-primary py-3 px-5 mt-4 wow zoomIn"
+                    data-wow-delay="0.6s">Privacy Policy</a>
                 @endauth
+
+
+
+
+
+
+
+
+
+
+
             </div>
             <div class="col-lg-5" style="min-height: 500px;">
                 <div class="position-relative h-100">

@@ -203,13 +203,8 @@
 
                     <div class="doc-head">
                         <div class="doc-name">{{ $doctor->doctor_designation }}. {{ $doctor->doctor_name }}</div>
+                        <div class="doc-name">{{ $doctor->doctor_specialist }}</div>
                         <div class="doc-chips">
-                            <span class="chip chip-spec">
-                                <svg style="width:10px;height:10px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
-                                </svg>
-                                {{ $doctor->doctor_specialist }}
-                            </span>
                             <span class="chip chip-fee">₹ {{ $doctor->doctor_fees }}</span>
                             @php
                             $statusChip = 'chip-stat-def';
