@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Partnerpanel;
 
 use App\Http\Controllers\Controller;
+use App\Mail\MedicalCardAccessRequestMail;
 use App\Models\AccessRequest;
 use App\Models\DwPartnerModel;
 use App\Models\DwUserModel;
@@ -20,6 +21,7 @@ use Illuminate\Support\Facades\Crypt;
 use Illuminate\Contracts\Encryption\DecryptException;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 class PatientProfileAccessController extends Controller
 {
@@ -109,7 +111,7 @@ class PatientProfileAccessController extends Controller
             return redirect()->back()->with('error', 'A pending request for this patient already exists.');
         }
 
-        AccessRequest::create([
+        $accessRequest = AccessRequest::create([
             'dw_user_id' => $request->dw_user_id,
             'doctor_id' => $request->doctor_id,
             'currently_loggedin_partner_id' => $request->currently_loggedin_partner_id,
@@ -125,6 +127,12 @@ class PatientProfileAccessController extends Controller
             'dw_member_id' => $request->dw_member_id,
             // read_status, req_status, access_status use model defaults
         ]);
+
+        // Send email to the patient
+        $patient = DwUserModel::find($request->dw_user_id);
+        if ($patient && $patient->user_email) {
+            Mail::to($patient->user_email)->send(new MedicalCardAccessRequestMail($accessRequest));
+        }
 
         return redirect()->route('partner.patient.profile.all.request')->with('success', 'Access request sent successfully. The patient will be notified.');
     }
@@ -260,7 +268,7 @@ class PatientProfileAccessController extends Controller
             ->orderBy('date_of_report', 'desc')
             ->orderBy('id', 'desc')
             ->paginate(10);
-        
+
         try {
             $systemPrescriptions = SystemPrescription::with(['opd', 'doctor'])
                 ->where('dw_user_id', $dwUserId)

@@ -1,51 +1,40 @@
 <?php
-
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
+use App\Models\AccessRequest;
 
 class MedicalCardAccessRequestMail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    /**
-     * Create a new message instance.
-     */
-    public function __construct()
+    public AccessRequest $accessRequest;
+
+    public function __construct(AccessRequest $accessRequest)
     {
-        //
+        // Eager load doctor & patient — same as allRequests() controller
+        $this->accessRequest = $accessRequest->load(['doctor', 'patient']);
     }
 
-    /**
-     * Get the message envelope.
-     */
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Medical Card Access Request Mail',
+            subject: 'Medical Card Access Request — Doctorwala',
         );
     }
 
-    /**
-     * Get the message content definition.
-     */
     public function content(): Content
     {
         return new Content(
-            view: 'view.name',
+            view: 'emails.medical-card-access-request',
+            with: ['accessRequest' => $this->accessRequest]
         );
     }
 
-    /**
-     * Get the attachments for the message.
-     *
-     * @return array<int, \Illuminate\Mail\Mailables\Attachment>
-     */
     public function attachments(): array
     {
         return [];

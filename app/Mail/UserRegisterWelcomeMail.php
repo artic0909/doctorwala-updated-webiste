@@ -55,16 +55,6 @@ class UserRegisterWelcomeMail extends Mailable
      */
     public function attachments(): array
     {
-        $cardPath = CardGenerator::generate($this->user);
-        
-        if ($cardPath && file_exists($cardPath)) {
-            return [
-                Attachment::fromPath($cardPath)
-                    ->as('Doctorwala_Medical_Card.png')
-                    ->withMime('image/png'),
-            ];
-        }
-
         return [];
     }
 }
