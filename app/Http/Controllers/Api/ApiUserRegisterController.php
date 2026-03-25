@@ -101,9 +101,12 @@ class ApiUserRegisterController extends Controller
             // Send Welcome Email
             Mail::to($dwuser->user_email)->send(new UserRegisterWelcomeMail($dwuser));
 
+            $token = $dwuser->createToken('auth_token')->plainTextToken;
+
             return response()->json([
                 'status'  => true,
-                'message' => 'Registration successful! Your Medical Card ID is ' . $memberId . '.',
+                'message' => 'Hi,' . $dwuser->user_name . '! Your Medical Card ID is ' . $memberId . 'successfully created, please login.',
+                'token'   => $token,
                 'user'    => [
                     'id'             => $dwuser->id,
                     'name'           => $dwuser->user_name,
