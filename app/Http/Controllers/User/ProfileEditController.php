@@ -483,6 +483,7 @@ class ProfileEditController extends Controller
             return redirect()->back()->with('error', 'Something went wrong: ' . $e->getMessage());
         }
     }
+    
     public function permissionOffRequest($id)
     {
         try {
