@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\ApiBlogController;
 use App\Http\Controllers\Api\ApiAllPathologyController;
 use App\Http\Controllers\Api\ApiCouponsController;
+use App\Http\Controllers\Api\ApiNotificationController;
 use App\Http\Controllers\Api\ApiUserLoginController;
 use App\Http\Controllers\Api\ApiUserOTPController;
 use App\Http\Controllers\Api\ApiUserProfileEditController;
@@ -34,6 +35,13 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user-profile', [ApiUserProfileEditController::class, 'getProfile']);
     Route::post('/update-profile', [ApiUserProfileEditController::class, 'updateProfile']);
     Route::post('/update-password', [ApiUserProfileEditController::class, 'updatePassword']);
+
+
+    Route::get('/notifications',                        [ApiNotificationController::class, 'notifications']);
+    Route::post('/notifications/{id}/accept',           [ApiNotificationController::class, 'acceptRequest']);
+    Route::post('/notifications/{id}/reject',           [ApiNotificationController::class, 'rejectRequest']);
+    Route::post('/notifications/{id}/permission-off',   [ApiNotificationController::class, 'permissionOffRequest']);
+    Route::post('/notifications/{id}/permission-on',    [ApiNotificationController::class, 'permissionOnRequest']);
 });
 
 

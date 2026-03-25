@@ -23,10 +23,3 @@ Route::post('/patient-inquiry', [ApiPartnerPatientInquiryController::class, 'sto
 
 Route::post('/send-otp', [ApiUserOTPController::class, 'sendOTP']);
 Route::post('/verify-otp', [ApiUserOTPController::class, 'verifyOTP']);
-
-
-Route::get('/notifications',                        [ApiNotificationController::class, 'notifications']);
-Route::post('/notifications/{id}/accept',           [ApiNotificationController::class, 'acceptRequest']);
-Route::post('/notifications/{id}/reject',           [ApiNotificationController::class, 'rejectRequest']);
-Route::post('/notifications/{id}/permission-off',   [ApiNotificationController::class, 'permissionOffRequest']);
-Route::post('/notifications/{id}/permission-on',    [ApiNotificationController::class, 'permissionOnRequest']);
