@@ -13,11 +13,47 @@ use Illuminate\Http\Request;
 
 class ApiAllPathologyController extends Controller
 {
+    // public function allPathologyData()
+    // {
+    //     $allPathologyContacts = PartnerPathologyContactModel::with('banner')->inRandomOrder()->get();
+
+    //     $finalData = $allPathologyContacts->map(function ($contact) {
+    //         if ($contact->banner && $contact->banner->pathologybanner) {
+    //             $contact->banner->pathologybanner = asset('storage/' . $contact->banner->pathologybanner);
+    //         }
+
+    //         $partnerId = $contact->currently_loggedin_partner_id;
+
+    //         $tests = PartnerAllPathologyTestModel::where('currently_loggedin_partner_id', $partnerId)->get();
+    //         foreach ($tests as $test) {
+    //             $test->test_day_time = json_decode($test->test_day_time, true);
+    //         }
+
+    //         return [
+    //             'pathologyContact' => $contact,
+    //             'tests' => $tests,
+    //             'services' => PartnerServiceListModel::where('currently_loggedin_partner_id', $partnerId)->get(),
+    //             'images' => PartnerGalleryModel::where('currently_loggedin_partner_id', $partnerId)->get(),
+    //             'aboutClinics' => PartnerAboutDetailsModel::where('currently_loggedin_partner_id', $partnerId)->get(),
+    //             'testsDetailsData' => PartnerAllPathologyTestModel::where('currently_loggedin_partner_id', $partnerId)->get(),
+
+    //         ];
+    //     });
+
+    //     return response()->json([
+    //         'status' => true,
+    //         'count' => $finalData->count(),
+    //         'data' => $finalData,
+    //     ]);
+    // }
+
     public function allPathologyData()
     {
-        $allPathologyContacts = PartnerPathologyContactModel::with('banner')->inRandomOrder()->paginate(10);
+        // 1. Paginate the main contact list (10 per page)
+        $paginatedPathology = PartnerPathologyContactModel::with('banner')->inRandomOrder()->paginate(10);
 
-        $finalData = $allPathologyContacts->map(function ($contact) {
+        // 2. Map the data to include tests, services, etc.
+        $finalData = $paginatedPathology->getCollection()->map(function ($contact) {
             if ($contact->banner && $contact->banner->pathologybanner) {
                 $contact->banner->pathologybanner = asset('storage/' . $contact->banner->pathologybanner);
             }
@@ -35,14 +71,14 @@ class ApiAllPathologyController extends Controller
                 'services' => PartnerServiceListModel::where('currently_loggedin_partner_id', $partnerId)->get(),
                 'images' => PartnerGalleryModel::where('currently_loggedin_partner_id', $partnerId)->get(),
                 'aboutClinics' => PartnerAboutDetailsModel::where('currently_loggedin_partner_id', $partnerId)->get(),
-                'testsDetailsData' => PartnerAllPathologyTestModel::where('currently_loggedin_partner_id', $partnerId)->get(),
-                
             ];
         });
 
         return response()->json([
             'status' => true,
-            'count' => $finalData->count(),
+            'total' => $paginatedPathology->total(),
+            'current_page' => $paginatedPathology->currentPage(),
+            'last_page' => $paginatedPathology->lastPage(),
             'data' => $finalData,
         ]);
     }
