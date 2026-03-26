@@ -13,6 +13,7 @@ use App\Http\Controllers\Api\ApiUserOTPController;
 use App\Http\Controllers\Api\ApiUserProfileEditController;
 use App\Http\Controllers\Api\ApiUserRegisterController;
 use App\Http\Controllers\Api\ApiPatientFeedbackController;
+use App\Http\Controllers\Api\ApiSearchHandleController;
 use App\Http\Controllers\Api\ApiVitalsController;
 use Illuminate\Http\Request;
 
@@ -59,6 +60,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/medical-history',                 [ApiMedicalHistoryController::class, 'addMedicalHistory']);
     Route::post('/medical-history/{id}',            [ApiMedicalHistoryController::class, 'editMedicalHistory']);
     Route::delete('/medical-history/{id}',          [ApiMedicalHistoryController::class, 'destroy']);
+
+    // Global Search
+    Route::get('/search', [ApiSearchHandleController::class, 'search']);
 });
 
 
