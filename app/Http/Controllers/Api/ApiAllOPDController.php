@@ -43,42 +43,82 @@ class ApiAllOPDController extends Controller
     // }
 
 
-    public function allOpdData()
+    // ── OPDs ───────────────────────────────────────────────────────────────────
+    public function allOpdData(Request $request)
     {
-        // 1. Use 'paginate(10)' to fetch only 10 at a time
-        // 2. Use 'with()' to fetch doctors and services in ONE go (Eager Loading)
-        // IMPORTANT: You should define 'doctors' and 'services' relationships in your PartnerOPDContactModel
-        $paginatedContacts = PartnerOPDContactModel::with(['banner'])
-            ->inRandomOrder()
-            ->paginate(10); // Fetch only 10
+        try {
+            $query = trim($request->get('query', ''));
 
-        $finalData = $paginatedContacts->getCollection()->map(function ($contact) {
-            if ($contact->banner && $contact->banner->opdbanner) {
-                $contact->banner->opdbanner = asset('storage/' . $contact->banner->opdbanner);
+            $dbQuery = PartnerOPDContactModel::with('banner')
+                ->where('status', 'active');
+
+            if ($query !== '') {
+                // Search mode — also check specialist via related doctor model
+                $opdPartnerIds = PartnerAllOPDDoctorModel::where('doctor_specialist', 'like', "%{$query}%")
+                    ->pluck('currently_loggedin_partner_id');
+
+                $dbQuery->where(function ($q) use ($query, $opdPartnerIds) {
+                    $q->where('clinic_name',                  'like', "%{$query}%")
+                        ->orWhere('clinic_address',             'like', "%{$query}%")
+                        ->orWhere('clinic_city',                'like', "%{$query}%")
+                        ->orWhere('clinic_state',               'like', "%{$query}%")
+                        ->orWhere('clinic_pincode',             'like', "%{$query}%")
+                        ->orWhere('clinic_landmark',            'like', "%{$query}%")
+                        ->orWhere('clinic_mobile_number',       'like', "%{$query}%")
+                        ->orWhere('clinic_contact_person_name', 'like', "%{$query}%")
+                        ->orWhereIn('currently_loggedin_partner_id', $opdPartnerIds);
+                });
+
+                $opds      = $dbQuery->get();
+                $finalData = $opds->map(fn($c) => $this->formatOpd($c));
+
+                return response()->json([
+                    'status'    => true,
+                    'is_search' => true,
+                    'total'     => $finalData->count(),
+                    'data'      => $finalData,
+                ]);
+            } else {
+                // Normal mode — 10 random paginated
+                $paginated = $dbQuery->inRandomOrder()->paginate(10);
+
+                $finalData = $paginated->getCollection()
+                    ->map(fn($c) => $this->formatOpd($c));
+
+                return response()->json([
+                    'status'       => true,
+                    'is_search'    => false,
+                    'total'        => $paginated->total(),
+                    'current_page' => $paginated->currentPage(),
+                    'last_page'    => $paginated->lastPage(),
+                    'data'         => $finalData,
+                ]);
             }
+        } catch (\Exception $e) {
+            return response()->json([
+                'status'  => false,
+                'message' => 'Something went wrong. Please try again.',
+            ], 500);
+        }
+    }
 
-            $partnerId = $contact->currently_loggedin_partner_id;
+    private function formatOpd(PartnerOPDContactModel $contact): array
+    {
+        if ($contact->banner && $contact->banner->opdbanner) {
+            $contact->banner->opdbanner = asset('storage/' . $contact->banner->opdbanner);
+        }
 
-            // Optimized: Fetching these once per contact is okay if not using 'with', 
-            // but it's better to fetch only what's needed.
-            $doctors = PartnerAllOPDDoctorModel::where('currently_loggedin_partner_id', $partnerId)->get();
-            foreach ($doctors as $doctor) {
-                $doctor->test_day_time = json_decode($doctor->test_day_time, true);
-            }
+        $partnerId = $contact->currently_loggedin_partner_id;
 
-            return [
-                'opdContact' => $contact,
-                'doctors' => $doctors,
-                'services' => PartnerServiceListModel::where('currently_loggedin_partner_id', $partnerId)->get(),
-            ];
-        });
+        $doctors = PartnerAllOPDDoctorModel::where('currently_loggedin_partner_id', $partnerId)->get();
+        foreach ($doctors as $doctor) {
+            $doctor->test_day_time = json_decode($doctor->test_day_time, true);
+        }
 
-        return response()->json([
-            'status' => true,
-            'total' => $paginatedContacts->total(),
-            'current_page' => $paginatedContacts->currentPage(),
-            'last_page' => $paginatedContacts->lastPage(),
-            'data' => $finalData,
-        ]);
+        return [
+            'opdContact' => $contact,
+            'doctors'    => $doctors,
+            'services'   => PartnerServiceListModel::where('currently_loggedin_partner_id', $partnerId)->get(),
+        ];
     }
 }
