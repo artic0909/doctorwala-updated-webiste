@@ -6,8 +6,11 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\ApiBlogController;
 use App\Http\Controllers\Api\ApiAllPathologyController;
 use App\Http\Controllers\Api\ApiCouponsController;
+use App\Http\Controllers\Api\ApiDocAppointmentBookingController;
 use App\Http\Controllers\Api\ApiMedicalHistoryController;
 use App\Http\Controllers\Api\ApiNotificationController;
+use App\Http\Controllers\Api\ApiOpdAppointmentBookingController;
+use App\Http\Controllers\Api\ApiPathAppointmentBookingController;
 use App\Http\Controllers\Api\ApiUserLoginController;
 use App\Http\Controllers\Api\ApiUserOTPController;
 use App\Http\Controllers\Api\ApiUserProfileEditController;
@@ -63,6 +66,11 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Global Search
     Route::get('/search', [ApiSearchHandleController::class, 'search']);
+
+    // Opd & Pathology & Doctor Appointments
+    Route::post('/opd-appointment', [ApiOpdAppointmentBookingController::class, 'patientInquiry']);
+    Route::post('/path-appointment', [ApiPathAppointmentBookingController::class, 'patientInquiry']);
+    Route::post('/doc-appointment', [ApiDocAppointmentBookingController::class, 'patientInquiry']);
 });
 
 
