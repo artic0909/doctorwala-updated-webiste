@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\ApiBlogController;
 use App\Http\Controllers\Api\ApiAllPathologyController;
 use App\Http\Controllers\Api\ApiCouponsController;
+use App\Http\Controllers\Api\ApiMedicalHistoryController;
 use App\Http\Controllers\Api\ApiNotificationController;
 use App\Http\Controllers\Api\ApiUserLoginController;
 use App\Http\Controllers\Api\ApiUserOTPController;
@@ -49,6 +50,15 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/vitals',          [ApiVitalsController::class, 'addVitals']);
     Route::put('/vitals/{id}',      [ApiVitalsController::class, 'editVitals']);
     Route::delete('/vitals/{id}',   [ApiVitalsController::class, 'deleteVitals']);
+
+    // Medical History
+    Route::get('/medical-history',                  [ApiMedicalHistoryController::class, 'getAll']);
+    Route::get('/medical-history/reports',          [ApiMedicalHistoryController::class, 'getReports']);
+    Route::get('/medical-history/prescriptions',    [ApiMedicalHistoryController::class, 'getPrescriptions']);
+    Route::get('/medical-history/{id}',             [ApiMedicalHistoryController::class, 'getRecord']);
+    Route::post('/medical-history',                 [ApiMedicalHistoryController::class, 'addMedicalHistory']);
+    Route::post('/medical-history/{id}',            [ApiMedicalHistoryController::class, 'editMedicalHistory']);
+    Route::delete('/medical-history/{id}',          [ApiMedicalHistoryController::class, 'destroy']);
 });
 
 
