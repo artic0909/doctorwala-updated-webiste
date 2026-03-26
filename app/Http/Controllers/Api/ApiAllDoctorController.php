@@ -10,7 +10,7 @@ class ApiAllDoctorController extends Controller
 {
     public function allDoctorData()
     {
-        $allDoctorContacts = PartnerDoctorContactModel::with('banner')->inRandomOrder()->get();
+        $allDoctorContacts = PartnerDoctorContactModel::with('banner')->inRandomOrder()->paginate(10);
 
         $allDoctorContacts = $allDoctorContacts->map(function ($contact) {
             if ($contact->banner && $contact->banner->doctorbanner) {

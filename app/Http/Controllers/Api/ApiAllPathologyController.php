@@ -15,7 +15,7 @@ class ApiAllPathologyController extends Controller
 {
     public function allPathologyData()
     {
-        $allPathologyContacts = PartnerPathologyContactModel::with('banner')->inRandomOrder()->get();
+        $allPathologyContacts = PartnerPathologyContactModel::with('banner')->inRandomOrder()->paginate(10);
 
         $finalData = $allPathologyContacts->map(function ($contact) {
             if ($contact->banner && $contact->banner->pathologybanner) {
