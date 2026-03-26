@@ -12,6 +12,7 @@ use App\Http\Controllers\Api\ApiUserOTPController;
 use App\Http\Controllers\Api\ApiUserProfileEditController;
 use App\Http\Controllers\Api\ApiUserRegisterController;
 use App\Http\Controllers\Api\ApiPatientFeedbackController;
+use App\Http\Controllers\Api\ApiVitalsController;
 use Illuminate\Http\Request;
 
 
@@ -36,12 +37,18 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/update-profile', [ApiUserProfileEditController::class, 'updateProfile']);
     Route::post('/update-password', [ApiUserProfileEditController::class, 'updatePassword']);
 
-
+    // Notifications
     Route::get('/notifications',                        [ApiNotificationController::class, 'notifications']);
     Route::post('/notifications/{id}/accept',           [ApiNotificationController::class, 'acceptRequest']);
     Route::post('/notifications/{id}/reject',           [ApiNotificationController::class, 'rejectRequest']);
     Route::post('/notifications/{id}/permission-off',   [ApiNotificationController::class, 'permissionOffRequest']);
     Route::post('/notifications/{id}/permission-on',    [ApiNotificationController::class, 'permissionOnRequest']);
+
+    // Vitals
+    Route::get('/vitals',           [ApiVitalsController::class, 'getVitals']);
+    Route::post('/vitals',          [ApiVitalsController::class, 'addVitals']);
+    Route::put('/vitals/{id}',      [ApiVitalsController::class, 'editVitals']);
+    Route::delete('/vitals/{id}',   [ApiVitalsController::class, 'deleteVitals']);
 });
 
 
