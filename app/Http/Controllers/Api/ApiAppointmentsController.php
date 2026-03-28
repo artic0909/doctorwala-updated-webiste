@@ -35,45 +35,6 @@ class ApiAppointmentsController extends Controller
                 'total'   => $bookings->count(),
                 'data'    => $bookings,
             ], 200);
-
-        } catch (\Exception $e) {
-            return response()->json([
-                'status'  => false,
-                'message' => 'Something went wrong. Please try again.',
-            ], 500);
-        }
-    }
-
-    /**
-     * Get single appointment detail
-     */
-    public function getAppointmentDetail(Request $request, $id)
-    {
-        try {
-            $booking = PartnerPatientInquiry::where('id', $id)
-                ->where('dw_user_id', $request->user()->id)
-                ->with([
-                    'opdContact.banner',
-                    'pathologyContact.banner',
-                    'doctorContact.banner',
-                    'user',
-                    'doctor',
-                    'test'
-                ])
-                ->firstOrFail();
-
-            return response()->json([
-                'status'  => true,
-                'message' => 'Appointment detail fetched successfully.',
-                'data'    => $this->formatBooking($booking),
-            ], 200);
-
-        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
-            return response()->json([
-                'status'  => false,
-                'message' => 'Appointment not found or unauthorized.',
-            ], 404);
-
         } catch (\Exception $e) {
             return response()->json([
                 'status'  => false,
@@ -84,17 +45,18 @@ class ApiAppointmentsController extends Controller
 
     /**
      * Get appointments filtered by status
-     * status: Pending | Completed | Cancelled
+     * Allowed: Upcoming | Completed | Cancelled
      */
     public function getAppointmentsByStatus(Request $request, $status)
     {
         try {
-            $allowed = ['Pending', 'Completed', 'Cancelled'];
+            // UPDATED: Changed 'Pending' to 'Upcoming'
+            $allowed = ['Upcoming', 'Completed', 'Cancelled'];
 
             if (!in_array($status, $allowed)) {
                 return response()->json([
                     'status'  => false,
-                    'message' => 'Invalid status. Allowed: Pending, Completed, Cancelled.',
+                    'message' => 'Invalid status. Allowed: Upcoming, Completed, Cancelled.',
                 ], 422);
             }
 
@@ -118,7 +80,6 @@ class ApiAppointmentsController extends Controller
                 'total'   => $bookings->count(),
                 'data'    => $bookings,
             ], 200);
-
         } catch (\Exception $e) {
             return response()->json([
                 'status'  => false,
@@ -128,7 +89,7 @@ class ApiAppointmentsController extends Controller
     }
 
     /**
-     * Mark appointment as Completed (mirrors website updatePatientEnquiryStatusIntoComplete)
+     * Mark appointment as Completed
      */
     public function markAsCompleted(Request $request, $id)
     {
@@ -145,13 +106,11 @@ class ApiAppointmentsController extends Controller
                 'message' => 'Appointment marked as completed.',
                 'data'    => $this->formatBooking($inquiry->fresh()),
             ], 200);
-
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
             return response()->json([
                 'status'  => false,
                 'message' => 'Appointment not found or unauthorized.',
             ], 404);
-
         } catch (\Exception $e) {
             return response()->json([
                 'status'  => false,
@@ -161,7 +120,7 @@ class ApiAppointmentsController extends Controller
     }
 
     /**
-     * Cancel appointment (mirrors website cancelPatientEnquiry)
+     * Cancel appointment
      */
     public function cancelAppointment(Request $request, $id)
     {
@@ -170,7 +129,7 @@ class ApiAppointmentsController extends Controller
                 ->where('dw_user_id', $request->user()->id)
                 ->firstOrFail();
 
-            // Only allow cancellation if still Pending
+            // Only allow cancellation if NOT already completed
             if ($inquiry->status === 'Completed') {
                 return response()->json([
                     'status'  => false,
@@ -186,13 +145,11 @@ class ApiAppointmentsController extends Controller
                 'message' => 'Appointment has been cancelled.',
                 'data'    => $this->formatBooking($inquiry->fresh()),
             ], 200);
-
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
             return response()->json([
                 'status'  => false,
                 'message' => 'Appointment not found or unauthorized.',
             ], 404);
-
         } catch (\Exception $e) {
             return response()->json([
                 'status'  => false,
@@ -209,30 +166,18 @@ class ApiAppointmentsController extends Controller
         $data = $booking->toArray();
 
         // Fix OPD banner URL
-        if (
-            isset($data['opd_contact']['banner']['opdbanner']) &&
-            $data['opd_contact']['banner']['opdbanner']
-        ) {
-            $data['opd_contact']['banner']['opdbanner'] =
-                asset('storage/' . $booking->opdContact->banner->opdbanner);
+        if (isset($data['opd_contact']['banner']['opdbanner']) && $data['opd_contact']['banner']['opdbanner']) {
+            $data['opd_contact']['banner']['opdbanner'] = asset('storage/' . $booking->opdContact->banner->opdbanner);
         }
 
         // Fix Pathology banner URL
-        if (
-            isset($data['pathology_contact']['banner']['pathologybanner']) &&
-            $data['pathology_contact']['banner']['pathologybanner']
-        ) {
-            $data['pathology_contact']['banner']['pathologybanner'] =
-                asset('storage/' . $booking->pathologyContact->banner->pathologybanner);
+        if (isset($data['pathology_contact']['banner']['pathologybanner']) && $data['pathology_contact']['banner']['pathologybanner']) {
+            $data['pathology_contact']['banner']['pathologybanner'] = asset('storage/' . $booking->pathologyContact->banner->pathologybanner);
         }
 
         // Fix Doctor banner URL
-        if (
-            isset($data['doctor_contact']['banner']['doctorbanner']) &&
-            $data['doctor_contact']['banner']['doctorbanner']
-        ) {
-            $data['doctor_contact']['banner']['doctorbanner'] =
-                asset('storage/' . $booking->doctorContact->banner->doctorbanner);
+        if (isset($data['doctor_contact']['banner']['doctorbanner']) && $data['doctor_contact']['banner']['doctorbanner']) {
+            $data['doctor_contact']['banner']['doctorbanner'] = asset('storage/' . $booking->doctorContact->banner->doctorbanner);
         }
 
         return $data;
