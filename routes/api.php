@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\ApiAllOPDController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\ApiBlogController;
 use App\Http\Controllers\Api\ApiAllPathologyController;
+use App\Http\Controllers\Api\ApiAppointmentsController;
 use App\Http\Controllers\Api\ApiCouponsController;
 use App\Http\Controllers\Api\ApiDocAppointmentBookingController;
 use App\Http\Controllers\Api\ApiMedicalHistoryController;
@@ -71,6 +72,14 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/opd-appointment', [ApiOpdAppointmentBookingController::class, 'patientInquiry']);
     Route::post('/path-appointment', [ApiPathAppointmentBookingController::class, 'patientInquiry']);
     Route::post('/doc-appointment', [ApiDocAppointmentBookingController::class, 'patientInquiry']);
+
+
+    // Appointments
+    Route::get('/appointments',                         [ApiAppointmentsController::class, 'getAppointments']);
+    Route::get('/appointments/{id}',                    [ApiAppointmentsController::class, 'getAppointmentDetail']);
+    Route::get('/appointments/status/{status}',         [ApiAppointmentsController::class, 'getAppointmentsByStatus']);
+    Route::post('/appointments/{id}/complete',          [ApiAppointmentsController::class, 'markAsCompleted']);
+    Route::post('/appointments/{id}/cancel',            [ApiAppointmentsController::class, 'cancelAppointment']);
 });
 
 
