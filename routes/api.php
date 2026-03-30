@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\ApiAllPathologyController;
 use App\Http\Controllers\Api\ApiAppointmentsController;
 use App\Http\Controllers\Api\ApiCouponsController;
 use App\Http\Controllers\Api\ApiDocAppointmentBookingController;
+use App\Http\Controllers\Api\ApiGenerateMedicalCard;
 use App\Http\Controllers\Api\ApiMedicalHistoryController;
 use App\Http\Controllers\Api\ApiNotificationController;
 use App\Http\Controllers\Api\ApiOpdAppointmentBookingController;
@@ -80,6 +81,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/appointments/status/{status}',         [ApiAppointmentsController::class, 'getAppointmentsByStatus']);
     Route::post('/appointments/{id}/complete',          [ApiAppointmentsController::class, 'markAsCompleted']);
     Route::post('/appointments/{id}/cancel',            [ApiAppointmentsController::class, 'cancelAppointment']);
+
+    // Generate Medical Card
+    Route::post('/generate-medical-card', [ApiGenerateMedicalCard::class, 'generateMedicalCard']);
 });
 
 
