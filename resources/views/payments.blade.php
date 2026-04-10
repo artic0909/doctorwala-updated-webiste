@@ -71,7 +71,7 @@
 
                                 <div class="col-12">
                                     <p for="coupon_code" class="form-label text-white fw-bolder fs-5" style="text-align: left;">Coupon Code (if any)*</p>
-                                    <p for="coupon_code" class="form-label text-danger fw-bolder fs-5" style="text-align: left;">Code: DWCPNFREE01</p>
+                                    <p for="coupon_code" class="form-label text-white fw-bolder fs-5" style="text-align: left;">Write the Code below : " DWCPNFREE01 "</p>
                                     <input type="text" class="form-control bg-light border-0" placeholder="Enter Coupon Code"
                                         style="height: 55px;" name="coupon_code" id="coupon_code">
 

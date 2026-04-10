@@ -282,6 +282,7 @@ Route::middleware(['auth:partner', 'verified'])->group(function () {
 
 
         Route::get('/partnerpanel/get-clinic-vitals', [PrescriptionController::class , 'getClinicVitals'])->name('partner.get.clinic.vitals');
+        Route::post('/partnerpanel/get-coupon-details', [DwPartnerController::class , 'getCouponDetails'])->name('get.coupon.details');
         Route::post('/partnerpanel/add-coupon-details', [DwPartnerController::class , 'partnerCouponCodeAdd'])->name('partner.coupon.code.add');
 
 
