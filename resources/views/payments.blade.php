@@ -71,8 +71,9 @@
 
                                 <div class="col-12">
                                     <p for="coupon_code" class="form-label text-white fw-bolder fs-5" style="text-align: left;">Coupon Code (if any)*</p>
+                                    <p for="coupon_code" class="form-label text-danger fw-bolder fs-5" style="text-align: left;">Code: DWCPNFREE01</p>
                                     <input type="text" class="form-control bg-light border-0" placeholder="Enter Coupon Code"
-                                        style="height: 55px;" name="coupon_code" id="coupon_code" value="DWCPNFREE01">
+                                        style="height: 55px;" name="coupon_code" id="coupon_code">
 
                                     <div class="btnns d-flex justify-content-end mt-2">
                                         <button type="button" class="btn btn-dark">Add</button>
