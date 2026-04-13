@@ -12,48 +12,12 @@ use Illuminate\Support\Facades\Validator;
 
 class ApiUserRegisterController extends Controller
 {
-    // public function register(Request $request)
-    // {
-    //     $validator = Validator::make($request->all(), [
-    //         'user_name' => 'required|string|max:255',
-    //         'user_email' => 'required|email|unique:dw_user_models,user_email',
-    //         'user_password' => 'required|min:8|confirmed',
-    //         'user_mobile' => 'required|string|max:15',
-    //         'user_city' => 'nullable|string|max:255',
-    //     ]);
-
-    //     if ($validator->fails()) {
-    //         return response()->json([
-    //             'status' => false,
-    //             'message' => 'Validation error',
-    //             'errors' => $validator->errors()
-    //         ], 422);
-    //     }
-
-    //     $user = DwUserModel::create([
-    //         'user_name' => $request->user_name,
-    //         'user_email' => $request->user_email,
-    //         'user_password' => bcrypt($request->user_password),
-    //         'user_mobile' => $request->user_mobile,
-    //         'user_city' => $request->user_city,
-    //     ]);
-
-    //     return response()->json([
-    //         'status' => true,
-    //         'message' => 'User registered successfully',
-    //         'user' => [
-    //             'id' => $user->id,
-    //             'name' => $user->user_name,
-    //             'email' => $user->user_email
-    //         ]
-    //     ]);
-    // }
 
     public function register(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'user_name'     => 'required|string|max:255',
-            'user_mobile'   => 'required|digits:10',
+            'user_mobile'   => 'required|digits:10|unique:dw_user_models,user_mobile',
             'user_city'     => 'required|string|max:255',
             'user_email'    => 'required|email|max:255|unique:dw_user_models,user_email',
             'user_password' => 'required|string|min:8',
@@ -62,10 +26,11 @@ class ApiUserRegisterController extends Controller
             'user_name.max'          => 'Name must not exceed 255 characters.',
             'user_mobile.required'   => 'Mobile number is required.',
             'user_mobile.digits'     => 'Mobile number must be exactly 10 digits.',
+            'user_mobile.unique'     => ' You are the existing user , please login !',
             'user_city.required'     => 'City is required.',
             'user_email.required'    => 'Email address is required.',
             'user_email.email'       => 'Please enter a valid email address.',
-            'user_email.unique'      => 'This email is already registered. Please login or use a different email.',
+            'user_email.unique'      => ' You are the existing user , please login !',
             'user_password.required' => 'Password is required.',
             'user_password.min'      => 'Password must be at least 8 characters.',
         ]);
@@ -73,7 +38,7 @@ class ApiUserRegisterController extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'status'  => false,
-                'message' => 'Validation error',
+                'message' => $validator->errors()->first(),
                 'errors'  => $validator->errors()
             ], 422);
         }
@@ -105,7 +70,7 @@ class ApiUserRegisterController extends Controller
 
             return response()->json([
                 'status'  => true,
-                'message' => 'Hi,' . $dwuser->user_name . '! Your Medical Card ID is ' . $memberId . 'successfully created, please login.',
+                'message' => 'Hi, ' . $dwuser->user_name . '! Your Medical Card ID ' . $memberId . ' is successfully created. Please login.',
                 'token'   => $token,
                 'user'    => [
                     'id'             => $dwuser->id,
@@ -120,7 +85,7 @@ class ApiUserRegisterController extends Controller
         } catch (\Illuminate\Database\QueryException $e) {
             return response()->json([
                 'status'  => false,
-                'message' => 'This email or mobile number is already registered. Please log in or use different details.',
+                'message' => ' You are the existing user , please login !',
             ], 409);
         } catch (\Exception $e) {
             return response()->json([
