@@ -487,11 +487,11 @@
                                                     @endphp
 
                                                     <a href="{{ $waUrl }}" target="_blank"
-                                                        class="ed-btn"><i class="fa-solid fa-whatsapp text-success"
+                                                        class="ed-btn"><i class="fa-brands fa-whatsapp text-success"
                                                             style="font-size: 1.1rem;"></i></a>
 
                                                     <a href="" data-target="#myDeleteModal{{$partner->id}}" data-toggle="modal"
-                                                        class="ed-btn"><i class="fa-solid fa-trash-can text-danger"
+                                                        class="ed-btn mt-2"><i class="fa-solid fa-trash-can text-danger"
                                                             style="font-size: 1.1rem;"></i></a>
 
                                                     <a href="" data-target="#myEditModal{{$partner->id}}" data-toggle="modal"
