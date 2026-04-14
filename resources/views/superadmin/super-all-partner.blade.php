@@ -376,7 +376,7 @@
                                                     <!-- Previous Page Link -->
                                                     @if ($partners->onFirstPage())
                                                     <li class="page-item disabled">
-                                                        <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Prev</a>
+                                                        <span class="page-link">Prev</span>
                                                     </li>
                                                     @else
                                                     <li class="page-item">
@@ -385,11 +385,24 @@
                                                     @endif
 
                                                     <!-- Page Number Links -->
-                                                    @foreach ($partners->getUrlRange(1, $partners->lastPage()) as $page => $url)
-                                                    <li class="page-item {{ $partners->currentPage() == $page ? 'active' : '' }}">
-                                                        <a class="page-link" href="{{ $url }}">{{ $page }}</a>
-                                                    </li>
-                                                    @endforeach
+                                                    @php
+                                                        $start = 1;
+                                                        $end = $partners->lastPage();
+                                                        $current = $partners->currentPage();
+                                                        $show = 1; // Number of pages to show around current page
+                                                    @endphp
+
+                                                    @for ($i = 1; $i <= $end; $i++)
+                                                        @if ($i == 1 || $i == $end || ($i >= $current - $show && $i <= $current + $show))
+                                                            <li class="page-item {{ $current == $i ? 'active' : '' }}">
+                                                                <a class="page-link" href="{{ $partners->url($i) }}">{{ $i }}</a>
+                                                            </li>
+                                                        @elseif ($i == $current - $show - 1 || $i == $current + $show + 1)
+                                                            <li class="page-item disabled">
+                                                                <span class="page-link">....</span>
+                                                            </li>
+                                                        @endif
+                                                    @endfor
 
                                                     <!-- Next Page Link -->
                                                     @if ($partners->hasMorePages())
@@ -398,7 +411,7 @@
                                                     </li>
                                                     @else
                                                     <li class="page-item disabled">
-                                                        <a class="page-link" href="#" aria-disabled="true">Next</a>
+                                                        <span class="page-link">Next</span>
                                                     </li>
                                                     @endif
                                                 </ul>
@@ -415,6 +428,7 @@
                                     <table class="table table-stripped table-bordered mt-4">
                                         <thead>
                                             <tr>
+                                                <th>SL.</th>
                                                 <th>Staus</th>
                                                 <th>Actions</th>
                                                 <th>ID</th>
@@ -432,6 +446,7 @@
 
                                             @foreach ($partners as $partner)
                                             <tr>
+                                                <td>{{ ($partners->currentPage() - 1) * $partners->perPage() + $loop->iteration }}</td>
                                                 <td>
                                                     @if($partner->status == 'Active')
                                                     <!-- If partner is Active -->
