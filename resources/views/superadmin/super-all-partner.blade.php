@@ -464,23 +464,27 @@
 
                                                 <td>
                                                     @php
-                                                        $waMessage = "“You are the director / owner of the " . $partner->partner_clinic_name . " ?”\n" .
-                                                                    "I am from Doctorwala Medical Ecosystem.\n" .
-                                                                    "We have website \"doctorwala.info\" and mobile android app \"Doctorwala\".\n" .
+                                                        $waMessage = "“You are the director / owner of the *" . $partner->partner_clinic_name . "* ?”\n" .
+                                                                    "I am from *Doctorwala Medical Ecosystem*.\n" .
+                                                                    "We have website *doctorwala.info* and mobile android app *Doctorwala: Medical Ecosystem*.\n\n" .
                                                                     "You have an advantage to grow your business.\n" .
-                                                                    "Our vision: all unorganized sector healthcare service holders get advantage of big technical opportunities.\n" .
+                                                                    "*Our vision:* all unorganized sector healthcare service holders get advantage of big technical opportunities.\n" .
                                                                     "Developed a healthy medical system.\n\n\n" .
-                                                                    "Here our website link: . . . . .\n\n" .
-                                                                    "Android mobile App link : https://play.google.com/store/apps/details?id=com.doctorwala.dochealth&pcampaignid=web_share\n\n" .
-                                                                    "Website Link: https://www.doctorwala.info/\n\n" .
-                                                                    "Registration YouTube video link (Partner): N/A\n\n" .
-                                                                    "Show Doctorwala full ecosystem: N/A";
+                                                                    "_Here our website link:_\n\n" .
+                                                                    "* Android mobile App link : _https://play.google.com/store/apps/details?id=com.doctorwala.dochealth&pcampaignid=web_share_\n" .
+                                                                    "* Website Link: _https://www.doctorwala.info/_\n" .
+                                                                    "* Registration YouTube video link (Partner): _N/A_\n" .
+                                                                    "* Show Doctorwala full ecosystem: _N/A_";
                                                         
                                                         // Clean the phone number (keep only digits)
                                                         $cleanPhone = preg_replace('/[^0-9]/', '', $partner->partner_mobile_number);
-                                                        // Fallback to India country code if only 10 digits
+                                                        
+                                                        // Ensure it has 91 prefix for India (wa.me requires international format without +)
                                                         if(strlen($cleanPhone) == 10) {
                                                             $cleanPhone = '91' . $cleanPhone;
+                                                        } elseif (strlen($cleanPhone) > 10 && strpos($cleanPhone, '91') !== 0 && strpos($cleanPhone, '0') === 0) {
+                                                            // Handle leading 0 if present
+                                                            $cleanPhone = '91' . ltrim($cleanPhone, '0');
                                                         }
                                                         
                                                         $waUrl = "https://wa.me/" . $cleanPhone . "?text=" . urlencode($waMessage);
