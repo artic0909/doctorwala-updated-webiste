@@ -112,7 +112,8 @@
                     </div>
 
                     <h3 class="bl-card__title">{{ $blog->blg_title }}</h3>
-                    <p class="bl-card__desc">{{ $blog->blg_desc }}</p>
+                    <!-- <p class="bl-card__desc">{!! $blog->blg_desc !!}</p> -->
+                    <p class="bl-card__desc">{{ Str::limit(strip_tags($blog->blg_desc), 150) }}</p>
 
                     <div class="bl-card__foot">
                         <div class="bl-card__author">

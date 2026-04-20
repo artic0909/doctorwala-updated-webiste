@@ -91,7 +91,7 @@
             </div>
 
             <div class="bd-body">
-                {!! nl2br(e($blog->blg_desc)) !!}
+                {!! $blog->blg_desc !!}
             </div>
 
             @guest
