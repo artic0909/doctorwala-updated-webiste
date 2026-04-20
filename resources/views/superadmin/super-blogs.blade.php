@@ -27,7 +27,8 @@
         integrity="sha512-5Hs3dF2AEPkpNAR7UiOHba+lRSJNeM2ECkwxUIxC1Q/FLycGTbNapWXB4tP889k5T5Ju8fs4b1P5z/iB4nMfSQ=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
 
-
+    <!-- CKEditor 5 -->
+    <script src="https://cdn.ckeditor.com/ckeditor5/40.0.0/classic/ckeditor.js"></script>
 
 </head>
 
@@ -479,7 +480,7 @@
                                             aria-hidden="true"></i>
                                         Add
                                         Description <span class="text-danger">*</span></label>
-                                    <textarea name="blg_desc" id="blg_desc" class="form-control" rows="5"></textarea>
+                                    <textarea name="blg_desc" id="blg_desc" class="form-control editor" rows="5"></textarea>
                                 </div>
 
 
@@ -540,7 +541,7 @@
                                             aria-hidden="true"></i>
                                         Add
                                         Description <span class="text-danger">*</span></label>
-                                    <textarea name="blg_desc" id="blg_desc" class="form-control" rows="7">{{ $blog->blg_desc }}</textarea>
+                                    <textarea name="blg_desc" id="blg_desc_{{ $blog->id }}" class="form-control editor" rows="7">{{ $blog->blg_desc }}</textarea>
                                 </div>
 
 
@@ -605,7 +606,7 @@
 
                             <form action="" class="modal-body">
 
-                                <p class="mt-2 text-start" style="font-size: 1.2rem;"><b class="text-primary">Blog Description: </b>{{ $blog->blg_desc }}
+                                <p class="mt-2 text-start" style="font-size: 1.2rem;"><b class="text-primary">Blog Description: </b>{!! $blog->blg_desc !!}
                                 </p>
 
 
@@ -686,6 +687,18 @@
     <script src="{{asset('../partner-assets/js/dashboard.js')}}"></script>
     <script src="{{asset('../partner-assets/js/Chart.roundedBarCharts.js')}}"></script>
     <!-- End custom js for this page-->
+
+    <script>
+        document.querySelectorAll('.editor').forEach(textarea => {
+            ClassicEditor
+                .create(textarea, {
+                    toolbar: [ 'heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'blockQuote' ],
+                })
+                .catch(error => {
+                    console.error(error);
+                });
+        });
+    </script>
 </body>
 
 </html>
