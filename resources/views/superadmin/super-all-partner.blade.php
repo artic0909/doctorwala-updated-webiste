@@ -467,8 +467,7 @@
                                                         $waMessage = "“You are the director / owner of the *" . $partner->partner_clinic_name . "* ?”\n" .
                                                                     "We are from *Doctorwala Medical Ecosystem*.\n" .
                                                                     "*Our vision:* all unorganized sector healthcare service holders get advantage of big technical opportunities.\n" .
-                                                                    "Developed a healthy medical system.\n\n" .
-                                                                    asset('img/attach.jpeg');
+                                                                    "Developed a healthy medical system.";
                                                         
                                                         // Clean the phone number (keep only digits)
                                                         $cleanPhone = preg_replace('/[^0-9]/', '', $partner->partner_mobile_number);
