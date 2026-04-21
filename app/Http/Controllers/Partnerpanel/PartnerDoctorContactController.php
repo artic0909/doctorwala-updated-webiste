@@ -47,6 +47,7 @@ class PartnerDoctorContactController extends Controller
             'contactDetails' => $contactDetails ?? null,
             'registrationTypes' => $registrationTypes,
             'contactCount' => $contactCount,
+            'partner' => $partner,
         ]);
     }
     

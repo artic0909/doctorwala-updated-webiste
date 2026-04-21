@@ -418,7 +418,7 @@
                                                         class="fa-solid fa-user text-primary"></i>
                                                     Doctor Name <span class="text-danger">*</span></label>
                                                 <input type="text" class="form-control" id="partner_doctor_name" name="partner_doctor_name"
-                                                    placeholder="Enter Doctor Name" style="height: 55px;">
+                                                    value="{{ $contactDetails->partner_doctor_name ?? $partner->partner_contact_person_name ?? '' }}" placeholder="Enter Doctor Name" style="height: 55px;">
                                             </div>
 
 
@@ -432,7 +432,7 @@
                                                         class="fa fa-stethoscope text-primary" aria-hidden="true"></i>
                                                     Specialist <span class="text-danger">*</span></label>
                                                     <input type="text" class="form-control" id="partner_doctor_specialist" name="partner_doctor_specialist"
-                                                    placeholder="Enter Specialization" style="height: 55px;">
+                                                    value="{{ $contactDetails->partner_doctor_specialist ?? '' }}" placeholder="Enter Specialization" style="height: 55px;">
                                             </div>
 
 
@@ -459,7 +459,7 @@
                                                         aria-hidden="true"></i>
                                                     Doctor Fees <span class="text-danger">*</span></label>
                                                 <input type="text" class="form-control" id="partner_doctor_fees" name="partner_doctor_fees"
-                                                    placeholder="Enter Doctor Fees" style="height: 55px;">
+                                                    value="{{ $contactDetails->partner_doctor_fees ?? '' }}" placeholder="Enter Doctor Fees" style="height: 55px;">
                                             </div>
 
 
@@ -472,7 +472,7 @@
                                                         class="fa fa-phone text-primary" aria-hidden="true"></i>
                                                     Mobile Number <span class="text-danger">*</span></label>
                                                 <input type="number" class="form-control" id="partner_doctor_mobile" name="partner_doctor_mobile"
-                                                    placeholder="Enter Your Email" style="height: 55px;">
+                                                    value="{{ $contactDetails->partner_doctor_mobile ?? $partner->partner_mobile_number ?? '' }}" placeholder="Enter Your Email" style="height: 55px;">
                                             </div>
 
 
@@ -482,7 +482,7 @@
                                                         class="fa fa-envelope text-primary" aria-hidden="true"></i>
                                                     Email Id <span class="text-danger">*</span></label>
                                                 <input type="email" class="form-control" id="partner_doctor_email" name="partner_doctor_email"
-                                                    placeholder="Enter Your Email" style="height: 55px;">
+                                                    value="{{ $contactDetails->partner_doctor_email ?? $partner->partner_email ?? '' }}" placeholder="Enter Your Email" style="height: 55px;">
                                             </div>
 
 
@@ -501,7 +501,7 @@
                                                         class="fa fa-map-pin text-primary" aria-hidden="true"></i>
                                                     Landmark <span class="text-danger">*</span></label>
                                                 <input type="text" class="form-control" id="partner_doctor_landmark" name="partner_doctor_landmark"
-                                                    placeholder="Enter Your Landmark" style="height: 55px;">
+                                                    value="{{ $contactDetails->partner_doctor_landmark ?? $partner->partner_landmark ?? '' }}" placeholder="Enter Your Landmark" style="height: 55px;">
                                             </div>
 
 
@@ -512,7 +512,7 @@
                                                         aria-hidden="true"></i>
                                                     Pin Code <span class="text-danger">*</span></label>
                                                 <input type="text" class="form-control" id="partner_doctor_pincode" name="partner_doctor_pincode"
-                                                    placeholder="Enter Your Pin Code" style="height: 55px;">
+                                                    value="{{ $contactDetails->partner_doctor_pincode ?? $partner->partner_pincode ?? '' }}" placeholder="Enter Your Pin Code" style="height: 55px;">
                                             </div>
 
 
@@ -523,7 +523,7 @@
                                                         aria-hidden="true"></i>
                                                     Google Map </label>
                                                 <input type="text" class="form-control" id="partner_doctor_google_map_link" name="partner_doctor_google_map_link"
-                                                    placeholder="Enter Your Google Map Link" style="height: 55px;">
+                                                    value="{{ $contactDetails->partner_doctor_google_map_link ?? '' }}" placeholder="Enter Your Google Map Link" style="height: 55px;">
                                             </div>
 
 
@@ -535,46 +535,46 @@
                                                         class="fa-solid fa-globe text-primary"></i>
                                                     State <span class="text-danger">*</span></label>
                                                 <select name="partner_doctor_state" id="partner_doctor_state" class="form-control" style="height: 55px;">
-                                                    <option selected>---Select State---</option>
-                                                    <option value="Andaman and Nicobar Islands">Andaman and Nicobar
-                                                        Islands</option>
-                                                    <option value="Andhra Pradesh">Andhra Pradesh</option>
-                                                    <option value="Arunachal Pradesh">Arunachal Pradesh</option>
-                                                    <option value="Assam">Assam</option>
-                                                    <option value="Bihar">Bihar</option>
-                                                    <option value="Chandigarh">Chandigarh</option>
-                                                    <option value="Chhattisgarh">Chhattisgarh</option>
-                                                    <option value="Dadra and Nagar Haveli and Daman and Diu">Dadra and
-                                                        Nagar Haveli
-                                                        and Daman and Diu</option>
-                                                    <option value="Delhi">Delhi</option>
-                                                    <option value="Goa">Goa</option>
-                                                    <option value="Gujarat">Gujarat</option>
-                                                    <option value="Haryana">Haryana</option>
-                                                    <option value="Himachal Pradesh">Himachal Pradesh</option>
-                                                    <option value="Jammu and Kashmir">Jammu and Kashmir</option>
-                                                    <option value="Jharkhand">Jharkhand</option>
-                                                    <option value="Karnataka">Karnataka</option>
-                                                    <option value="Kerala">Kerala</option>
-                                                    <option value="Ladakh">Ladakh</option>
-                                                    <option value="Lakshadweep">Lakshadweep</option>
-                                                    <option value="Madhya Pradesh">Madhya Pradesh</option>
-                                                    <option value="Maharashtra">Maharashtra</option>
-                                                    <option value="Manipur">Manipur</option>
-                                                    <option value="Meghalaya">Meghalaya</option>
-                                                    <option value="Mizoram">Mizoram</option>
-                                                    <option value="Nagaland">Nagaland</option>
-                                                    <option value="Odisha">Odisha</option>
-                                                    <option value="Puducherry">Puducherry</option>
-                                                    <option value="Punjab">Punjab</option>
-                                                    <option value="Rajasthan">Rajasthan</option>
-                                                    <option value="Sikkim">Sikkim</option>
-                                                    <option value="Tamil Nadu">Tamil Nadu</option>
-                                                    <option value="Telangana">Telangana</option>
-                                                    <option value="Tripura">Tripura</option>
-                                                    <option value="Uttar Pradesh">Uttar Pradesh</option>
-                                                    <option value="Uttarakhand">Uttarakhand</option>
-                                                    <option value="West Bengal">West Bengal</option>
+                                                    <option>---Select State---</option>
+                                                    @php
+                                                        $selectedDoctorState = $contactDetails->partner_doctor_state ?? $partner->partner_state ?? '';
+                                                    @endphp
+                                                    <option value="Andaman and Nicobar Islands" {{ ($selectedDoctorState == 'Andaman and Nicobar Islands') ? 'selected' : '' }}>Andaman and Nicobar Islands</option>
+                                                    <option value="Andhra Pradesh" {{ ($selectedDoctorState == 'Andhra Pradesh') ? 'selected' : '' }}>Andhra Pradesh</option>
+                                                    <option value="Arunachal Pradesh" {{ ($selectedDoctorState == 'Arunachal Pradesh') ? 'selected' : '' }}>Arunachal Pradesh</option>
+                                                    <option value="Assam" {{ ($selectedDoctorState == 'Assam') ? 'selected' : '' }}>Assam</option>
+                                                    <option value="Bihar" {{ ($selectedDoctorState == 'Bihar') ? 'selected' : '' }}>Bihar</option>
+                                                    <option value="Chandigarh" {{ ($selectedDoctorState == 'Chandigarh') ? 'selected' : '' }}>Chandigarh</option>
+                                                    <option value="Chhattisgarh" {{ ($selectedDoctorState == 'Chhattisgarh') ? 'selected' : '' }}>Chhattisgarh</option>
+                                                    <option value="Dadra and Nagar Haveli and Daman and Diu" {{ ($selectedDoctorState == 'Dadra and Nagar Haveli and Daman and Diu') ? 'selected' : '' }}>Dadra and Nagar Haveli and Daman and Diu</option>
+                                                    <option value="Delhi" {{ ($selectedDoctorState == 'Delhi') ? 'selected' : '' }}>Delhi</option>
+                                                    <option value="Goa" {{ ($selectedDoctorState == 'Goa') ? 'selected' : '' }}>Goa</option>
+                                                    <option value="Gujarat" {{ ($selectedDoctorState == 'Gujarat') ? 'selected' : '' }}>Gujarat</option>
+                                                    <option value="Haryana" {{ ($selectedDoctorState == 'Haryana') ? 'selected' : '' }}>Haryana</option>
+                                                    <option value="Himachal Pradesh" {{ ($selectedDoctorState == 'Himachal Pradesh') ? 'selected' : '' }}>Himachal Pradesh</option>
+                                                    <option value="Jammu and Kashmir" {{ ($selectedDoctorState == 'Jammu and Kashmir') ? 'selected' : '' }}>Jammu and Kashmir</option>
+                                                    <option value="Jharkhand" {{ ($selectedDoctorState == 'Jharkhand') ? 'selected' : '' }}>Jharkhand</option>
+                                                    <option value="Karnataka" {{ ($selectedDoctorState == 'Karnataka') ? 'selected' : '' }}>Karnataka</option>
+                                                    <option value="Kerala" {{ ($selectedDoctorState == 'Kerala') ? 'selected' : '' }}>Kerala</option>
+                                                    <option value="Ladakh" {{ ($selectedDoctorState == 'Ladakh') ? 'selected' : '' }}>Ladakh</option>
+                                                    <option value="Lakshadweep" {{ ($selectedDoctorState == 'Lakshadweep') ? 'selected' : '' }}>Lakshadweep</option>
+                                                    <option value="Madhya Pradesh" {{ ($selectedDoctorState == 'Madhya Pradesh') ? 'selected' : '' }}>Madhya Pradesh</option>
+                                                    <option value="Maharashtra" {{ ($selectedDoctorState == 'Maharashtra') ? 'selected' : '' }}>Maharashtra</option>
+                                                    <option value="Manipur" {{ ($selectedDoctorState == 'Manipur') ? 'selected' : '' }}>Manipur</option>
+                                                    <option value="Meghalaya" {{ ($selectedDoctorState == 'Meghalaya') ? 'selected' : '' }}>Meghalaya</option>
+                                                    <option value="Mizoram" {{ ($selectedDoctorState == 'Mizoram') ? 'selected' : '' }}>Mizoram</option>
+                                                    <option value="Nagaland" {{ ($selectedDoctorState == 'Nagaland') ? 'selected' : '' }}>Nagaland</option>
+                                                    <option value="Odisha" {{ ($selectedDoctorState == 'Odisha') ? 'selected' : '' }}>Odisha</option>
+                                                    <option value="Puducherry" {{ ($selectedDoctorState == 'Puducherry') ? 'selected' : '' }}>Puducherry</option>
+                                                    <option value="Punjab" {{ ($selectedDoctorState == 'Punjab') ? 'selected' : '' }}>Punjab</option>
+                                                    <option value="Rajasthan" {{ ($selectedDoctorState == 'Rajasthan') ? 'selected' : '' }}>Rajasthan</option>
+                                                    <option value="Sikkim" {{ ($selectedDoctorState == 'Sikkim') ? 'selected' : '' }}>Sikkim</option>
+                                                    <option value="Tamil Nadu" {{ ($selectedDoctorState == 'Tamil Nadu') ? 'selected' : '' }}>Tamil Nadu</option>
+                                                    <option value="Telangana" {{ ($selectedDoctorState == 'Telangana') ? 'selected' : '' }}>Telangana</option>
+                                                    <option value="Tripura" {{ ($selectedDoctorState == 'Tripura') ? 'selected' : '' }}>Tripura</option>
+                                                    <option value="Uttar Pradesh" {{ ($selectedDoctorState == 'Uttar Pradesh') ? 'selected' : '' }}>Uttar Pradesh</option>
+                                                    <option value="Uttarakhand" {{ ($selectedDoctorState == 'Uttarakhand') ? 'selected' : '' }}>Uttarakhand</option>
+                                                    <option value="West Bengal" {{ ($selectedDoctorState == 'West Bengal') ? 'selected' : '' }}>West Bengal</option>
 
                                                 </select>
                                             </div>
@@ -588,7 +588,7 @@
                                                         class="fa-solid fa-city text-primary"></i> City
                                                     <span class="text-danger">*</span></label>
 
-                                                <input type="text" id="partner_doctor_city" name="partner_doctor_city" class="form-control" style="height: 55px;">
+                                                <input type="text" id="partner_doctor_city" name="partner_doctor_city" value="{{ $contactDetails->partner_doctor_city ?? $partner->partner_city ?? '' }}" class="form-control" style="height: 55px;">
                                             </div>
 
 
@@ -606,7 +606,7 @@
                                                         class="fa-solid fa-location-dot text-primary"></i> Address
                                                     <span class="text-danger">*</span></label>
 
-                                                <textarea name="partner_doctor_address" id="partner_doctor_address" class="form-control" rows="7"></textarea>
+                                                <textarea name="partner_doctor_address" id="partner_doctor_address" class="form-control" rows="7">{{ $contactDetails->partner_doctor_address ?? $partner->partner_address ?? '' }}</textarea>
                                             </div>
 
 
@@ -621,6 +621,7 @@
                                                         Day <span class="text-danger">*</span></label>
                                                     <select name="partner_doctor_visit_day[]" id="partner_doctor_visit_day" class="form-control" style="height: 55px;">
                                                         <option selected>Select Day</option>
+
                                                         <option value="None">None</option>
                                                         <option value="All Day">All Day</option>
                                                         <option value="Monday">Monday</option>

@@ -30,7 +30,7 @@ class PartnerOPDContactController extends Controller
 
         $contactDetails = PartnerOPDContactModel::where('currently_loggedin_partner_id', $partnerId)->first();
 
-        return view('partnerpanel.partner-opd-contact', compact('opdBanner', 'pathologyBanner', 'doctorBanner', 'contactDetails', 'registrationTypes'));
+        return view('partnerpanel.partner-opd-contact', compact('opdBanner', 'pathologyBanner', 'doctorBanner', 'contactDetails', 'registrationTypes', 'partner'));
     }
 
 

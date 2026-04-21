@@ -411,7 +411,7 @@
                                                         class="fa-solid fa-user text-primary"></i>
                                                     Authorized Name <span class="text-danger">*</span></label>
                                                 <input type="text" class="form-control" id="clinic_contact_person_name" name="clinic_contact_person_name"
-                                                    value="{{ $contactDetails->clinic_contact_person_name ?? '' }}" style="height: 55px;">
+                                                    value="{{ $contactDetails->clinic_contact_person_name ?? $partner->partner_contact_person_name ?? '' }}" style="height: 55px;">
                                             </div>
 
                                             <div class="col-4 form-group">
@@ -419,7 +419,7 @@
                                                         class="fa-solid fa-hospital text-primary"></i>
                                                     Clinic Name <span class="text-danger">*</span></label>
                                                 <input type="text" class="form-control" id="clinic_name" name="clinic_name"
-                                                    value="{{ $contactDetails->clinic_name ?? '' }}" style="height: 55px;">
+                                                    value="{{ $contactDetails->clinic_name ?? $partner->partner_clinic_name ?? '' }}" style="height: 55px;">
                                             </div>
 
                                             <div class="col-4 form-group">
@@ -435,7 +435,7 @@
                                                         class="fa fa-phone text-primary" aria-hidden="true"></i> Mobile Number <span class="text-danger">*</span>
                                                 </label>
                                                 <input type="number" class="form-control" id="clinic_mobile_number" name="clinic_mobile_number"
-                                                    value="{{ $contactDetails->clinic_mobile_number ?? '' }}" style="height: 55px;">
+                                                    value="{{ $contactDetails->clinic_mobile_number ?? $partner->partner_mobile_number ?? '' }}" style="height: 55px;">
                                             </div>
 
                                             <div class="col-4 form-group">
@@ -443,7 +443,7 @@
                                                         class="fa fa-envelope text-primary" aria-hidden="true"></i>
                                                     Email Id <span class="text-danger">*</span></label>
                                                 <input type="text" class="form-control" id="clinic_email" name="clinic_email"
-                                                    value="{{ $contactDetails->clinic_email ?? '' }}" style="height: 55px;">
+                                                    value="{{ $contactDetails->clinic_email ?? $partner->partner_email ?? '' }}" style="height: 55px;">
                                             </div>
 
                                             <div class="col-4 form-group">
@@ -451,7 +451,7 @@
                                                         class="fa fa-map-pin text-primary" aria-hidden="true"></i>
                                                     Landmark <span class="text-danger">*</span></label>
                                                 <input type="text" class="form-control" id="clinic_landmark" name="clinic_landmark"
-                                                    value="{{ $contactDetails->clinic_landmark ?? '' }}" style="height: 55px;">
+                                                    value="{{ $contactDetails->clinic_landmark ?? $partner->partner_landmark ?? '' }}" style="height: 55px;">
                                             </div>
 
                                             <div class="col-4 form-group">
@@ -459,7 +459,7 @@
                                                         class="fa fa-location-pin-lock text-primary" aria-hidden="true"></i>
                                                     Pin Code <span class="text-danger">*</span></label>
                                                 <input type="text" class="form-control" id="clinic_pincode" name="clinic_pincode"
-                                                    value="{{ $contactDetails->clinic_pincode ?? '' }}" style="height: 55px;">
+                                                    value="{{ $contactDetails->clinic_pincode ?? $partner->partner_pincode ?? '' }}" style="height: 55px;">
                                             </div>
 
                                             <div class="col-4 form-group">
@@ -468,42 +468,45 @@
                                                     State <span class="text-danger">*</span></label>
                                                 <select name="clinic_state" id="clinic_state" class="form-control" style="height: 55px;">
                                                     <option>--Select State--</option>
-                                                    <option value="Andaman and Nicobar Islands" {{ (isset($contactDetails) && $contactDetails->clinic_state == 'Andaman and Nicobar Islands') ? 'selected' : '' }}>Andaman and Nicobar Islands</option>
-                                                    <option value="Andhra Pradesh" {{ (isset($contactDetails) && $contactDetails->clinic_state == 'Andhra Pradesh') ? 'selected' : '' }}>Andhra Pradesh</option>
-                                                    <option value="Arunachal Pradesh" {{ (isset($contactDetails) && $contactDetails->clinic_state == 'Arunachal Pradesh') ? 'selected' : '' }}>Arunachal Pradesh</option>
-                                                    <option value="Assam" {{ (isset($contactDetails) && $contactDetails->clinic_state == 'Assam') ? 'selected' : '' }}>Assam</option>
-                                                    <option value="Bihar" {{ (isset($contactDetails) && $contactDetails->clinic_state == 'Bihar') ? 'selected' : '' }}>Bihar</option>
-                                                    <option value="Chandigarh" {{ (isset($contactDetails) && $contactDetails->clinic_state == 'Chandigarh') ? 'selected' : '' }}>Chandigarh</option>
-                                                    <option value="Chhattisgarh" {{ (isset($contactDetails) && $contactDetails->clinic_state == 'Chhattisgarh') ? 'selected' : '' }}>Chhattisgarh</option>
-                                                    <option value="Dadra and Nagar Haveli and Daman and Diu" {{ (isset($contactDetails) && $contactDetails->clinic_state == 'Dadra and Nagar Haveli and Daman and Diu') ? 'selected' : '' }}>Dadra and Nagar Haveli and Daman and Diu</option>
-                                                    <option value="Delhi" {{ (isset($contactDetails) && $contactDetails->clinic_state == 'Delhi') ? 'selected' : '' }}>Delhi</option>
-                                                    <option value="Goa" {{ (isset($contactDetails) && $contactDetails->clinic_state == 'Goa') ? 'selected' : '' }}>Goa</option>
-                                                    <option value="Gujarat" {{ (isset($contactDetails) && $contactDetails->clinic_state == 'Gujarat') ? 'selected' : '' }}>Gujarat</option>
-                                                    <option value="Haryana" {{ (isset($contactDetails) && $contactDetails->clinic_state == 'Haryana') ? 'selected' : '' }}>Haryana</option>
-                                                    <option value="Himachal Pradesh" {{ (isset($contactDetails) && $contactDetails->clinic_state == 'Himachal Pradesh') ? 'selected' : '' }}>Himachal Pradesh</option>
-                                                    <option value="Jammu and Kashmir" {{ (isset($contactDetails) && $contactDetails->clinic_state == 'Jammu and Kashmir') ? 'selected' : '' }}>Jammu and Kashmir</option>
-                                                    <option value="Jharkhand" {{ (isset($contactDetails) && $contactDetails->clinic_state == 'Jharkhand') ? 'selected' : '' }}>Jharkhand</option>
-                                                    <option value="Karnataka" {{ (isset($contactDetails) && $contactDetails->clinic_state == 'Karnataka') ? 'selected' : '' }}>Karnataka</option>
-                                                    <option value="Kerala" {{ (isset($contactDetails) && $contactDetails->clinic_state == 'Kerala') ? 'selected' : '' }}>Kerala</option>
-                                                    <option value="Ladakh" {{ (isset($contactDetails) && $contactDetails->clinic_state == 'Ladakh') ? 'selected' : '' }}>Ladakh</option>
-                                                    <option value="Lakshadweep" {{ (isset($contactDetails) && $contactDetails->clinic_state == 'Lakshadweep') ? 'selected' : '' }}>Lakshadweep</option>
-                                                    <option value="Madhya Pradesh" {{ (isset($contactDetails) && $contactDetails->clinic_state == 'Madhya Pradesh') ? 'selected' : '' }}>Madhya Pradesh</option>
-                                                    <option value="Maharashtra" {{ (isset($contactDetails) && $contactDetails->clinic_state == 'Maharashtra') ? 'selected' : '' }}>Maharashtra</option>
-                                                    <option value="Manipur" {{ (isset($contactDetails) && $contactDetails->clinic_state == 'Manipur') ? 'selected' : '' }}>Manipur</option>
-                                                    <option value="Meghalaya" {{ (isset($contactDetails) && $contactDetails->clinic_state == 'Meghalaya') ? 'selected' : '' }}>Meghalaya</option>
-                                                    <option value="Mizoram" {{ (isset($contactDetails) && $contactDetails->clinic_state == 'Mizoram') ? 'selected' : '' }}>Mizoram</option>
-                                                    <option value="Nagaland" {{ (isset($contactDetails) && $contactDetails->clinic_state == 'Nagaland') ? 'selected' : '' }}>Nagaland</option>
-                                                    <option value="Odisha" {{ (isset($contactDetails) && $contactDetails->clinic_state == 'Odisha') ? 'selected' : '' }}>Odisha</option>
-                                                    <option value="Puducherry" {{ (isset($contactDetails) && $contactDetails->clinic_state == 'Puducherry') ? 'selected' : '' }}>Puducherry</option>
-                                                    <option value="Punjab" {{ (isset($contactDetails) && $contactDetails->clinic_state == 'Punjab') ? 'selected' : '' }}>Punjab</option>
-                                                    <option value="Rajasthan" {{ (isset($contactDetails) && $contactDetails->clinic_state == 'Rajasthan') ? 'selected' : '' }}>Rajasthan</option>
-                                                    <option value="Sikkim" {{ (isset($contactDetails) && $contactDetails->clinic_state == 'Sikkim') ? 'selected' : '' }}>Sikkim</option>
-                                                    <option value="Tamil Nadu" {{ (isset($contactDetails) && $contactDetails->clinic_state == 'Tamil Nadu') ? 'selected' : '' }}>Tamil Nadu</option>
-                                                    <option value="Telangana" {{ (isset($contactDetails) && $contactDetails->clinic_state == 'Telangana') ? 'selected' : '' }}>Telangana</option>
-                                                    <option value="Tripura" {{ (isset($contactDetails) && $contactDetails->clinic_state == 'Tripura') ? 'selected' : '' }}>Tripura</option>
-                                                    <option value="Uttar Pradesh" {{ (isset($contactDetails) && $contactDetails->clinic_state == 'Uttar Pradesh') ? 'selected' : '' }}>Uttar Pradesh</option>
-                                                    <option value="Uttarakhand" {{ (isset($contactDetails) && $contactDetails->clinic_state == 'Uttarakhand') ? 'selected' : '' }}>Uttarakhand</option>
-                                                    <option value="West Bengal" {{ (isset($contactDetails) && $contactDetails->clinic_state == 'West Bengal') ? 'selected' : '' }}>West Bengal</option>
+                                                    @php
+                                                        $selectedState = $contactDetails->clinic_state ?? $partner->partner_state ?? '';
+                                                    @endphp
+                                                    <option value="Andaman and Nicobar Islands" {{ ($selectedState == 'Andaman and Nicobar Islands') ? 'selected' : '' }}>Andaman and Nicobar Islands</option>
+                                                    <option value="Andhra Pradesh" {{ ($selectedState == 'Andhra Pradesh') ? 'selected' : '' }}>Andhra Pradesh</option>
+                                                    <option value="Arunachal Pradesh" {{ ($selectedState == 'Arunachal Pradesh') ? 'selected' : '' }}>Arunachal Pradesh</option>
+                                                    <option value="Assam" {{ ($selectedState == 'Assam') ? 'selected' : '' }}>Assam</option>
+                                                    <option value="Bihar" {{ ($selectedState == 'Bihar') ? 'selected' : '' }}>Bihar</option>
+                                                    <option value="Chandigarh" {{ ($selectedState == 'Chandigarh') ? 'selected' : '' }}>Chandigarh</option>
+                                                    <option value="Chhattisgarh" {{ ($selectedState == 'Chhattisgarh') ? 'selected' : '' }}>Chhattisgarh</option>
+                                                    <option value="Dadra and Nagar Haveli and Daman and Diu" {{ ($selectedState == 'Dadra and Nagar Haveli and Daman and Diu') ? 'selected' : '' }}>Dadra and Nagar Haveli and Daman and Diu</option>
+                                                    <option value="Delhi" {{ ($selectedState == 'Delhi') ? 'selected' : '' }}>Delhi</option>
+                                                    <option value="Goa" {{ ($selectedState == 'Goa') ? 'selected' : '' }}>Goa</option>
+                                                    <option value="Gujarat" {{ ($selectedState == 'Gujarat') ? 'selected' : '' }}>Gujarat</option>
+                                                    <option value="Haryana" {{ ($selectedState == 'Haryana') ? 'selected' : '' }}>Haryana</option>
+                                                    <option value="Himachal Pradesh" {{ ($selectedState == 'Himachal Pradesh') ? 'selected' : '' }}>Himachal Pradesh</option>
+                                                    <option value="Jammu and Kashmir" {{ ($selectedState == 'Jammu and Kashmir') ? 'selected' : '' }}>Jammu and Kashmir</option>
+                                                    <option value="Jharkhand" {{ ($selectedState == 'Jharkhand') ? 'selected' : '' }}>Jharkhand</option>
+                                                    <option value="Karnataka" {{ ($selectedState == 'Karnataka') ? 'selected' : '' }}>Karnataka</option>
+                                                    <option value="Kerala" {{ ($selectedState == 'Kerala') ? 'selected' : '' }}>Kerala</option>
+                                                    <option value="Ladakh" {{ ($selectedState == 'Ladakh') ? 'selected' : '' }}>Ladakh</option>
+                                                    <option value="Lakshadweep" {{ ($selectedState == 'Lakshadweep') ? 'selected' : '' }}>Lakshadweep</option>
+                                                    <option value="Madhya Pradesh" {{ ($selectedState == 'Madhya Pradesh') ? 'selected' : '' }}>Madhya Pradesh</option>
+                                                    <option value="Maharashtra" {{ ($selectedState == 'Maharashtra') ? 'selected' : '' }}>Maharashtra</option>
+                                                    <option value="Manipur" {{ ($selectedState == 'Manipur') ? 'selected' : '' }}>Manipur</option>
+                                                    <option value="Meghalaya" {{ ($selectedState == 'Meghalaya') ? 'selected' : '' }}>Meghalaya</option>
+                                                    <option value="Mizoram" {{ ($selectedState == 'Mizoram') ? 'selected' : '' }}>Mizoram</option>
+                                                    <option value="Nagaland" {{ ($selectedState == 'Nagaland') ? 'selected' : '' }}>Nagaland</option>
+                                                    <option value="Odisha" {{ ($selectedState == 'Odisha') ? 'selected' : '' }}>Odisha</option>
+                                                    <option value="Puducherry" {{ ($selectedState == 'Puducherry') ? 'selected' : '' }}>Puducherry</option>
+                                                    <option value="Punjab" {{ ($selectedState == 'Punjab') ? 'selected' : '' }}>Punjab</option>
+                                                    <option value="Rajasthan" {{ ($selectedState == 'Rajasthan') ? 'selected' : '' }}>Rajasthan</option>
+                                                    <option value="Sikkim" {{ ($selectedState == 'Sikkim') ? 'selected' : '' }}>Sikkim</option>
+                                                    <option value="Tamil Nadu" {{ ($selectedState == 'Tamil Nadu') ? 'selected' : '' }}>Tamil Nadu</option>
+                                                    <option value="Telangana" {{ ($selectedState == 'Telangana') ? 'selected' : '' }}>Telangana</option>
+                                                    <option value="Tripura" {{ ($selectedState == 'Tripura') ? 'selected' : '' }}>Tripura</option>
+                                                    <option value="Uttar Pradesh" {{ ($selectedState == 'Uttar Pradesh') ? 'selected' : '' }}>Uttar Pradesh</option>
+                                                    <option value="Uttarakhand" {{ ($selectedState == 'Uttarakhand') ? 'selected' : '' }}>Uttarakhand</option>
+                                                    <option value="West Bengal" {{ ($selectedState == 'West Bengal') ? 'selected' : '' }}>West Bengal</option>
 
                                                 </select>
                                             </div>
@@ -513,7 +516,7 @@
                                                         class="fa-solid fa-city text-primary"></i> City
                                                     <span class="text-danger">*</span></label>
                                                 <input type="text" class="form-control" id="clinic_city" name="clinic_city"
-                                                    value="{{ $contactDetails->clinic_city ?? '' }}" style="height: 55px;">
+                                                    value="{{ $contactDetails->clinic_city ?? $partner->partner_city ?? '' }}" style="height: 55px;">
                                             </div>
 
                                             <div class="col-8 form-group">
@@ -528,7 +531,7 @@
                                                 <label for="clinic_address" style="font-weight: 700;"><i
                                                         class="fa-solid fa-location-dot text-primary"></i> Address
                                                     <span class="text-danger">*</span></label>
-                                                <textarea name="clinic_address" id="clinic_address" class="form-control" rows="7">{{ $contactDetails->clinic_address ?? '' }}</textarea>
+                                                <textarea name="clinic_address" id="clinic_address" class="form-control" rows="7">{{ $contactDetails->clinic_address ?? $partner->partner_address ?? '' }}</textarea>
                                             </div>
 
                                             <div class="d-flex justify-content-center w-100">

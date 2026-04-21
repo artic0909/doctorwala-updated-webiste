@@ -29,7 +29,7 @@ class PartnerPathologyContactController extends Controller
 
         $contactDetails = PartnerPathologyContactModel::where('currently_loggedin_partner_id', $partnerId)->first();
 
-        return view('partnerpanel.partner-pathology-contact', compact('opdBanner', 'pathologyBanner', 'doctorBanner', 'contactDetails', 'registrationTypes'));
+        return view('partnerpanel.partner-pathology-contact', compact('opdBanner', 'pathologyBanner', 'doctorBanner', 'contactDetails', 'registrationTypes', 'partner'));
     }
 
     public function store(Request $request)
