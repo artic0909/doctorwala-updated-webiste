@@ -1098,6 +1098,89 @@
 
 
                 <!-- Analitics in barchart -->
+                {{-- ── Entity Stat Cards ── --}}
+                <div class="row g-3 mb-4">
+                    <!-- Total Partners -->
+                    <div class="col-xl-3 col-md-6 mb-3">
+                        <div class="va-stat-card va-stat-blue">
+                            <div class="va-stat-icon"><i class="fa-solid fa-handshake"></i></div>
+                            <div class="va-stat-body">
+                                <h3>{{ number_format($totalPartners) }}</h3>
+                                <p>Total Partners</p>
+                            </div>
+                            <div class="va-stat-wave"></div>
+                        </div>
+                    </div>
+                    <!-- Total Users -->
+                    <div class="col-xl-3 col-md-6 mb-3">
+                        <div class="va-stat-card va-stat-green">
+                            <div class="va-stat-icon"><i class="fa-solid fa-users-gear"></i></div>
+                            <div class="va-stat-body">
+                                <h3>{{ number_format($totalUsers) }}</h3>
+                                <p>Total Users</p>
+                            </div>
+                            <div class="va-stat-wave"></div>
+                        </div>
+                    </div>
+                    <!-- OPD Contacts -->
+                    <div class="col-xl-3 col-md-6 mb-3">
+                        <div class="va-stat-card va-stat-purple">
+                            <div class="va-stat-icon"><i class="fa-solid fa-hospital-user"></i></div>
+                            <div class="va-stat-body">
+                                <h3>{{ number_format($opdContactCount) }}</h3>
+                                <p>OPD Contacts</p>
+                            </div>
+                            <div class="va-stat-wave"></div>
+                        </div>
+                    </div>
+                    <!-- Pathology Contacts -->
+                    <div class="col-xl-3 col-md-6 mb-3">
+                        <div class="va-stat-card va-stat-orange">
+                            <div class="va-stat-icon"><i class="fa-solid fa-microscope"></i></div>
+                            <div class="va-stat-body">
+                                <h3>{{ number_format($pathologyContactCount) }}</h3>
+                                <p>Pathology Contacts</p>
+                            </div>
+                            <div class="va-stat-wave"></div>
+                        </div>
+                    </div>
+                    <!-- Doctor Contacts -->
+                    <div class="col-xl-3 col-md-6 mb-3">
+                        <div class="va-stat-card va-stat-blue">
+                            <div class="va-stat-icon"><i class="fa-solid fa-user-doctor"></i></div>
+                            <div class="va-stat-body">
+                                <h3>{{ number_format($doctorContactCount) }}</h3>
+                                <p>Doctor Contacts</p>
+                            </div>
+                            <div class="va-stat-wave"></div>
+                        </div>
+                    </div>
+                    <!-- OPD Doctors -->
+                    <div class="col-xl-3 col-md-6 mb-3">
+                        <div class="va-stat-card va-stat-green">
+                            <div class="va-stat-icon"><i class="fa-solid fa-stethoscope"></i></div>
+                            <div class="va-stat-body">
+                                <h3>{{ number_format($allOpdDoctorsCount) }}</h3>
+                                <p>Total OPD Doctors</p>
+                            </div>
+                            <div class="va-stat-wave"></div>
+                        </div>
+                    </div>
+                    <!-- Pathology Tests -->
+                    <div class="col-xl-3 col-md-6 mb-3">
+                        <div class="va-stat-card va-stat-purple">
+                            <div class="va-stat-icon"><i class="fa-solid fa-vial-virus"></i></div>
+                            <div class="va-stat-body">
+                                <h3>{{ number_format($allPathologyTestsCount) }}</h3>
+                                <p>Total Path Tests</p>
+                            </div>
+                            <div class="va-stat-wave"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <hr class="mb-4">
+
                 {{-- ── Summary Stat Cards ── --}}
                 <div class="row g-3 mb-4">
 

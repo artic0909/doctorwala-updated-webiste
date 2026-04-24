@@ -6,6 +6,14 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
+use App\Models\PartnerOPDContactModel;
+use App\Models\PartnerPathologyContactModel;
+use App\Models\PartnerDoctorContactModel;
+use App\Models\PartnerAllOPDDoctorModel;
+use App\Models\PartnerAllPathologyTestModel;
+use App\Models\DwPartnerModel;
+use App\Models\DwUserModel;
+
 class DashboardController extends Controller
 {
     public function index()
@@ -65,6 +73,15 @@ class DashboardController extends Controller
         $uniqueIPs       = DB::table('visitor_logs')->distinct('ip_address')->count('ip_address');
         $yesterdayCount  = DB::table('visitor_logs')->whereDate('created_at', now()->subDay())->count();
 
+        // ── Entity Counts ──────────────────────────────────────────
+        $opdContactCount = PartnerOPDContactModel::count();
+        $pathologyContactCount = PartnerPathologyContactModel::count();
+        $doctorContactCount = PartnerDoctorContactModel::count();
+        $allOpdDoctorsCount = PartnerAllOPDDoctorModel::count();
+        $allPathologyTestsCount = PartnerAllPathologyTestModel::count();
+        $totalPartners = DwPartnerModel::count();
+        $totalUsers = DwUserModel::count();
+
         return view('superadmin.super-dashboard', compact(
             'dailyVisitors',
             'deviceBreakdown',
@@ -75,7 +92,14 @@ class DashboardController extends Controller
             'totalVisitors',
             'todayVisitors',
             'uniqueIPs',
-            'yesterdayCount'
+            'yesterdayCount',
+            'opdContactCount',
+            'pathologyContactCount',
+            'doctorContactCount',
+            'allOpdDoctorsCount',
+            'allPathologyTestsCount',
+            'totalPartners',
+            'totalUsers'
         ));
     }
 }
