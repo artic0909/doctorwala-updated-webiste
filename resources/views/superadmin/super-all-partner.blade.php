@@ -364,15 +364,45 @@
                             <div class="row">
                                 <div class="col-12">
 
-                                    <div class="row">
-                                        <div class="col-3">
-                                            <h3 class="font-weight-bold">All Partners</h3>
-                                            <a href="{{ route('superadmin.export.partner') }}" style="text-decoration: underline;">Export</a> <!-- export as excel -->
+                                    <div class="row align-items-center mb-4">
+                                        <div class="col-lg-3 col-md-12 mb-3 mb-lg-0">
+                                            <h3 class="font-weight-bold m-0">All Partners</h3>
+                                            <a href="{{ route('superadmin.export.partner', request()->query()) }}" class="text-primary" style="text-decoration: underline; font-weight: 600;">
+                                                <i class="fa-solid fa-file-excel mr-1"></i>Export
+                                            </a>
                                         </div>
 
-                                        <div class="col-9 d-flex justify-content-end align-items-center">
+                                        <div class="col-lg-6 col-md-12 mb-3 mb-lg-0">
+                                            <form action="{{ route('superadmin.super-all-partner.get') }}" method="GET" class="d-flex align-items-center">
+                                                @if(request('search'))
+                                                    <input type="hidden" name="search" value="{{ request('search') }}">
+                                                @endif
+                                                
+                                                <div class="input-group align-items-center">
+                                                    <select name="sort" class="form-control mr-2" style="border-radius: 5px;">
+                                                        <option value="newest" {{ request('sort') == 'newest' ? 'selected' : '' }}>Newest first</option>
+                                                        <option value="oldest" {{ request('sort') == 'oldest' ? 'selected' : '' }}>Oldest first</option>
+                                                    </select>
+                                                    
+                                                    <input type="date" name="date" class="form-control mr-2" value="{{ request('date') }}" style="border-radius: 5px;">
+                                                    
+                                                    <div class="input-group-append">
+                                                        <button type="submit" class="btn btn-primary px-3" style="border-radius: 5px;">
+                                                            <i class="fa fa-search"></i>
+                                                        </button>
+                                                        @if(request('date') || request('sort') == 'oldest')
+                                                            <a href="{{ route('superadmin.super-all-partner.get', ['search' => request('search')]) }}" class="btn btn-light ml-2 border" style="border-radius: 5px;" title="Reset Filters">
+                                                                <i class="fa-solid fa-rotate-left"></i>
+                                                            </a>
+                                                        @endif
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+
+                                        <div class="col-lg-3 col-md-12 d-flex justify-content-end align-items-center">
                                             <nav aria-label="Page navigation">
-                                                <ul class="pagination">
+                                                <ul class="pagination mb-0">
                                                     <!-- Previous Page Link -->
                                                     @if ($partners->onFirstPage())
                                                     <li class="page-item disabled">
@@ -380,7 +410,7 @@
                                                     </li>
                                                     @else
                                                     <li class="page-item">
-                                                        <a class="page-link" href="{{ $partners->previousPageUrl() }}">Prev</a>
+                                                        <a class="page-link" href="{{ $partners->appends(request()->query())->previousPageUrl() }}">Prev</a>
                                                     </li>
                                                     @endif
 
@@ -395,7 +425,7 @@
                                                     @for ($i = 1; $i <= $end; $i++)
                                                         @if ($i == 1 || $i == $end || ($i >= $current - $show && $i <= $current + $show))
                                                             <li class="page-item {{ $current == $i ? 'active' : '' }}">
-                                                                <a class="page-link" href="{{ $partners->url($i) }}">{{ $i }}</a>
+                                                                <a class="page-link" href="{{ $partners->appends(request()->query())->url($i) }}">{{ $i }}</a>
                                                             </li>
                                                         @elseif ($i == $current - $show - 1 || $i == $current + $show + 1)
                                                             <li class="page-item disabled">
@@ -407,7 +437,7 @@
                                                     <!-- Next Page Link -->
                                                     @if ($partners->hasMorePages())
                                                     <li class="page-item">
-                                                        <a class="page-link" href="{{ $partners->nextPageUrl() }}">Next</a>
+                                                        <a class="page-link" href="{{ $partners->appends(request()->query())->nextPageUrl() }}">Next</a>
                                                     </li>
                                                     @else
                                                     <li class="page-item disabled">
@@ -417,10 +447,6 @@
                                                 </ul>
                                             </nav>
                                         </div>
-
-
-
-
                                     </div>
 
 

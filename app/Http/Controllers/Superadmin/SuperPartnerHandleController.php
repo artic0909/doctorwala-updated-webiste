@@ -206,8 +206,7 @@ class SuperPartnerHandleController extends Controller
 
     public function allPartnersShow(Request $request)
     {
-        $partners = DwPartnerModel::orderBy('created_at', 'desc');
-
+        $partners = DwPartnerModel::query();
 
         if ($request->has('search') && $request->search != '') {
             $search = $request->search;
@@ -223,6 +222,16 @@ class SuperPartnerHandleController extends Controller
             });
         }
 
+        if ($request->has('date') && $request->date != '') {
+            $partners->whereDate('created_at', $request->date);
+        }
+
+        $sort = $request->get('sort', 'newest');
+        if ($sort == 'oldest') {
+            $partners->orderBy('created_at', 'asc');
+        } else {
+            $partners->orderBy('created_at', 'desc');
+        }
 
         $partners = $partners->paginate(30);
 
@@ -277,7 +286,8 @@ class SuperPartnerHandleController extends Controller
     }
 
 
-    public function exportAsExel(Request $request){
-        return Excel::download(new Partners, 'partner_details.xlsx');
+    public function exportAsExel(Request $request)
+    {
+        return Excel::download(new Partners($request->all()), 'partner_details.xlsx');
     }
 }
