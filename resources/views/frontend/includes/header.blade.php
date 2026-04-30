@@ -35,6 +35,7 @@
 
         </div>
 
+        <a href="https://play.google.com/store/apps/details?id=com.doctorwala.dochealth&pcampaignid=web_share" class="btn btn-success py-2 px-4 ms-3">App</a>
         <a href="/dw/user-auth" class="btn btn-primary py-2 px-4 ms-3">Login</a>
 
     </div>
@@ -80,6 +81,8 @@
             <a href="/dw/privacy-policy" class="nav-item nav-link {{ request()->is('dw/privacy-policy') ? 'active' : '' }}">Privacy Policy</a>
 
         </div>
+
+        <a href="https://play.google.com/store/apps/details?id=com.doctorwala.dochealth&pcampaignid=web_share" class="btn btn-success py-2 px-4 ms-3">App</a>
 
         <a href="/dw/profile"class="btn btn-primary ms-3">
             <i class="fa fa-user" aria-hidden="true"></i>

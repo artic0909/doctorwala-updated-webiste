@@ -1087,7 +1087,11 @@
                 style="background:#16a34a;color:#fff;border-radius:8px;padding:10px 22px;font-size:14px;font-weight:700;text-decoration:none;display:inline-block;">
                 Create Your Card
             </a>
-            <span style="font-size:12px;color:#9ca3af;">Free · No credit card required</span>
+
+             <a href="https://play.google.com/store/apps/details?id=com.doctorwala.dochealth&pcampaignid=web_share"
+                style="background:#16a34a;color:#fff;border-radius:8px;padding:10px 22px;font-size:14px;font-weight:700;text-decoration:none;display:inline-block;">
+               <i class="fa-brands fa-google-play"></i> Download Doctorwala App
+            </a>
         </div>
 
     </div>
@@ -1224,7 +1228,10 @@
                 style="background:#16a34a;color:#fff;border-radius:8px;padding:10px 22px;font-size:14px;font-weight:700;text-decoration:none;display:inline-block;">
                 Create Your Card
             </a>
-            <span style="font-size:12px;color:#9ca3af;">Free · No credit card required</span>
+                         <a href="https://play.google.com/store/apps/details?id=com.doctorwala.dochealth&pcampaignid=web_share"
+                style="background:#16a34a;color:#fff;border-radius:8px;padding:10px 22px;font-size:14px;font-weight:700;text-decoration:none;display:inline-block;">
+               <i class="fa-brands fa-google-play"></i> Download Doctorwala App
+            </a>
         </div>
 
     </div>
