@@ -424,6 +424,7 @@
                                         <thead>
                                             <tr>
                                                 <th>Delete</th>
+                                                <th>Date</th>
                                                 <th>Name</th>
                                                 <th>Email ID</th>
                                                 <th>City</th>
@@ -442,6 +443,10 @@
                                                             style="font-size: 1.1rem;"></i></a></td>
 
 
+
+                                                <td>
+                                                    <p class="m-0" style="font-weight: 700;">{{$user->created_at->format('d-m-Y')}}</p>
+                                                </td>
 
                                                 <td>
                                                     <p class="m-0" style="font-weight: 700;">{{$user->user_name}}</p>

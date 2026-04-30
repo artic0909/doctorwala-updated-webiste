@@ -21,7 +21,7 @@ class SuperAllUserController extends Controller
                 ->orWhere('user_email', "%{$search}%")->orWhere('user_mobile', 'like', "%{$search}%")->orWhere('user_city', 'like', "%{$search}%");
         }
 
-        $users = $query->paginate(10);
+        $users = $query->orderBy('id', 'desc')->paginate(10);
         return view('superadmin.super-all-user', compact('users'));
     }
 
