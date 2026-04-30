@@ -438,7 +438,7 @@
                                             <tr>
 
 
-                                                <td><a href="" data-target="#myDeleteModal" data-toggle="modal"
+                                                <td><a href="" data-target="#myDeleteModal{{$user->id}}" data-toggle="modal"
                                                         class="ed-btn"><i class="fa-solid fa-trash-can text-danger"
                                                             style="font-size: 1.1rem;"></i></a></td>
 
@@ -512,8 +512,8 @@
 
                 <!-- Delete Modal -->
                 @foreach ($users as $user)
-                <div class="modal fade" id="myDeleteModal" tabindex="-1" role="dialog"
-                    aria-labelledby="myDeleteModalLabel" aria-hidden="true">
+                <div class="modal fade" id="myDeleteModal{{$user->id}}" tabindex="-1" role="dialog"
+                    aria-labelledby="myDeleteModalLabel{{$user->id}}" aria-hidden="true">
                     <div class="modal-dialog" role="document">
                         <div class="modal-content">
 
