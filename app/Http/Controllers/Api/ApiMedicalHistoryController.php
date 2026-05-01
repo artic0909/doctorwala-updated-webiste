@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\MedicalHistory;
-use App\Models\SystemPrescription;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
@@ -17,29 +16,15 @@ class ApiMedicalHistoryController extends Controller
     public function getAll(Request $request)
     {
         try {
-            $user_id = $request->user()->id;
-
-            // 1. Fetch manual records
-            $manualRecords = MedicalHistory::where('dw_user_id', $user_id)
+            $records = MedicalHistory::where('dw_user_id', $request->user()->id)
                 ->orderBy('date_of_report', 'desc')
                 ->get()
                 ->map(fn($r) => $this->formatRecord($r));
 
-            // 2. Fetch system generated prescriptions
-            $systemPrescriptions = SystemPrescription::where('dw_user_id', $user_id)
-                ->orderBy('prescription_date', 'desc')
-                ->get()
-                ->map(fn($sp) => $this->formatSystemPrescription($sp));
-
-            // 3. Merge and Sort
-            $allRecords = $manualRecords->concat($systemPrescriptions)
-                ->sortByDesc('date_of_report')
-                ->values();
-
             return response()->json([
                 'status'  => true,
                 'message' => 'Medical records fetched successfully.',
-                'data'    => $allRecords
+                'data'    => $records
             ], 200);
         } catch (\Exception $e) {
             return response()->json([
@@ -80,30 +65,16 @@ class ApiMedicalHistoryController extends Controller
     public function getPrescriptions(Request $request)
     {
         try {
-            $user_id = $request->user()->id;
-
-            // 1. Fetch manual prescriptions
-            $manualPrescriptions = MedicalHistory::where('dw_user_id', $user_id)
+            $records = MedicalHistory::where('dw_user_id', $request->user()->id)
                 ->where('type', 'prescription')
                 ->orderBy('date_of_report', 'desc')
                 ->get()
                 ->map(fn($r) => $this->formatRecord($r));
 
-            // 2. Fetch system generated prescriptions
-            $systemPrescriptions = SystemPrescription::where('dw_user_id', $user_id)
-                ->orderBy('prescription_date', 'desc')
-                ->get()
-                ->map(fn($sp) => $this->formatSystemPrescription($sp));
-
-            // 3. Merge and Sort
-            $allPrescriptions = $manualPrescriptions->concat($systemPrescriptions)
-                ->sortByDesc('date_of_report')
-                ->values();
-
             return response()->json([
                 'status'  => true,
                 'message' => 'Prescriptions fetched successfully.',
-                'data'    => $allPrescriptions
+                'data'    => $records
             ], 200);
         } catch (\Exception $e) {
             return response()->json([
@@ -319,28 +290,8 @@ class ApiMedicalHistoryController extends Controller
             'images'          => collect($record->images ?? [])->map(
                 fn($path) => asset('storage/' . $path)
             )->values()->toArray(),
-            'is_system_generated' => false,
-            'view_url'        => null,
             'created_at'      => $record->created_at,
             'updated_at'      => $record->updated_at,
-        ];
-    }
-
-    /**
-     * Helper — format system prescription
-     */
-    private function formatSystemPrescription(SystemPrescription $sp): array
-    {
-        return [
-            'id'              => $sp->id,
-            'type'            => 'prescription',
-            'date_of_report'  => $sp->prescription_date ? $sp->prescription_date->format('Y-m-d') : null,
-            'heading'         => $sp->heading ?? ('Prescription from ' . ($sp->doctor_name ?? 'Doctor')),
-            'images'          => [],
-            'is_system_generated' => true,
-            'view_url'        => route('dw.digital.prescription.view', ['id' => $sp->id]),
-            'created_at'      => $sp->created_at,
-            'updated_at'      => $sp->updated_at,
         ];
     }
 }
