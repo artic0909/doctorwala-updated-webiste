@@ -29,12 +29,31 @@
     style="margin-top: 90px;">
     <div class="container">
         <div class="row gx-5">
+
+
             <div class="col-lg-6 py-5">
                 <div class="py-5">
                     <h1 class="display-5 text-white mb-4">Why Clinics Partner with DoctorWala.info</h1>
                     <p class="text-white mb-0">Clinics join DoctorWala.info to expand their digital presence, reach more local patients, and simplify their service promotion. By partnering with us, they get a dedicated profile, can showcase their doctors, OPD schedules, pathology services, and receive direct inquiries from patients. It’s a powerful way to grow trust, visibility, and patient engagement — all in one platform.</p>
                 </div>
+                <div class="video-container mt-4 wow zoomIn" data-wow-delay="0.3s">
+                    <div class="ratio ratio-16x9 rounded shadow-lg overflow-hidden border border-white border-2">
+                        <iframe src="https://www.youtube.com/embed/Ttfr1gwk6BQ?si=N18uMtv42zTac9zb&autoplay=1&mute=1" 
+                            title="YouTube video player" 
+                            frameborder="0" 
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                            referrerpolicy="strict-origin-when-cross-origin" 
+                            allowfullscreen></iframe>
+                    </div>
+                    <div class="mt-3">
+                        <a href="https://www.youtube.com/watch?v=Ttfr1gwk6BQ&t=7s" target="_blank" class="btn btn-outline-light rounded-pill px-4 py-2 fw-bold shadow-sm">
+                            <i class="fab fa-youtube me-2"></i>Watch Full Video
+                        </a>
+                    </div>
+                </div>
             </div>
+
+
             <div class="col-lg-6">
                 <div class="appointment-form h-100 d-flex flex-column justify-content-center text-center p-5 wow zoomIn"
                     data-wow-delay="0.6s">
@@ -259,6 +278,9 @@
                     </form>
                 </div>
             </div>
+
+
+            
         </div>
     </div>
 </div>
