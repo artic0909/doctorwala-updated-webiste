@@ -596,8 +596,18 @@
                     <div class="row">
                         <div class="col-md-4 grid-margin stretch-card">
                             <div class="card tale-bg">
-                                <div class="card-people mt-auto">
-                                    <img src="../img/af.jpg" alt="people">
+                                <div class="card-body p-0 d-flex flex-column">
+                                    <h4 class="text-dark p-3 mb-0" style="font-weight: 700; font-size: 1.1rem; z-index: 1;">
+                                        <i class="fa-solid fa-circle-play me-2"></i> Tutorial Video
+                                    </h4>
+                                    <div class="flex-grow-1">
+                                        <iframe class="w-100 h-100 border-0" 
+                                            src="https://www.youtube.com/embed/Ttfr1gwk6BQ?si=N18uMtv42zTac9zb&autoplay=1&mute=1" 
+                                            title="YouTube video player" 
+                                            style="min-height: 280px;"
+                                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                                            allowfullscreen></iframe>
+                                    </div>
                                 </div>
                             </div>
                         </div>
