@@ -26,11 +26,11 @@ class ApiUserRegisterController extends Controller
             'user_name.max'          => 'Name must not exceed 255 characters.',
             'user_mobile.required'   => 'Mobile number is required.',
             'user_mobile.digits'     => 'Mobile number must be exactly 10 digits.',
-            'user_mobile.unique'     => ' You are the existing user , please login !',
+            'user_mobile.unique'     => 'This mobile number is already registered. Please login.',
             'user_city.required'     => 'City is required.',
             'user_email.required'    => 'Email address is required.',
             'user_email.email'       => 'Please enter a valid email address.',
-            'user_email.unique'      => ' You are the existing user , please login !',
+            'user_email.unique'      => 'This email address is already registered. Please login.',
             'user_password.required' => 'Password is required.',
             'user_password.min'      => 'Password must be at least 8 characters.',
         ]);
@@ -47,7 +47,18 @@ class ApiUserRegisterController extends Controller
             $currentYear      = now()->format('Y');
             $currentYearShort = now()->format('y');
 
-            $serial = DwUserModel::whereYear('created_at', $currentYear)->count() + 1;
+            $lastUser = DwUserModel::whereYear('created_at', $currentYear)
+                ->orderBy('id', 'desc')
+                ->first();
+
+            $serial = 1;
+            if ($lastUser && $lastUser->memberid) {
+                $parts = explode('-', $lastUser->memberid);
+                $lastSerialNum = end($parts);
+                if (is_numeric($lastSerialNum)) {
+                    $serial = (int)$lastSerialNum + 1;
+                }
+            }
 
             $paddedSerial = str_pad($serial, 3, '0', STR_PAD_LEFT);
             $memberId     = 'DW-' . $currentYear . '-' . $paddedSerial;
@@ -83,10 +94,17 @@ class ApiUserRegisterController extends Controller
                 ]
             ], 201);
         } catch (\Illuminate\Database\QueryException $e) {
+            // Check for duplicate entry error (MySQL 1062)
+            if ($e->errorInfo[1] == 1062) {
+                return response()->json([
+                    'status'  => false,
+                    'message' => 'You are already registered with this email or mobile number.',
+                ], 409);
+            }
             return response()->json([
                 'status'  => false,
-                'message' => ' You are the existing user , please login !',
-            ], 409);
+                'message' => 'Registration failed due to a database error.',
+            ], 500);
         } catch (\Exception $e) {
             return response()->json([
                 'status'  => false,
