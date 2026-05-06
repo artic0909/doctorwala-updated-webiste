@@ -391,101 +391,36 @@
                             </div>
 
 
-                            <div class="row m-auto">
-                                <div class="col-12 mt-4">
+                                    <form method="POST" action="{{ route('partner.about.details.store') }}">
+                                        @csrf
+                                        <div class="row m-auto">
+                                            <div class="col-12 mt-4">
+                                                <h4 class="font-weight-bold" style="font-weight: 900;"><i class="fa-solid fa-circle-info text-primary"></i> ABOUT <span class="text-danger">*</span></h4>
+                                                <textarea name="about_details" class="form-control rounded" rows="6" required>{{ $aboutDetails->about_details ?? '' }}</textarea>
+                                            </div>
 
-                                    <div class="row">
-                                        <div class="col-12 col-xl-8 mb-4 mb-xl-0">
+                                            <div class="col-12 mt-4">
+                                                <h4 class="font-weight-bold" style="font-weight: 900;"><i class="fa-solid fa-users-viewfinder text-primary"></i> MISSION <span class="text-danger">*</span></h4>
+                                                <textarea name="mission_details" class="form-control rounded" rows="6" required>{{ $aboutDetails->mission_details ?? '' }}</textarea>
+                                            </div>
 
-                                            <h4 class="font-weight-bold" style="font-weight: 900;"><i
-                                                    class="fa-solid fa-circle-info text-primary"></i> ABOUT</h4>
+                                            <div class="col-12 mt-4">
+                                                <h4 class="font-weight-bold" style="font-weight: 900;"><i class="fa-solid fa-eye text-primary"></i> VISION <span class="text-danger">*</span></h4>
+                                                <textarea name="vision_details" class="form-control rounded" rows="6" required>{{ $aboutDetails->vision_details ?? '' }}</textarea>
+                                            </div>
 
-                                        </div>
-                                    </div>
-
-
-
-                                    <div class="ab-view">
-                                        <div class="form-control" style="height: auto; font-size: 1rem;">
-                                            <p style="text-align: justify;">
-                                                {{ $aboutDetails->about_details ?? 'No details provided yet.' }}
-                                            </p>
-
-                                            <div class="btnn d-flex justify-content-end">
-                                                <button data-toggle="modal" data-target="#myAboutModal"
-                                                    class="btn rounded btn-primary">Edit</button>
+                                            <div class="col-12 mt-4">
+                                                <button type="submit" class="btn btn-primary rounded">
+                                                    @if($aboutDetails)
+                                                        Update Details
+                                                    @else
+                                                        Add Details
+                                                    @endif
+                                                </button>
                                             </div>
                                         </div>
-                                    </div>
+                                    </form>
 
-                                </div>
-
-
-
-
-
-                                <div class="col-12 mt-4">
-
-                                    <div class="row">
-                                        <div class="col-12 col-xl-8 mb-4 mb-xl-0">
-
-                                            <h4 class="font-weight-bold" style="font-weight: 900;"><i
-                                                    class="fa-solid fa-users-viewfinder text-primary"></i> MISSION</h4>
-
-                                        </div>
-                                    </div>
-
-
-
-                                    <div class="ab-view">
-                                        <div class="form-control" style="height: auto; font-size: 1rem;">
-                                            <p style="text-align: justify;">
-                                                {{ $aboutDetails->mission_details ?? 'No details provided yet.' }}
-                                            </p>
-
-                                            <div class="btnn d-flex justify-content-end">
-                                                <button type="submit" data-toggle="modal" data-target="#myMissionModal"
-                                                    class="btn rounded btn-primary">Edit</button>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                </div>
-
-
-
-
-
-
-                                <div class="col-12 mt-4">
-
-                                    <div class="row">
-                                        <div class="col-12 col-xl-8 mb-4 mb-xl-0">
-
-                                            <h4 class="font-weight-bold" style="font-weight: 900;"><i
-                                                    class="fa-solid fa-eye text-primary"></i> VISION</h4>
-
-                                        </div>
-                                    </div>
-
-
-
-                                    <div class="ab-view">
-                                        <div class="form-control" style="height: auto; font-size: 1rem;">
-                                            <p style="text-align: justify;">
-                                                {{ $aboutDetails->vision_details ?? 'No details provided yet.' }}
-                                            </p>
-
-                                            <div class="btnn d-flex justify-content-end">
-                                                <button type="submit" data-toggle="modal" data-target="#myVisionModal"
-                                                    class="btn rounded btn-primary">Edit</button>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                </div>
-
-                            </div>
                         </div>
                     </div>
 
@@ -507,71 +442,7 @@
 
 
 
-                <!-- About Edit Modal -->
-                <div class="modal fade" id="myAboutModal" tabindex="-1" role="dialog" aria-labelledby="myAboutModalLabel" aria-hidden="true">
-                    <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                            <form method="POST" action="{{ route('partner.about.details.store') }}">
-                                @csrf
-                                <div class="modal-body">
-                                    <div class="form-group">
-                                        <label for="about_details" style="font-weight: 700; font-size: 1.1rem;">
-                                            <i class="fa fa-info-circle text-success" aria-hidden="true"></i> About <span class="text-danger">*</span>
-                                        </label>
-                                        <textarea name="about_details" class="form-control rounded" id="about_details" rows="12">
-                                        {{ $aboutDetails->about_details ?? '' }}
-                                        </textarea>
-                                    </div>
-                                    <button type="submit" class="btn btn-success rounded w-100">Submit</button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
 
-                <!-- Mission Edit Modal -->
-                <div class="modal fade" id="myMissionModal" tabindex="-1" role="dialog" aria-labelledby="myMissionModalLabel" aria-hidden="true">
-                    <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                            <form method="POST" action="{{ route('partner.about.details.store') }}">
-                                @csrf
-                                <div class="modal-body">
-                                    <div class="form-group">
-                                        <label for="mission_details" style="font-weight: 700; font-size: 1.1rem;">
-                                            <i class="fa fa-users-viewfinder text-success" aria-hidden="true"></i> Mission <span class="text-danger">*</span>
-                                        </label>
-                                        <textarea name="mission_details" class="form-control rounded" id="mission_details" rows="12">
-                                        {{ $aboutDetails->mission_details ?? '' }}
-                                        </textarea>
-                                    </div>
-                                    <button type="submit" class="btn btn-success rounded w-100">Submit</button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Vision Edit Modal -->
-                <div class="modal fade" id="myVisionModal" tabindex="-1" role="dialog" aria-labelledby="myVisionModalLabel" aria-hidden="true">
-                    <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                            <form method="POST" action="{{ route('partner.about.details.store') }}">
-                                @csrf
-                                <div class="modal-body">
-                                    <div class="form-group">
-                                        <label for="vision_details" style="font-weight: 700; font-size: 1.1rem;">
-                                            <i class="fa fa-eye text-success" aria-hidden="true"></i> Vision <span class="text-danger">*</span>
-                                        </label>
-                                        <textarea name="vision_details" class="form-control rounded" id="vision_details" rows="12">
-                                        {{ $aboutDetails->vision_details ?? '' }}
-                                        </textarea>
-                                    </div>
-                                    <button type="submit" class="btn btn-success rounded w-100">Submit</button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
 
 
 
@@ -740,51 +611,12 @@
 
 
 
-        <!-- floating right button -->
-        <a type="button" class="btn btn-danger rounded btn-icon-text p-0 px-2 py-2 floating-btnn"
-            data-target="#myAddModal" data-toggle="modal" style="width: fit-content;">
-            <i class="fa fa-2x fa-plus" aria-hidden="true" style="font-size: 1.7rem;"></i>
-        </a>
 
 
 
 
-        <!-- Add Modal -->
-        <div class="modal fade" id="myAddModal" tabindex="-1" role="dialog" aria-labelledby="myAddModalLabel"
-            aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered" role="document">
-                <div class="modal-content">
-
-                    <form class="modal-body" method="POST" action="{{ route('partner.about.details.store') }}">
-                        @csrf
-                        <div class="form-group">
-                            <label for="about_details"><i class="fa fa-circle-info text-success" aria-hidden="true"></i> Add
-                                About Details <span class="text-danger">*</span></label>
-                            <textarea name="about_details" id="about_details" rows="9" class="form-control"></textarea>
-                        </div>
 
 
-                        <div class="form-group">
-                            <label for="about_details"><i class="fa fa-users-viewfinder text-success" aria-hidden="true"></i> Add
-                                Mission Details <span class="text-danger">*</span></label>
-                            <textarea name="mission_details" id="mission_details" rows="9" class="form-control"></textarea>
-                        </div>
-
-
-
-
-                        <div class="form-group">
-                            <label for="about_details"><i class="fa fa-eye text-success" aria-hidden="true"></i> Add
-                                Vision Details <span class="text-danger">*</span></label>
-                            <textarea name="vision_details" id="vision_details" rows="9" class="form-control"></textarea>
-                        </div>
-
-                        <button type="submit" class="btn btn-success rounded w-100">Submit</button>
-                    </form>
-
-                </div>
-            </div>
-        </div>
 
 
 

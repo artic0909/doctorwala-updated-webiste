@@ -394,100 +394,105 @@
 
                             <div class="row m-auto">
                                 <div class="col-12 mt-4">
+                                    <!-- Add Service Section -->
+                                    <div class="card shadow-sm border-0 mb-4">
+                                        <div class="card-body">
+                                            <h4 class="card-title font-weight-bold mb-4"><i class="fa fa-plus-circle text-primary"></i> Add New Service</h4>
+                                            <form action="{{ route('partner.services.store') }}" method="POST" class="form-inline">
+                                                @csrf
+                                                <div class="form-group mb-2 mr-3 w-75">
+                                                    <input type="text" class="form-control w-100" name="service" id="service" placeholder="Enter service name (e.g. Ambulance, ICU)" required>
+                                                </div>
+                                                <button type="submit" class="btn btn-primary mb-2 rounded">Add Service</button>
+                                            </form>
+                                        </div>
+                                    </div>
 
-
-                                    <table class="table">
-                                        <thead>
-                                            <tr>
-                                                <th scope="col">#</th>
-                                                <th scope="col">Edit</th>
-                                                <th scope="col">Delete</th>
-                                                <th scope="col">Service Name</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @forelse($services as $index => $service)
-                                            <tr>
-                                                <th scope="row">{{ $loop->iteration }}</th>
-                                                <td>
-                                                    <a href="#" data-toggle="modal" data-target="#editServiceModal{{ $index }}" class="ed-btn">
-                                                        <i class="fa fa-edit text-success"
-                                                            style="font-size: 1.2rem;"></i>
-                                                    </a>
-                                                </td>
-                                                <td>
-                                                    <a href="#" data-toggle="modal" data-target="#deleteServiceModal{{ $index }}" class="ed-btn">
-                                                        <i class="fa fa-trash text-danger"
-                                                            style="font-size: 1.1rem;"></i>
-                                                    </a>
-                                                </td>
-                                                <td style="text-transform: capitalize; font-size: 1rem;"><strong>{{ $service }}</strong></td>
-                                            </tr>
-
-                                            <!-- Edit Modal -->
-                                            <div class="modal fade" id="editServiceModal{{ $index }}" tabindex="-1" role="dialog">
-                                                <div class="modal-dialog" role="document">
-
-                                                    <div class="modal-content" style="padding: 20px;">
-                                                        <div class="modal-body">
-
-
-                                                            <form action="{{ route('partner.services.update', $index) }}" method="POST">
-                                                                @csrf
-                                                                @method('POST')
-                                                                <div class="form-group">
-                                                                    <label for="service_lists"><i class="fa fa-ambulance text-success" aria-hidden="true"></i> Edit
-                                                                        Service <span class="text-danger">*</span></label>
-                                                                    <input type="text" class="form-control" name="service" id="service" value="{{ $service }}" required>
-                                                                </div>
-
-                                                                <button type="submit" class="btn btn-success rounded w-100">Submit</button>
-                                                            </form>
+                                    <!-- Service List Grid -->
+                                    <div class="row">
+                                        @forelse($services as $index => $service)
+                                        <div class="col-md-4 mb-4">
+                                            <div class="card service-card shadow-sm border-0 h-100" style="transition: transform 0.3s;">
+                                                <div class="card-body d-flex flex-column">
+                                                    <div class="d-flex justify-content-between align-items-start mb-3">
+                                                        <div class="icon-box rounded bg-light p-3">
+                                                            <i class="fa fa-stethoscope text-primary fa-2x"></i>
                                                         </div>
+                                                        <div class="actions">
+                                                            <a href="#" data-toggle="modal" data-target="#editServiceModal{{ $index }}" class="mr-2 text-success">
+                                                                <i class="fa fa-edit" style="font-size: 1.1rem;"></i>
+                                                            </a>
+                                                            <a href="#" data-toggle="modal" data-target="#deleteServiceModal{{ $index }}" class="text-danger">
+                                                                <i class="fa fa-trash" style="font-size: 1.1rem;"></i>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                    <h5 class="card-title text-capitalize font-weight-bold mb-0">{{ $service }}</h5>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Edit Modal -->
+                                        <div class="modal fade" id="editServiceModal{{ $index }}" tabindex="-1" role="dialog">
+                                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                                <div class="modal-content border-0 shadow">
+                                                    <div class="modal-header bg-light">
+                                                        <h5 class="modal-title font-weight-bold">Edit Service</h5>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <form action="{{ route('partner.services.update', $index) }}" method="POST">
+                                                        @csrf
+                                                        <div class="modal-body">
+                                                            <div class="form-group">
+                                                                <label class="font-weight-bold">Service Name <span class="text-danger">*</span></label>
+                                                                <input type="text" class="form-control" name="service" value="{{ $service }}" required>
+                                                            </div>
+                                                        </div>
+                                                        <div class="modal-footer border-0">
+                                                            <button type="button" class="btn btn-secondary rounded" data-dismiss="modal">Cancel</button>
+                                                            <button type="submit" class="btn btn-primary rounded">Update Changes</button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Delete Modal -->
+                                        <div class="modal fade" id="deleteServiceModal{{ $index }}" tabindex="-1" role="dialog">
+                                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                                <div class="modal-content border-0 shadow">
+                                                    <div class="modal-body p-5 text-center">
+                                                        <div class="mb-4">
+                                                            <i class="fa-solid fa-circle-exclamation fa-4x text-danger animate__animated animate__pulse animate__infinite"></i>
+                                                        </div>
+                                                        <h3 class="font-weight-bold mb-3">Confirm Deletion</h3>
+                                                        <p class="text-muted mb-4">Are you sure you want to delete <strong class="text-dark">{{ $service }}</strong>? This action cannot be undone.</p>
+                                                        <form action="{{ route('partner.services.delete', $index) }}" method="POST">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <div class="d-flex justify-content-center gap-3" style="gap: 15px;">
+                                                                <button type="button" class="btn btn-light px-4 rounded" data-dismiss="modal">Cancel</button>
+                                                                <button type="submit" class="btn btn-danger px-4 rounded shadow-sm">Yes, Delete it</button>
+                                                            </div>
+                                                        </form>
                                                     </div>
                                                 </div>
                                             </div>
-
-                                            <!-- Delete Modal -->
-                                            <div class="modal fade" id="deleteServiceModal{{ $index }}" tabindex="-1" role="dialog">
-                                                <div class="modal-dialog" role="document">
-                                                    <div class="modal-content">
-                                                        <div class="modal-body">
-                                                            <form action="{{ route('partner.services.delete', $index) }}" method="POST">
-                                                                @csrf
-                                                                @method('DELETE')
-                                                                <div class="form-group d-flex flex-column align-items-center">
-                                                                    <i class="fa-solid fa-trash-can fa-2x text-danger"></i>
-
-                                                                    <h3 class="mt-3">Are You Sure ?</h3>
-
-                                                                    <p class="mt-2 text-center">Are you sure you want to delete this service: <strong style="color: red; font-size: 1.1rem; text-transform: capitalize">{{ $service }} ?</strong> This Process
-                                                                        cannot be undone.</p>
-
-                                                                    <div class="btnss d-flex justify-content-around align-items-center w-100 mt-3">
-                                                                        <button type="button" class="btn btn-primary rounded w-50 mr-3"
-                                                                            data-dismiss="modal">Cancel</button>
-                                                                        <button type="submit" class="btn btn-danger rounded w-50">Confirm</button>
-                                                                    </div>
-                                                                </div>
-                                                            </form>
-                                                        </div>
-                                                    </div>
-                                                </div>
+                                        </div>
+                                        @empty
+                                        <div class="col-12">
+                                            <div class="text-center p-5 bg-light rounded">
+                                                <i class="fa fa-info-circle fa-3x text-muted mb-3"></i>
+                                                <p class="text-muted mb-0">No services found. Add your first service above!</p>
                                             </div>
-                                            @empty
-                                            <tr>
-                                                <td colspan="4" class="text-center">No services found.</td>
-                                            </tr>
-                                            @endforelse
-                                        </tbody>
-                                    </table>
-
-
+                                        </div>
+                                        @endforelse
+                                    </div>
                                 </div>
-
-
                             </div>
+
                         </div>
                     </div>
 
@@ -504,35 +509,12 @@
 
 
 
-                <!-- floating right button -->
-                <a type="button" class="btn btn-primary rounded btn-icon-text p-0 px-2 py-2 floating-btnn"
-                    data-target="#myAddModal" data-toggle="modal" style="width: fit-content;">
-                    <i class="fa fa-2x fa-plus" aria-hidden="true" style="font-size: 1.7rem;"></i>
-                </a>
 
 
 
 
-                <!-- Add Modal -->
-                <div class="modal fade" id="myAddModal" tabindex="-1" role="dialog" aria-labelledby="myAddModalLabel"
-                    aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered" role="document">
-                        <div class="modal-content">
 
-                            <form class="modal-body" action="{{ route('partner.services.store') }}" method="POST">
-                                @csrf
-                                <div class="form-group">
-                                    <label for="service_lists"><i class="fa fa-ambulance text-success" aria-hidden="true"></i> Add
-                                        Service <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" name="service" id="service">
-                                </div>
 
-                                <button type="submit" class="btn btn-success rounded w-100">Submit</button>
-                            </form>
-
-                        </div>
-                    </div>
-                </div>
 
 
 
