@@ -602,7 +602,7 @@
                                     </h4>
                                     <div class="flex-grow-1">
                                         <iframe class="w-100 h-100 border-0" 
-                                            src="https://www.youtube.com/embed/Ttfr1gwk6BQ?si=N18uMtv42zTac9zb&autoplay=1&mute=1" 
+                                            src="https://www.youtube.com/embed/rtWdQz1Kmjk?si=lUWDuibF2wXeHp8s&autoplay=1&mute=0" 
                                             title="YouTube video player" 
                                             style="min-height: 280px;"
                                             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 

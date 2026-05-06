@@ -38,7 +38,7 @@
                 </div>
                 <div class="video-container mt-4 wow zoomIn" data-wow-delay="0.3s">
                     <div class="ratio ratio-16x9 rounded shadow-lg overflow-hidden border border-white border-2">
-                        <iframe src="https://www.youtube.com/embed/Ttfr1gwk6BQ?si=N18uMtv42zTac9zb&autoplay=1&mute=1" 
+                        <iframe src="https://www.youtube.com/embed/rtWdQz1Kmjk?si=lUWDuibF2wXeHp8s&autoplay=1&mute=0" 
                             title="YouTube video player" 
                             frameborder="0" 
                             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
@@ -46,7 +46,7 @@
                             allowfullscreen></iframe>
                     </div>
                     <div class="mt-3">
-                        <a href="https://www.youtube.com/watch?v=Ttfr1gwk6BQ&t=7s" target="_blank" class="btn btn-outline-light rounded-pill px-4 py-2 fw-bold shadow-sm">
+                        <a href="https://www.youtube.com/embed/rtWdQz1Kmjk?si=lUWDuibF2wXeHp8s" target="_blank" class="btn btn-outline-light rounded-pill px-4 py-2 fw-bold shadow-sm">
                             <i class="fab fa-youtube me-2"></i>Watch Full Video
                         </a>
                     </div>
