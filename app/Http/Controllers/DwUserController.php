@@ -59,7 +59,19 @@ class DwUserController extends Controller
             $currentYear      = now()->format('Y');
             $currentYearShort = now()->format('y');
 
-            $serial = DwUserModel::whereYear('created_at', $currentYear)->count() + 1;
+            // Find the last memberid for this year to get the next serial number
+            $lastUser = DwUserModel::where('memberid', 'like', "DW-$currentYear-%")
+                ->orderBy('memberid', 'desc')
+                ->first();
+
+            $serial = 1;
+            if ($lastUser && $lastUser->memberid) {
+                $parts = explode('-', $lastUser->memberid);
+                $lastSerialNum = end($parts);
+                if (is_numeric($lastSerialNum)) {
+                    $serial = (int)$lastSerialNum + 1;
+                }
+            }
 
             $paddedSerial = str_pad($serial, 3, '0', STR_PAD_LEFT);
             $memberId     = 'DW-' . $currentYear . '-' . $paddedSerial;
@@ -88,7 +100,7 @@ class DwUserController extends Controller
         } catch (\Illuminate\Database\QueryException $e) {
             return redirect()->back()
                 ->withInput()
-                ->with('error', 'This email or mobile number is already registered. Please log in or use different details.');
+                ->with('error', 'Registration failed: This email, mobile, or Medical ID is already in use.');
         } catch (\Exception $e) {
             return redirect()->back()
                 ->withInput()

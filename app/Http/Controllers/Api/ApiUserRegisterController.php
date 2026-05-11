@@ -47,7 +47,19 @@ class ApiUserRegisterController extends Controller
             $currentYear      = now()->format('Y');
             $currentYearShort = now()->format('y');
 
-            $serial = DwUserModel::whereYear('created_at', $currentYear)->count() + 1;
+            // Find the last memberid for this year to get the next serial number
+            $lastUser = DwUserModel::where('memberid', 'like', "DW-$currentYear-%")
+                ->orderBy('memberid', 'desc')
+                ->first();
+
+            $serial = 1;
+            if ($lastUser && $lastUser->memberid) {
+                $parts = explode('-', $lastUser->memberid);
+                $lastSerialNum = end($parts);
+                if (is_numeric($lastSerialNum)) {
+                    $serial = (int)$lastSerialNum + 1;
+                }
+            }
 
             $paddedSerial = str_pad($serial, 3, '0', STR_PAD_LEFT);
             $memberId     = 'DW-' . $currentYear . '-' . $paddedSerial;
@@ -92,7 +104,7 @@ class ApiUserRegisterController extends Controller
             if ($e->errorInfo[1] == 1062) {
                 return response()->json([
                     'status'  => false,
-                    'message' => 'You are already registered with this email or mobile number.',
+                    'message' => 'Registration failed: This email, mobile number, or Medical ID is already in use.',
                 ], 409);
             }
             return response()->json([
