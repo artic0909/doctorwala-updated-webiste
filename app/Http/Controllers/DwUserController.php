@@ -37,7 +37,7 @@ class DwUserController extends Controller
     {
         $request->validate([
             'user_name'     => 'required|string|max:255',
-            'user_mobile'   => 'required|digits:10',
+            'user_mobile'   => 'required|digits:10|unique:dw_user_models,user_mobile',
             'user_city'     => 'required|string|max:255',
             'user_email'    => 'required|email|max:255|unique:dw_user_models,user_email',
             'user_password' => 'required|string|min:8',
@@ -46,6 +46,7 @@ class DwUserController extends Controller
             'user_name.max'          => 'Name must not exceed 255 characters.',
             'user_mobile.required'   => 'Mobile number is required.',
             'user_mobile.digits'     => 'Mobile number must be exactly 10 digits.',
+            'user_mobile.unique'     => 'This mobile number is already registered.',
             'user_city.required'     => 'City is required.',
             'user_email.required'    => 'Email address is required.',
             'user_email.email'       => 'Please enter a valid email address.',
@@ -75,7 +76,12 @@ class DwUserController extends Controller
             $dwuser->save();
 
             // Send Welcome Email
-            Mail::to($dwuser->user_email)->send(new UserRegisterWelcomeMail($dwuser));
+            try {
+                Mail::to($dwuser->user_email)->send(new UserRegisterWelcomeMail($dwuser));
+            } catch (\Exception $e) {
+                // Log the error or ignore it so registration still succeeds
+                \Log::error('Registration Email Error: ' . $e->getMessage());
+            }
 
             return redirect()->route('dw.user-auth')
                 ->with('success', 'Registration successful! Your Medical Card ID is ' . $memberId . '. Please log in.');

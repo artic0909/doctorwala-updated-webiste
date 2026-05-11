@@ -47,18 +47,7 @@ class ApiUserRegisterController extends Controller
             $currentYear      = now()->format('Y');
             $currentYearShort = now()->format('y');
 
-            $lastUser = DwUserModel::whereYear('created_at', $currentYear)
-                ->orderBy('id', 'desc')
-                ->first();
-
-            $serial = 1;
-            if ($lastUser && $lastUser->memberid) {
-                $parts = explode('-', $lastUser->memberid);
-                $lastSerialNum = end($parts);
-                if (is_numeric($lastSerialNum)) {
-                    $serial = (int)$lastSerialNum + 1;
-                }
-            }
+            $serial = DwUserModel::whereYear('created_at', $currentYear)->count() + 1;
 
             $paddedSerial = str_pad($serial, 3, '0', STR_PAD_LEFT);
             $memberId     = 'DW-' . $currentYear . '-' . $paddedSerial;
@@ -75,7 +64,12 @@ class ApiUserRegisterController extends Controller
             $dwuser->save();
 
             // Send Welcome Email
-            Mail::to($dwuser->user_email)->send(new UserRegisterWelcomeMail($dwuser));
+            try {
+                Mail::to($dwuser->user_email)->send(new UserRegisterWelcomeMail($dwuser));
+            } catch (\Exception $e) {
+                // Log the error or ignore it so registration still succeeds
+                \Log::error('API Registration Email Error: ' . $e->getMessage());
+            }
 
             $token = $dwuser->createToken('auth_token')->plainTextToken;
 

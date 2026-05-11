@@ -52,20 +52,25 @@ class ApiUserLoginController extends Controller
             'user_password' => 'required|string|min:6',
         ]);
 
-        $identifier = $request->user_identifier;
+        $identifier = trim($request->user_identifier);
 
         // Try finding user by email or mobile
         $user = DwUserModel::where('user_email', $identifier)
             ->orWhere('user_mobile', $identifier)
             ->first();
 
-        if (!$user || !Hash::check($request->user_password, $user->user_password)) {
-            return response()->json(['message' => 'Invalid credentials'], 401);
+        if (!$user) {
+            return response()->json(['message' => 'No account found with this email or mobile number.'], 404);
+        }
+
+        if (!Hash::check($request->user_password, $user->user_password)) {
+            return response()->json(['message' => 'Incorrect password. Please try again.'], 401);
         }
 
         $token = $user->createToken('flutter-token')->plainTextToken;
 
         return response()->json([
+            'status' => true,
             'message' => 'Login successful',
             'token' => $token,
             'user' => [
@@ -74,7 +79,6 @@ class ApiUserLoginController extends Controller
                 'email' => $user->user_email,
                 'mobile' => $user->user_mobile,
                 'city' => $user->user_city,
-                // --- ADD THESE 3 LINES ---
                 'member_id' => $user->memberid,
                 'medical_card_no' => $user->medical_card_no,
                 'image' => $user->image,
