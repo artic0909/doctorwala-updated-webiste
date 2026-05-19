@@ -9,18 +9,25 @@ use Illuminate\Http\Request;
 
 class SuperFollowupController extends Controller
 {
-    /**
-     * Display the followup tracking page.
-     */
-    public function index()
+    public function index(Request $request)
     {
-        // Get all partners for selection in the form
-        $partners = DwPartnerModel::orderBy('partner_clinic_name', 'asc')->get();
+        $partnerId = $request->input('dw_partner_id');
 
-        // Get all followup records with their associated partners
-        $followups = Followup::with('partner')->orderBy('date', 'desc')->orderBy('id', 'desc')->get();
+        if (!$partnerId) {
+            return redirect()->route('superadmin.super-all-partner.get')->with('error', 'Please select a partner to view their follow-up history.');
+        }
 
-        return view('superadmin.followup.create', compact('partners', 'followups'));
+        // Get specific partner details
+        $selectedPartner = DwPartnerModel::findOrFail($partnerId);
+
+        // Get followup records associated specifically with this partner
+        $followups = Followup::with('partner')
+            ->where('dw_partner_id', $partnerId)
+            ->orderBy('date', 'desc')
+            ->orderBy('id', 'desc')
+            ->get();
+
+        return view('superadmin.followup.create', compact('selectedPartner', 'followups'));
     }
 
     /**

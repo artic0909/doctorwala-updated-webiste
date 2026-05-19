@@ -250,9 +250,14 @@
                 <div class="content-wrapper">
                     <!-- Title Section -->
                     <div class="row mb-4">
-                        <div class="col-md-12">
-                            <h3 class="font-weight-bold"><i class="fa fa-phone-volume text-danger"></i> Follow-up Tracking System</h3>
-                            <p class="text-muted">Manage, schedule, and track communications with clinical and diagnostics partners.</p>
+                        <div class="col-md-12 d-flex justify-content-between align-items-center flex-wrap">
+                            <div>
+                                <h3 class="font-weight-bold"><i class="fa fa-phone-volume text-danger"></i> Follow-up Tracking System</h3>
+                                <p class="text-muted">Manage, schedule, and track communications with <strong class="text-danger">{{ $selectedPartner->partner_clinic_name }}</strong></p>
+                            </div>
+                            <a href="/superadmin/super-all-partner" class="btn btn-outline-danger btn-icon-text font-weight-bold p-3 rounded shadow-sm">
+                                <i class="fa-solid fa-arrow-left-long mr-1"></i> Back to Partners
+                            </a>
                         </div>
                     </div>
 
@@ -267,19 +272,15 @@
                                     <form action="{{ route('superadmin.followup.store') }}" method="POST">
                                         @csrf
 
-                                        <div class="form-group">
-                                            <label for="dw_partner_id" class="font-weight-bold"><i class="fa fa-hospital text-danger mr-1"></i> Select Partner <span class="text-danger">*</span></label>
-                                            <select name="dw_partner_id" id="dw_partner_id" class="form-control" style="height: 50px;" required>
-                                                <option value="">-- Choose Partner --</option>
-                                                @foreach($partners as $partner)
-                                                    <option value="{{ $partner->id }}" {{ (old('dw_partner_id') ?? request('dw_partner_id')) == $partner->id ? 'selected' : '' }}>
-                                                        {{ $partner->partner_clinic_name }} ({{ $partner->partner_contact_person_name }})
-                                                    </option>
-                                                @endforeach
-                                            </select>
-                                            @error('dw_partner_id')
-                                                <small class="text-danger font-weight-bold mt-1">{{ $message }}</small>
-                                            @enderror
+                                        <!-- Hidden field to submit partner ID -->
+                                        <input type="hidden" name="dw_partner_id" value="{{ $selectedPartner->id }}">
+
+                                        <!-- Info block displaying the partner's clinic name at the top of the form -->
+                                        <div class="form-group mb-4 p-3 bg-light rounded border-left border-danger" style="border-left-width: 4px !important;">
+                                            <label class="font-weight-bold text-danger mb-1" style="font-size: 0.85rem;"><i class="fa fa-hospital mr-1"></i> Selected Partner Clinic</label>
+                                            <h5 class="font-weight-bold text-dark mb-1">{{ $selectedPartner->partner_clinic_name }}</h5>
+                                            <small class="text-muted d-block mt-1"><i class="fa-regular fa-user mr-1"></i><b>Contact:</b> {{ $selectedPartner->partner_contact_person_name }}</small>
+                                            <small class="text-muted d-block"><i class="fa-solid fa-phone mr-1"></i><b>Mobile:</b> {{ $selectedPartner->partner_mobile_number }}</small>
                                         </div>
 
                                         <div class="form-group">
