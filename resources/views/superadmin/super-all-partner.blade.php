@@ -336,9 +336,12 @@
                         </div>
                     </li>
 
-
-
-
+                    <!-- Follow-ups standalone menu -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="/superadmin/super-followups">
+                            <i class="fa fa-phone-volume" aria-hidden="true"></i>&nbsp; <span class="menu-title">Follow-ups</span>
+                        </a>
+                    </li>
                 </ul>
 
 
@@ -512,6 +515,11 @@
                                                     <a href="{{ $waUrl }}" target="_blank"
                                                         class="ed-btn"><i class="fa-brands fa-whatsapp text-success"
                                                             style="font-size: 1.1rem;"></i></a>
+
+                                                    <a href="{{ route('superadmin.followup.index', ['dw_partner_id' => $partner->id]) }}"
+                                                        class="ed-btn mt-2" title="Follow-up Tracking">
+                                                        <i class="fa-solid fa-phone-volume" style="font-size: 1.1rem; color: #6f42c1 !important;"></i>
+                                                    </a>
 
                                                     <a href="" data-target="#myDeleteModal{{$partner->id}}" data-toggle="modal"
                                                         class="ed-btn mt-2"><i class="fa-solid fa-trash-can text-danger"

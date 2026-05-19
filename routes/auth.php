@@ -25,6 +25,7 @@ use App\Http\Controllers\Superadmin\SuperPartnerHandleController;
 use App\Http\Controllers\Superadmin\SuperSubscriptionController;
 use App\Http\Controllers\Superadmin\SuperTicketController;
 use App\Http\Controllers\Superadmin\SuperUserInquiryController;
+use App\Http\Controllers\Superadmin\SuperFollowupController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('guest:web')->group(function () {
@@ -346,6 +347,11 @@ Route::middleware('auth:web')->group(function () {
     
     Route::get('/superadmin/super-ticket-replies', [SuperTicketController::class, 'showAllReplayed'])->name('superadmin.super-ticket-replies');
     Route::delete('/superadmin/super-ticket-replies/delete/{id}', [SuperTicketController::class, 'delete'])->name('superadmin.super-reply.delete');
+
+    // Follow-ups Routes
+    Route::get('/superadmin/super-followups', [SuperFollowupController::class, 'index'])->name('superadmin.followup.index');
+    Route::post('/superadmin/super-followups', [SuperFollowupController::class, 'store'])->name('superadmin.followup.store');
+    Route::delete('/superadmin/super-followups/delete/{id}', [SuperFollowupController::class, 'delete'])->name('superadmin.followup.delete');
 
 
     // User's Inquiries Routes---------------------------------------------------------------------------------------------------------------------------------------->
