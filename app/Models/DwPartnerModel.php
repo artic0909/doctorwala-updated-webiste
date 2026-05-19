@@ -104,4 +104,9 @@ class DwPartnerModel extends Authenticatable
     {
         return $this->hasOne(PartnerDoctorContactModel::class, 'currently_loggedin_partner_id', 'currently_loggedin_partner_id');
     }
+
+    public function followups()
+    {
+        return $this->hasMany(Followup::class, 'dw_partner_id', 'id');
+    }
 }

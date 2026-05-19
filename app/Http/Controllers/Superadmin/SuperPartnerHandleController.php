@@ -206,7 +206,7 @@ class SuperPartnerHandleController extends Controller
 
     public function allPartnersShow(Request $request)
     {
-        $partners = DwPartnerModel::query();
+        $partners = DwPartnerModel::withCount('followups');
 
         if ($request->has('search') && $request->search != '') {
             $search = $request->search;

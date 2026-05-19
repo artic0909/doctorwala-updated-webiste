@@ -474,7 +474,7 @@
                                         <tbody>
 
                                             @foreach ($partners as $partner)
-                                            <tr>
+                                            <tr class="{{ $partner->followups_count > 0 ? 'table-success' : '' }}" style="{{ $partner->followups_count > 0 ? 'background-color: #d4edda !important;' : '' }}">
                                                 <td>{{ ($partners->currentPage() - 1) * $partners->perPage() + $loop->iteration }}</td>
                                                 <td>
                                                     @if($partner->status == 'Active')
