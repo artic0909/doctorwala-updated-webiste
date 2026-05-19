@@ -326,4 +326,102 @@ class AuthApiController extends Controller
             'message' => 'Unauthorized or no active session.'
         ], 401);
     }
+
+    /**
+     * Get Coupon Details by code
+     */
+    public function getCouponDetails(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'coupon_code' => 'required|string',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Coupon code is required.',
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        $couponCode = $request->input('coupon_code');
+        $coupon = \App\Models\SuperCouponModel::where('coupon_code', $couponCode)->first();
+
+        if ($coupon) {
+            return response()->json([
+                'success' => true,
+                'data' => $coupon,
+            ]);
+        }
+
+        return response()->json([
+            'success' => false,
+            'message' => 'Coupon not found.',
+        ], 404);
+    }
+
+    /**
+     * Associate Coupon to Partner & Mark Status as Active
+     */
+    public function partnerCouponCodeAdd(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'currently_loggedin_partner_id' => 'required',
+            'coupon_code' => 'required|string',
+            'coupon_amount' => 'required|string',
+            'coupon_start_date' => 'required|string',
+            'coupon_end_date' => 'required|string',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Validation errors occurred.',
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        try {
+            \App\Models\CouponHolderModel::create([
+                'currently_loggedin_partner_id' => $request->input('currently_loggedin_partner_id'),
+                'coupon_code' => $request->input('coupon_code'),
+                'coupon_amount' => $request->input('coupon_amount'),
+                'coupon_start_date' => $request->input('coupon_start_date'),
+                'coupon_end_date' => $request->input('coupon_end_date'),
+            ]);
+
+            // Update partner status to Active
+            DwPartnerModel::where('id', $request->input('currently_loggedin_partner_id'))
+                ->update(['status' => 'Active']);
+
+            // Get updated partner details to return
+            $partner = DwPartnerModel::find($request->input('currently_loggedin_partner_id'));
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Coupon associated and subscription activated successfully!',
+                'partner' => [
+                    'id' => $partner->id,
+                    'partner_id' => $partner->partner_id,
+                    'partner_clinic_name' => $partner->partner_clinic_name,
+                    'partner_contact_person_name' => $partner->partner_contact_person_name,
+                    'partner_mobile_number' => $partner->partner_mobile_number,
+                    'partner_email' => $partner->partner_email,
+                    'partner_state' => $partner->partner_state,
+                    'partner_city' => $partner->partner_city,
+                    'partner_pincode' => $partner->partner_pincode,
+                    'partner_landmark' => $partner->partner_landmark,
+                    'partner_address' => $partner->partner_address,
+                    'registration_type' => is_string($partner->registration_type) ? json_decode($partner->registration_type, true) : $partner->registration_type,
+                    'status' => $partner->status,
+                ]
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to associate coupon. Please try again.',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
 }
