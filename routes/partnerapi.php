@@ -19,9 +19,11 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/get-coupon-details', [AuthApiController::class, 'getCouponDetails']);
     Route::post('/add-partner-coupon', [AuthApiController::class, 'partnerCouponCodeAdd']);
 
-    // Clinic Profile (OPD & Pathology) Routes
+    // Clinic Profile (OPD, Pathology & Doctor Contact) Routes
     Route::get('/clinic-profile/opd', [ClinicProfileAddApiController::class, 'getOPDContact']);
     Route::post('/clinic-profile/opd', [ClinicProfileAddApiController::class, 'storeOPDContact']);
     Route::get('/clinic-profile/pathology', [ClinicProfileAddApiController::class, 'getPathologyContact']);
     Route::post('/clinic-profile/pathology', [ClinicProfileAddApiController::class, 'storePathologyContact']);
+    Route::get('/clinic-profile/doctor', [ClinicProfileAddApiController::class, 'getDoctorContact']);
+    Route::post('/clinic-profile/doctor', [ClinicProfileAddApiController::class, 'storeDoctorContact']);
 });

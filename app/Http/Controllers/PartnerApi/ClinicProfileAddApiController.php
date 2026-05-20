@@ -5,6 +5,7 @@ namespace App\Http\Controllers\PartnerApi;
 use App\Http\Controllers\Controller;
 use App\Models\PartnerOPDContactModel;
 use App\Models\PartnerPathologyContactModel;
+use App\Models\PartnerDoctorContactModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -235,6 +236,127 @@ class ClinicProfileAddApiController extends Controller
             return response()->json([
                 'status' => false,
                 'message' => 'An error occurred while saving contact details.',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * Get Doctor Contact Details
+     */
+    public function getDoctorContact(Request $request)
+    {
+        $partner = $request->user();
+        if (!$partner) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Unauthorized.'
+            ], 401);
+        }
+
+        $contactDetails = PartnerDoctorContactModel::where('currently_loggedin_partner_id', $partner->id)->first();
+        $contactCount = PartnerDoctorContactModel::where('currently_loggedin_partner_id', $partner->id)->count();
+
+        $registrationTypes = $partner->registration_type;
+        if (is_string($registrationTypes)) {
+            $registrationTypes = json_decode($registrationTypes, true);
+        }
+
+        return response()->json([
+            'status' => true,
+            'contact_details' => $contactDetails,
+            'contact_count' => $contactCount,
+            'registration_types' => $registrationTypes,
+            'partner' => [
+                'id' => $partner->id,
+                'status' => $partner->status,
+            ]
+        ], 200);
+    }
+
+    /**
+     * Store or Update Doctor Contact Details
+     */
+    public function storeDoctorContact(Request $request)
+    {
+        $partner = $request->user();
+        if (!$partner) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Unauthorized.'
+            ], 401);
+        }
+
+        $validator = Validator::make($request->all(), [
+            'clinic_registration_type' => 'required|string',
+            'partner_doctor_name' => 'required|string',
+            'partner_doctor_specialist' => 'required|string',
+            'partner_doctor_designation' => 'required|string',
+            'partner_doctor_fees' => 'required|string',
+            'partner_doctor_mobile' => 'required|string|max:15',
+            'partner_doctor_email' => 'required|email',
+            'partner_doctor_landmark' => 'required|string',
+            'partner_doctor_pincode' => 'required|string|max:10',
+            'partner_doctor_google_map_link' => 'nullable|url',
+            'partner_doctor_state' => 'required|string',
+            'partner_doctor_city' => 'required|string',
+            'partner_doctor_address' => 'required|string',
+            'partner_doctor_visit_day' => 'required|array',
+            'partner_doctor_visit_day.*' => 'required|string',
+            'partner_doctor_visit_start_time' => 'required|array',
+            'partner_doctor_visit_start_time.*' => 'date_format:H:i',
+            'partner_doctor_visit_end_time' => 'required|array',
+            'partner_doctor_visit_end_time.*' => 'date_format:H:i|after:partner_doctor_visit_start_time.*',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Validation errors occurred.',
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        try {
+            $partnerId = $partner->id;
+            $partnerStatus = $partner->status;
+
+            $visitDayTime = [];
+            if ($request->has('partner_doctor_visit_day')) {
+                foreach ($request->partner_doctor_visit_day as $index => $day) {
+                    $visitDayTime[] = [
+                        'day' => $day,
+                        'start_time' => $request->partner_doctor_visit_start_time[$index] ?? null,
+                        'end_time' => $request->partner_doctor_visit_end_time[$index] ?? null,
+                    ];
+                }
+            }
+
+            $validatedData = $validator->validated();
+            $validatedData['visit_day_time'] = $visitDayTime;
+            $validatedData['currently_loggedin_partner_id'] = $partnerId;
+            $validatedData['status'] = $partnerStatus;
+
+            // Remove array fields to avoid issues with direct insertion
+            unset($validatedData['partner_doctor_visit_day']);
+            unset($validatedData['partner_doctor_visit_start_time']);
+            unset($validatedData['partner_doctor_visit_end_time']);
+
+            $contactDetails = PartnerDoctorContactModel::updateOrCreate(
+                ['currently_loggedin_partner_id' => $partnerId],
+                $validatedData
+            );
+
+            return response()->json([
+                'status' => true,
+                'message' => 'Doctor contact saved successfully!',
+                'contact_details' => $contactDetails
+            ], 200);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => false,
+                'message' => 'An error occurred while saving doctor contact details.',
                 'error' => $e->getMessage()
             ], 500);
         }
