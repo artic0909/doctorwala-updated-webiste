@@ -6,6 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Models\PartnerOPDContactModel;
 use App\Models\PartnerPathologyContactModel;
 use App\Models\PartnerDoctorContactModel;
+use App\Models\PartnerOPDBannerModel;
+use App\Models\PartnerPathologyBannerModel;
+use App\Models\PartnerDoctorBannerModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -25,6 +28,7 @@ class ClinicProfileAddApiController extends Controller
         }
 
         $contactDetails = PartnerOPDContactModel::where('currently_loggedin_partner_id', $partner->id)->first();
+        $opdBanner = PartnerOPDBannerModel::where('currently_loggedin_partner_id', $partner->id)->first();
 
         $registrationTypes = $partner->registration_type;
         if (is_string($registrationTypes)) {
@@ -34,6 +38,7 @@ class ClinicProfileAddApiController extends Controller
         return response()->json([
             'status' => true,
             'contact_details' => $contactDetails,
+            'opd_banner' => $opdBanner ? asset('storage/' . $opdBanner->opdbanner) : null,
             'registration_types' => $registrationTypes,
             'partner' => [
                 'id' => $partner->id,
@@ -68,6 +73,7 @@ class ClinicProfileAddApiController extends Controller
             'clinic_city' => 'required|string|max:255',
             'clinic_google_map_link' => 'nullable|string|max:500',
             'clinic_address' => 'required|string',
+            'opdbanner' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
         ]);
 
         if ($validator->fails()) {
@@ -111,10 +117,26 @@ class ClinicProfileAddApiController extends Controller
                 $message = 'OPD contact details saved successfully.';
             }
 
+            // Handle OPD banner upload
+            $opdBannerPath = null;
+            if ($request->hasFile('opdbanner')) {
+                $opdBannerPath = $request->file('opdbanner')->store('partner-opd-profile', 'public');
+            }
+
+            $opdBanner = null;
+            if ($opdBannerPath) {
+                $opdBanner = PartnerOPDBannerModel::firstOrNew(['currently_loggedin_partner_id' => $partnerId]);
+                $opdBanner->opdbanner = $opdBannerPath;
+                $opdBanner->save();
+            } else {
+                $opdBanner = PartnerOPDBannerModel::where('currently_loggedin_partner_id', $partnerId)->first();
+            }
+
             return response()->json([
                 'status' => true,
                 'message' => $message,
-                'contact_details' => $contactDetails
+                'contact_details' => $contactDetails,
+                'opd_banner' => $opdBanner ? asset('storage/' . $opdBanner->opdbanner) : null,
             ], 200);
 
         } catch (\Exception $e) {
@@ -140,6 +162,7 @@ class ClinicProfileAddApiController extends Controller
         }
 
         $contactDetails = PartnerPathologyContactModel::where('currently_loggedin_partner_id', $partner->id)->first();
+        $pathologyBanner = PartnerPathologyBannerModel::where('currently_loggedin_partner_id', $partner->id)->first();
 
         $registrationTypes = $partner->registration_type;
         if (is_string($registrationTypes)) {
@@ -149,6 +172,7 @@ class ClinicProfileAddApiController extends Controller
         return response()->json([
             'status' => true,
             'contact_details' => $contactDetails,
+            'pathology_banner' => $pathologyBanner ? asset('storage/' . $pathologyBanner->pathologybanner) : null,
             'registration_types' => $registrationTypes,
             'partner' => [
                 'id' => $partner->id,
@@ -183,6 +207,7 @@ class ClinicProfileAddApiController extends Controller
             'clinic_city' => 'required|string|max:255',
             'clinic_google_map_link' => 'nullable|string|max:500',
             'clinic_address' => 'required|string',
+            'pathologybanner' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
         ]);
 
         if ($validator->fails()) {
@@ -226,10 +251,26 @@ class ClinicProfileAddApiController extends Controller
                 $message = 'Pathology contact details saved successfully.';
             }
 
+            // Handle Pathology banner upload
+            $pathologyBannerPath = null;
+            if ($request->hasFile('pathologybanner')) {
+                $pathologyBannerPath = $request->file('pathologybanner')->store('partner-pathology-profile', 'public');
+            }
+
+            $pathologyBanner = null;
+            if ($pathologyBannerPath) {
+                $pathologyBanner = PartnerPathologyBannerModel::firstOrNew(['currently_loggedin_partner_id' => $partnerId]);
+                $pathologyBanner->pathologybanner = $pathologyBannerPath;
+                $pathologyBanner->save();
+            } else {
+                $pathologyBanner = PartnerPathologyBannerModel::where('currently_loggedin_partner_id', $partnerId)->first();
+            }
+
             return response()->json([
                 'status' => true,
                 'message' => $message,
-                'contact_details' => $contactDetails
+                'contact_details' => $contactDetails,
+                'pathology_banner' => $pathologyBanner ? asset('storage/' . $pathologyBanner->pathologybanner) : null,
             ], 200);
 
         } catch (\Exception $e) {
@@ -255,6 +296,7 @@ class ClinicProfileAddApiController extends Controller
         }
 
         $contactDetails = PartnerDoctorContactModel::where('currently_loggedin_partner_id', $partner->id)->first();
+        $doctorBanner = PartnerDoctorBannerModel::where('currently_loggedin_partner_id', $partner->id)->first();
         $contactCount = PartnerDoctorContactModel::where('currently_loggedin_partner_id', $partner->id)->count();
 
         $registrationTypes = $partner->registration_type;
@@ -265,6 +307,7 @@ class ClinicProfileAddApiController extends Controller
         return response()->json([
             'status' => true,
             'contact_details' => $contactDetails,
+            'doctor_banner' => $doctorBanner ? asset('storage/' . $doctorBanner->doctorbanner) : null,
             'contact_count' => $contactCount,
             'registration_types' => $registrationTypes,
             'partner' => [
@@ -307,6 +350,7 @@ class ClinicProfileAddApiController extends Controller
             'partner_doctor_visit_start_time.*' => 'date_format:H:i',
             'partner_doctor_visit_end_time' => 'required|array',
             'partner_doctor_visit_end_time.*' => 'date_format:H:i|after:partner_doctor_visit_start_time.*',
+            'doctorbanner' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
         ]);
 
         if ($validator->fails()) {
@@ -337,20 +381,37 @@ class ClinicProfileAddApiController extends Controller
             $validatedData['currently_loggedin_partner_id'] = $partnerId;
             $validatedData['status'] = $partnerStatus;
 
-            // Remove array fields to avoid issues with direct insertion
+            // Remove array fields and file fields to avoid issues with direct insertion
             unset($validatedData['partner_doctor_visit_day']);
             unset($validatedData['partner_doctor_visit_start_time']);
             unset($validatedData['partner_doctor_visit_end_time']);
+            unset($validatedData['doctorbanner']);
 
             $contactDetails = PartnerDoctorContactModel::updateOrCreate(
                 ['currently_loggedin_partner_id' => $partnerId],
                 $validatedData
             );
 
+            // Handle Doctor banner upload
+            $doctorBannerPath = null;
+            if ($request->hasFile('doctorbanner')) {
+                $doctorBannerPath = $request->file('doctorbanner')->store('partner-doctor-profile', 'public');
+            }
+
+            $doctorBanner = null;
+            if ($doctorBannerPath) {
+                $doctorBanner = PartnerDoctorBannerModel::firstOrNew(['currently_loggedin_partner_id' => $partnerId]);
+                $doctorBanner->doctorbanner = $doctorBannerPath;
+                $doctorBanner->save();
+            } else {
+                $doctorBanner = PartnerDoctorBannerModel::where('currently_loggedin_partner_id', $partnerId)->first();
+            }
+
             return response()->json([
                 'status' => true,
                 'message' => 'Doctor contact saved successfully!',
-                'contact_details' => $contactDetails
+                'contact_details' => $contactDetails,
+                'doctor_banner' => $doctorBanner ? asset('storage/' . $doctorBanner->doctorbanner) : null,
             ], 200);
 
         } catch (\Exception $e) {
