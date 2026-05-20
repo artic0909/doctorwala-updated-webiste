@@ -272,6 +272,105 @@ class AuthApiController extends Controller
     }
 
     /**
+     * Send OTP for Forgot Password
+     */
+    public function forgotPasswordSendOtp(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'partner_email' => 'required|email',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Please provide a valid email address.',
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        $partner = DwPartnerModel::where('partner_email', $request->partner_email)->first();
+
+        if (!$partner) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Email is not registered.'
+            ], 404);
+        }
+
+        try {
+            $otp = rand(1000, 9999);
+            
+            // Store OTP in Cache for 5 minutes
+            Cache::put('partner_forgot_password_otp_' . $request->partner_email, $otp, now()->addMinutes(5));
+
+            // Send OTP email
+            Mail::to($request->partner_email)->send(new SendOTPPartner($otp));
+
+            return response()->json([
+                'status' => true,
+                'message' => 'OTP has been sent to your email for password reset.'
+            ], 200);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Failed to send OTP email. Please try again.',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * Verify OTP and Reset Password
+     */
+    public function forgotPasswordReset(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'partner_email' => 'required|email',
+            'otp' => 'required|digits:4',
+            'partner_password' => 'required|string|min:6',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Validation errors occurred.',
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        $storedOtp = Cache::get('partner_forgot_password_otp_' . $request->partner_email);
+
+        if (!$storedOtp || $storedOtp != $request->otp) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Invalid or expired OTP.'
+            ], 401);
+        }
+
+        $partner = DwPartnerModel::where('partner_email', $request->partner_email)->first();
+
+        if (!$partner) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Partner not found.'
+            ], 404);
+        }
+
+        // Update password
+        $partner->partner_password = bcrypt($request->partner_password);
+        $partner->save();
+
+        // Clean up OTP from cache
+        Cache::forget('partner_forgot_password_otp_' . $request->partner_email);
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Password reset successfully. You can now login with your new password.',
+        ], 200);
+    }
+
+    /**
      * Get Authenticated Partner Profile
      */
     public function profile(Request $request)

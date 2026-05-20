@@ -8,6 +8,8 @@ Route::post('/login', [AuthApiController::class, 'login']);
 Route::post('/register', [AuthApiController::class, 'register']);
 Route::post('/send-otp', [AuthApiController::class, 'sendOTP']);
 Route::post('/verify-otp', [AuthApiController::class, 'verifyOTP']);
+Route::post('/forgot-password/send-otp', [AuthApiController::class, 'forgotPasswordSendOtp']);
+Route::post('/forgot-password/reset', [AuthApiController::class, 'forgotPasswordReset']);
 
 // Protected routes (Sanctum)
 Route::middleware('auth:sanctum')->group(function () {
