@@ -56,9 +56,9 @@ class DoctoraddApiController extends Controller
             'doctor_visit_day' => 'nullable|array',
             'doctor_visit_day.*' => 'nullable|string|max:255',
             'doctor_visit_start_time' => 'nullable|array',
-            'doctor_visit_start_time.*' => 'nullable|string',
+            'doctor_visit_start_time.*' => 'nullable|date_format:H:i',
             'doctor_visit_end_time' => 'nullable|array',
-            'doctor_visit_end_time.*' => 'nullable|string',
+            'doctor_visit_end_time.*' => 'nullable|date_format:H:i',
         ]);
 
         if ($validator->fails()) {
@@ -123,9 +123,9 @@ class DoctoraddApiController extends Controller
             'doctor_visit_day' => 'nullable|array',
             'doctor_visit_day.*' => 'nullable|string|max:255',
             'doctor_visit_start_time' => 'nullable|array',
-            'doctor_visit_start_time.*' => 'nullable|string',
+            'doctor_visit_start_time.*' => 'nullable|date_format:H:i',
             'doctor_visit_end_time' => 'nullable|array',
-            'doctor_visit_end_time.*' => 'nullable|string',
+            'doctor_visit_end_time.*' => 'nullable|date_format:H:i',
             'status' => 'nullable|string|max:255',
         ]);
 

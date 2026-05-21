@@ -54,9 +54,9 @@ class TestaddApiController extends Controller
             'test_day' => 'nullable|array',
             'test_day.*' => 'nullable|string|max:255',
             'test_start_time' => 'nullable|array',
-            'test_start_time.*' => 'nullable|string',
+            'test_start_time.*' => 'nullable|date_format:H:i',
             'test_end_time' => 'nullable|array',
-            'test_end_time.*' => 'nullable|string',
+            'test_end_time.*' => 'nullable|date_format:H:i',
         ]);
 
         if ($validator->fails()) {
@@ -117,9 +117,9 @@ class TestaddApiController extends Controller
             'test_day' => 'nullable|array',
             'test_day.*' => 'nullable|string|max:255',
             'test_start_time' => 'nullable|array',
-            'test_start_time.*' => 'nullable|string',
+            'test_start_time.*' => 'nullable|date_format:H:i',
             'test_end_time' => 'nullable|array',
-            'test_end_time.*' => 'nullable|string',
+            'test_end_time.*' => 'nullable|date_format:H:i',
             'status' => 'nullable|string|max:255',
         ]);
 
