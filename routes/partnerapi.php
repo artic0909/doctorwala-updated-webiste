@@ -3,6 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PartnerApi\AuthApiController;
 use App\Http\Controllers\PartnerApi\ClinicProfileAddApiController;
+use App\Http\Controllers\PartnerApi\DoctoraddApiController;
+use App\Http\Controllers\PartnerApi\TestaddApiController;
 
 // Public routes for partner API
 Route::post('/login', [AuthApiController::class, 'login']);
@@ -26,4 +28,16 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/clinic-profile/pathology', [ClinicProfileAddApiController::class, 'storePathologyContact']);
     Route::get('/clinic-profile/doctor', [ClinicProfileAddApiController::class, 'getDoctorContact']);
     Route::post('/clinic-profile/doctor', [ClinicProfileAddApiController::class, 'storeDoctorContact']);
+
+    // Doctor Add/Manage Routes
+    Route::get('/doctors', [DoctoraddApiController::class, 'index']);
+    Route::post('/doctors', [DoctoraddApiController::class, 'store']);
+    Route::post('/doctors/{id}', [DoctoraddApiController::class, 'update']);
+    Route::delete('/doctors/{id}', [DoctoraddApiController::class, 'destroy']);
+
+    // Test Add/Manage Routes
+    Route::get('/tests', [TestaddApiController::class, 'index']);
+    Route::post('/tests', [TestaddApiController::class, 'store']);
+    Route::post('/tests/{id}', [TestaddApiController::class, 'update']);
+    Route::delete('/tests/{id}', [TestaddApiController::class, 'destroy']);
 });
