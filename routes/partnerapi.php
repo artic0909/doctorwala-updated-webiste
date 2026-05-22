@@ -14,6 +14,8 @@ Route::post('/send-otp', [AuthApiController::class, 'sendOTP']);
 Route::post('/verify-otp', [AuthApiController::class, 'verifyOTP']);
 Route::post('/forgot-password/send-otp', [AuthApiController::class, 'forgotPasswordSendOtp']);
 Route::post('/forgot-password/reset', [AuthApiController::class, 'forgotPasswordReset']);
+Route::get('/about-us', [AuthApiController::class, 'getAboutUsDetails']);
+
 
 // Protected routes (Sanctum)
 Route::middleware('auth:sanctum')->group(function () {

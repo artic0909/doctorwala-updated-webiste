@@ -604,4 +604,22 @@ class AuthApiController extends Controller
             ], 500);
         }
     }
+
+    /**
+     * Get About Us / Help details
+     */
+    public function getAboutUsDetails()
+    {
+        $about = \App\Models\SuperAboutusModel::first();
+        if ($about) {
+            return response()->json([
+                'success' => true,
+                'data' => $about
+            ], 200);
+        }
+        return response()->json([
+            'success' => false,
+            'message' => 'About Us details not found.'
+        ], 404);
+    }
 }
