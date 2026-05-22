@@ -24,7 +24,21 @@ class PartnerPatientInquiry extends Model
         'user_email',
         'user_inquiry',
         'status',
+        'enquiry_serial',
     ];
+
+    protected static function booted()
+    {
+        static::creating(function ($inquiry) {
+            if ($inquiry->currently_loggedin_partner_id) {
+                $max = static::where('currently_loggedin_partner_id', $inquiry->currently_loggedin_partner_id)->max('enquiry_serial');
+                $inquiry->enquiry_serial = $max ? ($max + 1) : 1;
+            } else {
+                $max = static::whereNull('currently_loggedin_partner_id')->max('enquiry_serial');
+                $inquiry->enquiry_serial = $max ? ($max + 1) : 1;
+            }
+        });
+    }
 
     public function opdContact()
     {
