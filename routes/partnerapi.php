@@ -5,6 +5,7 @@ use App\Http\Controllers\PartnerApi\AuthApiController;
 use App\Http\Controllers\PartnerApi\ClinicProfileAddApiController;
 use App\Http\Controllers\PartnerApi\DoctoraddApiController;
 use App\Http\Controllers\PartnerApi\TestaddApiController;
+use App\Http\Controllers\PartnerApi\AppointmentsManagementApiController;
 
 // Public routes for partner API
 Route::post('/login', [AuthApiController::class, 'login']);
@@ -40,4 +41,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/tests', [TestaddApiController::class, 'store']);
     Route::post('/tests/{id}', [TestaddApiController::class, 'update']);
     Route::delete('/tests/{id}', [TestaddApiController::class, 'destroy']);
+
+    // Appointments Management Routes
+    Route::get('/appointments', [AppointmentsManagementApiController::class, 'index']);
+    Route::get('/appointments/stats', [AppointmentsManagementApiController::class, 'stats']);
+    Route::post('/appointments/{id}/status', [AppointmentsManagementApiController::class, 'updateStatus']);
 });
