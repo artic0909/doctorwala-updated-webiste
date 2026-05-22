@@ -523,4 +523,85 @@ class AuthApiController extends Controller
             ], 500);
         }
     }
+
+    /**
+     * Update Partner Profile
+     */
+    public function updateProfile(Request $request)
+    {
+        $partner = $request->user();
+
+        if (!$partner) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Unauthorized.'
+            ], 401);
+        }
+
+        $validator = Validator::make($request->all(), [
+            'partner_clinic_name' => 'required|string|max:255',
+            'partner_contact_person_name' => 'required|string|max:255',
+            'partner_mobile_number' => 'required|string|max:15|unique:dw_partner_models,partner_mobile_number,' . $partner->id,
+            'partner_email' => 'required|string|email|max:255|unique:dw_partner_models,partner_email,' . $partner->id,
+            'partner_state' => 'required|string',
+            'partner_city' => 'required|string',
+            'partner_pincode' => 'required|string',
+            'partner_landmark' => 'required|string',
+            'partner_address' => 'required|string',
+            'partner_password' => 'nullable|string|min:6',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Validation errors occurred.',
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        try {
+            $partner->partner_clinic_name = $request->partner_clinic_name;
+            $partner->partner_contact_person_name = $request->partner_contact_person_name;
+            $partner->partner_mobile_number = $request->partner_mobile_number;
+            $partner->partner_email = $request->partner_email;
+            $partner->partner_state = $request->partner_state;
+            $partner->partner_city = $request->partner_city;
+            $partner->partner_pincode = $request->partner_pincode;
+            $partner->partner_landmark = $request->partner_landmark;
+            $partner->partner_address = $request->partner_address;
+
+            if ($request->filled('partner_password')) {
+                $partner->partner_password = bcrypt($request->partner_password);
+            }
+
+            $partner->save();
+
+            return response()->json([
+                'status' => true,
+                'message' => 'Profile updated successfully!',
+                'partner' => [
+                    'id' => $partner->id,
+                    'partner_id' => $partner->partner_id,
+                    'partner_clinic_name' => $partner->partner_clinic_name,
+                    'partner_contact_person_name' => $partner->partner_contact_person_name,
+                    'partner_mobile_number' => $partner->partner_mobile_number,
+                    'partner_email' => $partner->partner_email,
+                    'partner_state' => $partner->partner_state,
+                    'partner_city' => $partner->partner_city,
+                    'partner_pincode' => $partner->partner_pincode,
+                    'partner_landmark' => $partner->partner_landmark,
+                    'partner_address' => $partner->partner_address,
+                    'registration_type' => is_string($partner->registration_type) ? json_decode($partner->registration_type, true) : $partner->registration_type,
+                    'status' => $partner->status,
+                ]
+            ], 200);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => false,
+                'message' => 'An error occurred while updating profile. Please try again.',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
 }

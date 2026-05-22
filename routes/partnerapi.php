@@ -19,6 +19,7 @@ Route::post('/forgot-password/reset', [AuthApiController::class, 'forgotPassword
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthApiController::class, 'logout']);
     Route::get('/profile', [AuthApiController::class, 'profile']);
+    Route::post('/profile/update', [AuthApiController::class, 'updateProfile']);
     Route::post('/get-coupon-details', [AuthApiController::class, 'getCouponDetails']);
     Route::post('/add-partner-coupon', [AuthApiController::class, 'partnerCouponCodeAdd']);
 
