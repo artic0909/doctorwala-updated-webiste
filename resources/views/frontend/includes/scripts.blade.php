@@ -99,3 +99,57 @@
         </div>`;
         };
     </script>
+
+    <!-- Chatbase Chatbot Integration -->
+    <script>
+        (function(){if(!window.chatbase||window.chatbase("getState")!=="initialized"){window.chatbase=(...arguments)=>{if(!window.chatbase.q){window.chatbase.q=[]}window.chatbase.q.push(arguments)};window.chatbase=new Proxy(window.chatbase,{get(target,prop){if(prop==="q"){return target.q}return(...args)=>target(prop,...args)}})}const onLoad=function(){const script=document.createElement("script");script.src="https://www.chatbase.co/embed.min.js";script.id="rqDR6Kx1HIctWqyibJ7bm";script.domain="www.chatbase.co";document.body.appendChild(script)};if(document.readyState==="complete"){onLoad()}else{window.addEventListener("load",onLoad)}})();
+    </script>
+
+    @php
+        $chatbotToken = null;
+        $chatbotSecret = env('CHATBOT_IDENTITY_SECRET');
+        if ($chatbotSecret) {
+            $chatbotUser = null;
+            if (auth('dwuser')->check()) {
+                $u = auth('dwuser')->user();
+                $chatbotUser = [
+                    'user_id' => (string) $u->id,
+                    'email' => $u->user_email,
+                    'name' => $u->user_name,
+                ];
+            } elseif (auth('partner')->check()) {
+                $u = auth('partner')->user();
+                $chatbotUser = [
+                    'user_id' => (string) $u->id,
+                    'email' => $u->partner_email,
+                    'name' => $u->partner_contact_person_name,
+                ];
+            } elseif (auth()->check()) {
+                $u = auth()->user();
+                $chatbotUser = [
+                    'user_id' => (string) $u->id,
+                    'email' => $u->email,
+                    'name' => $u->name,
+                ];
+            }
+
+            if ($chatbotUser) {
+                $header = json_encode(['alg' => 'HS256', 'typ' => 'JWT']);
+                $payload = json_encode(array_merge($chatbotUser, [
+                    'exp' => time() + 3600
+                ]));
+
+                $base64UrlHeader = str_replace(['+', '/', '='], ['-', '_', ''], base64_encode($header));
+                $base64UrlPayload = str_replace(['+', '/', '='], ['-', '_', ''], base64_encode($payload));
+                $signature = hash_hmac('sha256', $base64UrlHeader . "." . $base64UrlPayload, $chatbotSecret, true);
+                $base64UrlSignature = str_replace(['+', '/', '='], ['-', '_', ''], base64_encode($signature));
+                $chatbotToken = $base64UrlHeader . "." . $base64UrlPayload . "." . $base64UrlSignature;
+            }
+        }
+    @endphp
+
+    @if($chatbotToken)
+    <script>
+        window.chatbase('identify', { token: '{{ $chatbotToken }}' });
+    </script>
+    @endif
