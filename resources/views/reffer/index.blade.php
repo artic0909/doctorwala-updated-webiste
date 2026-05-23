@@ -40,6 +40,11 @@
             padding: 0;
         }
 
+        html, body {
+            max-width: 100%;
+            overflow-x: hidden;
+        }
+
         body {
             font-family: 'Outfit', 'Plus Jakarta Sans', sans-serif;
             background-color: var(--light-bg);
@@ -52,9 +57,19 @@
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            overflow-x: hidden;
             position: relative;
             line-height: 1.6;
+        }
+
+        .bg-blob-wrapper {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+            pointer-events: none;
         }
 
         /* Subtle Background Aura Blobs */
@@ -64,7 +79,6 @@
             height: 320px;
             border-radius: 50%;
             filter: blur(100px);
-            z-index: -1;
             opacity: 0.55;
             pointer-events: none;
             animation: floatBlob 12s infinite alternate ease-in-out;
@@ -372,7 +386,7 @@
             text-decoration: underline;
         }
 
-        @media (max-width: 480px) {
+        @media (max-width: 576px) {
             .celebrate-card {
                 padding: 24px 16px;
             }
@@ -412,9 +426,11 @@
 </head>
 <body>
 
-    <!-- Subtle Aura Background Blobs -->
-    <div class="bg-glow-blob blob-cyan"></div>
-    <div class="bg-glow-blob blob-blue"></div>
+    <!-- Background blobs wrapper -->
+    <div class="bg-blob-wrapper">
+        <div class="bg-glow-blob blob-cyan"></div>
+        <div class="bg-glow-blob blob-blue"></div>
+    </div>
 
     <header>
         <div class="logo-container">
