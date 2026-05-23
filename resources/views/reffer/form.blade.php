@@ -634,6 +634,182 @@
             }
         }
 
+        /* Instructions Modal Styles */
+        .instructions-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(15, 23, 42, 0.75);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            z-index: 99999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 1;
+            transition: opacity 0.35s ease, visibility 0.35s ease;
+        }
+
+        .instructions-modal-content {
+            background: #ffffff;
+            border-radius: 24px;
+            width: 90%;
+            max-width: 520px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            border: 1.5px solid rgba(255, 255, 255, 0.8);
+            display: flex;
+            flex-direction: column;
+            animation: modalZoomIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.15);
+        }
+
+        @keyframes modalZoomIn {
+            from { transform: scale(0.9); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .modal-header {
+            padding: 20px 24px 15px;
+            border-bottom: 1px solid #f1f5f9;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .modal-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .modal-logo h4 {
+            font-size: 1.15rem;
+            font-weight: 800;
+            color: var(--dark);
+            margin: 0;
+        }
+
+        .lang-tabs {
+            display: flex;
+            background: #f1f5f9;
+            padding: 4px;
+            border-radius: 30px;
+        }
+
+        .lang-tab-btn {
+            border: none;
+            background: none;
+            padding: 6px 16px;
+            font-size: 0.82rem;
+            font-weight: 700;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: var(--text-mute);
+        }
+
+        .lang-tab-btn:hover {
+            color: var(--primary-dark);
+        }
+
+        .lang-tab-btn.active {
+            background: #ffffff;
+            color: var(--primary-dark);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+
+        .modal-body {
+            padding: 24px;
+            overflow-y: auto;
+            flex-grow: 1;
+        }
+
+        .intro-text {
+            font-size: 0.9rem;
+            color: var(--text-main);
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+
+        .lang-content {
+            display: none;
+        }
+
+        .lang-content.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .instruction-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .instruction-list li {
+            display: flex;
+            gap: 14px;
+            align-items: flex-start;
+        }
+
+        .step-num {
+            background: rgba(7, 161, 207, 0.1);
+            color: var(--primary-dark);
+            font-weight: 800;
+            font-size: 0.9rem;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            border: 1px solid rgba(7, 161, 207, 0.2);
+        }
+
+        .step-text {
+            font-size: 0.88rem;
+            color: var(--text-main);
+            line-height: 1.5;
+        }
+
+        .step-text strong {
+            color: var(--dark);
+        }
+
+        .modal-footer {
+            padding: 16px 24px 20px;
+            border-top: 1px solid #f1f5f9;
+            text-align: center;
+        }
+
+        .modal-close-btn {
+            background: var(--gradient);
+            color: #ffffff;
+            border: none;
+            border-radius: 12px;
+            padding: 12px 30px;
+            font-size: 0.95rem;
+            font-weight: 800;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(7, 161, 207, 0.2);
+        }
+
+        .modal-close-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 16px rgba(7, 161, 207, 0.3);
+        }
+
         @media (max-width: 576px) {
             .hero-title {
                 font-size: 2rem;
@@ -641,10 +817,108 @@
             .step-card {
                 padding: 24px 18px;
             }
+            .instructions-modal-content {
+                max-height: 95vh;
+            }
+            .modal-header {
+                padding: 16px 20px 12px;
+            }
+            .modal-body {
+                padding: 20px;
+            }
+            .modal-footer {
+                padding: 12px 20px 16px;
+            }
         }
     </style>
 </head>
 <body>
+
+    <!-- Instructions Modal (Bilingual) -->
+    <div class="instructions-modal-overlay" id="instructions-modal">
+        <div class="instructions-modal-content">
+            <div class="modal-header">
+                <div class="modal-logo">
+                    <i class="fa-solid fa-circle-info" style="color: var(--primary); font-size: 1.5rem;"></i>
+                    <h4>Instructions / নির্দেশাবলী</h4>
+                </div>
+                <div class="lang-tabs">
+                    <button type="button" class="lang-tab-btn active" data-lang="bengali">বাংলা</button>
+                    <button type="button" class="lang-tab-btn" data-lang="english">English</button>
+                </div>
+            </div>
+            
+            <div class="modal-body">
+                <!-- Bengali Instructions -->
+                <div class="lang-content active" id="lang-bengali">
+                    <p class="intro-text">রেফারেল বোনাস পেতে নিচের ধাপগুলো অনুসরণ করুন:</p>
+                    <ul class="instruction-list">
+                        <li>
+                            <span class="step-num">১</span>
+                            <div class="step-text">
+                                <strong>অ্যাপ ডাউনলোড করুন:</strong> প্রথমে নিচে দেওয়া <strong>"Download & Register"</strong> বাটনে ক্লিক করে গুগল প্লে স্টোর থেকে ডক্টরওয়ালা অ্যাপটি ইনস্টল করুন এবং রেজিস্ট্রেশন সম্পন্ন করুন।
+                            </div>
+                        </li>
+                        <li>
+                            <span class="step-num">২</span>
+                            <div class="step-text">
+                                <strong>প্রোফাইল স্ক্রিনশট নিন:</strong> অ্যাপে সফলভাবে রেজিস্টার করার পর, প্রোফাইল সেকশনে গিয়ে আপনার প্রোফাইলের একটি স্ক্রিনশট (Screenshot) নিন।
+                            </div>
+                        </li>
+                        <li>
+                            <span class="step-num">৩</span>
+                            <div class="step-text">
+                                <strong>ফরমটি পূরণ করুন:</strong> আবার এই পেজে ফিরে এসে আপনার সঠিক নাম, ফোন নম্বর, ইউপিআই আইডি (যেখানে টাকা পেতে চান) ও মেডিকেল কার্ড নম্বর দিন এবং স্ক্রিনশটটি আপলোড করুন।
+                            </div>
+                        </li>
+                        <li>
+                            <span class="step-num">৪</span>
+                            <div class="step-text">
+                                <strong>রেফার লিংক শেয়ার করুন:</strong> ফরম সাবমিট করার পর আপনার একটি ইউনিক রেফার লিংক তৈরি হবে। বন্ধুদের সাথে সেটি শেয়ার করে প্রতি সফল রেফারেলে <strong>২০ টাকা</strong> আয় করুন!
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- English Instructions -->
+                <div class="lang-content" id="lang-english">
+                    <p class="intro-text">Follow these steps to claim your referral rewards:</p>
+                    <ul class="instruction-list">
+                        <li>
+                            <span class="step-num">1</span>
+                            <div class="step-text">
+                                <strong>Download the App:</strong> Click the <strong>"Download & Register"</strong> button below to install the Doctorwala app from Google Play Store and complete your registration.
+                            </div>
+                        </li>
+                        <li>
+                            <span class="step-num">2</span>
+                            <div class="step-text">
+                                <strong>Take Profile Screenshot:</strong> After successfully registering on the app, go to your profile section and take a screenshot (SS) of your profile page.
+                            </div>
+                        </li>
+                        <li>
+                            <span class="step-num">3</span>
+                            <div class="step-text">
+                                <strong>Fill up the Form:</strong> Return to this page, enter your Name, Phone Number, UPI ID (for receiving payments), Medical Card Number, and upload the screenshot.
+                            </div>
+                        </li>
+                        <li>
+                            <span class="step-num">4</span>
+                            <div class="step-text">
+                                <strong>Share & Earn:</strong> Submit the form to generate your unique referral link. Share it with friends and earn <strong>₹20</strong> for every successful signup!
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="modal-close-btn" id="close-modal-btn">
+                    Close / বন্ধ করুন
+                </button>
+            </div>
+        </div>
+    </div>
 
     <!-- Background blobs wrapper -->
     <div class="bg-blob-wrapper">
@@ -986,6 +1260,52 @@
                     formStepCard.style.animation = 'none';
                     formStepCard.offsetHeight; // trigger reflow
                     formStepCard.style.animation = 'shake 0.4s ease';
+                }
+            });
+
+            // --- Instructions Modal Logic ---
+            const modal = document.getElementById('instructions-modal');
+            const closeModalBtn = document.getElementById('close-modal-btn');
+            const tabBtns = document.querySelectorAll('.lang-tab-btn');
+            const tabContents = document.querySelectorAll('.lang-content');
+
+            // Handle language tab clicks
+            tabBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const selectedLang = this.getAttribute('data-lang');
+                    
+                    // Update active button
+                    tabBtns.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+
+                    // Update active content
+                    tabContents.forEach(content => {
+                        if (content.id === `lang-${selectedLang}`) {
+                            content.classList.add('active');
+                        } else {
+                            content.classList.remove('active');
+                        }
+                    });
+                });
+            });
+
+            // Close modal button click
+            closeModalBtn.addEventListener('click', function() {
+                modal.style.opacity = '0';
+                setTimeout(() => {
+                    modal.style.display = 'none';
+                }, 350);
+            });
+
+            // Prevent closing modal when clicking backdrop (non-closable except by button)
+            modal.addEventListener('click', function(e) {
+                e.stopPropagation();
+            });
+
+            // Prevent ESC key from closing
+            window.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && modal.style.display !== 'none') {
+                    e.preventDefault();
                 }
             });
         });
