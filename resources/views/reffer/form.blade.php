@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Doctorwala & Doctorvibes Referral Program - Earn ₹20 Per Referral</title>
+    <title>Doctorwala Referral Program - Earn ₹20 Per Referral</title>
     
     <link href="{{asset('fav5.png')}}" rel="icon">
     
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     
     <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css" integrity="sha512-5Hs3dF2AEPkpNAR7UiOHba+lRSJNeM2ECkwxUIxC1Q/FLycGTbNapWXB4tP889k5T5Ju8fs4b1P5z/iB4nMfSQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -22,11 +22,15 @@
             --secondary: #0d6efd;
             --success: #2e7d32;
             --dark: #0f172a;
-            --light: #f8fafc;
-            --gray: #64748b;
-            --card-bg: rgba(255, 255, 255, 0.95);
+            --light-bg: #f8fafc;
+            --card-bg: rgba(255, 255, 255, 0.9);
+            --card-border: rgba(0, 0, 0, 0.05);
+            --text-main: #1e293b;
+            --text-mute: #64748b;
+            --input-bg: #ffffff;
+            --input-border: #cbd5e1;
+            --glow: 0 20px 40px -15px rgba(7, 161, 207, 0.15);
             --gradient: linear-gradient(135deg, #07a1cf 0%, #0d6efd 100%);
-            --glow: 0 10px 30px rgba(7, 161, 207, 0.15);
         }
 
         * {
@@ -37,89 +41,123 @@
 
         body {
             font-family: 'Outfit', 'Plus Jakarta Sans', sans-serif;
-            background-color: #0b1329;
+            background-color: var(--light-bg);
             background-image: 
-                radial-gradient(at 10% 20%, rgba(7, 161, 207, 0.15) 0px, transparent 50%),
-                radial-gradient(at 90% 80%, rgba(13, 110, 253, 0.12) 0px, transparent 50%);
+                radial-gradient(circle at 10% 20%, rgba(7, 161, 207, 0.08) 0px, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(13, 110, 253, 0.06) 0px, transparent 40%);
             background-attachment: fixed;
-            color: #f8fafc;
+            color: var(--text-main);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
+            overflow-x: hidden;
+            position: relative;
             line-height: 1.6;
         }
 
+        /* Subtle Floating Background Blobs */
+        .bg-glow-blob {
+            position: absolute;
+            width: 320px;
+            height: 320px;
+            border-radius: 50%;
+            filter: blur(100px);
+            z-index: -1;
+            opacity: 0.55;
+            pointer-events: none;
+            animation: floatBlob 12s infinite alternate ease-in-out;
+        }
+
+        .blob-cyan {
+            background-color: rgba(7, 161, 207, 0.15);
+            top: -100px;
+            left: -100px;
+        }
+
+        .blob-blue {
+            background-color: rgba(13, 110, 253, 0.1);
+            bottom: 10%;
+            right: -100px;
+            animation-delay: -6s;
+        }
+
+        @keyframes floatBlob {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(30px, -30px) scale(1.15); }
+        }
+
         header {
-            padding: 25px 20px;
+            padding: 30px 20px;
             text-align: center;
+            animation: fadeInDown 0.8s ease-out;
         }
 
         .logo-container {
-            display: flex;
+            display: inline-flex;
             flex-direction: column;
             align-items: center;
-            gap: 5px;
+            gap: 8px;
         }
 
         .logo-img {
-            max-height: 50px;
+            max-height: 55px;
             object-fit: contain;
-            filter: drop-shadow(0 2px 8px rgba(7, 161, 207, 0.3));
+            filter: drop-shadow(0 4px 10px rgba(7, 161, 207, 0.15));
         }
 
         .brand-badge {
-            background: rgba(255, 255, 255, 0.08);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            padding: 4px 12px;
+            background: rgba(255, 255, 255, 0.8);
+            border: 1px solid rgba(7, 161, 207, 0.25);
+            box-shadow: 0 4px 10px rgba(7, 161, 207, 0.08);
+            padding: 5px 14px;
             border-radius: 30px;
-            font-size: 0.75rem;
+            font-size: 0.78rem;
             text-transform: uppercase;
             letter-spacing: 1.5px;
-            color: #07a1cf;
-            font-weight: 700;
+            color: var(--primary-dark);
+            font-weight: 800;
             display: inline-flex;
             align-items: center;
             gap: 6px;
         }
 
         .brand-badge span {
-            color: #fff;
+            color: var(--dark);
         }
 
         .referral-container {
             max-width: 600px;
             width: 100%;
             margin: 0 auto;
-            padding: 20px 15px 40px;
+            padding: 10px 18px 50px;
         }
 
         .hero-section {
             text-align: center;
             margin-bottom: 30px;
+            animation: fadeInUp 0.8s ease-out;
         }
 
         .hero-title {
-            font-size: 2.2rem;
-            font-weight: 800;
-            color: #fff;
+            font-size: 2.4rem;
+            font-weight: 900;
+            color: var(--dark);
             margin-bottom: 10px;
-            background: linear-gradient(to right, #fff, #80deea);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            letter-spacing: -0.5px;
+            letter-spacing: -0.8px;
         }
 
         .hero-desc {
-            color: #94a3b8;
-            font-size: 1rem;
+            color: var(--text-mute);
+            font-size: 1.02rem;
         }
 
         .promo-banner {
-            background: linear-gradient(135deg, rgba(7, 161, 207, 0.15) 0%, rgba(13, 110, 253, 0.15) 100%);
-            border: 1px solid rgba(7, 161, 207, 0.3);
-            border-radius: 16px;
-            padding: 15px;
+            background: linear-gradient(135deg, rgba(7, 161, 207, 0.1) 0%, rgba(13, 110, 253, 0.1) 100%);
+            border: 1.5px solid rgba(7, 161, 207, 0.2);
+            box-shadow: 0 8px 20px rgba(7, 161, 207, 0.06);
+            border-radius: 18px;
+            padding: 18px;
             text-align: center;
             margin-bottom: 25px;
             display: flex;
@@ -127,11 +165,17 @@
             justify-content: center;
             gap: 12px;
             backdrop-filter: blur(10px);
+            animation: pulseBanner 3s infinite alternate ease-in-out;
+        }
+
+        @keyframes pulseBanner {
+            0% { transform: scale(1); }
+            100% { transform: scale(1.015); }
         }
 
         .promo-icon {
-            font-size: 1.8rem;
-            color: #ffd700;
+            font-size: 1.9rem;
+            color: #e65100;
             animation: bounce 2s infinite;
         }
 
@@ -141,168 +185,212 @@
         }
 
         .promo-text {
-            font-weight: 700;
-            font-size: 1.1rem;
-            color: #ffd700;
+            font-weight: 800;
+            font-size: 1.15rem;
+            color: #e65100;
         }
 
         .referrer-card {
-            background: rgba(7, 161, 207, 0.12);
-            border: 1.5px solid rgba(7, 161, 207, 0.3);
-            border-radius: 16px;
-            padding: 16px;
+            background: rgba(7, 161, 207, 0.05);
+            border: 1px solid rgba(7, 161, 207, 0.15);
+            border-radius: 18px;
+            padding: 16px 20px;
             margin-bottom: 25px;
             display: flex;
             align-items: center;
             gap: 15px;
+            backdrop-filter: blur(8px);
+            animation: fadeInUp 0.8s ease-out;
         }
 
         .referrer-avatar {
             width: 44px;
             height: 44px;
-            background: #fff;
+            background: var(--gradient);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #07a1cf;
+            color: #fff;
             font-size: 1.2rem;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 12px rgba(7, 161, 207, 0.2);
         }
 
         .referrer-info h6 {
-            font-size: 0.75rem;
+            font-size: 0.72rem;
             text-transform: uppercase;
-            color: #94a3b8;
+            color: var(--text-mute);
             letter-spacing: 0.5px;
+            margin-bottom: 2px;
         }
 
         .referrer-info h5 {
             font-size: 1.05rem;
-            font-weight: 700;
-            color: #fff;
+            font-weight: 800;
+            color: var(--dark);
         }
 
+        /* Glassmorphism Card Style */
         .step-card {
             background: var(--card-bg);
-            border-radius: 20px;
-            padding: 24px;
+            border: 1.5px solid var(--card-border);
+            border-radius: 24px;
+            padding: 30px;
             margin-bottom: 25px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            box-shadow: var(--glow);
             position: relative;
-            color: var(--dark);
-            transition: all 0.3s ease;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            animation: fadeInUp 0.9s ease-out;
+        }
+
+        .step-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 25px 50px -15px rgba(7, 161, 207, 0.22);
         }
 
         .step-badge {
-            background: var(--primary);
+            background: var(--gradient);
             color: #fff;
             font-weight: 800;
-            font-size: 0.75rem;
-            padding: 4px 12px;
-            border-radius: 20px;
+            font-size: 0.72rem;
+            padding: 5px 14px;
+            border-radius: 30px;
             display: inline-block;
             margin-bottom: 12px;
             letter-spacing: 0.5px;
             text-transform: uppercase;
+            box-shadow: 0 4px 10px rgba(7, 161, 207, 0.15);
         }
 
         .step-title {
-            font-size: 1.3rem;
-            font-weight: 700;
+            font-size: 1.35rem;
+            font-weight: 800;
             color: var(--dark);
             margin-bottom: 8px;
+            letter-spacing: -0.3px;
         }
 
         .step-desc {
-            color: var(--gray);
-            font-size: 0.9rem;
-            margin-bottom: 20px;
+            color: var(--text-mute);
+            font-size: 0.92rem;
+            margin-bottom: 22px;
         }
 
         .playstore-btn {
             background: var(--gradient);
             color: #fff;
             border: none;
-            padding: 14px 28px;
-            border-radius: 50px;
-            font-weight: 600;
+            padding: 15px 30px;
+            border-radius: 14px;
+            font-weight: 700;
             font-size: 1rem;
             display: inline-flex;
             align-items: center;
             gap: 10px;
-            box-shadow: 0 8px 20px rgba(13, 110, 253, 0.3);
+            box-shadow: 0 8px 20px rgba(13, 110, 253, 0.2);
             text-decoration: none;
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             width: 100%;
             justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .playstore-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                rgba(255, 255, 255, 0) 0%,
+                rgba(255, 255, 255, 0.35) 50%,
+                rgba(255, 255, 255, 0) 100%
+            );
+            animation: shineBtn 2.5s infinite;
+        }
+
+        @keyframes shineBtn {
+            0% { left: -100%; }
+            100% { left: 100%; }
         }
 
         .playstore-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 12px 25px rgba(13, 110, 253, 0.5);
+            box-shadow: 0 12px 25px rgba(13, 110, 253, 0.35);
             color: #fff;
         }
 
         .playstore-btn.completed {
             background: linear-gradient(135deg, #2e7d32 0%, #4caf50 100%);
-            box-shadow: 0 8px 20px rgba(76, 175, 80, 0.3);
+            box-shadow: 0 8px 20px rgba(76, 175, 80, 0.2);
         }
 
+        .playstore-btn.completed::before {
+            display: none;
+        }
+
+        /* Glassmorphism Locked Overlay */
         .locked-overlay {
             position: absolute;
             top: 0;
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(255, 255, 255, 0.93);
-            backdrop-filter: blur(6px);
-            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.88);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 24px;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            z-index: 10;
-            transition: all 0.4s ease;
+            z-index: 20;
+            transition: all 0.4s ease-out;
             text-align: center;
             padding: 20px;
         }
 
         .locked-icon {
-            font-size: 3rem;
-            color: var(--gray);
+            font-size: 3.5rem;
+            color: var(--text-mute);
             margin-bottom: 12px;
-            animation: floaty 3s ease-in-out infinite;
+            animation: floatLock 3s infinite ease-in-out;
         }
 
-        @keyframes floaty {
+        @keyframes floatLock {
             0%, 100% { transform: translateY(0); }
             50% { transform: translateY(-6px); }
         }
 
         .locked-title {
-            font-size: 1.1rem;
-            font-weight: 700;
+            font-size: 1.25rem;
+            font-weight: 800;
             color: var(--dark);
             margin-bottom: 6px;
         }
 
         .locked-desc {
-            font-size: 0.85rem;
-            color: var(--gray);
-            max-width: 280px;
+            font-size: 0.88rem;
+            color: var(--text-mute);
+            max-width: 300px;
         }
 
         .form-group {
-            margin-bottom: 18px;
+            margin-bottom: 20px;
+            text-align: left;
         }
 
         .form-group label {
             display: block;
             font-weight: 600;
             color: var(--dark);
-            margin-bottom: 6px;
-            font-size: 0.9rem;
+            margin-bottom: 8px;
+            font-size: 0.92rem;
         }
 
         .input-wrapper {
@@ -311,45 +399,55 @@
 
         .input-icon {
             position: absolute;
-            left: 14px;
+            left: 15px;
             top: 50%;
             transform: translateY(-50%);
-            color: var(--gray);
-            font-size: 0.95rem;
+            color: var(--text-mute);
+            font-size: 1rem;
+            transition: all 0.3s;
         }
 
         .form-control {
             width: 100%;
-            padding: 12px 14px 12px 38px;
+            padding: 13px 15px 13px 42px;
             border-radius: 12px;
-            border: 1.5px solid #cbd5e1;
-            font-size: 0.95rem;
+            border: 1.5px solid var(--input-border);
+            font-size: 0.96rem;
             font-family: inherit;
             color: var(--dark);
             transition: all 0.3s ease;
-            background: #fff;
+            background: var(--input-bg);
             outline: none;
+        }
+
+        .form-control::placeholder {
+            color: #94a3b8;
         }
 
         .form-control:focus {
             border-color: var(--primary);
+            background: #fff;
             box-shadow: 0 0 0 4px rgba(7, 161, 207, 0.12);
         }
 
+        .form-control:focus + .input-icon {
+            color: var(--primary);
+        }
+
         .file-upload-zone {
-            border: 2px dashed var(--primary);
+            border: 2px dashed rgba(7, 161, 207, 0.4);
             border-radius: 12px;
-            padding: 20px;
+            padding: 22px;
             text-align: center;
-            background: #f8fafc;
+            background: rgba(7, 161, 207, 0.01);
             cursor: pointer;
             position: relative;
             transition: all 0.3s ease;
         }
 
         .file-upload-zone:hover {
-            background: #f0f9ff;
-            border-color: var(--secondary);
+            background: rgba(7, 161, 207, 0.04);
+            border-color: var(--primary);
         }
 
         .file-input {
@@ -360,23 +458,29 @@
             height: 100%;
             opacity: 0;
             cursor: pointer;
+            z-index: 5;
         }
 
         .upload-icon {
-            font-size: 2rem;
+            font-size: 2.2rem;
             color: var(--primary);
             margin-bottom: 8px;
+            transition: transform 0.3s ease;
+        }
+
+        .file-upload-zone:hover .upload-icon {
+            transform: translateY(-2px);
         }
 
         .upload-text {
-            font-size: 0.85rem;
-            font-weight: 600;
+            font-size: 0.9rem;
+            font-weight: 700;
             color: var(--dark);
         }
 
         .upload-hint {
-            font-size: 0.75rem;
-            color: var(--gray);
+            font-size: 0.78rem;
+            color: var(--text-mute);
             margin-top: 3px;
         }
 
@@ -384,14 +488,15 @@
             margin-top: 15px;
             display: none;
             justify-content: center;
+            animation: zoomIn 0.3s ease;
         }
 
         .preview-img {
             max-width: 100%;
-            max-height: 140px;
+            max-height: 150px;
             border-radius: 8px;
-            border: 1px solid #cbd5e1;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+            border: 1.5px solid #cbd5e1;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
             object-fit: contain;
         }
 
@@ -402,7 +507,7 @@
             padding: 14px;
             border-radius: 12px;
             font-size: 1.05rem;
-            font-weight: 700;
+            font-weight: 800;
             width: 100%;
             cursor: pointer;
             transition: all 0.3s ease;
@@ -410,7 +515,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
+            gap: 10px;
         }
 
         .submit-btn:hover {
@@ -419,73 +524,127 @@
         }
 
         .error-banner {
-            background: #fef2f2;
-            border-left: 4px solid #ef4444;
-            color: #991b1b;
+            background: #fff5f5;
+            border: 1px solid #feb2b2;
+            color: #c53030;
             padding: 12px 16px;
-            border-radius: 8px;
+            border-radius: 12px;
             margin-bottom: 25px;
-            font-size: 0.85rem;
+            font-size: 0.88rem;
+            text-align: left;
+            animation: shake 0.4s ease;
         }
 
         .error-banner ul {
             padding-left: 20px;
-            margin-top: 5px;
+            margin-top: 6px;
         }
 
         /* Validation Feedback styles */
         .invalid-feedback {
-            color: #dc2626;
-            font-size: 0.75rem;
+            color: #c53030;
+            font-size: 0.78rem;
             font-weight: 600;
-            margin-top: 4px;
+            margin-top: 6px;
             display: none;
+            animation: fadeIn 0.3s ease;
         }
 
         .form-control.invalid {
-            border-color: #ef4444;
-            background-color: #fffafb;
+            border-color: #fc8181;
+            background-color: #fff5f5;
+        }
+
+        /* Keyframes */
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes zoomIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
 
         footer {
             text-align: center;
-            padding: 20px;
-            font-size: 0.8rem;
-            color: #64748b;
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 30px;
+            font-size: 0.82rem;
+            color: var(--text-mute);
+            border-top: 1px solid rgba(0, 0, 0, 0.04);
+            margin-top: auto;
         }
 
         footer a {
-            color: #07a1cf;
+            color: var(--primary-dark);
             text-decoration: none;
+            font-weight: 600;
         }
 
-        /* Responsive Breakpoints */
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        .row {
+            display: flex;
+            flex-wrap: wrap;
+            margin-right: -10px;
+            margin-left: -10px;
+        }
+        .col-md-6 {
+            flex: 0 0 100%;
+            max-width: 100%;
+            padding-right: 10px;
+            padding-left: 10px;
+        }
+        @media (min-width: 576px) {
+            .col-md-6 {
+                flex: 0 0 50%;
+                max-width: 50%;
+            }
+        }
+
         @media (max-width: 480px) {
             .hero-title {
-                font-size: 1.8rem;
+                font-size: 2rem;
             }
             .step-card {
-                padding: 18px;
-            }
-            .playstore-btn, .submit-btn {
-                padding: 12px 20px;
-                font-size: 0.95rem;
+                padding: 24px 18px;
             }
         }
     </style>
 </head>
 <body>
 
+    <!-- Subtle Aura Background Blobs -->
+    <div class="bg-glow-blob blob-cyan"></div>
+    <div class="bg-glow-blob blob-blue"></div>
+
     <header>
         <div class="logo-container">
             @if(file_exists(public_path('img/logo3.png')))
                 <img src="{{ asset('img/logo3.png') }}" class="logo-img" alt="Doctorwala Logo">
             @else
-                <h2 style="color: #fff; font-weight: 800; letter-spacing: -1px;">Doctor<span style="color:#07a1cf;">wala</span></h2>
+                <h2 style="color: var(--dark); font-weight: 900; letter-spacing: -1.2px; font-size: 1.8rem;">Doctor<span style="color:#07a1cf;">wala</span></h2>
             @endif
             <div class="brand-badge">
-                <i class="fa fa-bolt"></i> <span>Doctorvibes</span> program
+                <i class="fa fa-bolt"></i> <span>Referral</span> program
             </div>
         </div>
     </header>
@@ -518,7 +677,7 @@
         <!-- Server side validation alerts -->
         @if ($errors->any())
         <div class="error-banner">
-            <div style="font-weight: 700; display:flex; align-items:center; gap:6px;">
+            <div style="font-weight: 800; display:flex; align-items:center; gap:6px;">
                 <i class="fa fa-exclamation-circle"></i> Submission failed:
             </div>
             <ul>
@@ -566,7 +725,6 @@
                 <div class="form-group">
                     <label for="name">Full Name</label>
                     <div class="input-wrapper">
-                        <i class="fa fa-user input-icon"></i>
                         <input type="text" 
                                name="name" 
                                id="name" 
@@ -576,6 +734,7 @@
                                required 
                                minlength="3" 
                                maxlength="100">
+                        <i class="fa fa-user input-icon"></i>
                     </div>
                     <div class="invalid-feedback" id="name-error">Please enter your full name (minimum 3 characters).</div>
                 </div>
@@ -584,7 +743,6 @@
                 <div class="form-group">
                     <label for="phone">Phone Number (Numbers Only)</label>
                     <div class="input-wrapper">
-                        <i class="fa fa-phone input-icon"></i>
                         <input type="tel" 
                                name="phone" 
                                id="phone" 
@@ -593,6 +751,7 @@
                                value="{{ old('phone') }}" 
                                inputmode="numeric"
                                required>
+                        <i class="fa fa-phone input-icon"></i>
                     </div>
                     <div class="invalid-feedback" id="phone-error">Please enter a valid 10-digit mobile number.</div>
                 </div>
@@ -601,7 +760,6 @@
                 <div class="form-group">
                     <label for="upi">UPI ID or UPI Phone Number</label>
                     <div class="input-wrapper">
-                        <i class="fa fa-credit-card input-icon"></i>
                         <input type="text" 
                                name="upi" 
                                id="upi" 
@@ -609,6 +767,7 @@
                                placeholder="e.g. 9876543210@ybl or phone number" 
                                value="{{ old('upi') }}" 
                                required>
+                        <i class="fa fa-credit-card input-icon"></i>
                     </div>
                     <div class="invalid-feedback" id="upi-error">Please enter your UPI ID or UPI phone number.</div>
                 </div>
@@ -617,7 +776,6 @@
                 <div class="form-group">
                     <label for="medical_card_number">Medical Card Number</label>
                     <div class="input-wrapper">
-                        <i class="fa fa-id-card input-icon"></i>
                         <input type="text" 
                                name="medical_card_number" 
                                id="medical_card_number" 
@@ -625,6 +783,7 @@
                                placeholder="Enter medical card number" 
                                value="{{ old('medical_card_number') }}" 
                                required>
+                        <i class="fa fa-id-card input-icon"></i>
                     </div>
                     <div class="invalid-feedback" id="medical_card-error">Please enter your medical card number.</div>
                 </div>
@@ -681,10 +840,7 @@
 
             // 1. Force strict numeric-only on Phone number input & limit to 10 digits
             phoneInput.addEventListener('input', function() {
-                // Remove any non-digit characters
                 this.value = this.value.replace(/[^0-9]/g, '');
-                
-                // Limit to maximum 10 digits
                 if (this.value.length > 10) {
                     this.value = this.value.slice(0, 10);
                 }
@@ -809,6 +965,11 @@
 
                 if (!isValid) {
                     event.preventDefault(); // Stop form submission
+                    
+                    // Shake the card to indicate failure
+                    formStepCard.style.animation = 'none';
+                    formStepCard.offsetHeight; // trigger reflow
+                    formStepCard.style.animation = 'shake 0.4s ease';
                 }
             });
         });

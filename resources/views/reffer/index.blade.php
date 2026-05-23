@@ -10,7 +10,7 @@
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     
     <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css" integrity="sha512-5Hs3dF2AEPkpNAR7UiOHba+lRSJNeM2ECkwxUIxC1Q/FLycGTbNapWXB4tP889k5T5Ju8fs4b1P5z/iB4nMfSQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -20,12 +20,17 @@
             --primary: #07a1cf;
             --primary-dark: #0582a8;
             --secondary: #0d6efd;
-            --success: #25d366;
+            --success: #2e7d32;
+            --success-glow: rgba(46, 125, 50, 0.15);
             --dark: #0f172a;
-            --light: #f8fafc;
-            --gray: #64748b;
-            --card-bg: rgba(255, 255, 255, 0.95);
-            --gradient: linear-gradient(135deg, #07a1cf 0%, #0d6efd 100%);
+            --light-bg: #f8fafc;
+            --card-bg: rgba(255, 255, 255, 0.9);
+            --card-border: rgba(0, 0, 0, 0.05);
+            --text-main: #1e293b;
+            --text-mute: #64748b;
+            --input-bg: #ffffff;
+            --input-border: #cbd5e1;
+            --glow: 0 20px 40px -15px rgba(7, 161, 207, 0.15);
             --whatsapp-grad: linear-gradient(135deg, #25d366 0%, #128c7e 100%);
         }
 
@@ -37,71 +42,108 @@
 
         body {
             font-family: 'Outfit', 'Plus Jakarta Sans', sans-serif;
-            background-color: #0b1329;
+            background-color: var(--light-bg);
             background-image: 
-                radial-gradient(at 10% 20%, rgba(7, 161, 207, 0.15) 0px, transparent 50%),
-                radial-gradient(at 90% 80%, rgba(13, 110, 253, 0.12) 0px, transparent 50%);
+                radial-gradient(circle at 10% 20%, rgba(7, 161, 207, 0.08) 0px, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(13, 110, 253, 0.06) 0px, transparent 40%);
             background-attachment: fixed;
-            color: #f8fafc;
+            color: var(--text-main);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
+            overflow-x: hidden;
+            position: relative;
             line-height: 1.6;
         }
 
+        /* Subtle Background Aura Blobs */
+        .bg-glow-blob {
+            position: absolute;
+            width: 320px;
+            height: 320px;
+            border-radius: 50%;
+            filter: blur(100px);
+            z-index: -1;
+            opacity: 0.55;
+            pointer-events: none;
+            animation: floatBlob 12s infinite alternate ease-in-out;
+        }
+
+        .blob-cyan {
+            background-color: rgba(7, 161, 207, 0.15);
+            top: -100px;
+            left: -100px;
+        }
+
+        .blob-blue {
+            background-color: rgba(13, 110, 253, 0.1);
+            bottom: 10%;
+            right: -100px;
+            animation-delay: -6s;
+        }
+
+        @keyframes floatBlob {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(30px, -30px) scale(1.15); }
+        }
+
         header {
-            padding: 25px 20px;
+            padding: 30px 20px;
             text-align: center;
+            animation: fadeInDown 0.8s ease-out;
         }
 
         .logo-container {
-            display: flex;
+            display: inline-flex;
             flex-direction: column;
             align-items: center;
-            gap: 5px;
+            gap: 8px;
         }
 
         .logo-img {
-            max-height: 50px;
+            max-height: 55px;
             object-fit: contain;
-            filter: drop-shadow(0 2px 8px rgba(7, 161, 207, 0.3));
+            filter: drop-shadow(0 4px 10px rgba(7, 161, 207, 0.15));
         }
 
         .brand-badge {
-            background: rgba(255, 255, 255, 0.08);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            padding: 4px 12px;
+            background: rgba(255, 255, 255, 0.8);
+            border: 1px solid rgba(7, 161, 207, 0.25);
+            box-shadow: 0 4px 10px rgba(7, 161, 207, 0.08);
+            padding: 5px 14px;
             border-radius: 30px;
-            font-size: 0.75rem;
+            font-size: 0.78rem;
             text-transform: uppercase;
             letter-spacing: 1.5px;
-            color: #07a1cf;
-            font-weight: 700;
+            color: var(--primary-dark);
+            font-weight: 800;
             display: inline-flex;
             align-items: center;
             gap: 6px;
         }
 
         .brand-badge span {
-            color: #fff;
+            color: var(--dark);
         }
 
         .success-container {
             max-width: 550px;
             width: 100%;
             margin: 0 auto;
-            padding: 20px 15px 40px;
+            padding: 10px 18px 50px;
         }
 
         .celebrate-card {
             background: var(--card-bg);
+            border: 1.5px solid var(--card-border);
             border-radius: 24px;
-            padding: 35px 25px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+            padding: 40px 30px;
+            box-shadow: var(--glow);
             text-align: center;
-            color: var(--dark);
-            position: relative;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            animation: zoomIn 0.8s cubic-bezier(0.165, 0.84, 0.44, 1);
         }
 
         .success-badge {
@@ -112,55 +154,59 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            margin-bottom: 20px;
+            margin-bottom: 22px;
             color: #2e7d32;
-            font-size: 2.2rem;
-            box-shadow: 0 8px 18px rgba(46, 125, 50, 0.12);
+            font-size: 2.3rem;
+            box-shadow: 0 8px 18px rgba(46, 125, 50, 0.1);
             animation: popScale 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
         @keyframes popScale {
-            0% { transform: scale(0.4); opacity: 0; }
+            0% { transform: scale(0.3); opacity: 0; }
             100% { transform: scale(1); opacity: 1; }
         }
 
         .title {
-            font-size: 1.6rem;
+            font-size: 1.65rem;
             font-weight: 800;
             color: var(--dark);
-            margin-bottom: 6px;
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
         }
 
         .desc {
-            color: var(--gray);
+            color: var(--text-mute);
             font-size: 0.95rem;
-            margin-bottom: 25px;
+            margin-bottom: 28px;
         }
 
         .info-box {
-            background-color: #f8fafc;
+            background-color: #ffffff;
             border: 1.5px solid #e2e8f0;
-            border-radius: 16px;
-            padding: 20px;
-            margin-bottom: 25px;
+            border-radius: 18px;
+            padding: 22px;
+            margin-bottom: 28px;
             text-align: left;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
         }
 
         .info-row {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 15px;
+            margin-bottom: 16px;
             flex-wrap: wrap;
             gap: 10px;
+            border-bottom: 1px solid #f1f5f9;
+            padding-bottom: 12px;
         }
 
         .info-label {
             font-weight: 700;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            color: var(--gray);
+            color: var(--text-mute);
         }
 
         .code-badge {
@@ -168,7 +214,7 @@
             color: #006064;
             font-weight: 800;
             font-size: 1.1rem;
-            letter-spacing: 1.5px;
+            letter-spacing: 1px;
             padding: 6px 16px;
             border-radius: 8px;
             border: 1px dashed #00acc1;
@@ -176,11 +222,11 @@
 
         .link-label {
             font-weight: 700;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            color: var(--gray);
-            margin-bottom: 6px;
+            color: var(--text-mute);
+            margin-bottom: 8px;
             display: block;
         }
 
@@ -192,10 +238,10 @@
         .copy-input {
             flex-grow: 1;
             border-radius: 10px;
-            border: 1.5px solid #cbd5e1;
-            padding: 10px 14px;
+            border: 1.5px solid var(--input-border);
+            padding: 11px 14px;
             font-size: 0.9rem;
-            background-color: #fff;
+            background-color: #f8fafc;
             color: var(--dark);
             font-family: monospace;
             outline: none;
@@ -203,6 +249,7 @@
             white-space: nowrap;
             overflow: hidden;
             width: 10px; /* Force flex shrinking */
+            min-width: 0;
         }
 
         .copy-btn {
@@ -211,7 +258,7 @@
             color: #fff;
             border-radius: 10px;
             padding: 10px 18px;
-            font-weight: 600;
+            font-weight: 700;
             font-size: 0.9rem;
             cursor: pointer;
             transition: all 0.3s ease;
@@ -221,7 +268,7 @@
         }
 
         .copy-btn:hover {
-            background-color: var(--secondary);
+            background-color: var(--primary-dark);
         }
 
         .share-whatsapp-btn {
@@ -229,38 +276,44 @@
             color: #fff;
             border: none;
             border-radius: 50px;
-            padding: 14px 30px;
+            padding: 15px 30px;
             font-size: 1.05rem;
-            font-weight: 700;
+            font-weight: 800;
             display: inline-flex;
             align-items: center;
-            gap: 10px;
-            box-shadow: 0 8px 20px rgba(37, 211, 102, 0.3);
+            gap: 12px;
+            box-shadow: 0 8px 22px rgba(37, 211, 102, 0.25);
             text-decoration: none;
             width: 100%;
             justify-content: center;
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
         .share-whatsapp-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 12px 25px rgba(37, 211, 102, 0.5);
+            box-shadow: 0 12px 25px rgba(37, 211, 102, 0.4);
             color: #fff;
         }
 
         .earnings-banner {
             background-color: #fffde7;
-            border: 1px solid #fff59d;
-            border-radius: 12px;
-            padding: 12px 16px;
-            color: #f57f17;
+            border: 1.5px solid #fff59d;
+            border-radius: 14px;
+            padding: 14px 18px;
+            color: #e65100;
             font-weight: 700;
-            font-size: 0.85rem;
+            font-size: 0.88rem;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
-            margin-top: 20px;
+            margin-top: 24px;
+            animation: pulseBanner 2.5s infinite alternate ease-in-out;
+        }
+
+        @keyframes pulseBanner {
+            0% { transform: scale(1); }
+            100% { transform: scale(1.015); }
         }
 
         /* Custom Notification Toast */
@@ -269,12 +322,12 @@
             bottom: 30px;
             left: 50%;
             transform: translateX(-50%) translateY(100px);
-            background-color: #1e293b;
+            background-color: var(--dark);
             color: #fff;
             padding: 12px 24px;
             border-radius: 30px;
             font-size: 0.9rem;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
             z-index: 9999;
             transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.4s;
             opacity: 0;
@@ -289,42 +342,86 @@
             opacity: 1;
         }
 
+        /* Keyframes */
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes zoomIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
         footer {
             text-align: center;
-            padding: 20px;
-            font-size: 0.8rem;
-            color: #64748b;
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 30px;
+            font-size: 0.82rem;
+            color: var(--text-mute);
+            border-top: 1px solid rgba(0, 0, 0, 0.04);
+            margin-top: auto;
         }
 
         footer a {
-            color: #07a1cf;
+            color: var(--primary-dark);
             text-decoration: none;
+            font-weight: 600;
         }
 
-        /* Responsive */
+        footer a:hover {
+            text-decoration: underline;
+        }
+
         @media (max-width: 480px) {
             .celebrate-card {
-                padding: 25px 18px;
+                padding: 24px 16px;
             }
             .title {
                 font-size: 1.4rem;
             }
+            .info-box {
+                padding: 16px;
+                margin-bottom: 20px;
+            }
+            .info-row {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 6px;
+            }
+            .code-badge {
+                width: 100%;
+                text-align: center;
+            }
+            .copy-group {
+                flex-direction: column;
+                width: 100%;
+            }
+            .copy-btn {
+                width: 100%;
+                justify-content: center;
+            }
+            .copy-input {
+                width: 100%;
+            }
             .share-whatsapp-btn {
-                padding: 12px 20px;
-                font-size: 0.95rem;
+                padding: 14px 20px;
+                font-size: 0.98rem;
             }
         }
     </style>
 </head>
 <body>
 
+    <!-- Subtle Aura Background Blobs -->
+    <div class="bg-glow-blob blob-cyan"></div>
+    <div class="bg-glow-blob blob-blue"></div>
+
     <header>
         <div class="logo-container">
             @if(file_exists(public_path('img/logo3.png')))
                 <img src="{{ asset('img/logo3.png') }}" class="logo-img" alt="Doctorwala Logo">
             @else
-                <h2 style="color: #fff; font-weight: 800; letter-spacing: -1px;">Doctor<span style="color:#07a1cf;">wala</span></h2>
+                <h2 style="color: var(--dark); font-weight: 900; letter-spacing: -1.2px; font-size: 1.8rem;">Doctor<span style="color:#07a1cf;">wala</span></h2>
             @endif
             <div class="brand-badge">
                 <i class="fa fa-bolt"></i> <span>Doctorvibes</span> program
@@ -342,7 +439,7 @@
             <p class="desc">Your referral profile is active. You can now invite friends to earn rewards.</p>
 
             @if(session('success'))
-                <div style="background-color: #f0fdf4; color: #15803d; border-radius: 10px; padding: 12px; font-size: 0.85rem; margin-bottom: 20px; text-align: left;">
+                <div style="background-color: #f0fdf4; color: #166534; border: 1px solid #bbf7d0; border-radius: 12px; padding: 12px 16px; font-size: 0.88rem; margin-bottom: 20px; text-align: left;">
                     <i class="fa fa-info-circle"></i> {{ session('success') }}
                 </div>
             @endif
@@ -375,7 +472,7 @@
             </div>
 
             <div class="earnings-banner">
-                <i class="fa fa-gift" style="font-size: 1.1rem;"></i>
+                <i class="fa fa-gift" style="font-size: 1.15rem;"></i>
                 Earn ₹20 instantly in your UPI account for every friend who registers!
             </div>
         </div>
