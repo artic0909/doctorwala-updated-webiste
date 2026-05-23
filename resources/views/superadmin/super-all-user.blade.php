@@ -370,26 +370,62 @@
                             <div class="row">
                                 <div class="col-12">
 
-                                    <div class="row">
-                                        <div class="col-3">
-                                            <h3 class="font-weight-bold">All Users</h3>
-                                            <a href="{{ route('superadmin.export.user') }}" style="text-decoration: underline;">Export</a> <!-- export as excel -->
+                                    <div class="row align-items-center mb-4">
+                                        <div class="col-lg-3 col-md-12 mb-3 mb-lg-0">
+                                            <h3 class="font-weight-bold m-0">All Users</h3>
+                                            <div class="d-flex align-items-center gap-2 mt-1">
+                                                <a href="{{ route('superadmin.export.user', request()->query()) }}" class="text-primary mr-3" style="text-decoration: underline; font-weight: 600;">
+                                                    <i class="fa-solid fa-file-excel mr-1"></i>Export
+                                                </a>
+                                                <span class="badge badge-info" style="font-size: 0.9rem;">Total: {{ $users->total() }}</span>
+                                            </div>
                                         </div>
 
-                                        <div class="col-9 d-flex justify-content-end align-items-center">
+                                        <div class="col-lg-6 col-md-12 mb-3 mb-lg-0">
+                                            <form action="{{ route('superadmin.super-all-user') }}" method="GET" class="d-flex align-items-center">
+                                                @if(request('search'))
+                                                    <input type="hidden" name="search" value="{{ request('search') }}">
+                                                @endif
+                                                
+                                                <div class="input-group align-items-center">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text bg-transparent border-0 px-2" style="font-weight: 700;">From:</span>
+                                                    </div>
+                                                    <input type="date" name="start_date" class="form-control mr-2" value="{{ request('start_date') }}" style="border-radius: 5px;">
+                                                    
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text bg-transparent border-0 px-2" style="font-weight: 700;">To:</span>
+                                                    </div>
+                                                    <input type="date" name="end_date" class="form-control mr-2" value="{{ request('end_date') }}" style="border-radius: 5px;">
+                                                    
+                                                    <div class="input-group-append">
+                                                        <button type="submit" class="btn btn-primary px-3" style="border-radius: 5px;">
+                                                            <i class="fa fa-filter"></i> Filter
+                                                        </button>
+                                                        @if(request('start_date') || request('end_date'))
+                                                            <a href="{{ route('superadmin.super-all-user', ['search' => request('search')]) }}" class="btn btn-light ml-2 border" style="border-radius: 5px;" title="Reset Date Filter">
+                                                                <i class="fa-solid fa-rotate-left"></i>
+                                                            </a>
+                                                        @endif
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+
+                                        <div class="col-lg-3 col-md-12 d-flex justify-content-end align-items-center">
                                             <nav aria-label="Page navigation">
-                                                <ul class="pagination">
+                                                <ul class="pagination mb-0">
                                                     {{-- Previous Page Link --}}
                                                     @if ($users->onFirstPage())
                                                     <li class="page-item disabled"><span class="page-link">Prev</span></li>
                                                     @else
                                                     <li class="page-item">
-                                                        <a class="page-link" href="{{ $users->previousPageUrl() }}" rel="prev">Prev</a>
+                                                        <a class="page-link" href="{{ $users->appends(request()->query())->previousPageUrl() }}" rel="prev">Prev</a>
                                                     </li>
                                                     @endif
 
                                                     {{-- Pagination Elements --}}
-                                                    @foreach ($users->links()->elements as $element)
+                                                    @foreach ($users->appends(request()->query())->links()->elements as $element)
                                                     {{-- "Three Dots" Separator --}}
                                                     @if (is_string($element))
                                                     <li class="page-item disabled"><span class="page-link">{{ $element }}</span></li>
@@ -412,7 +448,7 @@
                                                     {{-- Next Page Link --}}
                                                     @if ($users->hasMorePages())
                                                     <li class="page-item">
-                                                        <a class="page-link" href="{{ $users->nextPageUrl() }}" rel="next">Next</a>
+                                                        <a class="page-link" href="{{ $users->appends(request()->query())->nextPageUrl() }}" rel="next">Next</a>
                                                     </li>
                                                     @else
                                                     <li class="page-item disabled"><span class="page-link">Next</span></li>
@@ -420,9 +456,6 @@
                                                 </ul>
                                             </nav>
                                         </div>
-
-
-
                                     </div>
 
 

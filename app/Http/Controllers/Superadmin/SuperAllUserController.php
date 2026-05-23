@@ -14,11 +14,22 @@ class SuperAllUserController extends Controller
     {
         $query = DwUserModel::query();
 
-
         if ($request->has('search') && $request->search != '') {
             $search = $request->search;
-            $query->where('user_name', 'like', "%{$search}%")
-                ->orWhere('user_email', "%{$search}%")->orWhere('user_mobile', 'like', "%{$search}%")->orWhere('user_city', 'like', "%{$search}%");
+            $query->where(function($q) use ($search) {
+                $q->where('user_name', 'like', "%{$search}%")
+                  ->orWhere('user_email', 'like', "%{$search}%")
+                  ->orWhere('user_mobile', 'like', "%{$search}%")
+                  ->orWhere('user_city', 'like', "%{$search}%");
+            });
+        }
+
+        if ($request->filled('start_date')) {
+            $query->whereDate('created_at', '>=', $request->start_date);
+        }
+
+        if ($request->filled('end_date')) {
+            $query->whereDate('created_at', '<=', $request->end_date);
         }
 
         $users = $query->orderBy('id', 'desc')->paginate(10);
@@ -36,6 +47,6 @@ class SuperAllUserController extends Controller
 
 
     public function exportAsExel(Request $request){
-        return Excel::download(new UsersExport, 'user_details.xlsx');
+        return Excel::download(new UsersExport($request->all()), 'user_details.xlsx');
     }
 }
