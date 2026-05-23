@@ -371,12 +371,13 @@
                                 <div class="col-12">
 
                                     <div class="row">
-                                        <div class="col-3">
+                                        <div class="col-4">
                                             <h3 class="font-weight-bold">All Users</h3>
-                                            <a href="{{ route('superadmin.export.user') }}" style="text-decoration: underline;">Export</a> <!-- export as excel -->
+                                            <a href="{{ route('superadmin.export.user', request()->query()) }}" style="text-decoration: underline;">Export</a> <!-- export as excel -->
+                                            <span class="badge badge-success ml-2" style="font-size: 0.9rem; font-weight: 700;">Total: {{ $users->total() }}</span>
                                         </div>
 
-                                        <div class="col-9 d-flex justify-content-end align-items-center">
+                                        <div class="col-8 d-flex justify-content-end align-items-center">
                                             <nav aria-label="Page navigation">
                                                 <ul class="pagination">
                                                     {{-- Previous Page Link --}}
@@ -384,12 +385,12 @@
                                                     <li class="page-item disabled"><span class="page-link">Prev</span></li>
                                                     @else
                                                     <li class="page-item">
-                                                        <a class="page-link" href="{{ $users->previousPageUrl() }}" rel="prev">Prev</a>
+                                                        <a class="page-link" href="{{ $users->appends(request()->query())->previousPageUrl() }}" rel="prev">Prev</a>
                                                     </li>
                                                     @endif
 
                                                     {{-- Pagination Elements --}}
-                                                    @foreach ($users->links()->elements as $element)
+                                                    @foreach ($users->appends(request()->query())->links()->elements as $element)
                                                     {{-- "Three Dots" Separator --}}
                                                     @if (is_string($element))
                                                     <li class="page-item disabled"><span class="page-link">{{ $element }}</span></li>
@@ -412,7 +413,7 @@
                                                     {{-- Next Page Link --}}
                                                     @if ($users->hasMorePages())
                                                     <li class="page-item">
-                                                        <a class="page-link" href="{{ $users->nextPageUrl() }}" rel="next">Next</a>
+                                                        <a class="page-link" href="{{ $users->appends(request()->query())->nextPageUrl() }}" rel="next">Next</a>
                                                     </li>
                                                     @else
                                                     <li class="page-item disabled"><span class="page-link">Next</span></li>
