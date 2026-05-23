@@ -600,6 +600,13 @@
                         </a>
                     </li>
 
+                    <!-- referrals -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="/superadmin/super-all-reffer">
+                            <i class="fa fa-gift" aria-hidden="true"></i>&nbsp; <span class="menu-title">Referrals</span>
+                        </a>
+                    </li>
+
 
 
                     <!-- all partners lists -->

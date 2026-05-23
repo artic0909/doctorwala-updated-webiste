@@ -26,6 +26,7 @@ use App\Http\Controllers\Superadmin\SuperSubscriptionController;
 use App\Http\Controllers\Superadmin\SuperTicketController;
 use App\Http\Controllers\Superadmin\SuperUserInquiryController;
 use App\Http\Controllers\Superadmin\SuperFollowupController;
+use App\Http\Controllers\Superadmin\SuperRefferController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('guest:web')->group(function () {
@@ -382,20 +383,9 @@ Route::middleware('auth:web')->group(function () {
     Route::get('/superadmin/export-partner', [SuperPartnerHandleController::class, 'exportAsExel'])->name('superadmin.export.partner');
     Route::get('/superadmin/export-user', [SuperAllUserController::class, 'exportAsExel'])->name('superadmin.export.user');
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    // Referral Program Superadmin Routes
+    Route::get('/superadmin/super-all-reffer', [SuperRefferController::class, 'index'])->name('superadmin.super-all-reffer');
+    Route::delete('/superadmin/super-all-reffer/delete/{id}', [SuperRefferController::class, 'delete'])->name('superadmin.super-all-reffer.delete');
 
     Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
         ->name('logout');

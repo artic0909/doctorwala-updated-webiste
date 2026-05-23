@@ -88,5 +88,12 @@ Route::get('/pathology', [UserAllPathologyHandleController::class, 'index'])->na
 
 // Search result route
 Route::get('/search-result', [UserUserSearchHandleController::class, 'index'])->name('search.result');
-
 Route::post('/track-visitor', [VisitorTrackController::class, 'store'])->name('visitor.track');
+
+// Referral Program Routes
+use App\Http\Controllers\RefferController;
+
+Route::get('/reffer', [RefferController::class, 'index'])->name('reffer.index');
+Route::get('/reffer/success/{code}', [RefferController::class, 'success'])->name('reffer.success');
+Route::get('/reffer/{code}', [RefferController::class, 'referredIndex'])->name('reffer.referred');
+Route::post('/reffer', [RefferController::class, 'store'])->name('reffer.store');
