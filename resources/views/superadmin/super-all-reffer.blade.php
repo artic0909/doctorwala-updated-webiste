@@ -259,8 +259,11 @@
                                 <div class="col-12">
                                     <div class="row">
                                         <div class="col-6">
-                                            <h3 class="font-weight-bold">Referral Registrations</h3>
-                                            <p class="text-muted">Manage app referral accounts, payout details, and track referral chains.</p>
+                                            <h3 class="font-weight-bold m-0">Referral Registrations</h3>
+                                            <a href="{{ route('superadmin.export.reffer', request()->query()) }}" class="text-primary" style="text-decoration: underline; font-weight: 600;">
+                                                <i class="fa-solid fa-file-excel mr-1"></i>Export
+                                            </a>
+                                            <p class="text-muted mt-1 mb-0">Manage app referral accounts, payout details, and track referral chains.</p>
                                         </div>
 
                                         <div class="col-6 d-flex justify-content-end align-items-center">

@@ -382,6 +382,7 @@ Route::middleware('auth:web')->group(function () {
     Route::get('/superadmin/export-doc', [SuperAllOnlyDoctorHandleController::class, 'exportAsExel'])->name('superadmin.export.doc');
     Route::get('/superadmin/export-partner', [SuperPartnerHandleController::class, 'exportAsExel'])->name('superadmin.export.partner');
     Route::get('/superadmin/export-user', [SuperAllUserController::class, 'exportAsExel'])->name('superadmin.export.user');
+    Route::get('/superadmin/export-reffer', [SuperRefferController::class, 'exportAsExel'])->name('superadmin.export.reffer');
 
     // Referral Program Superadmin Routes
     Route::get('/superadmin/super-all-reffer', [SuperRefferController::class, 'index'])->name('superadmin.super-all-reffer');

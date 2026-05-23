@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Superadmin;
 use App\Http\Controllers\Controller;
 use App\Models\Reffer;
 use Illuminate\Http\Request;
+use App\Exports\ReferralsExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class SuperRefferController extends Controller
 {
@@ -45,5 +47,13 @@ class SuperRefferController extends Controller
         $reffer->delete();
 
         return back()->with('success', 'Referral registration deleted successfully!');
+    }
+
+    /**
+     * Export referral registrations to Excel.
+     */
+    public function exportAsExel(Request $request)
+    {
+        return Excel::download(new ReferralsExport($request->all()), 'referral_registrations.xlsx');
     }
 }
