@@ -370,18 +370,63 @@
                             <div class="row">
                                 <div class="col-12">
 
-                                    <div class="row align-items-center mb-4">
-                                        <div class="col-lg-3 col-md-12 mb-3 mb-lg-0">
-                                            <h3 class="font-weight-bold m-0">All Users</h3>
-                                            <div class="d-flex align-items-center gap-2 mt-1">
-                                                <a href="{{ route('superadmin.export.user', request()->query()) }}" class="text-primary mr-3" style="text-decoration: underline; font-weight: 600;">
-                                                    <i class="fa-solid fa-file-excel mr-1"></i>Export
-                                                </a>
-                                                <span class="badge badge-info" style="font-size: 0.9rem;">Total: {{ $users->total() }}</span>
-                                            </div>
+                                    <div class="row">
+                                        <div class="col-3">
+                                            <h3 class="font-weight-bold">All Users</h3>
+                                            <a href="{{ route('superadmin.export.user') }}" style="text-decoration: underline;">Export</a> <!-- export as excel -->
                                         </div>
 
-                                        <div class="col-lg-6 col-md-12 mb-3 mb-lg-0">
+                                        <div class="col-9 d-flex justify-content-end align-items-center">
+                                            <nav aria-label="Page navigation">
+                                                <ul class="pagination">
+                                                    {{-- Previous Page Link --}}
+                                                    @if ($users->onFirstPage())
+                                                    <li class="page-item disabled"><span class="page-link">Prev</span></li>
+                                                    @else
+                                                    <li class="page-item">
+                                                        <a class="page-link" href="{{ $users->previousPageUrl() }}" rel="prev">Prev</a>
+                                                    </li>
+                                                    @endif
+
+                                                    {{-- Pagination Elements --}}
+                                                    @foreach ($users->links()->elements as $element)
+                                                    {{-- "Three Dots" Separator --}}
+                                                    @if (is_string($element))
+                                                    <li class="page-item disabled"><span class="page-link">{{ $element }}</span></li>
+                                                    @endif
+
+                                                    {{-- Array Of Links --}}
+                                                    @if (is_array($element))
+                                                    @foreach ($element as $page => $url)
+                                                    @if ($page == $users->currentPage())
+                                                    <li class="page-item active"><span class="page-link">{{ $page }}</span></li>
+                                                    @else
+                                                    <li class="page-item">
+                                                        <a class="page-link" href="{{ $url }}">{{ $page }}</a>
+                                                    </li>
+                                                    @endif
+                                                    @endforeach
+                                                    @endif
+                                                    @endforeach
+
+                                                    {{-- Next Page Link --}}
+                                                    @if ($users->hasMorePages())
+                                                    <li class="page-item">
+                                                        <a class="page-link" href="{{ $users->nextPageUrl() }}" rel="next">Next</a>
+                                                    </li>
+                                                    @else
+                                                    <li class="page-item disabled"><span class="page-link">Next</span></li>
+                                                    @endif
+                                                </ul>
+                                            </nav>
+                                        </div>
+
+
+
+                                    </div>
+
+                                    <div class="row">
+                                                                                <div class="col-lg-6 col-md-12 mb-3 mb-lg-0">
                                             <form action="{{ route('superadmin.super-all-user') }}" method="GET" class="d-flex align-items-center">
                                                 @if(request('search'))
                                                     <input type="hidden" name="search" value="{{ request('search') }}">
@@ -410,51 +455,6 @@
                                                     </div>
                                                 </div>
                                             </form>
-                                        </div>
-
-                                        <div class="col-lg-3 col-md-12 d-flex justify-content-end align-items-center">
-                                            <nav aria-label="Page navigation">
-                                                <ul class="pagination mb-0">
-                                                    {{-- Previous Page Link --}}
-                                                    @if ($users->onFirstPage())
-                                                    <li class="page-item disabled"><span class="page-link">Prev</span></li>
-                                                    @else
-                                                    <li class="page-item">
-                                                        <a class="page-link" href="{{ $users->appends(request()->query())->previousPageUrl() }}" rel="prev">Prev</a>
-                                                    </li>
-                                                    @endif
-
-                                                    {{-- Pagination Elements --}}
-                                                    @foreach ($users->appends(request()->query())->links()->elements as $element)
-                                                    {{-- "Three Dots" Separator --}}
-                                                    @if (is_string($element))
-                                                    <li class="page-item disabled"><span class="page-link">{{ $element }}</span></li>
-                                                    @endif
-
-                                                    {{-- Array Of Links --}}
-                                                    @if (is_array($element))
-                                                    @foreach ($element as $page => $url)
-                                                    @if ($page == $users->currentPage())
-                                                    <li class="page-item active"><span class="page-link">{{ $page }}</span></li>
-                                                    @else
-                                                    <li class="page-item">
-                                                        <a class="page-link" href="{{ $url }}">{{ $page }}</a>
-                                                    </li>
-                                                    @endif
-                                                    @endforeach
-                                                    @endif
-                                                    @endforeach
-
-                                                    {{-- Next Page Link --}}
-                                                    @if ($users->hasMorePages())
-                                                    <li class="page-item">
-                                                        <a class="page-link" href="{{ $users->appends(request()->query())->nextPageUrl() }}" rel="next">Next</a>
-                                                    </li>
-                                                    @else
-                                                    <li class="page-item disabled"><span class="page-link">Next</span></li>
-                                                    @endif
-                                                </ul>
-                                            </nav>
                                         </div>
                                     </div>
 
