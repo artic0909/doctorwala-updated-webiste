@@ -684,16 +684,30 @@
                                                     Select Doctor &nbsp;<span class="text-danger">*</span>
                                                 </label>
                                                 <select id="pprDoctorSelect" name="doctor_id" style="width:100%" required>
-                                                    <option value="" disabled selected>— Search and select a doctor —</option>
-                                                    @forelse($doctors as $doc)
-                                                    <option value="{{ $doc->id }}">
-                                                        {{ $doc->doctor_name }}{{ $doc->doctor_designation ? ' · '.$doc->doctor_designation : '' }}{{ $doc->doctor_specialist ? ' ('.$doc->doctor_specialist.')' : '' }}
-                                                    </option>
-                                                    @empty
-                                                    <option disabled>No doctors registered yet.</option>
-                                                    @endforelse
+                                                    @if(in_array('Doctor', $registrationTypes) && count($doctors) === 1)
+                                                        @foreach($doctors as $doc)
+                                                        <option value="{{ $doc->id }}" selected>
+                                                            {{ $doc->doctor_name }}{{ $doc->doctor_designation ? ' · '.$doc->doctor_designation : '' }}{{ $doc->doctor_specialist ? ' ('.$doc->doctor_specialist.')' : '' }}
+                                                        </option>
+                                                        @endforeach
+                                                    @else
+                                                        <option value="" disabled selected>— Search and select a doctor —</option>
+                                                        @forelse($doctors as $doc)
+                                                        <option value="{{ $doc->id }}">
+                                                            {{ $doc->doctor_name }}{{ $doc->doctor_designation ? ' · '.$doc->doctor_designation : '' }}{{ $doc->doctor_specialist ? ' ('.$doc->doctor_specialist.')' : '' }}
+                                                        </option>
+                                                        @empty
+                                                        <option disabled>No doctors registered yet.</option>
+                                                        @endforelse
+                                                    @endif
                                                 </select>
-                                                <small class="text-muted">Only active doctors under your clinic are listed.</small>
+                                                <small class="text-muted">
+                                                    @if(in_array('Doctor', $registrationTypes))
+                                                        Your doctor profile is selected.
+                                                    @else
+                                                        Only active doctors under your clinic are listed.
+                                                    @endif
+                                                </small>
                                             </div>
 
                                             {{-- ── 2. Medical ID ── --}}

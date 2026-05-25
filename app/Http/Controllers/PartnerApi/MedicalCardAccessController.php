@@ -44,6 +44,27 @@ class MedicalCardAccessController extends Controller
             $registrationTypes = json_decode($registrationTypes, true);
         }
 
+        // Sync and get doctor if registration type has 'Doctor'
+        if (is_array($registrationTypes) && in_array('Doctor', $registrationTypes)) {
+            $contact = \App\Models\PartnerDoctorContactModel::where('currently_loggedin_partner_id', $partnerId)->first();
+            if ($contact) {
+                \App\Models\PartnerAllOPDDoctorModel::updateOrCreate(
+                    [
+                        'currently_loggedin_partner_id' => $partnerId,
+                        'doctor_name' => $contact->partner_doctor_name,
+                    ],
+                    [
+                        'doctor_designation' => $contact->partner_doctor_designation,
+                        'doctor_specialist' => $contact->partner_doctor_specialist,
+                        'doctor_fees' => $contact->partner_doctor_fees ?? 0,
+                        'doctor_more' => $contact->partner_doctor_address,
+                        'visit_day_time' => $contact->visit_day_time,
+                        'status' => $contact->status ?? 'active',
+                    ]
+                );
+            }
+        }
+
         // Fetch all active doctors for this partner
         $doctors = PartnerAllOPDDoctorModel::where('currently_loggedin_partner_id', $partnerId)
             ->orderBy('doctor_name')
@@ -116,6 +137,33 @@ class MedicalCardAccessController extends Controller
         $partner = $request->user();
         if (!$partner) {
             return response()->json(['success' => false, 'message' => 'Unauthorized.'], 401);
+        }
+
+        $registrationTypes = $partner->registration_type;
+        if (is_string($registrationTypes)) {
+            $registrationTypes = json_decode($registrationTypes, true);
+        }
+
+        // Sync and auto-select doctor if registration type has 'Doctor'
+        if (is_array($registrationTypes) && in_array('Doctor', $registrationTypes)) {
+            $contact = \App\Models\PartnerDoctorContactModel::where('currently_loggedin_partner_id', $partner->id)->first();
+            if ($contact) {
+                $syncedDoc = \App\Models\PartnerAllOPDDoctorModel::updateOrCreate(
+                    [
+                        'currently_loggedin_partner_id' => $partner->id,
+                        'doctor_name' => $contact->partner_doctor_name,
+                    ],
+                    [
+                        'doctor_designation' => $contact->partner_doctor_designation,
+                        'doctor_specialist' => $contact->partner_doctor_specialist,
+                        'doctor_fees' => $contact->partner_doctor_fees ?? 0,
+                        'doctor_more' => $contact->partner_doctor_address,
+                        'visit_day_time' => $contact->visit_day_time,
+                        'status' => $contact->status ?? 'active',
+                    ]
+                );
+                $request->merge(['doctor_id' => $syncedDoc->id]);
+            }
         }
 
         $validator = Validator::make($request->all(), [
