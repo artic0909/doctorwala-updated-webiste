@@ -22,7 +22,7 @@ class MedicalHistory extends Model
 
     protected $casts = [
         'images'         => 'array',
-        'date_of_report' => 'date',
+        'date_of_report' => 'date:Y-m-d',
     ];
 
     /** Relationship back to the user */

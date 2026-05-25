@@ -39,8 +39,8 @@ class SystemPrescription extends Model
         'recommended_tests' => 'array',
         'medicines' => 'array',
         'repeat_tests_required' => 'boolean',
-        'prescription_date' => 'date',
-        'next_visit_date' => 'date',
+        'prescription_date' => 'date:Y-m-d',
+        'next_visit_date' => 'date:Y-m-d',
     ];
 
     public function patient()
