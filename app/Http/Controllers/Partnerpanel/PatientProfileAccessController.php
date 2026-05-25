@@ -518,4 +518,35 @@ class PatientProfileAccessController extends Controller
 
     //     return view('partnerpanel.patient-view-report-images', compact('record'));
     // }
+
+    /**
+     * Helper method to sync PartnerDoctorContactModel to PartnerAllOPDDoctorModel for Doctor type partners
+     */
+    private function syncDoctorIfDoctorType($partner)
+    {
+        if (!$partner) return;
+        $registrationTypes = $partner->registration_type;
+        if (is_string($registrationTypes)) {
+            $registrationTypes = json_decode($registrationTypes, true);
+        }
+        if (is_array($registrationTypes) && in_array('Doctor', $registrationTypes)) {
+            $contact = \App\Models\PartnerDoctorContactModel::where('currently_loggedin_partner_id', $partner->id)->first();
+            if ($contact) {
+                \App\Models\PartnerAllOPDDoctorModel::updateOrCreate(
+                    [
+                        'currently_loggedin_partner_id' => $partner->id,
+                        'doctor_name' => $contact->partner_doctor_name,
+                    ],
+                    [
+                        'doctor_designation' => $contact->partner_doctor_designation,
+                        'doctor_specialist' => $contact->partner_doctor_specialist,
+                        'doctor_fees' => $contact->partner_doctor_fees ?? 0,
+                        'doctor_more' => $contact->partner_doctor_address,
+                        'visit_day_time' => $contact->visit_day_time,
+                        'status' => $contact->status ?? 'active',
+                    ]
+                );
+            }
+        }
+    }
 }

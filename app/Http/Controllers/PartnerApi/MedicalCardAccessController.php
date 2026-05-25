@@ -35,6 +35,8 @@ class MedicalCardAccessController extends Controller
         }
 
         $partnerId = $partner->id;
+        $this->syncDoctorIfDoctorType($partner);
+
         $opdBanner = PartnerOPDBannerModel::where('currently_loggedin_partner_id', $partnerId)->first();
         $pathologyBanner = PartnerPathologyBannerModel::where('currently_loggedin_partner_id', $partnerId)->first();
         $doctorBanner = PartnerDoctorBannerModel::where('currently_loggedin_partner_id', $partnerId)->first();
@@ -42,27 +44,6 @@ class MedicalCardAccessController extends Controller
 
         if (is_string($registrationTypes)) {
             $registrationTypes = json_decode($registrationTypes, true);
-        }
-
-        // Sync and get doctor if registration type has 'Doctor'
-        if (is_array($registrationTypes) && in_array('Doctor', $registrationTypes)) {
-            $contact = \App\Models\PartnerDoctorContactModel::where('currently_loggedin_partner_id', $partnerId)->first();
-            if ($contact) {
-                \App\Models\PartnerAllOPDDoctorModel::updateOrCreate(
-                    [
-                        'currently_loggedin_partner_id' => $partnerId,
-                        'doctor_name' => $contact->partner_doctor_name,
-                    ],
-                    [
-                        'doctor_designation' => $contact->partner_doctor_designation,
-                        'doctor_specialist' => $contact->partner_doctor_specialist,
-                        'doctor_fees' => $contact->partner_doctor_fees ?? 0,
-                        'doctor_more' => $contact->partner_doctor_address,
-                        'visit_day_time' => $contact->visit_day_time,
-                        'status' => $contact->status ?? 'active',
-                    ]
-                );
-            }
         }
 
         // Fetch all active doctors for this partner
@@ -237,6 +218,8 @@ class MedicalCardAccessController extends Controller
         if (!$partner) {
             return response()->json(['success' => false, 'message' => 'Unauthorized.'], 401);
         }
+
+        $this->syncDoctorIfDoctorType($partner);
 
         $requests = AccessRequest::where('currently_loggedin_partner_id', $partner->partner_id)
             ->with(['patient', 'doctor'])
@@ -470,5 +453,36 @@ class MedicalCardAccessController extends Controller
         $patient = DwUserModel::find($dwUserId);
 
         return [$dwUserId, $patient, $blocked];
+    }
+
+    /**
+     * Helper method to sync PartnerDoctorContactModel to PartnerAllOPDDoctorModel for Doctor type partners
+     */
+    private function syncDoctorIfDoctorType($partner)
+    {
+        if (!$partner) return;
+        $registrationTypes = $partner->registration_type;
+        if (is_string($registrationTypes)) {
+            $registrationTypes = json_decode($registrationTypes, true);
+        }
+        if (is_array($registrationTypes) && in_array('Doctor', $registrationTypes)) {
+            $contact = \App\Models\PartnerDoctorContactModel::where('currently_loggedin_partner_id', $partner->id)->first();
+            if ($contact) {
+                \App\Models\PartnerAllOPDDoctorModel::updateOrCreate(
+                    [
+                        'currently_loggedin_partner_id' => $partner->id,
+                        'doctor_name' => $contact->partner_doctor_name,
+                    ],
+                    [
+                        'doctor_designation' => $contact->partner_doctor_designation,
+                        'doctor_specialist' => $contact->partner_doctor_specialist,
+                        'doctor_fees' => $contact->partner_doctor_fees ?? 0,
+                        'doctor_more' => $contact->partner_doctor_address,
+                        'visit_day_time' => $contact->visit_day_time,
+                        'status' => $contact->status ?? 'active',
+                    ]
+                );
+            }
+        }
     }
 }
