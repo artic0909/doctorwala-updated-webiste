@@ -351,6 +351,11 @@ class MedicalCardAccessController extends Controller
                 ->orderBy('prescription_date', 'desc')
                 ->orderBy('id', 'desc')
                 ->get();
+            
+            $systemPrescriptions = $systemPrescriptions->map(function ($pres) {
+                $pres->encrypted_id = \Illuminate\Support\Facades\Crypt::encryptString((string) $pres->id);
+                return $pres;
+            });
         } catch (\Exception $e) {
             $systemPrescriptions = collect();
         }

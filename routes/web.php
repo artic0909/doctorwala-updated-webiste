@@ -97,3 +97,6 @@ Route::get('/reffer', [RefferController::class, 'index'])->name('reffer.index');
 Route::get('/reffer/success/{code}', [RefferController::class, 'success'])->name('reffer.success');
 Route::get('/reffer/{code}', [RefferController::class, 'referredIndex'])->name('reffer.referred');
 Route::post('/reffer', [RefferController::class, 'store'])->name('reffer.store');
+
+Route::get('/share/prescription/{encryptedId}/view', [\App\Http\Controllers\Partnerpanel\PrescriptionController::class, 'viewPrescriptionShared'])
+    ->name('digital.prescription.view.shared');

@@ -320,4 +320,32 @@ class PrescriptionController extends Controller
 
         return view('partnerpanel.view-digital-prescription', compact('prescription', 'patient', 'partner'));
     }
+
+    public function viewPrescriptionShared($encryptedId)
+    {
+        try {
+            $id = Crypt::decryptString($encryptedId);
+        } catch (\Exception $e) {
+            try {
+                // Support double base64/encryption check or plain numeric ID
+                if (is_numeric($encryptedId)) {
+                    $id = $encryptedId;
+                } else {
+                    $id = Crypt::decryptString(urldecode($encryptedId));
+                }
+            } catch (\Exception $ex) {
+                abort(403, 'Invalid link.');
+            }
+        }
+
+        $prescription = SystemPrescription::findOrFail($id);
+        $patient = DwUserModel::findOrFail($prescription->dw_user_id);
+        $partner = \App\Models\DwPartnerModel::find($prescription->partner_id);
+
+        if (!$partner) {
+            $partner = \App\Models\PartnerOPDContactModel::where('id', $prescription->partner_id)->first();
+        }
+
+        return view('partnerpanel.view-digital-prescription', compact('prescription', 'patient', 'partner'));
+    }
 }
