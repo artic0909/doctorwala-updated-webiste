@@ -190,6 +190,29 @@
 <body>
     <a href="javascript:void(0)" onclick="window.print()" class="download-btn no-print">Print / Save as PDF</a>
 
+@php
+    $registrationTypes = $partner->registration_type ?? null;
+    if (is_string($registrationTypes)) {
+        $registrationTypes = json_decode($registrationTypes, true);
+    }
+    
+    $docSpecialist = null;
+    $docDesignation = null;
+    
+    if ($partner && is_array($registrationTypes) && in_array('Doctor', $registrationTypes)) {
+        $docContact = \App\Models\PartnerDoctorContactModel::where('currently_loggedin_partner_id', $partner->id)->first();
+        if ($docContact) {
+            $docSpecialist = $docContact->partner_doctor_specialist;
+            $docDesignation = $docContact->partner_doctor_designation;
+        }
+    }
+    
+    if (empty($docSpecialist) && empty($docDesignation) && $prescription->doctor) {
+        $docSpecialist = $prescription->doctor->doctor_specialist;
+        $docDesignation = $prescription->doctor->doctor_designation;
+    }
+@endphp
+
     <div class="prescription-container">
         <h4><span style="color: green;">Doctorwala</span>| Your Medical Ecosystem</h4>
         <div class="header">
@@ -200,7 +223,12 @@
             </div>
             <div class="doc-meta" style="text-align: right;">
                 <p style="font-weight: 700; margin: 0; color: #1e3a8a;">Dr. {{ $prescription->doctor_name }}</p>
-                <p style="margin: 5px 0; color: #64748b;">Date: {{ \Carbon\Carbon::parse($prescription->prescription_date)->format('d-M-Y') }}</p>
+                @if(!empty($docDesignation) || !empty($docSpecialist))
+                    <p style="margin: 2px 0 0; font-size: 13px; color: #64748b;">
+                        {{ $docDesignation }}{{ (!empty($docDesignation) && !empty($docSpecialist)) ? ' · ' : '' }}{{ $docSpecialist }}
+                    </p>
+                @endif
+                <p style="margin: 5px 0 0; color: #64748b;">Date: {{ \Carbon\Carbon::parse($prescription->prescription_date)->format('d-M-Y') }}</p>
             </div>
         </div>
 
