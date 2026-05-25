@@ -16,6 +16,7 @@ Route::post('/verify-otp', [AuthApiController::class, 'verifyOTP']);
 Route::post('/forgot-password/send-otp', [AuthApiController::class, 'forgotPasswordSendOtp']);
 Route::post('/forgot-password/reset', [AuthApiController::class, 'forgotPasswordReset']);
 Route::get('/about-us', [AuthApiController::class, 'getAboutUsDetails']);
+Route::get('/partner-carousels', [AuthApiController::class, 'getPartnerCarousels']);
 
 
 // Protected routes (Sanctum)

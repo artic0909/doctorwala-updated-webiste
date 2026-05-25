@@ -127,8 +127,10 @@
                                 <li class="nav-item"> <a class="nav-link"
                                         href="/superadmin/super-home-banner">Home Banner</a></li>
 
+                                <li class="nav-item"> <a class="nav-link"\s*href="/superadmin/super-others-banner">Others Banner</a></li>
+
                                 <li class="nav-item"> <a class="nav-link"
-                                        href="/superadmin/super-others-banner">Others Banner</a></li>
+                                        href="/superadmin/super-partner-carousel">Partner Carousel</a></li>
 
 
                             </ul>

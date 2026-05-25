@@ -622,4 +622,22 @@ class AuthApiController extends Controller
             'message' => 'About Us details not found.'
         ], 404);
     }
+
+    /**
+     * Get Partner Carousels
+     */
+    public function getPartnerCarousels()
+    {
+        $carousels = \App\Models\PartnerCarousel::all();
+        if ($carousels->count() > 0) {
+            return response()->json([
+                'success' => true,
+                'data' => $carousels
+            ], 200);
+        }
+        return response()->json([
+            'success' => false,
+            'message' => 'No carousels found.'
+        ], 404);
+    }
 }

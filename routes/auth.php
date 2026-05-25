@@ -21,6 +21,7 @@ use App\Http\Controllers\Superadmin\SuperBlogController;
 use App\Http\Controllers\Superadmin\SuperCouponController;
 use App\Http\Controllers\Superadmin\SuperHomeBannerController;
 use App\Http\Controllers\Superadmin\SuperOtherBannerController;
+use App\Http\Controllers\Superadmin\SuperPartnerCarouselController;
 use App\Http\Controllers\Superadmin\SuperPartnerHandleController;
 use App\Http\Controllers\Superadmin\SuperSubscriptionController;
 use App\Http\Controllers\Superadmin\SuperTicketController;
@@ -226,6 +227,12 @@ Route::middleware('auth:web')->group(function () {
     Route::post('/superadmin/super-others-banner', [SuperOtherBannerController::class, 'store'])->name('superadmin.otherbanner.store');
     Route::put('/superadmin/super-others-banner/update/{id}', [SuperOtherBannerController::class, 'update'])->name('superadmin.otherbanner.update');
     Route::delete('/superadmin/super-others-banner/delete/{id}', [SuperOtherBannerController::class, 'delete'])->name('superadmin.otherbanner.delete');
+
+    // Partner Carousel---------------------------------------------------------------------------------------------------------------------------------------->
+    Route::get('/superadmin/super-partner-carousel', [SuperPartnerCarouselController::class, 'index'])->name('superadmin.super-partner-carousel');
+    Route::post('/superadmin/super-partner-carousel', [SuperPartnerCarouselController::class, 'store'])->name('superadmin.partnercarousel.store');
+    Route::put('/superadmin/super-partner-carousel/update/{id}', [SuperPartnerCarouselController::class, 'update'])->name('superadmin.partnercarousel.update');
+    Route::delete('/superadmin/super-partner-carousel/delete/{id}', [SuperPartnerCarouselController::class, 'delete'])->name('superadmin.partnercarousel.delete');
 
     // All Users---------------------------------------------------------------------------------------------------------------------------------------->
     Route::get('/superadmin/super-all-user', [SuperAllUserController::class, 'index'])->name('superadmin.super-all-user');

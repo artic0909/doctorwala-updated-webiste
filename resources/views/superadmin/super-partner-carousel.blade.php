@@ -5,8 +5,7 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Super | All OPD Details</title>
-
+    <title>Super | Partner Carousel</title>
     <!-- plugins:css -->
     <link rel="stylesheet" href="{{asset('../partner-assets')}}">
     <link rel="stylesheet" href="{{asset('../partner-assets/vendors/ti-icons/css/themify-icons.css')}}">
@@ -28,7 +27,6 @@
         crossorigin="anonymous" referrerpolicy="no-referrer" />
 
 
-
 </head>
 
 <body>
@@ -42,23 +40,17 @@
         <nav class="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
             <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
                 <a class="navbar-brand brand-logo mr-5" href="/superadmin/super-dashboard" style="font-weight: 900;"><img
-                        src="../img/logo3.png" alt="logo"></a>
-                <a class="navbar-brand brand-logo-mini" href="/superadmin/super-dashboard"><img src="../img/fav5.png"
+                        src="{{asset('../img/logo3.png')}}" alt="logo"></a>
+                <a class="navbar-brand brand-logo-mini" href="/superadmin/super-dashboard"><img src="{{asset('fav5.png')}}"
                         alt="logo" /></a>
             </div>
-            <div class="navbar-menu-wrapper d-flex align-items-center justify-content-between">
+            <div class="navbar-menu-wrapper d-flex align-items-center justify-content-end">
                 <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
                     <i class="fa-solid fa-bars"></i>
                 </button>
-                
-                <form method="GET" action="{{ route('superadmin.super-all-opd') }}" class="d-flex w-100">
-                    <input type="search" id="search" name="search" value="{{ request('search') }}"
-                        placeholder="Search Here ........" class="form-control mx-4 w-100">
-                </form>
 
-
-
-
+                <input type="search" id="search" placeholder="Search Here ........" name="search"
+                    class="form-control mx-4 w-100">
 
                 <ul class="navbar-nav navbar-nav-right">
 
@@ -352,6 +344,7 @@
 
 
 
+
             <!-- partial -->
             <div class="main-panel">
 
@@ -368,146 +361,58 @@
                         <div class="col-md-12 grid-margin">
                             <div class="row">
                                 <div class="col-12">
-
-                                    <div class="row">
-                                        <div class="col-3">
-                                            <h3 class="font-weight-bold">All OPD Details</h3>
-                                            <a href="{{ route('superadmin.export.opd') }}" style="text-decoration: underline;">Export</a> <!-- export as excel -->
-                                        </div>
-
-                                        <div class="col-9 d-flex justify-content-end align-items-center">
-                                            <nav aria-label="Page navigation">
-                                                <ul class="pagination">
-                                                    {{-- Previous Page Link --}}
-                                                    @if ($opds->onFirstPage())
-                                                    <li class="page-item disabled"><span class="page-link">Prev</span></li>
-                                                    @else
-                                                    <li class="page-item"><a class="page-link" href="{{ $opds->previousPageUrl() }}">Prev</a></li>
-                                                    @endif
-
-                                                    {{-- Pagination Elements --}}
-                                                    @foreach ($opds->links()->elements[0] as $page => $url)
-                                                    @if ($page == $opds->currentPage())
-                                                    <li class="page-item active"><span class="page-link">{{ $page }}</span></li>
-                                                    @else
-                                                    <li class="page-item"><a class="page-link" href="{{ $url }}">{{ $page }}</a></li>
-                                                    @endif
-                                                    @endforeach
-
-                                                    {{-- Next Page Link --}}
-                                                    @if ($opds->hasMorePages())
-                                                    <li class="page-item"><a class="page-link" href="{{ $opds->nextPageUrl() }}">Next</a></li>
-                                                    @else
-                                                    <li class="page-item disabled"><span class="page-link">Next</span></li>
-                                                    @endif
-                                                </ul>
-                                            </nav>
-                                        </div>
-
-                                    </div>
+                                    <h3 class="font-weight-bold">Partner Carousel</h3>
 
 
-<div style="overflow-x: auto;">
+
+
+
                                     <table class="table table-stripped table-bordered mt-4">
                                         <thead>
                                             <tr>
-                                                <th>SL.</th>
-                                                <th>Date</th>
-                                                <th>Subscription Date</th>
-                                                <th>ID</th>
-                                                <th>Clinic Name</th>
-                                                <th>Clinic Contacts</th>
-                                                <th>Address Details</th>
-                                                <th>Status</th>
-                                                <th>Actions</th>
+                                                <th>Edit</th>
+                                                <th>Delete</th>
+                                                <th>Banner Image</th>
+                                                <th>Title</th>
+                                                <th>Short Description</th>
                                             </tr>
                                         </thead>
 
                                         <tbody>
-                                            @foreach($opds as $opd)
+                                            @foreach ($carousels as $carousel)
                                             <tr>
+                                                <td><a href="" data-target="#myEditModal{{$carousel->id}}" data-toggle="modal"
+                                                        class="ed-btn"><i class="fa-solid fa-pen-to-square text-success"
+                                                            style="font-size: 1.1rem;"></i></a></td>
 
-                                                <td><b>{{$loop->iteration}}</b></td>
-                                                <td>29-11-2024</td>
-                                                <td>29-11-2024</td>
 
-                                                <td><b>{{$opd->partner_id}}</b></td>
-                                                <td style="text-transform: capitalize;"><b>{{$opd->clinic_name}}</b></td>
+                                                <td><a href="" data-target="#myDeleteModal{{$carousel->id}}" data-toggle="modal"
+                                                        class="ed-btn"><i class="fa-solid fa-trash-can text-danger"
+                                                            style="font-size: 1.1rem;"></i></a></td>
 
-                                                <td>
-                                                    <p class="m-0" style="text-transform: capitalize;"><b>Name: </b><b class="text-primary">{{$opd->clinic_contact_person_name}}</b></p>
-                                                    <p class="m-0"><b>Email: </b><b class="text-danger">{{$opd->clinic_email}}</b></p>
-                                                    <p class="m-0"><b>Mobile: </b><b class="text-success">{{$opd->clinic_mobile_number}}</b></p>
+
+
+                                                <td><img src="{{ asset('storage/' . $carousel->image) }}" alt=""
+                                                        style="width: 150px; height: 80px; border-radius: 10px;">
                                                 </td>
 
 
                                                 <td>
-                                                    <p class="m-0"><b>State: </b><b class="text-priamry">{{$opd->clinic_state}}</b></p>
-                                                    <p class="m-0"><b>City: </b><b class="text-danger">{{$opd->clinic_city}}</b></p>
-                                       
-
-                                                    <p class="m-0" style="text-transform: capitalize;">
-                                                    <b>Address: </b>
-                                                    <b class="text-success">{{ \Illuminate\Support\Str::limit($opd->clinic_address, 10, '...') }}</b>
-                                                    </p>
-
+                                                    <p class="m-0" style="font-weight: 700;">{{$carousel->title}}</p>
                                                 </td>
-
-
                                                 <td>
-                                                    @if($opd->status == 'Active')
-                                                    <a href="" data-target="#myActiveInactiveModal{{$opd->id}}" data-toggle="modal" class="ed-btn">
-                                                        <i class="fa-solid fa-toggle-on text-success" style="font-size: 1.1rem;"></i>
-                                                    </a>
-                                                    @else
-                                                    <a href="" data-target="#myActiveInactiveModal{{$opd->id}}" data-toggle="modal" class="ed-btn">
-                                                        <i class="fa-solid fa-toggle-off text-danger" style="font-size: 1.1rem;"></i>
-                                                    </a>
-                                                    @endif
-                                                </td>
-
-
-
-                                                <td>
-
-                                                    <div class="actions d-flex flex-wrap">
-                                                        <a href="" data-target="#myDeleteModal{{$opd->id}}" data-toggle="modal"
-                                                            class="ed-btn ml-3 mb-2">
-                                                            <i class="fa-solid fa-trash-can text-danger"
-                                                                style="font-size: 1rem;"></i>
-                                                        </a>
-
-
-                                                        <a href="/superadmin/super-edit-opd-details/{{$opd->id}}"
-                                                            class="ed-btn ml-3 mb-2">
-                                                            <i class="fa-solid fa-pen-to-square text-primaryy"
-                                                                style="font-size: 1rem;"></i>
-                                                        </a>
-
-
-                                                        <a href="/superadmin/super-addopd-doctor/{{$opd->pid}}"
-                                                            class="ed-btn ml-3 mb-2">
-                                                            <i class="fa-solid fa-plus text-success"
-                                                                style="font-size: 1rem;"></i>
-                                                        </a>
-
-                                                    </div>
-
+                                                    <p class="m-0" style="font-weight: 700;">{{$carousel->desc}}</p>
                                                 </td>
                                             </tr>
                                             @endforeach
                                         </tbody>
                                     </table>
 
-</div>
+
                                 </div>
                             </div>
                         </div>
                     </div>
-
-
-
-
 
                 </div>
 
@@ -516,17 +421,122 @@
 
 
 
+
+
+
+
+                <!-- floating right button -->
+                <a type="button" class="btn btn-primary rounded btn-icon-text p-0 px-2 py-2 floating-btnn"
+                    data-target="#myAddModal" data-toggle="modal" style="width: fit-content;">
+                    <i class="fa fa-2x fa-plus" aria-hidden="true" style="font-size: 1.7rem;"></i>
+                </a>
+
+
+
+
+                <!-- Add Modal -->
+                <div class="modal fade" id="myAddModal" tabindex="-1" role="dialog" aria-labelledby="myAddModalLabel"
+                    aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="myAddModalLabel">Add Partner Carousel</h5>
+                            </div>
+
+                            <form class="modal-body" action="{{route('superadmin.partnercarousel.store')}}" method="post" enctype="multipart/form-data">
+                                @csrf
+
+                                <div class="form-group">
+                                    <label for="image"><i class="fa fa-stethoscope text-success" aria-hidden="true"></i>
+                                        Add
+                                        Banner <span class="text-danger">*</span></label>
+                                    <input type="file" class="form-control" name="image" id="image">
+                                </div>
+
+
+                                <div class="form-group">
+                                    <label for="title"><i class="fa fa-stethoscope text-success" aria-hidden="true"></i>
+                                        Title <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" name="title" id="title">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="desc"><i class="fa fa-stethoscope text-success" aria-hidden="true"></i>
+                                        Short Desc <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" name="desc" id="desc">
+                                </div>
+
+
+                                <button type="submit" class="btn btn-success rounded w-100">Submit</button>
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- Edit Modal -->
+                @foreach ($carousels as $carousel)
+                <div class="modal fade" id="myEditModal{{$carousel->id}}" tabindex="-1" role="dialog" aria-labelledby="myEditModalLabel"
+                    aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+
+
+
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="myAddModalLabel">Edit Partner Carousel</h5>
+                            </div>
+
+                            <img src="{{ asset('storage/' . $carousel->image) }}" alt="" style="height: inherit; width: inherit;">
+
+                            <form class="modal-body" action="{{route('superadmin.partnercarousel.update' , $carousel->id)}}" method="post" enctype="multipart/form-data">
+                                @csrf
+                                @method('PUT')
+
+
+                                <div class="form-group">
+                                    <label for="image"><i class="fa fa-stethoscope text-success" aria-hidden="true"></i>
+                                        Add
+                                        Banner <span class="text-danger">*</span></label>
+                                    <input type="file" class="form-control" name="image" id="image">
+                                </div>
+
+
+                                <div class="form-group">
+                                    <label for="title"><i class="fa fa-stethoscope text-success" aria-hidden="true"></i>
+                                        Title <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" name="title" id="title" value="{{$carousel->title}}">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="desc"><i class="fa fa-stethoscope text-success" aria-hidden="true"></i>
+                                        Short Desc <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" name="desc" id="desc" value="{{$carousel->desc}}">
+                                </div>
+
+
+                                <button type="submit" class="btn btn-success rounded w-100">Submit</button>
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
+                @endforeach
+
+
+
                 <!-- Delete Modal -->
-                @foreach($opds as $opd)
-                <div class="modal fade" id="myDeleteModal{{$opd->id}}" tabindex="-1" role="dialog"
+                @foreach ($carousels as $carousel)
+                <div class="modal fade" id="myDeleteModal{{$carousel->id}}" tabindex="-1" role="dialog"
                     aria-labelledby="myDeleteModalLabel" aria-hidden="true">
                     <div class="modal-dialog" role="document">
                         <div class="modal-content">
 
-                            <form action="{{route('superadmin.opd.contact.delete', $opd->id)}}" class="modal-body" method="POST" enctype="multipart/form-data">
+                            <form action="{{route('superadmin.partnercarousel.delete' , $carousel->id)}}" method="post" class="modal-body">
                                 @csrf
                                 @method('DELETE')
-
                                 <div class="form-group d-flex flex-column align-items-center">
                                     <i class="fa-solid fa-trash-can fa-2x text-danger"></i>
 
@@ -555,42 +565,9 @@
 
 
 
-                <!-- My Active Inactive  Modal -->
-                @foreach ($opds as $opd)
-                <div class="modal fade" id="myActiveInactiveModal{{$opd->id}}" tabindex="-1" role="dialog"
-                    aria-labelledby="myActiveInactiveModalLabel" aria-hidden="true">
-                    <div class="modal-dialog" role="document">
-                        <div class="modal-content">
 
 
 
-                            <form class="modal-body" action="{{route('superadmin.status.opd.edit', $opd->id)}}" method="POST" enctype="multipart/form-data">
-                                @csrf
-                                @method('PUT')
-
-
-
-                                <div class="form-group">
-                                    <label for="status"><i class="fa fa-stethoscope text-success"
-                                            aria-hidden="true"></i>
-                                        Set Status <span class="text-danger">*</span></label>
-                                    <select name="status" id="status" class="form-control">
-                                        <option value="Inactive" selected>{{$opd->status}}</option>
-                                        <option value="">---Select Status---</option>
-                                        <option value="Active">Active</option>
-                                        <option value="Inactive">Inactive</option>
-                                    </select>
-                                </div>
-
-
-
-                                <button type="submit" class="btn btn-success rounded w-100">Submit</button>
-                            </form>
-
-                        </div>
-                    </div>
-                </div>
-                @endforeach
 
 
 
@@ -654,12 +631,6 @@
     <script src="{{asset('../partner-assets/js/dashboard.js')}}"></script>
     <script src="{{asset('../partner-assets/js/Chart.roundedBarCharts.js')}}"></script>
     <!-- End custom js for this page-->
-
-
-
-
-    <!-- add section JS -->
-    <script src="{{asset('../partner-assets/js/add-section.js')}}"></script>
 </body>
 
 </html>
