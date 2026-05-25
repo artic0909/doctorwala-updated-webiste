@@ -485,4 +485,105 @@ class MedicalCardAccessController extends Controller
             }
         }
     }
+
+    /**
+     * Create digital prescription
+     * POST /partner-api/medical-card-access/prescription/create
+     */
+    public function storePrescription(Request $request)
+    {
+        $partner = $request->user();
+        if (!$partner) {
+            return response()->json(['success' => false, 'message' => 'Unauthorized.'], 401);
+        }
+
+        $validator = Validator::make($request->all(), [
+            'dw_user_id' => 'required|exists:dw_user_models,id',
+            'opd_doctor_id' => 'required|integer',
+            'prescription_date' => 'required|date',
+            'user_age' => 'nullable|string',
+            'user_gender' => 'nullable|string',
+            'blood_group' => 'nullable|string',
+            'bp' => 'nullable|string',
+            'pulse' => 'nullable|string',
+            'spo2' => 'nullable|string',
+            'temperature' => 'nullable|string',
+            'weight' => 'nullable|string',
+            'heading' => 'required|string|max:255',
+            'symptoms' => 'nullable|array',
+            'tests' => 'nullable|array',
+            'tests.*.name' => 'required|string',
+            'tests.*.priority' => 'nullable|string',
+            'tests.*.notes' => 'nullable|string',
+            'medicines' => 'nullable|array',
+            'medicines.*.name' => 'required|string',
+            'medicines.*.timing' => 'nullable|array',
+            'medicines.*.eating' => 'nullable|array',
+            'medicines.*.days' => 'nullable|string',
+            'medical_instructions' => 'nullable|string',
+            'diet_instructions' => 'nullable|string',
+            'next_visit_date' => 'nullable|date',
+            'repeat_tests_required' => 'nullable|string',
+            'emergency_note' => 'nullable|string',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Validation error.',
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        $partnerId = $partner->partner_id;
+        $access = AccessRequest::where('dw_user_id', $request->dw_user_id)
+            ->where('currently_loggedin_partner_id', $partnerId)
+            ->first();
+
+        if (!$access || $access->req_status !== 'accepted' || $access->access_status !== 'on') {
+            return response()->json([
+                'success' => false,
+                'message' => 'Unauthorized patient access or access is blocked.'
+            ], 403);
+        }
+
+        $doctorName = null;
+        if ($request->opd_doctor_id) {
+            $doc = PartnerAllOPDDoctorModel::find($request->opd_doctor_id);
+            if ($doc) {
+                $doctorName = $doc->doctor_name;
+            }
+        }
+
+        $prescription = SystemPrescription::create([
+            'dw_user_id' => $request->dw_user_id,
+            'partner_id' => $partner->id,
+            'opd_doctor_id' => $request->opd_doctor_id,
+            'doctor_name' => $doctorName,
+            'prescription_date' => \Carbon\Carbon::parse($request->prescription_date),
+            'user_age' => $request->user_age,
+            'user_gender' => $request->user_gender,
+            'blood_group' => $request->blood_group,
+            'bp' => $request->bp,
+            'pulse' => $request->pulse,
+            'spo2' => $request->spo2,
+            'temperature' => $request->temperature,
+            'weight' => $request->weight,
+            'heading' => $request->heading,
+            'symptoms' => $request->symptoms ?? [],
+            'recommended_tests' => $request->tests ?? [],
+            'medicines' => $request->medicines ?? [],
+            'medical_instructions' => $request->medical_instructions,
+            'diet_instructions' => $request->diet_instructions,
+            'next_visit_date' => $request->next_visit_date ? \Carbon\Carbon::parse($request->next_visit_date) : null,
+            'repeat_tests_required' => $request->repeat_tests_required === 'yes',
+            'emergency_note' => $request->emergency_note,
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Digital prescription saved successfully.',
+            'data' => $prescription
+        ], 201);
+    }
 }
