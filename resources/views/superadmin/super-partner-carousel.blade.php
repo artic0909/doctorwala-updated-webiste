@@ -374,7 +374,7 @@
                                                 <th>Delete</th>
                                                 <th>Banner Image</th>
                                                 <th>Title</th>
-                                                <th>Short Description</th>
+                                                <th>Short descriptionription</th>
                                             </tr>
                                         </thead>
 
@@ -401,7 +401,7 @@
                                                     <p class="m-0" style="font-weight: 700;">{{$carousel->title}}</p>
                                                 </td>
                                                 <td>
-                                                    <p class="m-0" style="font-weight: 700;">{{$carousel->desc}}</p>
+                                                    <p class="m-0" style="font-weight: 700;">{{$carousel->description}}</p>
                                                 </td>
                                             </tr>
                                             @endforeach
@@ -462,9 +462,9 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="desc"><i class="fa fa-stethoscope text-success" aria-hidden="true"></i>
-                                        Short Desc <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" name="desc" id="desc">
+                                    <label for="description"><i class="fa fa-stethoscope text-success" aria-hidden="true"></i>
+                                        Short description <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" name="description" id="description">
                                 </div>
 
 
@@ -511,9 +511,9 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="desc"><i class="fa fa-stethoscope text-success" aria-hidden="true"></i>
-                                        Short Desc <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" name="desc" id="desc" value="{{$carousel->desc}}">
+                                    <label for="description"><i class="fa fa-stethoscope text-success" aria-hidden="true"></i>
+                                        Short description <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" name="description" id="description" value="{{$carousel->description}}">
                                 </div>
 
 
