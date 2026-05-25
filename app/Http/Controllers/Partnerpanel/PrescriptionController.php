@@ -316,7 +316,7 @@ class PrescriptionController extends Controller
         $patient = DwUserModel::findOrFail($prescription->dw_user_id);
         
         // Find the partner info for the header
-        $partner = \App\Models\PartnerOPDContactModel::where('id', $prescription->partner_id)->first();
+        $partner = \App\Models\DwPartnerModel::find($prescription->partner_id);
 
         return view('partnerpanel.view-digital-prescription', compact('prescription', 'patient', 'partner'));
     }

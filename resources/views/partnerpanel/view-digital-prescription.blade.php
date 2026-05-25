@@ -194,9 +194,9 @@
         <h4><span style="color: green;">Doctorwala</span>| Your Medical Ecosystem</h4>
         <div class="header">
             <div class="clinic-info">
-                <h1>{{ $partner->partner_clinic_name }}</h1>
-                <p style="margin: 5px 0; color: #64748b;">{{ $partner->partner_address }}</p>
-                <p style="margin: 0; color: #64748b;">Contact: {{ $partner->partner_mobile_number }}</p>
+                <h1>{{ $partner->partner_clinic_name ?? 'Doctorwala Partner' }}</h1>
+                <p style="margin: 5px 0; color: #64748b;">{{ $partner->partner_address ?? '' }}</p>
+                <p style="margin: 0; color: #64748b;">Contact: {{ $partner->partner_mobile_number ?? '' }}</p>
             </div>
             <div class="doc-meta" style="text-align: right;">
                 <p style="font-weight: 700; margin: 0; color: #1e3a8a;">Dr. {{ $prescription->doctor_name }}</p>
