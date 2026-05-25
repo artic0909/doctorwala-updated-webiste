@@ -60,4 +60,5 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/medical-card-access/patient/{encryptedId}/history', [MedicalCardAccessController::class, 'viewMedicalHistory']);
     Route::get('/medical-card-access/report/{encryptedId}', [MedicalCardAccessController::class, 'viewPatientReportDetails']);
     Route::post('/medical-card-access/prescription/create', [MedicalCardAccessController::class, 'storePrescription']);
+    Route::post('/medical-card-access/handwritten/create', [MedicalCardAccessController::class, 'storeHandwrittenPrescription']);
 });

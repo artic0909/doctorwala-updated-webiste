@@ -591,4 +591,84 @@ class MedicalCardAccessController extends Controller
             'data' => $prescription
         ], 201);
     }
+
+    /**
+     * Create handwritten prescription (Uploaded image/pdf report)
+     * POST /partner-api/medical-card-access/handwritten/create
+     */
+    public function storeHandwrittenPrescription(Request $request)
+    {
+        $partner = $request->user();
+        if (!$partner) {
+            return response()->json(['success' => false, 'message' => 'Unauthorized.'], 401);
+        }
+
+        $validator = Validator::make($request->all(), [
+            'dw_user_id' => 'required|exists:dw_user_models,id',
+            'date_of_report' => 'required|date|before_or_equal:today',
+            'heading' => 'required|string|max:255',
+            'opd_doctor_id' => 'nullable|integer',
+            'images' => 'required|array|min:1|max:20',
+            'images.*' => 'file|mimes:jpg,jpeg,png,webp,pdf|max:5120', // 5 MB each
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Validation error.',
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        $partnerId = $partner->partner_id;
+        $access = AccessRequest::where('dw_user_id', $request->dw_user_id)
+            ->where('currently_loggedin_partner_id', $partnerId)
+            ->first();
+
+        if (!$access || $access->req_status !== 'accepted' || $access->access_status !== 'on') {
+            return response()->json([
+                'success' => false,
+                'message' => 'Unauthorized patient access or access is blocked.'
+            ], 403);
+        }
+
+        // Store images
+        $imagePaths = [];
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $file) {
+                $path = $file->store(
+                    'medical_histories/' . $request->dw_user_id,
+                    'public'
+                );
+                $imagePaths[] = $path;
+            }
+        }
+
+        $doctorName = null;
+        if ($request->opd_doctor_id) {
+            $doc = PartnerAllOPDDoctorModel::find($request->opd_doctor_id);
+            if ($doc) {
+                $doctorName = $doc->doctor_name;
+            }
+        }
+
+        $record = MedicalHistory::create([
+            'dw_user_id' => $request->dw_user_id,
+            'partner_id' => $partner->id,
+            'clinic_name' => $partner->partner_clinic_name,
+            'opd_doctor_id' => $request->opd_doctor_id,
+            'doctor_name' => $doctorName,
+            'type' => 'prescription',
+            'date_of_report' => $request->date_of_report,
+            'heading' => $request->heading,
+            'images' => $imagePaths,
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Handwritten prescription saved successfully.',
+            'data' => $record
+        ], 201);
+    }
 }
+
