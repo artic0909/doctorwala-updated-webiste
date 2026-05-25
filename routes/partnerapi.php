@@ -6,6 +6,7 @@ use App\Http\Controllers\PartnerApi\ClinicProfileAddApiController;
 use App\Http\Controllers\PartnerApi\DoctoraddApiController;
 use App\Http\Controllers\PartnerApi\TestaddApiController;
 use App\Http\Controllers\PartnerApi\AppointmentsManagementApiController;
+use App\Http\Controllers\PartnerApi\MedicalCardAccessController;
 
 // Public routes for partner API
 Route::post('/login', [AuthApiController::class, 'login']);
@@ -49,4 +50,13 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/appointments', [AppointmentsManagementApiController::class, 'index']);
     Route::get('/appointments/stats', [AppointmentsManagementApiController::class, 'stats']);
     Route::post('/appointments/{id}/status', [AppointmentsManagementApiController::class, 'updateStatus']);
+
+    // Medical Card Access Routes
+    Route::get('/medical-card-access/meta', [MedicalCardAccessController::class, 'index']);
+    Route::post('/medical-card-access/lookup', [MedicalCardAccessController::class, 'patientLookup']);
+    Route::post('/medical-card-access/request', [MedicalCardAccessController::class, 'sendRequest']);
+    Route::get('/medical-card-access/requests', [MedicalCardAccessController::class, 'allRequests']);
+    Route::get('/medical-card-access/patient/{encryptedId}', [MedicalCardAccessController::class, 'viewPatientProfile']);
+    Route::get('/medical-card-access/patient/{encryptedId}/history', [MedicalCardAccessController::class, 'viewMedicalHistory']);
+    Route::get('/medical-card-access/report/{encryptedId}', [MedicalCardAccessController::class, 'viewPatientReportDetails']);
 });
