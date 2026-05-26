@@ -17,7 +17,8 @@ class ApiMedicalHistoryController extends Controller
     public function getAll(Request $request)
     {
         try {
-            $records = MedicalHistory::where('dw_user_id', $request->user()->id)
+            $records = MedicalHistory::with(['opd', 'doctor'])
+                ->where('dw_user_id', $request->user()->id)
                 ->orderBy('date_of_report', 'desc')
                 ->get()
                 ->map(fn($r) => $this->formatRecord($r));
@@ -41,7 +42,8 @@ class ApiMedicalHistoryController extends Controller
     public function getReports(Request $request)
     {
         try {
-            $records = MedicalHistory::where('dw_user_id', $request->user()->id)
+            $records = MedicalHistory::with(['opd', 'doctor'])
+                ->where('dw_user_id', $request->user()->id)
                 ->where('type', 'report')
                 ->orderBy('date_of_report', 'desc')
                 ->get()
@@ -66,7 +68,8 @@ class ApiMedicalHistoryController extends Controller
     public function getPrescriptions(Request $request)
     {
         try {
-            $records = MedicalHistory::where('dw_user_id', $request->user()->id)
+            $records = MedicalHistory::with(['opd', 'doctor'])
+                ->where('dw_user_id', $request->user()->id)
                 ->where('type', 'prescription')
                 ->orderBy('date_of_report', 'desc')
                 ->get()
@@ -91,9 +94,29 @@ class ApiMedicalHistoryController extends Controller
     public function getSystemPrescriptions(Request $request)
     {
         try {
-            $records = SystemPrescription::where('dw_user_id', $request->user()->id)
+            $records = SystemPrescription::with(['opd', 'doctor'])
+                ->where('dw_user_id', $request->user()->id)
                 ->orderBy('created_at', 'desc')
-                ->get();
+                ->get()
+                ->map(function($record) {
+                    return [
+                        'id' => $record->id,
+                        'type' => 'system-prescription',
+                        'heading' => $record->heading,
+                        'doctor_name' => $record->doctor_name,
+                        'clinic_name' => $record->opd ? $record->opd->partner_clinic_name : null,
+                        'prescription_date' => $record->prescription_date,
+                        'user_age' => $record->user_age,
+                        'user_gender' => $record->user_gender,
+                        'blood_group' => $record->blood_group,
+                        'symptoms' => $record->symptoms,
+                        'medicines' => $record->medicines,
+                        'recommended_tests' => $record->recommended_tests,
+                        'registration_type' => $record->opd ? $record->opd->registration_type : null,
+                        'doctor_specialist' => $record->doctor ? $record->doctor->doctor_specialist : null,
+                        'created_at' => $record->created_at,
+                    ];
+                });
 
             return response()->json([
                 'status'  => true,
@@ -319,6 +342,8 @@ class ApiMedicalHistoryController extends Controller
             'partner_id'      => $record->partner_id,
             'doctor_name'     => $record->doctor_name,
             'clinic_name'     => $record->clinic_name,
+            'registration_type' => $record->opd ? $record->opd->registration_type : null,
+            'doctor_specialist' => $record->doctor ? $record->doctor->doctor_specialist : null,
         ];
     }
 }
