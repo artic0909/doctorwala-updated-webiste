@@ -292,6 +292,7 @@ class ApiMedicalHistoryController extends Controller
             )->values()->toArray(),
             'created_at'      => $record->created_at,
             'updated_at'      => $record->updated_at,
+            'partner_id'      => $record->partner_id,
         ];
     }
 }
