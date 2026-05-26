@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\MedicalHistory;
+use App\Models\SystemPrescription;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
@@ -74,6 +75,29 @@ class ApiMedicalHistoryController extends Controller
             return response()->json([
                 'status'  => true,
                 'message' => 'Prescriptions fetched successfully.',
+                'data'    => $records
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status'  => false,
+                'message' => 'Something went wrong. Please try again.',
+            ], 500);
+        }
+    }
+
+    /**
+     * Get System Prescriptions
+     */
+    public function getSystemPrescriptions(Request $request)
+    {
+        try {
+            $records = SystemPrescription::where('dw_user_id', $request->user()->id)
+                ->orderBy('created_at', 'desc')
+                ->get();
+
+            return response()->json([
+                'status'  => true,
+                'message' => 'System prescriptions fetched successfully.',
                 'data'    => $records
             ], 200);
         } catch (\Exception $e) {

@@ -61,6 +61,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/medical-history',                  [ApiMedicalHistoryController::class, 'getAll']);
     Route::get('/medical-history/reports',          [ApiMedicalHistoryController::class, 'getReports']);
     Route::get('/medical-history/prescriptions',    [ApiMedicalHistoryController::class, 'getPrescriptions']);
+    Route::get('/medical-history/system-prescriptions', [ApiMedicalHistoryController::class, 'getSystemPrescriptions']);
     Route::get('/medical-history/{id}',             [ApiMedicalHistoryController::class, 'getRecord']);
     Route::post('/medical-history',                 [ApiMedicalHistoryController::class, 'addMedicalHistory']);
     Route::post('/medical-history/{id}',            [ApiMedicalHistoryController::class, 'editMedicalHistory']);
