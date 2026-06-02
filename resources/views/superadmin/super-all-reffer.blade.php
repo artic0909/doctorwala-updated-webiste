@@ -376,14 +376,14 @@
                                                     </td>
 
                                                     <!-- Referred By -->
-                                                    <!-- <td>
+                                                    <td>
                                                         @if($ref->referredBy)
                                                             <p class="m-0" style="font-weight: 700;">{{$ref->referredBy->name}}</p>
                                                             <small class="text-muted">Code: {{$ref->referredBy->referral_code}}</small>
                                                         @else
                                                             <span class="badge badge-secondary">Direct</span>
                                                         @endif
-                                                    </td> -->
+                                                    </td>
 
                                                     <!-- People Referred (Count) -->
                                                     <td>
