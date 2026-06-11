@@ -209,7 +209,7 @@
     
     if (empty($docSpecialist) && empty($docDesignation) && $prescription->doctor) {
         $docSpecialist = $prescription->doctor->doctor_specialist;
-        $docDesignation = $prescription->doctor->doctor_designation;
+        $docDesignation = $prescription->doctor->doctor_more;
     }
 @endphp
 
