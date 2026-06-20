@@ -460,7 +460,7 @@
                 </div>
             @endif
 
-            <div class="info-box">
+            <!-- <div class="info-box">
                 <div class="info-row">
                     <span class="info-label">Your Referral Code</span>
                     <span class="code-badge">{{ $reffer->referral_code }}</span>
@@ -490,7 +490,7 @@
             <div class="earnings-banner">
                 <i class="fa fa-gift" style="font-size: 1.15rem;"></i>
                 Earn ₹20 instantly in your UPI account for every friend who registers!
-            </div>
+            </div> -->
         </div>
     </div>
 
