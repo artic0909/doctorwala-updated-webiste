@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Doctorwala Referral Program - Earn ₹20 Per Referral</title>
+    <title>Doctorwala Referral Program</title>
     
     <link href="{{asset('fav5.png')}}" rel="icon">
     
@@ -868,13 +868,7 @@
                         <li>
                             <span class="step-num">৩</span>
                             <div class="step-text">
-                                <strong>ফরমটি পূরণ করুন:</strong> আবার এই পেজে ফিরে এসে আপনার সঠিক নাম, ফোন নম্বর, ইউপিআই আইডি (যেখানে টাকা পেতে চান) ও মেডিকেল কার্ড নম্বর দিন এবং স্ক্রিনশটটি আপলোড করুন।
-                            </div>
-                        </li>
-                        <li>
-                            <span class="step-num">৪</span>
-                            <div class="step-text">
-                                <strong>রেফার লিংক শেয়ার করুন:</strong> ফরম সাবমিট করার পর আপনার একটি ইউনিক রেফার লিংক তৈরি হবে। বন্ধুদের সাথে সেটি শেয়ার করে প্রতি সফল রেফারেলে <strong>২০ টাকা</strong> আয় করুন!
+                                <strong>ফরমটি পূরণ করুন:</strong> আবার এই পেজে ফিরে এসে আপনার সঠিক মেডিকেল কার্ড নম্বর দিন এবং স্ক্রিনশটটি আপলোড করে ফরম সাবমিট করুন।
                             </div>
                         </li>
                     </ul>
@@ -899,13 +893,7 @@
                         <li>
                             <span class="step-num">3</span>
                             <div class="step-text">
-                                <strong>Fill up the Form:</strong> Return to this page, enter your Name, Phone Number, UPI ID (for receiving payments), Medical Card Number, and upload the screenshot.
-                            </div>
-                        </li>
-                        <li>
-                            <span class="step-num">4</span>
-                            <div class="step-text">
-                                <strong>Share & Earn:</strong> Submit the form to generate your unique referral link. Share it with friends and earn <strong>₹20</strong> for every successful signup!
+                                <strong>Fill up the Form:</strong> Return to this page, Enter Your Medical Card Number, and upload the screenshot & submit the form.
                             </div>
                         </li>
                     </ul>
@@ -941,15 +929,15 @@
 
     <div class="referral-container">
         
-        <div class="hero-section">
+        <!-- <div class="hero-section">
             <h1 class="hero-title">Refer & Earn Program</h1>
             <p class="hero-desc">Invite friends to Doctorwala, and claim instant cash rewards!</p>
-        </div>
+        </div> -->
 
-        <div class="promo-banner">
+        <!-- <div class="promo-banner">
             <i class="fa fa-gift promo-icon"></i>
             <span class="promo-text">Get ₹20 per active referral!</span>
-        </div>
+        </div> -->
 
         <!-- Referrer Card -->
         @if($referrer)
@@ -1012,7 +1000,7 @@
                 <input type="hidden" name="referred_by_code" value="{{ $referrer ? $referrer->referral_code : '' }}">
 
                 <!-- Full Name -->
-                <div class="form-group">
+                <!-- <div class="form-group">
                     <label for="name">Full Name</label>
                     <div class="input-wrapper">
                         <input type="text" 
@@ -1027,10 +1015,10 @@
                         <i class="fa fa-user input-icon"></i>
                     </div>
                     <div class="invalid-feedback" id="name-error">Please enter your full name (minimum 3 characters).</div>
-                </div>
+                </div> -->
 
                 <!-- Phone Number -->
-                <div class="form-group">
+                <!-- <div class="form-group">
                     <label for="phone">Phone Number (Numbers Only)</label>
                     <div class="input-wrapper">
                         <input type="tel" 
@@ -1044,10 +1032,10 @@
                         <i class="fa fa-phone input-icon"></i>
                     </div>
                     <div class="invalid-feedback" id="phone-error">Please enter a valid 10-digit mobile number.</div>
-                </div>
+                </div> -->
 
                 <!-- Payout Details -->
-                <div class="form-group">
+                <!-- <div class="form-group">
                     <label for="upi">UPI ID or UPI Phone Number</label>
                     <div class="input-wrapper">
                         <input type="text" 
@@ -1060,7 +1048,7 @@
                         <i class="fa fa-credit-card input-icon"></i>
                     </div>
                     <div class="invalid-feedback" id="upi-error">Please enter your UPI ID or UPI phone number.</div>
-                </div>
+                </div> -->
 
                 <!-- Medical Card -->
                 <div class="form-group">
@@ -1119,9 +1107,9 @@
             const formInputs = formStepCard.querySelectorAll('input, button[type="submit"]');
             
             const form = document.getElementById('referral-submit-form');
-            const nameInput = document.getElementById('name');
-            const phoneInput = document.getElementById('phone');
-            const upiInput = document.getElementById('upi');
+            // const nameInput = document.getElementById('name');
+            // const phoneInput = document.getElementById('phone');
+            // const upiInput = document.getElementById('upi');
             const medicalCardInput = document.getElementById('medical_card_number');
             const fileInput = document.getElementById('profile_screenshot');
             const uploadLabel = document.getElementById('upload-filename');
@@ -1129,12 +1117,12 @@
             const previewImg = document.getElementById('preview-img');
 
             // 1. Force strict numeric-only on Phone number input & limit to 10 digits
-            phoneInput.addEventListener('input', function() {
-                this.value = this.value.replace(/[^0-9]/g, '');
-                if (this.value.length > 10) {
-                    this.value = this.value.slice(0, 10);
-                }
-            });
+            // phoneInput.addEventListener('input', function() {
+            //     this.value = this.value.replace(/[^0-9]/g, '');
+            //     if (this.value.length > 10) {
+            //         this.value = this.value.slice(0, 10);
+            //     }
+            // });
 
             // 2. Lock/Unlock state helpers
             function setFormLock(isLocked) {
@@ -1218,26 +1206,26 @@
                 form.querySelectorAll('.invalid-feedback').forEach(el => el.style.display = 'none');
 
                 // Validate Name
-                if (nameInput.value.trim().length < 3) {
-                    nameInput.classList.add('invalid');
-                    document.getElementById('name-error').style.display = 'block';
-                    isValid = false;
-                }
+                // if (nameInput.value.trim().length < 3) {
+                //     nameInput.classList.add('invalid');
+                //     document.getElementById('name-error').style.display = 'block';
+                //     isValid = false;
+                // }
 
                 // Validate Phone (must be numeric and exactly 10 digits)
-                const phoneReg = /^[0-9]{10}$/;
-                if (!phoneReg.test(phoneInput.value)) {
-                    phoneInput.classList.add('invalid');
-                    document.getElementById('phone-error').style.display = 'block';
-                    isValid = false;
-                }
+                // const phoneReg = /^[0-9]{10}$/;
+                // if (!phoneReg.test(phoneInput.value)) {
+                //     phoneInput.classList.add('invalid');
+                //     document.getElementById('phone-error').style.display = 'block';
+                //     isValid = false;
+                // }
 
                 // Validate UPI
-                if (upiInput.value.trim() === '') {
-                    upiInput.classList.add('invalid');
-                    document.getElementById('upi-error').style.display = 'block';
-                    isValid = false;
-                }
+                // if (upiInput.value.trim() === '') {
+                //     upiInput.classList.add('invalid');
+                //     document.getElementById('upi-error').style.display = 'block';
+                //     isValid = false;
+                // }
 
                 // Validate Medical Card
                 if (medicalCardInput.value.trim() === '') {

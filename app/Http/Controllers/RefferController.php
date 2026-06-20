@@ -37,18 +37,18 @@ class RefferController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
-            'phone' => 'required|numeric|unique:reffers,phone',
-            'upi' => 'required|string|max:255',
+            // 'name' => 'required|string|max:255',
+            // 'phone' => 'required|numeric|unique:reffers,phone',
+            // 'upi' => 'required|string|max:255',
             'medical_card_number' => 'required|string|max:255',
             'profile_screenshot' => 'required|image|mimes:jpeg,png,jpg,webp|max:5120', // Max 5MB
             'referred_by_code' => 'nullable|string|exists:reffers,referral_code',
         ], [
-            'name.required' => 'The full name field is required.',
-            'phone.required' => 'The phone number field is required.',
-            'phone.numeric' => 'The phone number must be a valid number.',
-            'phone.unique' => 'This phone number is already registered in the referral program.',
-            'upi.required' => 'The bank details or UPI ID field is required.',
+            // 'name.required' => 'The full name field is required.',
+            // 'phone.required' => 'The phone number field is required.',
+            // 'phone.numeric' => 'The phone number must be a valid number.',
+            // 'phone.unique' => 'This phone number is already registered in the referral program.',
+            // 'upi.required' => 'The bank details or UPI ID field is required.',
             'medical_card_number.required' => 'The medical card number field is required.',
             'profile_screenshot.required' => 'The profile screenshot is required.',
             'profile_screenshot.image' => 'The profile screenshot must be an image file.',
@@ -82,9 +82,9 @@ class RefferController extends Controller
 
         // Create the Reffer record
         $reffer = Reffer::create([
-            'name' => $request->name,
-            'phone' => $request->phone,
-            'upi' => $request->upi,
+            // 'name' => $request->name,
+            // 'phone' => $request->phone,
+            // 'upi' => $request->upi,
             'medical_card_number' => $request->medical_card_number,
             'profile_screenshot' => $screenshotPath,
             'referral_code' => $referralCode,
