@@ -440,7 +440,7 @@
                 <h2 style="color: var(--dark); font-weight: 900; letter-spacing: -1.2px; font-size: 1.8rem;">Doctor<span style="color:#07a1cf;">wala</span></h2>
             @endif
             <div class="brand-badge">
-                <i class="fa fa-bolt"></i> <span>Doctorvibes</span> program
+                <i class="fa fa-bolt"></i> <span>Referral</span> program
             </div>
         </div>
     </header>
