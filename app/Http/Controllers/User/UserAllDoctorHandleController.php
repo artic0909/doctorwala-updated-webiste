@@ -110,7 +110,7 @@ class UserAllDoctorHandleController extends Controller
             'clinic_name'                   => 'required|string',
             'user_name'                     => 'required|string|max:255',
             'user_mobile'                   => 'required|string|max:20',
-            'user_email'                    => 'required|email|max:255',
+            'user_email'                    => 'nullable|email|max:255',
             'user_inquiry'                  => 'required|string',
 
             'dw_user_id'   => 'nullable|exists:dw_user_models,id',
