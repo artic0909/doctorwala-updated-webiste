@@ -16,22 +16,20 @@ class ApiUserOTPController extends Controller
     public function sendOTP(Request $request)
     {
         $request->validate([
-            'user_email' => 'required|email',
+            'user_mobile_number' => 'required|string',
         ]);
 
-        $user = DwUserModel::where('user_email', $request->user_email)->first();
+        $user = DwUserModel::where('user_mobile', $request->user_mobile_number)->first();
 
         if (!$user) {
             return response()->json([
                 'status' => false,
-                'message' => 'Email not registered.',
+                'message' => 'Mobile number not registered.',
             ]);
         }
 
         $otp = rand(1000, 9999);
-        Cache::put('otp_' . $request->user_email, $otp, now()->addMinutes(3));
-
-        Mail::to($request->user_email)->send(new SendOTPUser($otp));
+        Cache::put('otp_' . $request->user_mobile_number, $otp, now()->addMinutes(3));
 
         // Send WhatsApp OTP
         if ($user && $user->user_mobile) {
@@ -41,7 +39,7 @@ class ApiUserOTPController extends Controller
 
         return response()->json([
             'status' => true,
-            'message' => 'OTP sent to email.',
+            'message' => 'OTP sent to your WhatsApp.',
         ]);
     }
 
@@ -49,14 +47,14 @@ class ApiUserOTPController extends Controller
     public function verifyOTP(Request $request)
     {
         $request->validate([
-            'user_email' => 'required|email',
+            'user_mobile_number' => 'required|string',
             'otp' => 'required|digits:4',
         ]);
 
-        $storedOtp = Cache::get('otp_' . $request->user_email);
+        $storedOtp = Cache::get('otp_' . $request->user_mobile_number);
 
         if ($storedOtp == $request->otp) {
-            $user = DwUserModel::where('user_email', $request->user_email)->first();
+            $user = DwUserModel::where('user_mobile', $request->user_mobile_number)->first();
 
             if (!$user) {
                 return response()->json(['status' => false, 'message' => 'User not found']);
@@ -78,11 +76,11 @@ class ApiUserOTPController extends Controller
     public function updatePasswordDuringOTP(Request $request)
     {
         $request->validate([
-            'user_email' => 'required|email',
+            'user_mobile_number' => 'required|string',
             'user_password' => 'required|string|min:8|confirmed',
         ]);
 
-        $user = DwUserModel::where('user_email', $request->user_email)->first();
+        $user = DwUserModel::where('user_mobile', $request->user_mobile_number)->first();
         if (!$user) {
             return response()->json(['status' => false, 'message' => 'User not found']);
         }
