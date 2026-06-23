@@ -131,7 +131,7 @@ class UserAllDoctorHandleController extends Controller
 
             return back()->with('success', 'Your message has been sent successfully!');
         } catch (\Exception $e) {
-
+            \Illuminate\Support\Facades\Log::error('Inquiry Creation Error: ' . $e->getMessage());
             return back()
                 ->withInput()
                 ->with('error', 'Failed to send your message. Please try again.');

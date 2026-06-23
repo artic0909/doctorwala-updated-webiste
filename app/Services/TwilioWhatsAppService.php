@@ -97,16 +97,17 @@ class TwilioWhatsAppService
         ]);
     }
 
-    public function sendAppointmentUserAlert($mobile, $userName, $doctorName, $clinicName, $date, $time)
+    public function sendAppointmentUserAlert($mobile, $userName, $doctorName, $doctorSpeciality, $clinicName, $date, $time)
     {
-        $sid = 'HXf91cf7cd8f09df56870a0aab01432944';
-        // Hi {{1}}, Your appointment with Dr. {{2}} at {{3}} has been successfully booked for {{4}} at {{5}}.
+        $sid = 'HXf1cc2d8ed9fa51334da211fde6fba996';
+        // Hi {{1}}, Your appointment with Dr. {{2}}, {{3}} at {{4}} has been successfully booked for {{5}} at {{6}}. See you soon! - Doctorwala
         return $this->sendTemplateMessage($mobile, $sid, [
             '1' => $userName,
             '2' => $doctorName ?? 'Doctor',
-            '3' => $clinicName ?? 'Clinic',
-            '4' => $date,
-            '5' => $time
+            '3' => $doctorSpeciality ?? 'Specialist',
+            '4' => $clinicName ?? 'Clinic',
+            '5' => $date,
+            '6' => $time
         ]);
     }
 

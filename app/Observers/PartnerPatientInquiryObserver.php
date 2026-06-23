@@ -28,15 +28,25 @@ class PartnerPatientInquiryObserver
                 $doctorSpeciality = $inquiry->doctor->speciality;
             }
 
+            $formattedTime = 'a requested time';
+            if ($inquiry->booking_time) {
+                try {
+                    $formattedTime = \Carbon\Carbon::parse($inquiry->booking_time)->format('g:i A');
+                } catch (\Exception $e) {
+                    $formattedTime = $inquiry->booking_time;
+                }
+            }
+
             // 1. Send Alert to Patient/User
             if ($inquiry->user_mobile) {
                 $twilioService->sendAppointmentUserAlert(
                     $inquiry->user_mobile,
                     $inquiry->user_name,
                     $doctorName,
+                    $doctorSpeciality ?? $inquiry->clinic_name,
                     $inquiry->clinic_name,
-                    $inquiry->booking_date,
-                    $inquiry->booking_time
+                    $inquiry->booking_date ?? 'a requested date',
+                    $formattedTime
                 );
             }
 
@@ -57,8 +67,8 @@ class PartnerPatientInquiryObserver
                         $patientCity,
                         $doctorName,
                         $doctorSpeciality ?? $inquiry->clinic_name,
-                        $inquiry->booking_date,
-                        $inquiry->booking_time
+                        $inquiry->booking_date ?? 'a requested date',
+                        $formattedTime
                     );
                 }
             }
