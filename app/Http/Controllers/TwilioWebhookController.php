@@ -14,27 +14,39 @@ class TwilioWebhookController extends Controller
     {
         Log::info('Twilio Webhook Received:', $request->all());
 
-        // Extract parameters from Twilio payload
-        $from = $request->input('From'); // e.g. whatsapp:+919876543210
-        $buttonPayload = $request->input('ButtonPayload'); // e.g. 'confirm' or 'cancel'
-        $body = $request->input('Body'); // e.g. 'Confirm'
+        $from = $request->input('From');
+        $buttonPayload = $request->input('ButtonPayload');
+        $body = $request->input('Body');
 
-        // Determine action
+        // Determine action via robust case-insensitive substring match
         $action = null;
-        if (strtolower($buttonPayload) === 'confirm' || strtolower($body) === 'confirm') {
+        if (
+            (is_string($buttonPayload) && stripos($buttonPayload, 'confirm') !== false) ||
+            (is_string($body) && stripos($body, 'confirm') !== false)
+        ) {
             $action = 'Confirmed';
-        } elseif (strtolower($buttonPayload) === 'cancel' || strtolower($body) === 'cancel') {
+        } elseif (
+            (is_string($buttonPayload) && stripos($buttonPayload, 'cancel') !== false) ||
+            (is_string($body) && stripos($body, 'cancel') !== false)
+        ) {
             $action = 'Cancelled';
         }
 
-        if (!$action) {
-            return response('Ignoring non-button payload', 200);
+        // Always return TwiML 200 OK so Twilio doesn't throw errors
+        $twimlResponse = response('<Response></Response>', 200)->header('Content-Type', 'text/xml');
+
+        if (!$action || empty($from)) {
+            return $twimlResponse;
         }
 
-        // Clean phone number (remove 'whatsapp:' and '+' prefix if present)
-        $cleanPhone = str_replace(['whatsapp:', '+'], '', $from);
+        // Clean phone number
+        $cleanPhone = str_replace(['whatsapp:', '+', ' '], '', $from);
+        
+        if (strlen($cleanPhone) < 10) {
+            Log::warning('Webhook: Invalid phone number length: ' . $cleanPhone);
+            return $twimlResponse;
+        }
 
-        // Usually numbers in database are stored without country code if they are local.
         // Try to find the partner by mobile number
         $partner = DwPartnerModel::where('partner_mobile_number', $cleanPhone)
             ->orWhere('partner_mobile_number', 'like', '%' . substr($cleanPhone, -10))
@@ -42,7 +54,7 @@ class TwilioWebhookController extends Controller
 
         if (!$partner) {
             Log::warning('Webhook: Partner not found for mobile: ' . $cleanPhone);
-            return response('Partner not found', 404);
+            return $twimlResponse;
         }
 
         // Find the most recent pending inquiry for this partner
@@ -56,7 +68,7 @@ class TwilioWebhookController extends Controller
 
         if (!$inquiry) {
             Log::warning('Webhook: No pending inquiry found for partner: ' . $partner->currently_loggedin_partner_id);
-            return response('No pending inquiry found', 404);
+            return $twimlResponse;
         }
 
         // Update the status
@@ -67,14 +79,18 @@ class TwilioWebhookController extends Controller
 
         // Notify the user via Twilio
         if ($inquiry->user_mobile) {
-            $twilioService = new TwilioWhatsAppService();
-            if ($action === 'Confirmed') {
-                $twilioService->sendUserConfirmationAlert($inquiry);
-            } else {
-                $twilioService->sendUserCancellationAlert($inquiry);
+            try {
+                $twilioService = new TwilioWhatsAppService();
+                if ($action === 'Confirmed') {
+                    $twilioService->sendUserConfirmationAlert($inquiry);
+                } else {
+                    $twilioService->sendUserCancellationAlert($inquiry);
+                }
+            } catch (\Exception $e) {
+                Log::error('Webhook: Error sending user notification: ' . $e->getMessage());
             }
         }
 
-        return response('Success', 200);
+        return $twimlResponse;
     }
 }
