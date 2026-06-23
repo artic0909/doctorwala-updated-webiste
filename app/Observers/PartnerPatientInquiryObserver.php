@@ -26,6 +26,9 @@ class PartnerPatientInquiryObserver
             if ($inquiry->doctor) {
                 $doctorName = $inquiry->doctor->doctor_name;
                 $doctorSpeciality = $inquiry->doctor->doctor_specialist;
+            } elseif ($inquiry->clinic_type === 'Doctor' && $inquiry->doctorContact) {
+                $doctorName = $inquiry->doctorContact->partner_doctor_name;
+                $doctorSpeciality = $inquiry->doctorContact->partner_doctor_specialist;
             }
 
             $formattedTime = 'a requested time';
@@ -67,6 +70,32 @@ class PartnerPatientInquiryObserver
                             $inquiry->clinic_name,
                             $inquiry->booking_date ?? 'a requested date',
                             $formattedTime
+                        );
+                    }
+                }
+            } elseif ($inquiry->clinic_type === 'Doctor') {
+                // 1. Send Alert to Patient/User
+                if ($inquiry->user_mobile) {
+                    $twilioService->sendIndividualDoctorUserAlert(
+                        $inquiry->user_mobile,
+                        $inquiry->user_name,
+                        $doctorName,
+                        $doctorSpeciality ?? $inquiry->clinic_name,
+                        $inquiry->booking_date ?? 'a requested date',
+                        $formattedTime
+                    );
+                }
+
+                // 2. Send Alert to Partner
+                if ($inquiry->currently_loggedin_partner_id) {
+                    $partner = DwPartnerModel::find($inquiry->currently_loggedin_partner_id);
+                    if ($partner && $partner->partner_mobile_number) {
+                        $twilioService->sendIndividualDoctorPartnerAlert(
+                            $partner->partner_mobile_number,
+                            $inquiry->user_name,
+                            $inquiry->booking_date ?? 'a requested date',
+                            $formattedTime,
+                            $inquiry->user_mobile
                         );
                     }
                 }

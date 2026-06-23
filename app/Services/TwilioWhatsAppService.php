@@ -153,6 +153,31 @@ class TwilioWhatsAppService
         ]);
     }
 
+    public function sendIndividualDoctorUserAlert($mobile, $userName, $doctorName, $doctorSpeciality, $date, $time)
+    {
+        $sid = 'HX86b5815acded20301901a5b0e822d042';
+        // Hi {{1}}, Your appointment with Dr. {{2}} ({{3}}) on {{4}} at {{5}} is booked successfully! ✅ Please arrive 20 minutes before your scheduled time. Thank you for choosing Doctorwala!
+        return $this->sendTemplateMessage($mobile, $sid, [
+            '1' => $userName,
+            '2' => $doctorName ?? 'Doctor',
+            '3' => $doctorSpeciality ?? 'Specialist',
+            '4' => $date,
+            '5' => $time
+        ]);
+    }
+
+    public function sendIndividualDoctorPartnerAlert($mobile, $patientName, $date, $time, $patientMobile)
+    {
+        $sid = 'HX8961a91a827db0ecf6ef6fd10ec66ae5';
+        // New Appointment Alert! 🔔 Patient: {{1}} Date: {{4}} Time: {{5}} Phone: {{6}} Please confirm or cancel this appointment by calling the patient phone number - Doctorwala
+        return $this->sendTemplateMessage($mobile, $sid, [
+            '1' => $patientName,
+            '4' => $date,
+            '5' => $time,
+            '6' => $patientMobile
+        ]);
+    }
+
     public function sendUserConfirmationAlert($inquiry)
     {
         $sid = 'HX573c38ede05a1813bce1e881bef7a26c';
