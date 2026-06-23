@@ -35,21 +35,21 @@ class DwPartnerOTPController extends Controller
     }
 
 
-    // Send OTP to the email
+    // Send OTP to the mobile
     public function sendOTP(Request $request)
     {
         $request->validate([
-            'partner_email' => 'required|email',
+            'partner_mobile_number' => 'required|string',
         ]);
 
-        $email = $request->partner_email;
+        $mobile = $request->partner_mobile_number;
 
-        // Check if the email exists in the DwPartnerModel
-        $partner = DwPartnerModel::where('partner_email', $email)->first();
+        // Check if the mobile exists in the DwPartnerModel
+        $partner = DwPartnerModel::where('partner_mobile_number', $mobile)->first();
 
         if (!$partner) {
-            // If email is not found, return error message
-            return back()->withErrors(['partner_email' => 'Email is not registered.']);
+            // If mobile is not found, return error message
+            return back()->withErrors(['partner_mobile_number' => 'Mobile number is not registered.']);
         }
 
         // Generate OTP
@@ -58,11 +58,8 @@ class DwPartnerOTPController extends Controller
         // Store OTP in cookie for 3 minutes
         Cookie::queue('partner_otp', $otp, 3);
 
-        // Store email in session to use it later
-        session(['partner_email' => $email]);
-
-        // Send OTP email
-        Mail::to($email)->send(new SendOTPPartner($otp));
+        // Store mobile in session to use it later
+        session(['partner_mobile_number' => $mobile]);
 
         // Send WhatsApp OTP
         if ($partner && $partner->partner_mobile_number) {
@@ -71,7 +68,7 @@ class DwPartnerOTPController extends Controller
         }
 
         // Redirect to OTP verification page
-        return redirect()->route('partner-otp.verify')->with('message', 'OTP has been sent to your email.');
+        return redirect()->route('partner-otp.verify')->with('message', 'OTP has been sent to your mobile number.');
     }
 
 
@@ -87,15 +84,15 @@ class DwPartnerOTPController extends Controller
         // Get OTP from the cookie
         $storedOtp = Cookie::get('partner_otp');
 
-        // Get email from the session
-        $email = session('partner_email');
+        // Get mobile from the session
+        $mobile = session('partner_mobile_number');
 
         // Verify OTP
         if ($storedOtp && $enteredOtp == $storedOtp) {
             // OTP is valid, log the user in
 
-            // Retrieve the partner data using the stored email
-            $partner = DwPartnerModel::where('partner_email', $email)->first();
+            // Retrieve the partner data using the stored mobile
+            $partner = DwPartnerModel::where('partner_mobile_number', $mobile)->first();
 
             if ($partner) {
                 // Log the partner in using the partner guard
@@ -105,7 +102,7 @@ class DwPartnerOTPController extends Controller
                 return redirect()->route('partnerpanel.partner-dashboard');
             } else {
                 // Partner not found, return error
-                return back()->withErrors(['partner_email' => 'Partner does not exist.']);
+                return back()->withErrors(['partner_mobile_number' => 'Partner does not exist.']);
             }
         } else {
             // OTP is invalid or expired

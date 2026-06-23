@@ -49,8 +49,8 @@
                         @csrf
                         <div class="row g-3" id="afteClickSendOtpButtonItHideAlso">
                             <div class="col-12">
-                                <input type="email" class="form-control bg-light border-0" placeholder="Enter Registered Email *"
-                                    style="height: 55px;" name="partner_email" id="partner_email" required>
+                                <input type="tel" class="form-control bg-light border-0" placeholder="Enter Registered Mobile Number *"
+                                    style="height: 55px;" name="partner_mobile_number" id="partner_mobile_number" required>
                             </div>
 
                             @if(session('message'))
