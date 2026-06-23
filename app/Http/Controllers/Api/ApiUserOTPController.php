@@ -33,6 +33,12 @@ class ApiUserOTPController extends Controller
 
         Mail::to($request->user_email)->send(new SendOTPUser($otp));
 
+        // Send WhatsApp OTP
+        if ($user && $user->user_mobile) {
+            $twilioService = new \App\Services\TwilioWhatsAppService();
+            $twilioService->sendUserOtp($user->user_mobile, $otp);
+        }
+
         return response()->json([
             'status' => true,
             'message' => 'OTP sent to email.',

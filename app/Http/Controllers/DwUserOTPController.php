@@ -39,6 +39,12 @@ class DwUserOTPController extends Controller
 
         Mail::to($request->user_email)->send(new SendOTPUser($otp));
 
+        // Send WhatsApp OTP
+        if ($user && $user->user_mobile) {
+            $twilioService = new \App\Services\TwilioWhatsAppService();
+            $twilioService->sendUserOtp($user->user_mobile, $otp);
+        }
+
         return redirect()->route('dw.user-otp')
             ->with('message', 'OTP sent successfully! Please check your inbox (and spam folder).');
     }

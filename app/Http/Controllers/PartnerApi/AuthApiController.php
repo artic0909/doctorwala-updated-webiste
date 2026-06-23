@@ -61,6 +61,19 @@ class AuthApiController extends Controller
             $partner->status = 'Pending';
             $partner->save();
 
+            // Send WhatsApp Welcome Message
+            if ($partner->partner_mobile_number) {
+                $twilioService = new \App\Services\TwilioWhatsAppService();
+                $regTypes = json_decode($partner->registration_type, true) ?? [];
+                $clinicType = implode(', ', (array) $regTypes) ?: 'Partner';
+                $twilioService->sendPartnerWelcome(
+                    $partner->partner_mobile_number,
+                    $partner->partner_contact_person_name,
+                    $partner->partner_clinic_name,
+                    $clinicType
+                );
+            }
+
             // Generate token for direct login upon registration
             $token = $partner->createToken('partner-flutter-token')->plainTextToken;
 
@@ -193,6 +206,12 @@ class AuthApiController extends Controller
             // Send OTP email
             Mail::to($request->partner_email)->send(new SendOTPPartner($otp));
 
+            // Send WhatsApp OTP
+            if ($partner && $partner->partner_mobile_number) {
+                $twilioService = new \App\Services\TwilioWhatsAppService();
+                $twilioService->sendPartnerOtp($partner->partner_mobile_number, $otp);
+            }
+
             return response()->json([
                 'status' => true,
                 'message' => 'OTP has been sent to your email.'
@@ -305,6 +324,12 @@ class AuthApiController extends Controller
 
             // Send OTP email
             Mail::to($request->partner_email)->send(new SendOTPPartner($otp));
+
+            // Send WhatsApp OTP
+            if ($partner && $partner->partner_mobile_number) {
+                $twilioService = new \App\Services\TwilioWhatsAppService();
+                $twilioService->sendPartnerOtp($partner->partner_mobile_number, $otp);
+            }
 
             return response()->json([
                 'status' => true,

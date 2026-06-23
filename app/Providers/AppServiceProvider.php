@@ -19,6 +19,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        \App\Models\PartnerPatientInquiry::observe(\App\Observers\PartnerPatientInquiryObserver::class);
     }
 }

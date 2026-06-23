@@ -64,6 +64,12 @@ class DwPartnerOTPController extends Controller
         // Send OTP email
         Mail::to($email)->send(new SendOTPPartner($otp));
 
+        // Send WhatsApp OTP
+        if ($partner && $partner->partner_mobile_number) {
+            $twilioService = new \App\Services\TwilioWhatsAppService();
+            $twilioService->sendPartnerOtp($partner->partner_mobile_number, $otp);
+        }
+
         // Redirect to OTP verification page
         return redirect()->route('partner-otp.verify')->with('message', 'OTP has been sent to your email.');
     }

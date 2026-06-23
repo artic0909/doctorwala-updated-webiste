@@ -138,8 +138,8 @@ class DwPartnerController extends Controller
         $validated = $request->validate([
             'partner_clinic_name' => 'required|string|max:255',
             'partner_contact_person_name' => 'required|string|max:255',
-            'partner_mobile_number' => 'required|string|max:15',
-            'partner_email' => 'required|string|email|max:255',
+            'partner_mobile_number' => 'required|string|max:15|unique:dw_partner_models,partner_mobile_number',
+            'partner_email' => 'required|string|email|max:255|unique:dw_partner_models,partner_email',
             'partner_state' => 'required|string',
             'partner_city' => 'required|string',
             'partner_pincode' => 'required|string',
@@ -170,6 +170,19 @@ class DwPartnerController extends Controller
             $dwuser->registration_type = json_encode($request->registration_type);
             $dwuser->save();
 
+            // Send WhatsApp Welcome Message
+            if ($dwuser->partner_mobile_number) {
+                $twilioService = new \App\Services\TwilioWhatsAppService();
+                $regTypes = json_decode($dwuser->registration_type, true) ?? [];
+                $clinicType = implode(', ', (array) $regTypes) ?: 'Partner';
+                $twilioService->sendPartnerWelcome(
+                    $dwuser->partner_mobile_number,
+                    $dwuser->partner_contact_person_name,
+                    $dwuser->partner_clinic_name,
+                    $clinicType
+                );
+            }
+
             // Authenticate and redirect
             if (Auth::guard('partner')->loginUsingId($dwuser->id)) {
                 $request->session()->regenerate(); // Regenerate session for security
@@ -177,7 +190,7 @@ class DwPartnerController extends Controller
                     ->with('success', 'Registration successful! Welcome to your dashboard.');
             }
         } catch (\Exception $e) {
-            
+            \Illuminate\Support\Facades\Log::error('Partner Reg Error: ' . $e->getMessage());
 
             return back()->with('unsuccess', 'Registration unsuccessful! Please try again.')->withInput();
         }
