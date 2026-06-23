@@ -41,8 +41,17 @@ class ApiPathAppointmentBookingController extends Controller
             ], 422);
         }
 
+        $validatedData = $validator->validated();
+
+        if (empty($validatedData['clinic_name']) || $validatedData['clinic_name'] === 'N/A') {
+            $pathology = \App\Models\PartnerPathologyContactModel::where('currently_loggedin_partner_id', $validatedData['currently_loggedin_partner_id'])->first();
+            if ($pathology && $pathology->clinic_name) {
+                $validatedData['clinic_name'] = $pathology->clinic_name;
+            }
+        }
+
         try {
-            $inquiry = PartnerPatientInquiry::create($validator->validated());
+            $inquiry = PartnerPatientInquiry::create($validatedData);
 
             return response()->json([
                 'status'  => true,
