@@ -125,4 +125,87 @@ class TwilioWhatsAppService
             '7' => $time
         ]);
     }
+
+    public function sendLabBookingUserAlert($mobile, $userName, $testName, $clinicName, $date, $time)
+    {
+        $sid = 'HXd6ffa0b174d8b33b46d607f0206390c3';
+        // Hi {{1}}, your {{2}} at {{3}} on {{4}} at {{5}} is booked successfully. - Doctorwala
+        return $this->sendTemplateMessage($mobile, $sid, [
+            '1' => $userName,
+            '2' => $testName ?? 'Lab Test',
+            '3' => $clinicName ?? 'Clinic',
+            '4' => $date,
+            '5' => $time
+        ]);
+    }
+
+    public function sendLabBookingPartnerAlert($mobile, $patientName, $patientMobile, $testName, $clinicName, $date, $time)
+    {
+        $sid = 'HX7c5df5542a2fa330726bb7dba2cfe044';
+        // New Booking Alert! 🔔 Patient: {{1}} Contact No: {{2}} Test: {{3}} Lab: {{4}} Date: {{5}} Time: {{6}} Please confirm or cancel this booking.
+        return $this->sendTemplateMessage($mobile, $sid, [
+            '1' => $patientName,
+            '2' => $patientMobile,
+            '3' => $testName ?? 'Lab Test',
+            '4' => $clinicName,
+            '5' => $date,
+            '6' => $time
+        ]);
+    }
+
+    public function sendUserConfirmationAlert($inquiry)
+    {
+        $sid = 'HX573c38ede05a1813bce1e881bef7a26c';
+        $mobile = $inquiry->user_mobile;
+        
+        $formattedTime = 'a requested time';
+        if ($inquiry->booking_time) {
+            try {
+                $formattedTime = \Carbon\Carbon::parse($inquiry->booking_time)->format('g:i A');
+            } catch (\Exception $e) {}
+        }
+
+        $typeString = 'Appointment';
+        if ($inquiry->clinic_type === 'Pathology') {
+            $typeString = $inquiry->test ? $inquiry->test->test_name : 'Lab Test';
+        } else {
+            $typeString = $inquiry->doctor ? ('Appointment with Dr. ' . $inquiry->doctor->doctor_name) : 'Doctor Appointment';
+        }
+
+        return $this->sendTemplateMessage($mobile, $sid, [
+            '1' => $inquiry->user_name,
+            '2' => $typeString,
+            '3' => $inquiry->clinic_name,
+            '4' => $inquiry->booking_date ?? 'a requested date',
+            '5' => $formattedTime,
+        ]);
+    }
+
+    public function sendUserCancellationAlert($inquiry)
+    {
+        $sid = 'HXb8324847f92f88567ae45f760f01444b';
+        $mobile = $inquiry->user_mobile;
+
+        $formattedTime = 'a requested time';
+        if ($inquiry->booking_time) {
+            try {
+                $formattedTime = \Carbon\Carbon::parse($inquiry->booking_time)->format('g:i A');
+            } catch (\Exception $e) {}
+        }
+
+        $typeString = 'Appointment';
+        if ($inquiry->clinic_type === 'Pathology') {
+            $typeString = $inquiry->test ? $inquiry->test->test_name : 'Lab Test';
+        } else {
+            $typeString = $inquiry->doctor ? ('Appointment with Dr. ' . $inquiry->doctor->doctor_name) : 'Doctor Appointment';
+        }
+
+        return $this->sendTemplateMessage($mobile, $sid, [
+            '1' => $inquiry->user_name,
+            '2' => $typeString,
+            '3' => $inquiry->clinic_name,
+            '4' => $inquiry->booking_date ?? 'a requested date',
+            '5' => $formattedTime,
+        ]);
+    }
 }

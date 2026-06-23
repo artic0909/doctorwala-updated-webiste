@@ -25,7 +25,7 @@ class PartnerPatientInquiryObserver
             $doctorSpeciality = null;
             if ($inquiry->doctor) {
                 $doctorName = $inquiry->doctor->doctor_name;
-                $doctorSpeciality = $inquiry->doctor->speciality;
+                $doctorSpeciality = $inquiry->doctor->doctor_specialist;
             }
 
             $formattedTime = 'a requested time';
@@ -37,39 +37,74 @@ class PartnerPatientInquiryObserver
                 }
             }
 
-            // 1. Send Alert to Patient/User
-            if ($inquiry->user_mobile) {
-                $twilioService->sendAppointmentUserAlert(
-                    $inquiry->user_mobile,
-                    $inquiry->user_name,
-                    $doctorName,
-                    $doctorSpeciality ?? $inquiry->clinic_name,
-                    $inquiry->clinic_name,
-                    $inquiry->booking_date ?? 'a requested date',
-                    $formattedTime
-                );
-            }
+            if ($inquiry->clinic_type === 'Pathology') {
+                $testName = null;
+                if ($inquiry->test) {
+                    $testName = $inquiry->test->test_name;
+                }
 
-            // 2. Send Alert to Partner
-            if ($inquiry->currently_loggedin_partner_id) {
-                $partner = DwPartnerModel::find($inquiry->currently_loggedin_partner_id);
-                if ($partner && $partner->partner_mobile_number) {
-                    // For patient city, we can try to get it from User model if available
-                    $patientCity = null;
-                    if ($inquiry->user && $inquiry->user->user_city) {
-                        $patientCity = $inquiry->user->user_city;
-                    }
-
-                    $twilioService->sendAppointmentPartnerAlert(
-                        $partner->partner_mobile_number,
-                        $inquiry->user_name,
+                // 1. Send Alert to Patient/User
+                if ($inquiry->user_mobile) {
+                    $twilioService->sendLabBookingUserAlert(
                         $inquiry->user_mobile,
-                        $patientCity,
-                        $doctorName,
-                        $doctorSpeciality ?? $inquiry->clinic_name,
+                        $inquiry->user_name,
+                        $testName,
+                        $inquiry->clinic_name,
                         $inquiry->booking_date ?? 'a requested date',
                         $formattedTime
                     );
+                }
+
+                // 2. Send Alert to Partner
+                if ($inquiry->currently_loggedin_partner_id) {
+                    $partner = DwPartnerModel::find($inquiry->currently_loggedin_partner_id);
+                    if ($partner && $partner->partner_mobile_number) {
+                        $twilioService->sendLabBookingPartnerAlert(
+                            $partner->partner_mobile_number,
+                            $inquiry->user_name,
+                            $inquiry->user_mobile,
+                            $testName,
+                            $inquiry->clinic_name,
+                            $inquiry->booking_date ?? 'a requested date',
+                            $formattedTime
+                        );
+                    }
+                }
+            } else {
+                // 1. Send Alert to Patient/User
+                if ($inquiry->user_mobile) {
+                    $twilioService->sendAppointmentUserAlert(
+                        $inquiry->user_mobile,
+                        $inquiry->user_name,
+                        $doctorName,
+                        $doctorSpeciality ?? $inquiry->clinic_name,
+                        $inquiry->clinic_name,
+                        $inquiry->booking_date ?? 'a requested date',
+                        $formattedTime
+                    );
+                }
+
+                // 2. Send Alert to Partner
+                if ($inquiry->currently_loggedin_partner_id) {
+                    $partner = DwPartnerModel::find($inquiry->currently_loggedin_partner_id);
+                    if ($partner && $partner->partner_mobile_number) {
+                        // For patient city, we can try to get it from User model if available
+                        $patientCity = null;
+                        if ($inquiry->user && $inquiry->user->user_city) {
+                            $patientCity = $inquiry->user->user_city;
+                        }
+
+                        $twilioService->sendAppointmentPartnerAlert(
+                            $partner->partner_mobile_number,
+                            $inquiry->user_name,
+                            $inquiry->user_mobile,
+                            $patientCity,
+                            $doctorName,
+                            $doctorSpeciality ?? $inquiry->clinic_name,
+                            $inquiry->booking_date ?? 'a requested date',
+                            $formattedTime
+                        );
+                    }
                 }
             }
         } catch (\Exception $e) {

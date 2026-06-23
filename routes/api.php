@@ -21,6 +21,7 @@ use App\Http\Controllers\Api\ApiPatientFeedbackController;
 use App\Http\Controllers\Api\ApiSearchHandleController;
 use App\Http\Controllers\Api\ApiVitalsController;
 use Illuminate\Http\Request;
+use App\Http\Controllers\TwilioWebhookController;
 
 
 // create api routes here for flutter app ------------------------------->
@@ -37,6 +38,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     ]);
 });
 
+// Twilio WhatsApp Webhook
+Route::post('/twilio/webhook', [TwilioWebhookController::class, 'handle']);
 
 
 Route::middleware('auth:sanctum')->group(function () {
