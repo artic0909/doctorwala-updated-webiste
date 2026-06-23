@@ -20,24 +20,21 @@ class DwUserOTPController extends Controller
     public function sendOTP(Request $request)
     {
         $request->validate([
-            'user_email' => 'required|email',
+            'user_mobile_number' => 'required|string',
         ], [
-            'user_email.required' => 'Email address is required.',
-            'user_email.email'    => 'Please enter a valid email address.',
+            'user_mobile_number.required' => 'Mobile number is required.',
         ]);
 
-        $user = DwUserModel::where('user_email', $request->user_email)->first();
+        $user = DwUserModel::where('user_mobile', $request->user_mobile_number)->first();
 
         if (!$user) {
-            return back()->withErrors(['user_email' => 'This email is not registered with us.'])->withInput();
+            return back()->withErrors(['user_mobile_number' => 'This mobile number is not registered with us.'])->withInput();
         }
 
         $otp = rand(1000, 9999);
 
         Cookie::queue('user_otp', $otp, 3);
-        session(['user_email' => $request->user_email]);
-
-        Mail::to($request->user_email)->send(new SendOTPUser($otp));
+        session(['user_mobile_number' => $request->user_mobile_number]);
 
         // Send WhatsApp OTP
         if ($user && $user->user_mobile) {
@@ -46,7 +43,7 @@ class DwUserOTPController extends Controller
         }
 
         return redirect()->route('dw.user-otp')
-            ->with('message', 'OTP sent successfully! Please check your inbox (and spam folder).');
+            ->with('message', 'OTP sent successfully! Please check your WhatsApp.');
     }
 
     public function verifyOTP(Request $request)
@@ -59,7 +56,7 @@ class DwUserOTPController extends Controller
         ]);
 
         $storedOtp = Cookie::get('user_otp');
-        $email     = session('user_email');
+        $mobile     = session('user_mobile_number');
 
         if (!$storedOtp) {
             return back()->withErrors(['user_otp' => 'OTP has expired. Please request a new one.']);
@@ -69,14 +66,14 @@ class DwUserOTPController extends Controller
             return back()->withErrors(['user_otp' => 'Incorrect OTP. Please try again.']);
         }
 
-        $user = DwUserModel::where('user_email', $email)->first();
+        $user = DwUserModel::where('user_mobile', $mobile)->first();
 
         if (!$user) {
             return back()->withErrors(['user_otp' => 'Account not found. Please contact support.']);
         }
 
         Cookie::queue(Cookie::forget('user_otp'));
-        session()->forget('user_email');
+        session()->forget('user_mobile_number');
 
         Auth::guard('dwuser')->login($user);
         $request->session()->regenerate();
@@ -86,7 +83,7 @@ class DwUserOTPController extends Controller
 
     public function resetOtp(Request $request)
     {
-        session()->forget('user_email');
+        session()->forget('user_mobile_number');
         Cookie::queue(Cookie::forget('user_otp'));
 
         return response()->json(['status' => 'ok']);

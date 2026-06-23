@@ -1192,10 +1192,10 @@
                     <i class="fa-solid fa-mobile-screen-button" aria-hidden="true"></i> OTP Login
                 </div>
                 <div class="step-pills">
-                    @php $otpSent = session('user_email'); @endphp
+                    @php $otpSent = session('user_mobile_number'); @endphp
                     <div class="step-pill {{ $otpSent ? 'done' : 'active' }}">
-                        <i class="fa-solid {{ $otpSent ? 'fa-check' : 'fa-at' }}" aria-hidden="true"></i>
-                        <span>Email</span>
+                        <i class="fa-solid {{ $otpSent ? 'fa-check' : 'fa-phone' }}" aria-hidden="true"></i>
+                        <span>Mobile</span>
                     </div>
                     <span class="step-sep" aria-hidden="true">›</span>
                     <div class="step-pill {{ $otpSent ? 'active' : '' }}">
@@ -1211,19 +1211,19 @@
                 <div class="otp-step {{ $otpSent ? '' : 'active' }}" id="step-email">
                     <div class="form-header">
                         <div>
-                            <h2>Enter your email 📧</h2>
-                            <p>We'll send a 4-digit OTP to your registered email</p>
+                            <h2>Enter your mobile 📱</h2>
+                            <p>We'll send a 4-digit OTP to your registered mobile number</p>
                         </div>
                         <span class="form-badge">STEP 1 / 2</span>
                     </div>
 
-                    @if($errors->has('user_email'))
+                    @if($errors->has('user_mobile_number'))
                     <div class="alert-box alert-error" role="alert">
                         <i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i>
                         <div>
                             <strong>Could not send OTP —</strong>
                             <ul class="alert-list">
-                                @foreach($errors->get('user_email') as $e)<li>{{ $e }}</li>@endforeach
+                                @foreach($errors->get('user_mobile_number') as $e)<li>{{ $e }}</li>@endforeach
                             </ul>
                         </div>
                     </div>
@@ -1232,25 +1232,25 @@
                     <form action="{{ route('user.send.otp') }}" method="POST" novalidate>
                         @csrf
                         <div class="field">
-                            <label for="send_email">
-                                <i class="fa-solid fa-at" aria-hidden="true"></i> Email Address
+                            <label for="send_mobile">
+                                <i class="fa-solid fa-phone" aria-hidden="true"></i> Mobile Number
                             </label>
                             <div class="input-wrap">
-                                <i class="fa-solid fa-at input-icon" aria-hidden="true"></i>
-                                <input type="email" id="send_email" name="user_email"
-                                    placeholder="Enter your registered email"
-                                    autocomplete="email" required
-                                    value="{{ old('user_email') }}"
-                                    class="{{ $errors->has('user_email') ? 'is-invalid' : '' }}">
+                                <i class="fa-solid fa-phone input-icon" aria-hidden="true"></i>
+                                <input type="tel" id="send_mobile" name="user_mobile_number"
+                                    placeholder="Enter your registered mobile number"
+                                    autocomplete="tel" required
+                                    value="{{ old('user_mobile_number') }}"
+                                    class="{{ $errors->has('user_mobile_number') ? 'is-invalid' : '' }}">
                             </div>
-                            @error('user_email')
+                            @error('user_mobile_number')
                             <p class="field-error" role="alert">
                                 <i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i>{{ $message }}
                             </p>
                             @enderror
                         </div>
                         <button type="submit" class="btn-submit">
-                            <i class="fa-solid fa-paper-plane" aria-hidden="true"></i> SEND OTP TO MY EMAIL
+                            <i class="fa-solid fa-paper-plane" aria-hidden="true"></i> SEND OTP TO MY MOBILE
                         </button>
                     </form>
 
@@ -1292,16 +1292,16 @@
 
                     @if($otpSent)
                     <div class="email-badge">
-                        <i class="fa-solid fa-envelope-circle-check" aria-hidden="true"></i>
+                        <i class="fa-solid fa-mobile-button" aria-hidden="true"></i>
                         <span>OTP sent to: <strong>{{ $otpSent }}</strong></span>
-                        <button type="button" class="change-link" onclick="changeEmail()">Change</button>
+                        <button type="button" class="change-link" onclick="changeMobile()">Change</button>
                     </div>
                     @endif
 
                     {{-- Resend form: lives OUTSIDE verify form — nested forms break submission --}}
                     <form action="{{ route('user.send.otp') }}" method="POST" id="resend-form" style="display:none">
                         @csrf
-                        <input type="hidden" name="user_email" value="{{ $otpSent }}">
+                        <input type="hidden" name="user_mobile_number" value="{{ $otpSent }}">
                     </form>
 
                     <form action="{{ route('user.verify.otp') }}" method="POST" novalidate id="otp-form">
