@@ -296,23 +296,23 @@ class AuthApiController extends Controller
     public function forgotPasswordSendOtp(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'partner_email' => 'required|email',
+            'partner_mobile_number' => 'required|string',
         ]);
 
         if ($validator->fails()) {
             return response()->json([
                 'status' => false,
-                'message' => 'Please provide a valid email address.',
+                'message' => 'Please provide a valid mobile number.',
                 'errors' => $validator->errors()
             ], 422);
         }
 
-        $partner = DwPartnerModel::where('partner_email', $request->partner_email)->first();
+        $partner = DwPartnerModel::where('partner_mobile_number', $request->partner_mobile_number)->first();
 
         if (!$partner) {
             return response()->json([
                 'status' => false,
-                'message' => 'Email is not registered.'
+                'message' => 'Mobile number is not registered.'
             ], 404);
         }
 
@@ -320,10 +320,7 @@ class AuthApiController extends Controller
             $otp = rand(1000, 9999);
             
             // Store OTP in Cache for 5 minutes
-            Cache::put('partner_forgot_password_otp_' . $request->partner_email, $otp, now()->addMinutes(5));
-
-            // Send OTP email
-            Mail::to($request->partner_email)->send(new SendOTPPartner($otp));
+            Cache::put('partner_forgot_password_otp_' . $request->partner_mobile_number, $otp, now()->addMinutes(5));
 
             // Send WhatsApp OTP
             if ($partner && $partner->partner_mobile_number) {
@@ -333,13 +330,13 @@ class AuthApiController extends Controller
 
             return response()->json([
                 'status' => true,
-                'message' => 'OTP has been sent to your email for password reset.'
+                'message' => 'OTP has been sent to your mobile for password reset.'
             ], 200);
 
         } catch (\Exception $e) {
             return response()->json([
                 'status' => false,
-                'message' => 'Failed to send OTP email. Please try again.',
+                'message' => 'Failed to send OTP. Please try again.',
                 'error' => $e->getMessage()
             ], 500);
         }
@@ -351,7 +348,7 @@ class AuthApiController extends Controller
     public function forgotPasswordReset(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'partner_email' => 'required|email',
+            'partner_mobile_number' => 'required|string',
             'otp' => 'required|digits:4',
             'partner_password' => 'required|string|min:6',
         ]);
@@ -364,7 +361,7 @@ class AuthApiController extends Controller
             ], 422);
         }
 
-        $storedOtp = Cache::get('partner_forgot_password_otp_' . $request->partner_email);
+        $storedOtp = Cache::get('partner_forgot_password_otp_' . $request->partner_mobile_number);
 
         if (!$storedOtp || $storedOtp != $request->otp) {
             return response()->json([
@@ -373,7 +370,7 @@ class AuthApiController extends Controller
             ], 401);
         }
 
-        $partner = DwPartnerModel::where('partner_email', $request->partner_email)->first();
+        $partner = DwPartnerModel::where('partner_mobile_number', $request->partner_mobile_number)->first();
 
         if (!$partner) {
             return response()->json([
@@ -387,7 +384,7 @@ class AuthApiController extends Controller
         $partner->save();
 
         // Clean up OTP from cache
-        Cache::forget('partner_forgot_password_otp_' . $request->partner_email);
+        Cache::forget('partner_forgot_password_otp_' . $request->partner_mobile_number);
 
         return response()->json([
             'status' => true,
