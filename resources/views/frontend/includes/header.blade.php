@@ -36,7 +36,7 @@
         </div>
 
         <a href="/appdownload" class="btn btn-success py-2 px-4 ms-3"><i class="fa fa-download me-2"></i>Download App</a>
-        <a href="/dw/user-auth" class="btn btn-primary py-2 px-4 ms-3">Login</a>
+        <button data-bs-toggle="modal" data-bs-target="#loginSelectionModal" class="btn btn-primary py-2 px-4 ms-3">Login</button>
 
     </div>
 </nav>
@@ -92,3 +92,46 @@
 </nav>
 <!-- Navbar End -->
 @endauth
+
+<!-- Login Selection Modal -->
+<div class="modal fade" id="loginSelectionModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
+            <div class="modal-header border-0 pb-0 pt-4 px-4 bg-light">
+                <h4 class="modal-title fw-bold text-dark">Welcome to Doctorwala</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4 bg-light">
+                <p class="text-muted text-center mb-4">Please select how you would like to proceed</p>
+                <div class="row g-4">
+                    <div class="col-md-6">
+                        <a href="/dw/user-auth" class="text-decoration-none">
+                            <div class="card h-100 border-0 shadow-sm rounded-4 text-center transition-all bg-white" style="transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='0 10px 20px rgba(13,110,253,0.15)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 .125rem .25rem rgba(0,0,0,.075)';">
+                                <div class="card-body p-4">
+                                    <div class="rounded-circle d-inline-flex p-4 mb-3" style="background-color: rgba(13, 110, 253, 0.1);">
+                                        <i class="fa fa-user fa-3x text-primary"></i>
+                                    </div>
+                                    <h4 class="fw-bold text-dark mb-3">User or Patient</h4>
+                                    <p class="text-muted mb-0" style="font-size: 0.95rem;">Login to find doctors, book appointments, schedule tests, and manage your medical records.</p>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-md-6">
+                        <a href="/partner-register" class="text-decoration-none">
+                            <div class="card h-100 border-0 shadow-sm rounded-4 text-center transition-all bg-white" style="transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='0 10px 20px rgba(25,135,84,0.15)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 .125rem .25rem rgba(0,0,0,.075)';">
+                                <div class="card-body p-4">
+                                    <div class="rounded-circle d-inline-flex p-4 mb-3" style="background-color: rgba(25, 135, 84, 0.1);">
+                                        <i class="fa fa-clinic-medical fa-3x text-success"></i>
+                                    </div>
+                                    <h4 class="fw-bold text-dark mb-3">Partner</h4>
+                                    <p class="text-muted mb-0" style="font-size: 0.95rem;">Doctor Chambers, Labs, Individual Doctors & all types of Healthcare Providers.</p>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
