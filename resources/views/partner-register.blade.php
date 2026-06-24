@@ -435,8 +435,8 @@
             <div class="modal-body p-0 text-center">
                 <img src="{{ asset('img/logos/partner-banner.png') }}" alt="Download Partner App" class="img-fluid w-100">
                 <div class="p-4 bg-light">
-                    <h3 class="mb-3">Please Download Our Partner App</h3>
-                    <p class="text-muted mb-4">For the best experience, register and manage your clinic through our Doctorwala Partner App.</p>
+                    <h3 class="mb-3">Download Doctorwala Partner App</h3>
+                    <p class="text-muted mb-4">Your clinic, your pocket. Download the Doctorwala Partner App to creation, login, and manage everything — anytime, anywhere.</p>
                     <a href="https://play.google.com/store/apps/details?id=info.doctorwala.partner" target="_blank" class="btn btn-success btn-lg px-5 rounded-pill shadow-sm">
                         <i class="fab fa-google-play me-2"></i> Download Partner App
                     </a>
