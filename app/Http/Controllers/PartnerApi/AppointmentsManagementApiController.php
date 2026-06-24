@@ -105,7 +105,7 @@ class AppointmentsManagementApiController extends Controller
         }
 
         $request->validate([
-            'status' => 'required|in:Pending,Upcoming,Completed,Cancelled'
+            'status' => 'required|in:Pending,Upcoming,Confirmed,Completed,Cancelled'
         ]);
 
         $appointment = PartnerPatientInquiry::where('currently_loggedin_partner_id', $partner->id)
@@ -130,7 +130,7 @@ class AppointmentsManagementApiController extends Controller
                 $twilioService = new \App\Services\TwilioWhatsAppService();
                 
                 // Confirm appointment
-                if ($request->status === 'Upcoming' && $oldStatus !== 'Upcoming') {
+                if ($request->status === 'Confirmed' && $oldStatus !== 'Confirmed') {
                     $twilioService->sendUserConfirmationAlert($appointment);
                 } 
                 // Cancel appointment

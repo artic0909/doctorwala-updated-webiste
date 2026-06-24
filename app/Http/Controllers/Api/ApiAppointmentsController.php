@@ -51,12 +51,12 @@ class ApiAppointmentsController extends Controller
     {
         try {
             // UPDATED: Changed 'Pending' to 'Upcoming'
-            $allowed = ['Upcoming', 'Completed', 'Cancelled'];
+            $allowed = ['Upcoming', 'Confirmed', 'Completed', 'Cancelled'];
 
             if (!in_array($status, $allowed)) {
                 return response()->json([
                     'status'  => false,
-                    'message' => 'Invalid status. Allowed: Upcoming, Completed, Cancelled.',
+                    'message' => 'Invalid status. Allowed: Upcoming, Confirmed, Completed, Cancelled.',
                 ], 422);
             }
 
