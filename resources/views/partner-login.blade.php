@@ -164,6 +164,25 @@
 <!-- Testimonial End -->
 
 
+<!-- Force App Download Modal -->
+<div class="modal fade" id="forcePartnerAppModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden relative">
+            <button type="button" class="btn-close position-absolute top-0 end-0 m-3" data-bs-dismiss="modal" aria-label="Close" style="z-index: 10; background-color: rgba(255,255,255,0.8); border-radius: 50%; padding: 10px;"></button>
+            <div class="modal-body p-0 text-center">
+                <img src="{{ asset('img/logos/partner-banner.png') }}" alt="Download Partner App" class="img-fluid w-100">
+                <div class="p-4 bg-light">
+                    <h3 class="mb-3">Please Download Our Partner App</h3>
+                    <p class="text-muted mb-4">For the best experience, login and manage your clinic through our Doctorwala Partner App.</p>
+                    <a href="https://play.google.com/store/apps/details?id=info.doctorwala.partner" target="_blank" class="btn btn-success btn-lg px-5 rounded-pill shadow-sm">
+                        <i class="fab fa-google-play me-2"></i> Download Partner App
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
     // Render captcha on canvas
     const captcha = @json($captcha); // Pass captcha value from controller
@@ -174,6 +193,15 @@
 
     // Reload captcha on click
     canvas.addEventListener('click', () => location.reload());
+
+    // Show Force App Download Modal only once per session
+    document.addEventListener("DOMContentLoaded", function() {
+        if (!sessionStorage.getItem('partnerLoginModalShown')) {
+            var forceModal = new bootstrap.Modal(document.getElementById('forcePartnerAppModal'));
+            forceModal.show();
+            sessionStorage.setItem('partnerLoginModalShown', 'true');
+        }
+    });
 </script>
 
 @endsection

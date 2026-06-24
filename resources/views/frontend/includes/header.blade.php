@@ -35,7 +35,7 @@
 
         </div>
 
-        <a href="https://play.google.com/store/apps/details?id=com.doctorwala.dochealth&pcampaignid=web_share" class="btn btn-success py-2 px-4 ms-3">App</a>
+        <a href="/appdownload" class="btn btn-success py-2 px-4 ms-3"><i class="fa fa-download me-2"></i>Download App</a>
         <a href="/dw/user-auth" class="btn btn-primary py-2 px-4 ms-3">Login</a>
 
     </div>
@@ -82,7 +82,7 @@
 
         </div>
 
-        <a href="https://play.google.com/store/apps/details?id=com.doctorwala.dochealth&pcampaignid=web_share" class="btn btn-success py-2 px-4 ms-3">App</a>
+        <a href="/appdownload" class="btn btn-success py-2 px-4 ms-3"><i class="fa fa-download me-2"></i>Download App</a>
 
         <a href="/dw/profile"class="btn btn-primary ms-3">
             <i class="fa fa-user" aria-hidden="true"></i>

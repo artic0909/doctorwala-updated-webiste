@@ -641,7 +641,8 @@
                     <h1 class="display-5 text-white off-texts">Partner with Doctorwala.info to expand your services nationwide</h1>
                     <div class="d-flex g-3 flex-wrap justify-content-center ">
                         <a href="/partner-register" class="btn btn-dark py-3 px-5 me-3 mb-2">Join As Partner(Clinics)</a>
-                        <a href="https://play.google.com/store/apps/details?id=com.doctorwala.dochealth" target="_blank" class="btn btn-light py-3 px-5 mb-2"><i class="fab fa-google-play me-2" style="font-size: 1.2rem;"></i>Download Doctorwala Mobile App</a>
+                        <a href="https://play.google.com/store/apps/details?id=com.doctorwala.dochealth&pcampaignid=web_share" target="_blank" class="btn btn-light py-3 px-5 me-3 mb-2"><i class="fab fa-google-play me-2" style="font-size: 1.2rem;"></i>Download User App</a>
+                        <a href="https://play.google.com/store/apps/details?id=info.doctorwala.partner" target="_blank" class="btn btn-light py-3 px-5 mb-2"><i class="fab fa-google-play me-2" style="font-size: 1.2rem;"></i>Download Partner App</a>
                     </div>
                 </div>
             </div>
@@ -661,7 +662,8 @@
                     <h1 class="display-5 text-white off-texts">Learn About Our Privacy Policy or Download Our App</h1>
                     <div class="d-flex g-3 flex-wrap justify-content-center ">
                         <a href="/dw/privacy-policy" class="btn btn-dark py-3 px-5 me-3 mb-2">Privacy Policy</a>
-                        <a href="https://play.google.com/store/apps/details?id=com.doctorwala.dochealth" target="_blank" class="btn btn-light py-3 px-5 mb-2"><i class="fab fa-google-play me-2" style="font-size: 1.2rem;"></i>Download Doctorwala Mobile App</a>
+                        <a href="https://play.google.com/store/apps/details?id=com.doctorwala.dochealth&pcampaignid=web_share" target="_blank" class="btn btn-light py-3 px-5 me-3 mb-2"><i class="fab fa-google-play me-2" style="font-size: 1.2rem;"></i>Download User App</a>
+                        <a href="https://play.google.com/store/apps/details?id=info.doctorwala.partner" target="_blank" class="btn btn-light py-3 px-5 mb-2"><i class="fab fa-google-play me-2" style="font-size: 1.2rem;"></i>Download Partner App</a>
                     </div>
                 </div>
             </div>
@@ -1088,9 +1090,9 @@
                 Create Your Card
             </a>
 
-             <a href="https://play.google.com/store/apps/details?id=com.doctorwala.dochealth&pcampaignid=web_share"
+             <a href="/appdownload"
                 style="background:#16a34a;color:#fff;border-radius:8px;padding:10px 22px;font-size:14px;font-weight:700;text-decoration:none;display:inline-block;">
-               <i class="fa-brands fa-google-play"></i> Download Doctorwala App
+               <i class="fa-brands fa-google-play"></i> Download Apps
             </a>
         </div>
 
@@ -1228,9 +1230,9 @@
                 style="background:#16a34a;color:#fff;border-radius:8px;padding:10px 22px;font-size:14px;font-weight:700;text-decoration:none;display:inline-block;">
                 Create Your Card
             </a>
-                         <a href="https://play.google.com/store/apps/details?id=com.doctorwala.dochealth&pcampaignid=web_share"
+                         <a href="/appdownload"
                 style="background:#16a34a;color:#fff;border-radius:8px;padding:10px 22px;font-size:14px;font-weight:700;text-decoration:none;display:inline-block;">
-               <i class="fa-brands fa-google-play"></i> Download Doctorwala App
+               <i class="fa-brands fa-google-play"></i> Download Apps
             </a>
         </div>
 

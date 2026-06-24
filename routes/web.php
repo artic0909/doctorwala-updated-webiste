@@ -55,8 +55,11 @@ Route::get('/contact', [FrontContactusPageController::class, 'index'])->name('co
 Route::post('/contact', [FrontContactusPageController::class, 'store'])->name('contact.store');
 Route::get('/privacy-policy', [FrontPrivacyPolicyPageController::class, 'index'])->name('privacy-policiypage');
 // ===========================================================================================================
-// ========================================== Front Unrestricted Routes End ==================================
-// ===========================================================================================================
+Route::get('/appdownload', function () {
+    $aboutDetails = \App\Models\SuperAboutusModel::get();
+    $otherBanners = \App\Models\SuperOtherBannerModel::get();
+    return view('appdownload', compact('aboutDetails', 'otherBanners'));
+})->name('appdownload');
 
 Route::get('/opd/search-specialist', [FrontHomePageController::class, 'opdContactFetchBySearchDoctorSpaciality'])
     ->name('opd.search.doctor.specialist');
