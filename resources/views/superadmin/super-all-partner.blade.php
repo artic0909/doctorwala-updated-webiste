@@ -462,6 +462,7 @@
                                                 <th>SL.</th>
                                                 <th>Staus</th>
                                                 <th>Actions</th>
+                                                <th>Date</th>
                                                 <th>ID</th>
                                                 <th>Partner ID</th>
                                                 <th>Type</th>
@@ -532,6 +533,13 @@
                                                             style="font-size: 1.1rem;"></i></a>
 
 
+                                                </td>
+
+
+                                                <td>
+                                                    <p class="m-0" style="font-weight: 700;">
+                                                        {{$partner->created_at}}
+                                                    </p>
                                                 </td>
 
 
