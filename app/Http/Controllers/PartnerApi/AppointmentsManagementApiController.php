@@ -105,7 +105,7 @@ class AppointmentsManagementApiController extends Controller
         }
 
         $request->validate([
-            'status' => 'required|in:Upcoming,Completed,Cancelled'
+            'status' => 'required|in:Pending,Upcoming,Completed,Cancelled'
         ]);
 
         $appointment = PartnerPatientInquiry::where('currently_loggedin_partner_id', $partner->id)
