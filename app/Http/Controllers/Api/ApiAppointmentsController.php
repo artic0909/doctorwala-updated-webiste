@@ -140,6 +140,17 @@ class ApiAppointmentsController extends Controller
             $inquiry->status = 'Cancelled';
             $inquiry->save();
 
+            // Send Twilio WhatsApp Message for User Cancellation
+            if ($inquiry->user_mobile) {
+                try {
+                    $twilioService = new \App\Services\TwilioWhatsAppService();
+                    $inquiry->load(['doctor', 'test']); // Eager load for template variables
+                    $twilioService->sendUserCancellationAlert($inquiry);
+                } catch (\Exception $e) {
+                    \Illuminate\Support\Facades\Log::error('Twilio Error in user cancelAppointment: ' . $e->getMessage());
+                }
+            }
+
             return response()->json([
                 'status'  => true,
                 'message' => 'Appointment has been cancelled.',

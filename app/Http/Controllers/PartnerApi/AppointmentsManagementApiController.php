@@ -109,6 +109,7 @@ class AppointmentsManagementApiController extends Controller
         ]);
 
         $appointment = PartnerPatientInquiry::where('currently_loggedin_partner_id', $partner->id)
+            ->with(['doctor', 'test']) // Eager load relationships for Twilio templates
             ->where('id', $id)
             ->first();
 
@@ -122,6 +123,24 @@ class AppointmentsManagementApiController extends Controller
         $oldStatus = $appointment->status;
         $appointment->status = $request->status;
         $appointment->save();
+
+        // Send Twilio WhatsApp Message on Status Change
+        if ($appointment->user_mobile) {
+            try {
+                $twilioService = new \App\Services\TwilioWhatsAppService();
+                
+                // Confirm appointment
+                if ($request->status === 'Upcoming' && $oldStatus !== 'Upcoming') {
+                    $twilioService->sendUserConfirmationAlert($appointment);
+                } 
+                // Cancel appointment
+                elseif ($request->status === 'Cancelled' && $oldStatus !== 'Cancelled') {
+                    $twilioService->sendUserCancellationAlert($appointment);
+                }
+            } catch (\Exception $e) {
+                \Illuminate\Support\Facades\Log::error('Twilio Error in updateStatus: ' . $e->getMessage());
+            }
+        }
 
         return response()->json([
             'success' => true,
