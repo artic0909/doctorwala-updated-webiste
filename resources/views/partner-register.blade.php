@@ -58,7 +58,7 @@
                 <div class="appointment-form h-100 d-flex flex-column justify-content-center text-center p-5 wow zoomIn"
                     data-wow-delay="0.6s">
                     <h1 class="text-white mb-4">Partner Registration</h1>
-                    <form action="{{route('partnerRegForm')}}" method="POST" enctype="multipart/form-data">
+                    <form id="partnerRegisterForm" action="{{route('partnerRegForm')}}" method="POST" enctype="multipart/form-data">
                         @csrf
                         <div class="row g-3">
 
@@ -275,65 +275,7 @@
 
 
 
-<!-- profile registration success modal start -->
-<div class="modal fade" id="profileRegistrationSuccessModal" tabindex="-1" aria-labelledby="profileRegistrationSuccessModalLabel"
-    aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-body d-flex flex-column align-middle justify-center align-items-center">
-                <h2 class="modal-title" id="profileUpdateSuccessModalLabel"><span class="text-primary">+</span> SUCCESS <span class="text-primary">+</span></h2>
-                <h2 class="text-primary">Thank You For Register</h2>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn p-2 btn-primary w-100" data-bs-dismiss="modal">CLOSE</button>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- profile registration success modal end -->
 
-<!-- profile registration Unsuccess modal start -->
-<div class="modal fade" id="profileRegistrationUnsuccessModal" tabindex="-1" aria-labelledby="profileRegistrationUnsuccessModalLabel"
-    aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-body d-flex flex-column align-middle justify-center align-items-center">
-                <h3 class="modal-title" id="profileUpdateSuccessModalLabel"><span class="text-primary">+</span> ERROR <span class="text-primary">+</span></h3>
-                <h4 class="text-danger">Profile Is Not Registered</h4>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn p-2 btn-primary w-100" data-bs-dismiss="modal">CLOSE</button>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- profile registration Unsuccess modal end -->
-
-
-
-
-
-
-
-@if(session('success') == 'success')
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const successModal = new bootstrap.Modal(document.getElementById('profileRegistrationSuccessModal'));
-        successModal.show();
-    });
-</script>
-@elseif(session('unsuccess') == 'unsuccess')
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const failureModal = new bootstrap.Modal(document.getElementById('profileRegistrationSuccessModal'));
-        failureModal.show();
-    });
-</script>
-@endif
-
-
-
-<div id="alertPlaceholder"></div>
 
 
 
@@ -366,52 +308,117 @@
 </div> -->
 <!-- Testimonial End -->
 
+<!-- jQuery Validate & SweetAlert -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
-        // Form validation
-        const form = document.querySelector("form");
-        const passwordField = document.getElementById("partner_password");
-        const confirmPasswordField = document.querySelector("input[placeholder='Confirm Password *']");
-        const opdCheckbox = document.getElementById("opd");
-        const pathologyCheckbox = document.getElementById("pathology");
-        const doctorCheckbox = document.getElementById("doctor");
-
-        // Validate form before submission
-        form.addEventListener("submit", function(e) {
-            let valid = true;
-
-            // Check password and confirm password
-            if (passwordField.value !== confirmPasswordField.value) {
-                alert("Passwords do not match!");
-                valid = false;
-            }
-
-            // If not valid, prevent form submission
-            if (!valid) {
-                e.preventDefault();
-            }
-        });
-
-        // Handle registration type logic
-        opdCheckbox.addEventListener("change", function() {
-            if (this.checked) {
-                doctorCheckbox.checked = false;
-            }
-        });
-
-        pathologyCheckbox.addEventListener("change", function() {
-            if (this.checked) {
-                doctorCheckbox.checked = false;
-            }
-        });
-
-        doctorCheckbox.addEventListener("change", function() {
-            if (this.checked) {
-                opdCheckbox.checked = false;
-                pathologyCheckbox.checked = false;
-            }
-        });
+$(document).ready(function() {
+    // Registration Type Logic
+    $('#opd, #pathology').on('change', function() {
+        if ($(this).is(':checked')) {
+            $('#doctor').prop('checked', false);
+        }
     });
+    $('#doctor').on('change', function() {
+        if ($(this).is(':checked')) {
+            $('#opd, #pathology').prop('checked', false);
+        }
+    });
+
+    // jQuery Validation
+    $("#partnerRegisterForm").validate({
+        rules: {
+            partner_clinic_name: { required: true },
+            partner_contact_person_name: { required: true },
+            partner_mobile_number: { required: true, digits: true, minlength: 10, maxlength: 15 },
+            partner_email: { required: true, email: true },
+            partner_state: { required: true },
+            partner_city: { required: true },
+            partner_pincode: { required: true, digits: true, minlength: 6, maxlength: 6 },
+            partner_landmark: { required: true },
+            partner_address: { required: true },
+            partner_password: { required: true, minlength: 6 },
+            'registration_type[]': { required: true }
+        },
+        messages: {
+            'registration_type[]': { required: "Please select at least one Registration Type" }
+        },
+        errorElement: 'span',
+        errorPlacement: function(error, element) {
+            error.addClass('text-danger fw-bold text-start d-block mt-1');
+            if(element.attr("name") == "registration_type[]") {
+                error.insertAfter(element.closest('.form-check-inline'));
+            } else {
+                element.closest('.col-12').append(error);
+            }
+        },
+        highlight: function(element) { $(element).addClass('is-invalid'); },
+        unhighlight: function(element) { $(element).removeClass('is-invalid'); },
+        submitHandler: function(form) {
+            var submitBtn = $(form).find('button[type="submit"]');
+            var originalText = submitBtn.text();
+            submitBtn.prop('disabled', true).text('Processing...');
+
+            $.ajax({
+                url: $(form).attr('action'),
+                type: 'POST',
+                data: new FormData(form),
+                processData: false,
+                contentType: false,
+                success: function(response) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success!',
+                        text: 'Thank You For Registering',
+                        showConfirmButton: false,
+                        timer: 1500
+                    }).then(() => {
+                        window.location.href = response.redirect;
+                    });
+                },
+                error: function(xhr) {
+                    submitBtn.prop('disabled', false).text(originalText);
+                    var errorMessage = 'Profile Is Not Registered. Please try again.';
+                    if(xhr.responseJSON && xhr.responseJSON.message) {
+                        errorMessage = xhr.responseJSON.message;
+                    } else if(xhr.responseJSON && xhr.responseJSON.errors) {
+                        errorMessage = Object.values(xhr.responseJSON.errors).map(e => e.join('<br>')).join('<br>');
+                    }
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Registration Failed',
+                        html: errorMessage,
+                    });
+                }
+            });
+            return false;
+        }
+    });
+
+    // SweetAlerts for Backend Errors & Success
+    @if ($errors->any())
+        Swal.fire({
+            icon: 'error',
+            title: 'Validation Error',
+            html: '{!! implode("<br>", $errors->all()) !!}',
+        });
+    @elseif (session('success'))
+        Swal.fire({
+            icon: 'success',
+            title: 'Success!',
+            text: '{!! session("success") == "success" ? "Thank You For Registering" : addslashes(session("success")) !!}',
+        }).then(() => {
+            window.location.href = '/partner-login';
+        });
+    @elseif (session('unsuccess'))
+        Swal.fire({
+            icon: 'error',
+            title: 'Registration Failed',
+            text: 'Profile Is Not Registered. Please try again.',
+        });
+    @endif
+});
 </script>
 
 <!-- Force App Download Modal -->

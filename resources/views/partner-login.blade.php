@@ -62,7 +62,7 @@
                 <div class="appointment-form h-100 d-flex flex-column justify-content-center text-center p-5 wow zoomIn"
                     data-wow-delay="0.6s">
                     <h1 class="text-white mb-4">Partner Login</h1>
-                    <form action="{{route('partnerpanel.partner-login')}}" method="POST">
+                    <form id="partnerLoginForm" action="{{route('partnerpanel.partner-login')}}" method="POST">
                         @csrf
                         <div class="row g-3">
 
@@ -181,6 +181,89 @@
             sessionStorage.setItem('partnerLoginModalShown', 'true');
         }
     });
+</script>
+
+<!-- jQuery Validate & SweetAlert -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+$(document).ready(function() {
+    $("#partnerLoginForm").validate({
+        rules: {
+            partner_email: { required: true, email: true },
+            partner_password: { required: true }
+        },
+        messages: {
+            partner_email: { required: "Please enter your registered email", email: "Please enter a valid email" },
+            partner_password: { required: "Please enter your password" }
+        },
+        errorElement: 'span',
+        errorPlacement: function(error, element) {
+            error.addClass('text-danger fw-bold text-start d-block mt-1');
+            element.closest('.col-12').append(error);
+        },
+        highlight: function(element) { $(element).addClass('is-invalid'); },
+        unhighlight: function(element) { $(element).removeClass('is-invalid'); },
+        submitHandler: function(form) {
+            var submitBtn = $(form).find('button[type="submit"]');
+            var originalText = submitBtn.text();
+            submitBtn.prop('disabled', true).text('Processing...');
+
+            $.ajax({
+                url: $(form).attr('action'),
+                type: 'POST',
+                data: $(form).serialize(),
+                success: function(response) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: 'Login Successful!',
+                        showConfirmButton: false,
+                        timer: 1500
+                    }).then(() => {
+                        window.location.href = response.redirect;
+                    });
+                },
+                error: function(xhr) {
+                    submitBtn.prop('disabled', false).text(originalText);
+                    var errorMessage = 'An error occurred during login.';
+                    if(xhr.responseJSON && xhr.responseJSON.message) {
+                        errorMessage = xhr.responseJSON.message;
+                    } else if(xhr.responseJSON && xhr.responseJSON.errors) {
+                        errorMessage = Object.values(xhr.responseJSON.errors).map(e => e.join('<br>')).join('<br>');
+                    }
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Login Failed',
+                        html: errorMessage,
+                    });
+                }
+            });
+            return false;
+        }
+    });
+
+    @if ($errors->any())
+        Swal.fire({
+            icon: 'error',
+            title: 'Login Failed',
+            text: '{!! addslashes($errors->first()) !!}',
+        });
+    @elseif (session('error'))
+        Swal.fire({
+            icon: 'error',
+            title: 'Login Failed',
+            text: '{!! addslashes(session("error")) !!}',
+        });
+    @elseif (session('success'))
+        Swal.fire({
+            icon: 'success',
+            title: 'Success',
+            text: '{!! addslashes(session("success")) !!}',
+        });
+    @endif
+});
 </script>
 
 @endsection

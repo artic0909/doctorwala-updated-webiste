@@ -173,15 +173,24 @@ class DwPartnerController extends Controller
             // Authenticate and redirect
             if (Auth::guard('partner')->loginUsingId($dwuser->id)) {
                 $request->session()->regenerate(); // Regenerate session for security
+                if ($request->ajax()) {
+                    return response()->json(['success' => true, 'redirect' => route('partnerpanel.partner-coupon')]);
+                }
                 return redirect()->route('partnerpanel.partner-coupon')
                     ->with('success', 'Registration successful! Welcome to your dashboard.');
             }
         } catch (\Exception $e) {
             \Illuminate\Support\Facades\Log::error('Partner Reg Error: ' . $e->getMessage());
 
+            if ($request->ajax()) {
+                return response()->json(['success' => false, 'message' => 'Registration unsuccessful! Please try again.'], 400);
+            }
             return back()->with('unsuccess', 'Registration unsuccessful! Please try again.')->withInput();
         }
 
+        if ($request->ajax()) {
+            return response()->json(['success' => false, 'message' => 'An unexpected error occurred. Please try again.'], 400);
+        }
         return back()->with('unsuccess', 'An unexpected error occurred. Please try again.'); 
     }
 
@@ -206,12 +215,15 @@ class DwPartnerController extends Controller
         if (Auth::guard('partner')->attempt($credentials)) {
 
             $request->session()->regenerate();
+            if ($request->ajax()) {
+                return response()->json(['success' => true, 'redirect' => route('partnerpanel.partner-dashboard')]);
+            }
             return redirect()->route('partnerpanel.partner-dashboard');
         }
 
-
-
-
+        if ($request->ajax()) {
+            return response()->json(['success' => false, 'message' => 'Invalid credentials. Please try again.'], 401);
+        }
         return back()->withErrors([
             'partner_email' => 'Invalid credentials. Please try again.',
         ]);
