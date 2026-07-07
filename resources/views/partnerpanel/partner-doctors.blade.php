@@ -584,7 +584,7 @@
                                                         <div class="col-4 form-group">
                                                             <label for="partner_doctor_visit_day_{{ $index }}"><i class="fa-solid fa-calendar-days text-primary"></i> Day</label>
                                                             <select name="partner_doctor_visit_day[]" id="partner_doctor_visit_day_{{ $index }}" class="form-control" style="height: 55px;">
-                                                                <option selected disabled>Select Day</option>
+                                                                <option value="" selected>Select Day</option>
                                                                 <option value="All day" {{ ($visit['day'] ?? '') == 'All day' ? 'selected' : '' }}>All day</option>
                                                                 <option value="Monday" {{ ($visit['day'] ?? '') == 'Monday' ? 'selected' : '' }}>Monday</option>
                                                                 <option value="Tuesday" {{ ($visit['day'] ?? '') == 'Tuesday' ? 'selected' : '' }}>Tuesday</option>
@@ -972,7 +972,7 @@
                 <div class="col-4 form-group">
                     <label for="partner_doctor_visit_day[]"><i class="fa-solid fa-calendar-days text-primary"></i> Day</label>
                     <select name="partner_doctor_visit_day[]" class="form-control" style="height: 55px;">
-                        <option selected disabled>Select Day</option>
+                        <option value="" selected>Select Day</option>
                         <option value="Allday">Allday</option>
                         <option value="Monday">Monday</option>
                         <option value="Tuesday">Tuesday</option>

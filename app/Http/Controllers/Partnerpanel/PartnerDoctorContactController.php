@@ -81,12 +81,16 @@ class PartnerDoctorContactController extends Controller
 
         
         $visitDayTime = [];
-        foreach ($request->partner_doctor_visit_day as $index => $day) {
-            $visitDayTime[] = [
-                'day' => $day,
-                'start_time' => $request->partner_doctor_visit_start_time[$index],
-                'end_time' => $request->partner_doctor_visit_end_time[$index],
-            ];
+        if (is_array($request->partner_doctor_visit_day)) {
+            foreach ($request->partner_doctor_visit_day as $index => $day) {
+                if (!empty($day)) {
+                    $visitDayTime[] = [
+                        'day' => $day,
+                        'start_time' => $request->partner_doctor_visit_start_time[$index] ?? null,
+                        'end_time' => $request->partner_doctor_visit_end_time[$index] ?? null,
+                    ];
+                }
+            }
         }
 
         $validatedData['visit_day_time'] = $visitDayTime;
