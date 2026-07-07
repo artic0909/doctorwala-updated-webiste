@@ -41,7 +41,7 @@
                 </div>
                 <div class="video-container mt-4 wow zoomIn" data-wow-delay="0.3s">
                     <div class="ratio ratio-16x9 rounded shadow-lg overflow-hidden border border-white border-2">
-                        <iframe src="https://www.youtube.com/embed/rtWdQz1Kmjk?si=lUWDuibF2wXeHp8s&autoplay=1&mute=1" 
+                        <iframe src="https://www.youtube.com/embed/rtWdQz1Kmjk?si=lUWDuibF2wXeHp8s&autoplay=0&mute=1" 
                             title="YouTube video player" 
                             frameborder="0" 
                             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
