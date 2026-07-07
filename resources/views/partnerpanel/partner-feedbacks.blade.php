@@ -132,6 +132,11 @@
                                 <li class="nav-item"> <a class="nav-link"
                                         href="/partnerpanel/partner-pathology-contact">Pathology Contact</a></li>
                                 @endif
+
+                                @if(in_array('Doctor', $registrationTypes))
+                                <li class="nav-item"> <a class="nav-link"
+                                        href="/partnerpanel/partner-doctors">List Myself</a></li>
+                                @endif
                             </ul>
                         </div>
                     </li>
@@ -250,26 +255,7 @@
 
 
 
-                    @if(in_array('Doctor', $registrationTypes))
-                    <!-- Doctors -->
-                    <li class="nav-item">
-                        <a class="nav-link" data-toggle="collapse" href="#ui-basic1234" aria-expanded="false"
-                            aria-controls="ui-basic1234">
-                            <i class="fa fa-stethoscope" aria-hidden="true"></i>&nbsp; <span
-                                class="menu-title">Doctor</span><i class="menu-arrow"></i>
-                        </a>
-                        <div class="collapse" id="ui-basic1234">
-                            <ul class="nav flex-column sub-menu">
-
-                                <li class="nav-item"> <a class="nav-link" href="/partnerpanel/partner-doctors">Upload Doctor</a>
-                                </li>
-
-
-
-                            </ul>
-                        </div>
-                    </li>
-                    @endif
+                    
 
 
                     <!-- Patient profile management -->
