@@ -32,10 +32,7 @@ class DwPartnerController extends Controller
 
         $testi = PartnerFeedback::get();
 
-        $captcha = $this->generateCaptcha();
-        session(['captcha_text' => $captcha]);
-
-        return view('partner-register', compact('captcha', 'aboutDetails', 'otherBanners', 'testi'));
+        return view('partner-register', compact('aboutDetails', 'otherBanners', 'testi'));
     }
 
 
@@ -47,10 +44,7 @@ class DwPartnerController extends Controller
 
         $testi = PartnerFeedback::get();
 
-        $captcha = $this->generateCaptcha();
-        session(['captcha_text' => $captcha]);
-
-        return view('partner-login', compact('captcha', 'aboutDetails', 'otherBanners', 'testi'));
+        return view('partner-login', compact('aboutDetails', 'otherBanners', 'testi'));
     }
 
 
@@ -147,14 +141,7 @@ class DwPartnerController extends Controller
             'partner_address' => 'required|string',
             'partner_password' => 'required|string',
             'registration_type' => 'required|array',
-            'registration_type.*' => 'string',
-            'captcha' => 'required|string', // Captcha input field
         ]);
-
-        // Check if captcha matches the one in session
-        if ($request->captcha !== session('captcha_text')) {
-            return back()->withErrors(['captcha' => 'Captcha is incorrect.'])->withInput();
-        }
 
 
 
@@ -198,15 +185,6 @@ class DwPartnerController extends Controller
         return back()->with('unsuccess', 'An unexpected error occurred. Please try again.'); 
     }
 
-    private function generateCaptcha()
-    {
-        $chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghjkmnopqrstuvwxyz0123456789';
-        $captcha = '';
-        for ($i = 0; $i < 6; $i++) {
-            $captcha .= $chars[random_int(0, strlen($chars) - 1)];
-        }
-        return $captcha;
-    }
 
     public function partnerLogin(Request $request)
     {
@@ -217,10 +195,6 @@ class DwPartnerController extends Controller
         ]);
 
 
-
-        if ($request->captcha !== session('captcha_text')) {
-            return back()->withErrors(['captcha' => 'Captcha is incorrect.'])->withInput();
-        }
 
 
         $credentials = [

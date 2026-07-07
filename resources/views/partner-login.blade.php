@@ -84,20 +84,7 @@
                             </div>
 
 
-                            <div class="col-12 col-sm-6">
-                                <div class="cap-back" style="background: url('../img/captcha.jpg'); background-repeat: no-repeat; background-position: center; background-size: cover; border-radius: 2px;" data-captcha="{{ $captcha }}">
-                                    <canvas id="captchaCanvas" width="150" height="49" style="cursor: pointer;"></canvas>
-                                </div>
-                            </div>
 
-
-                            <div class="col-12 col-sm-6">
-                                <input type="text" class="form-control bg-light border-0"
-                                    placeholder="Enter Captcha *" style="height: 55px;" name="captcha" id="captcha" required>
-                                @error('captcha')
-                                <small class="text-white">{{ $message }}</small>
-                                @enderror
-                            </div>
 
 
 
@@ -184,15 +171,7 @@
 </div>
 
 <script>
-    // Render captcha on canvas
-    const captcha = @json($captcha); // Pass captcha value from controller
-    const canvas = document.getElementById('captchaCanvas');
-    const ctx = canvas.getContext('2d');
-    ctx.font = '23px Arial';
-    ctx.fillText(captcha, 10, 35);
 
-    // Reload captcha on click
-    canvas.addEventListener('click', () => location.reload());
 
     // Show Force App Download Modal only once per session
     document.addEventListener("DOMContentLoaded", function() {
