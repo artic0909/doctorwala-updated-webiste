@@ -427,7 +427,7 @@ $(document).ready(function() {
         <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden relative">
             <button type="button" class="btn-close position-absolute top-0 end-0 m-3" data-bs-dismiss="modal" aria-label="Close" style="z-index: 10; background-color: rgba(255,255,255,0.8); border-radius: 50%; padding: 10px;"></button>
             <div class="modal-body p-0 text-center">
-                <img src="{{ asset('img/logos/partner-banner.png') }}" alt="Download Partner App" class="img-fluid w-100">
+                <img src="{{ asset('img/partner-banner.png') }}" alt="Download Partner App" class="img-fluid w-100">
                 <div class="p-4 bg-light">
                     <h3 class="mb-3">Download Doctorwala Partner App</h3>
                     <p class="text-muted mb-4">Your clinic, your pocket. Download the Doctorwala Partner App to creation, login, and manage everything — anytime, anywhere.</p>
