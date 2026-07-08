@@ -160,6 +160,11 @@
 
 
                             <div class="col-12">
+                                <input type="text" class="form-control bg-light border-0" placeholder="Google Map Link (Optional)"
+                                    style="height: 55px;" name="clinic_google_map_link" id="clinic_google_map_link" value="{{ old('clinic_google_map_link') }}">
+                            </div>
+
+                            <div class="col-12">
                                 <textarea name="partner_address" class="form-control bg-light border-0" rows="5"
                                     id="partner_address" placeholder="Full Address *" required>{{ old('partner_address') }}</textarea>
                             </div>

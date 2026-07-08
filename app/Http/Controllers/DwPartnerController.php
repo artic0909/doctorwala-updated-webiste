@@ -157,6 +157,45 @@ class DwPartnerController extends Controller
             $dwuser->registration_type = json_encode($request->registration_type);
             $dwuser->save();
 
+            $regTypes = $request->registration_type ?? [];
+            $partnerStatus = $dwuser->status ?? 'Inactive';
+
+            if (in_array('OPD', $regTypes)) {
+                \App\Models\PartnerOPDContactModel::create([
+                    'currently_loggedin_partner_id' => $dwuser->id,
+                    'clinic_registration_type' => 'OPD',
+                    'clinic_contact_person_name' => $dwuser->partner_contact_person_name,
+                    'clinic_name' => $dwuser->partner_clinic_name,
+                    'clinic_mobile_number' => $dwuser->partner_mobile_number,
+                    'clinic_email' => $dwuser->partner_email,
+                    'clinic_landmark' => $dwuser->partner_landmark,
+                    'clinic_pincode' => $dwuser->partner_pincode,
+                    'clinic_state' => $dwuser->partner_state,
+                    'clinic_city' => $dwuser->partner_city,
+                    'clinic_google_map_link' => $request->clinic_google_map_link,
+                    'clinic_address' => $dwuser->partner_address,
+                    'status' => $partnerStatus,
+                ]);
+            }
+
+            if (in_array('Pathology', $regTypes)) {
+                \App\Models\PartnerPathologyContactModel::create([
+                    'currently_loggedin_partner_id' => $dwuser->id,
+                    'clinic_registration_type' => 'Pathology',
+                    'clinic_contact_person_name' => $dwuser->partner_contact_person_name,
+                    'clinic_name' => $dwuser->partner_clinic_name,
+                    'clinic_mobile_number' => $dwuser->partner_mobile_number,
+                    'clinic_email' => $dwuser->partner_email,
+                    'clinic_landmark' => $dwuser->partner_landmark,
+                    'clinic_pincode' => $dwuser->partner_pincode,
+                    'clinic_state' => $dwuser->partner_state,
+                    'clinic_city' => $dwuser->partner_city,
+                    'clinic_google_map_link' => $request->clinic_google_map_link,
+                    'clinic_address' => $dwuser->partner_address,
+                    'status' => $partnerStatus,
+                ]);
+            }
+
             // Send WhatsApp Welcome Message
             if ($dwuser->partner_mobile_number) {
                 $twilioService = new \App\Services\TwilioWhatsAppService();
