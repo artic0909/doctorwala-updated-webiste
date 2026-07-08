@@ -58,7 +58,7 @@
                 <div class="appointment-form h-100 d-flex flex-column justify-content-center text-center p-5 wow zoomIn"
                     data-wow-delay="0.6s">
                     <h1 class="text-white mb-4">Partner Registration</h1>
-                    <form id="partnerRegisterForm" action="{{route('partnerRegForm')}}" method="POST" enctype="multipart/form-data">
+                    <form id="partnerRegisterForm" action="{{route('partnerRegForm')}}" method="POST" enctype="multipart/form-data" autocomplete="off">
                         @csrf
                         <div class="row g-3">
 
@@ -174,7 +174,8 @@
                                 <div class="input-group">
                                     <input type="password" class="form-control bg-light border-0"
                                         placeholder="Password *" style="height: 55px;" name="partner_password"
-                                        id="partner_password" required value="{{ old('partner_password') ?: '12345678' }}">
+                                        id="partner_password" required value="{{ old('partner_password') ?: '12345678' }}"
+                                        autocomplete="new-password">
                                     <span class="input-group-text bg-light border-0" id="togglePassword" style="cursor: pointer;">
                                         <i class="fa-solid fa-eye" id="eyeIcon"></i>
                                     </span>
