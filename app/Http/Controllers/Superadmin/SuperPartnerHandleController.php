@@ -267,11 +267,6 @@ class SuperPartnerHandleController extends Controller
 
         if ($request->has('status')) {
             $partner->status = $request->status;
-
-            // Sync the status change to the contact models so they appear/hide in the frontend accordingly
-            \App\Models\PartnerOPDContactModel::where('currently_loggedin_partner_id', $partner->id)->update(['status' => $request->status]);
-            \App\Models\PartnerPathologyContactModel::where('currently_loggedin_partner_id', $partner->id)->update(['status' => $request->status]);
-            \App\Models\PartnerDoctorContactModel::where('currently_loggedin_partner_id', $partner->id)->update(['status' => $request->status]);
         }
 
         $partner->save();

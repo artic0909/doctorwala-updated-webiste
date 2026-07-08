@@ -158,7 +158,7 @@ class DwPartnerController extends Controller
             $dwuser->save();
 
             $regTypes = $request->registration_type ?? [];
-            $partnerStatus = $dwuser->status ?? 'Inactive';
+            $partnerStatus = $dwuser->status ?? 'Pending';
 
             if (in_array('OPD', $regTypes)) {
                 \App\Models\PartnerOPDContactModel::create([
