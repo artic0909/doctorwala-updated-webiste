@@ -78,9 +78,14 @@
 
 
                             <div class="col-12">
-                                <input type="password" class="form-control bg-light border-0"
-                                    placeholder="Enter Password *" style="height: 55px;" name="partner_password"
-                                    id="partner_password" required value="{{ old('partner_password') }}">
+                                <div class="input-group">
+                                    <input type="password" class="form-control bg-light border-0"
+                                        placeholder="Enter Password *" style="height: 55px;" name="partner_password"
+                                        id="partner_password" required value="{{ old('partner_password') }}">
+                                    <span class="input-group-text bg-light border-0" id="togglePassword" style="cursor: pointer;">
+                                        <i class="fa-solid fa-eye" id="eyeIcon"></i>
+                                    </span>
+                                </div>
                             </div>
 
 
@@ -179,6 +184,26 @@
             var forceModal = new bootstrap.Modal(document.getElementById('forcePartnerAppModal'));
             forceModal.show();
             sessionStorage.setItem('partnerLoginModalShown', 'true');
+        }
+
+        // Toggle password visibility
+        const togglePassword = document.querySelector("#togglePassword");
+        const password = document.querySelector("#partner_password");
+        const eyeIcon = document.querySelector("#eyeIcon");
+
+        if(togglePassword && password) {
+            togglePassword.addEventListener("click", function () {
+                const type = password.getAttribute("type") === "password" ? "text" : "password";
+                password.setAttribute("type", type);
+                
+                if (type === "password") {
+                    eyeIcon.classList.remove("fa-eye-slash");
+                    eyeIcon.classList.add("fa-eye");
+                } else {
+                    eyeIcon.classList.remove("fa-eye");
+                    eyeIcon.classList.add("fa-eye-slash");
+                }
+            });
         }
     });
 </script>
