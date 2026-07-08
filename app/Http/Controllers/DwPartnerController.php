@@ -144,7 +144,7 @@ class DwPartnerController extends Controller
             'partner_city' => 'required|string',
             'partner_pincode' => 'required|string',
             'partner_landmark' => 'required|string',
-            'clinic_google_map_link' => 'required|string',
+            'clinic_google_map_link' => 'nullable|string|max:500',
             'partner_address' => 'required|string',
             'partner_password' => 'required|string',
             'registration_type' => 'required|array',
@@ -162,7 +162,6 @@ class DwPartnerController extends Controller
             $dwuser->partner_id = $partnerId;
             $dwuser->partner_password = bcrypt($request->partner_password);
             $dwuser->registration_type = json_encode($request->registration_type);
-            $dwuser->partner_google_map_link = $request->clinic_google_map_link;
             $dwuser->save();
 
             $regTypes = $request->registration_type ?? [];
