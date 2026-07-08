@@ -102,6 +102,12 @@ class DwPartnerController extends Controller
         DwPartnerModel::where('id', $request->input('currently_loggedin_partner_id'))
             ->update(['status' => 'Active']);
 
+        \App\Models\PartnerOPDContactModel::where('currently_loggedin_partner_id', $request->input('currently_loggedin_partner_id'))
+            ->update(['status' => 'Active']);
+
+        \App\Models\PartnerPathologyContactModel::where('currently_loggedin_partner_id', $request->input('currently_loggedin_partner_id'))
+            ->update(['status' => 'Active']);
+
         return redirect()->route('partnerpanel.partner-dashboard')->with('success', 'Coupon added successfully!');
     }
 
@@ -138,6 +144,7 @@ class DwPartnerController extends Controller
             'partner_city' => 'required|string',
             'partner_pincode' => 'required|string',
             'partner_landmark' => 'required|string',
+            'clinic_google_map_link' => 'required|string',
             'partner_address' => 'required|string',
             'partner_password' => 'required|string',
             'registration_type' => 'required|array',
@@ -155,6 +162,7 @@ class DwPartnerController extends Controller
             $dwuser->partner_id = $partnerId;
             $dwuser->partner_password = bcrypt($request->partner_password);
             $dwuser->registration_type = json_encode($request->registration_type);
+            $dwuser->partner_google_map_link = $request->clinic_google_map_link;
             $dwuser->save();
 
             $regTypes = $request->registration_type ?? [];

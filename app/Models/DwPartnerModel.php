@@ -25,6 +25,7 @@ class DwPartnerModel extends Authenticatable
         'partner_pincode',
         'partner_landmark',
         'partner_address',
+        'clinic_google_map_link',
         'partner_password',
         'partnerRegisterCaptchaInput',
         'registration_type',
