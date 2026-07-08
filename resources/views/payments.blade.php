@@ -32,18 +32,14 @@
             <div class="row gx-5">
                 <div class="col-lg-6 py-5">
                     <div class="py-5">
-                        <h1 class="display-5 text-white mb-4">We Are A Certified and Award Winning Dental Clinic You Can
-                            Trust</h1>
-                        <p class="text-white mb-0">Eirmod sed tempor lorem ut dolores. Aliquyam sit sadipscing kasd
-                            ipsum. Dolor ea et dolore et at sea ea at dolor, justo ipsum duo rebum sea invidunt
-                            voluptua. Eos vero eos vero ea et dolore eirmod et. Dolores diam duo invidunt lorem. Elitr
-                            ut dolores magna sit. Sea dolore sanctus sed et. Takimata takimata sanctus sed.</p>
+                        <h1 class="display-5 text-white mb-4">Why Partner with DoctorWala.info</h1>
+                        <p class="text-white mb-0">Clinics join DoctorWala.info to expand their digital presence, reach more local patients, and simplify their service promotion. By partnering with us, they get a dedicated profile, can showcase their doctors, OPD schedules, pathology services, and receive direct inquiries from patients. It’s a powerful way to grow trust, visibility, and patient engagement — all in one platform.</p>
                     </div>
                 </div>
                 <div class="col-lg-6">
                     <div class="appointment-form h-100 d-flex flex-column justify-content-center text-center p-5 wow zoomIn"
                         data-wow-delay="0.6s">
-                        <h1 class="text-white mb-4">Make Payments</h1>
+                        <h1 class="text-white mb-4">Add Coupon</h1>
 
                         <form action="{{route('partner.coupon.code.add')}}" method="POST" enctype="multipart/form-data">
                             @csrf
@@ -51,12 +47,12 @@
 
 
 
-                                <div class="col-12">
+                                <!-- <div class="col-12">
                                     <p for="subciption_amount" class="form-label text-white fw-bolder fs-5"
                                         style="text-align: left;">Subscribe Now</p>
-                                    <!-- <a href="/partnerpanel/partner-subscription" class="btn btn-dark w-100 py-3">Go With Subscription</a> -->
+                                    <a href="/partnerpanel/partner-subscription" class="btn btn-dark w-100 py-3">Go With Subscription</a>
                                     <a href="" class="btn btn-dark w-100 py-3">Coming Soon</a>
-                                </div>
+                                </div> -->
 
 
                                 <div class="col-12">
@@ -73,25 +69,22 @@
                                     <p for="coupon_code" class="form-label text-white fw-bolder fs-5" style="text-align: left;">Coupon Code (if any)*</p>
                                     <p for="coupon_code" class="form-label text-white fw-bolder fs-5" style="text-align: left;">Write the Code below : " DWCPNFREE01 "</p>
                                     <input type="text" class="form-control bg-light border-0" placeholder="Enter Coupon Code"
-                                        style="height: 55px;" name="coupon_code" id="coupon_code">
+                                        style="height: 55px;" name="coupon_code" id="coupon_code" value="DWCPNFREE01">
 
-                                    <div class="btnns d-flex justify-content-end mt-2">
-                                        <button type="button" class="btn btn-dark">Add</button>
-                                    </div>
                                 </div>
 
-                                <div class="col-12">
-                                    <p for="coupon_amount" class="form-label text-white fw-bolder fs-5" style="text-align: left;">Coupon Code Amount*</p>
+                                <div class="col-4">
+                                    <p for="coupon_amount" class="form-label text-white fw-bolder fs-5" style="text-align: left;">Amount</p>
                                     <input type="text" class="form-control bg-light border-0" value="" style="height: 55px;" name="coupon_amount" id="coupon_amount" readonly>
                                 </div>
 
-                                <div class="col-12">
-                                    <p for="coupon_start_date" class="form-label text-white fw-bolder fs-5" style="text-align: left;">Start Date*</p>
+                                <div class="col-4">
+                                    <p for="coupon_start_date" class="form-label text-white fw-bolder fs-5" style="text-align: left;">From</p>
                                     <input type="text" class="form-control bg-light border-0" value="" style="height: 55px;" name="coupon_start_date" id="coupon_start_date" readonly>
                                 </div>
 
-                                <div class="col-12">
-                                    <p for="coupon_end_date" class="form-label text-white fw-bolder fs-5" style="text-align: left;">End Date*</p>
+                                <div class="col-4">
+                                    <p for="coupon_end_date" class="form-label text-white fw-bolder fs-5" style="text-align: left;">Expire</p>
                                     <input type="text" class="form-control bg-light border-0" value="" style="height: 55px;" name="coupon_end_date" id="coupon_end_date" readonly>
                                 </div>
 
@@ -112,54 +105,11 @@
     </div>
     <!-- Payment End -->
 
-    <!-- Testimonial Start -->
-    <div class="container-fluid bg-primary bg-testimonial py-5 wow fadeInUp" data-wow-delay="0.1s">
-        <div class="container py-5">
-            <div class="row justify-content-center">
-                <div class="col-lg-7">
-                    <div class="owl-carousel testimonial-carousel rounded p-5 wow zoomIn" data-wow-delay="0.6s">
-                        <div class="testimonial-item text-center text-white">
-                            <img class="img-fluid mx-auto rounded mb-4" src="img/testilogo.png" alt="">
-
-                            <p class="fs-5" style="color: white; opacity: 1; font-weight: 700;">
-
-                                <i class="fa-solid fa-2x fa-quote-left"></i>&nbsp;Dolores sed duo clita justo
-                                dolor et stet
-                                lorem kasd dolore lorem ipsum. At
-                                lorem lorem magna ut et, nonumy labore diam erat. Erat dolor rebum sit ipsum.&nbsp;
-                                <i class="fa-solid fa-2x fa-quote-right"></i>
-                            </p>
-                            <hr class="mx-auto w-25">
-                            <h4 class="text-white mb-0">Client Name</h4>
-                        </div>
-                        <div class="testimonial-item text-center text-white">
-                            <img class="img-fluid mx-auto rounded mb-4" src="img/testilogo.png" alt="">
-
-                            <p class="fs-5" style="color: white; opacity: 1; font-weight: 700;">
-
-                                <i class="fa-solid fa-2x fa-quote-left"></i>&nbsp;Dolores sed duo clita justo
-                                dolor et stet
-                                lorem kasd dolore lorem ipsum. At
-                                lorem lorem magna ut et, nonumy labore diam erat. Erat dolor rebum sit ipsum.&nbsp;
-                                <i class="fa-solid fa-2x fa-quote-right"></i>
-                            </p>
-                            <hr class="mx-auto w-25">
-                            <h4 class="text-white mb-0">Client Name</h4>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Testimonial End -->
-
 
 
 
     <script>
-        document.getElementById('coupon_code').addEventListener('change', function() {
-            const couponCode = this.value;
-
+        function fetchCouponDetails(couponCode) {
             if (couponCode) {
                 fetch('{{ route("get.coupon.details") }}', {
                         method: 'POST',
@@ -186,7 +136,7 @@
                             const submitButton = document.getElementById('submitBtn');
 
                             // If the coupon's end date is today or in the future, enable the button
-                            if (couponEndDate > currentDate) {
+                            if (couponEndDate >= currentDate) {
                                 submitButton.disabled = false; // Enable button
                                 submitButton.textContent = 'Continue With Code';
                             } else {
@@ -204,6 +154,18 @@
                         console.error('Error fetching coupon details:', error);
                     });
             }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const couponInput = document.getElementById('coupon_code');
+            
+            // Fetch immediately on load for the prefilled value
+            fetchCouponDetails(couponInput.value);
+
+            // Fetch when changed manually
+            couponInput.addEventListener('change', function() {
+                fetchCouponDetails(this.value);
+            });
         });
     </script>
 
