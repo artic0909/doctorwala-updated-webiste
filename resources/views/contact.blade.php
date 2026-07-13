@@ -41,7 +41,7 @@
 <div class="container-fluid py-5">
     <div class="container">
         <div class="row g-5">
-            <div class="col-xl-4 col-lg-6 wow slideInUp" data-wow-delay="0.1s">
+            <div class="col-xl-6 col-lg-6 wow slideInUp" data-wow-delay="0.1s">
                 <div class="bg-light rounded h-100 p-5">
                     <div class="section-title">
                         <h5 class="position-relative d-inline-block text-primary text-uppercase">Contact Us</h5>
@@ -72,7 +72,7 @@
                     @endforeach
                 </div>
             </div>
-            <div class="col-xl-4 col-lg-6 wow slideInUp" data-wow-delay="0.3s">
+            <div class="col-xl-6 col-lg-6 wow slideInUp" data-wow-delay="0.3s">
                 @guest
                 <form action="{{ route('contact.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
@@ -130,13 +130,13 @@
                 @endauth
 
             </div>
-            <div class="col-xl-4 col-lg-12 wow slideInUp" data-wow-delay="0.6s">
+            <!-- <div class="col-xl-4 col-lg-12 wow slideInUp" data-wow-delay="0.6s">
 
                 <iframe class="position-relative rounded w-100 h-100"
                     src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d4571.920519621659!2d88.15360417530022!3d22.564069079497806!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a028142cd118f05%3A0x573fefde2b8f0953!2sRANIHATI%20CONSTRUCTION%20PVT.%20LTD.!5e1!3m2!1sen!2sin!4v1732015654255!5m2!1sen!2sin"
                     frameborder="0" style="min-height: 400px; border:0;" allowfullscreen="" aria-hidden="false"
                     tabindex="0"></iframe>
-            </div>
+            </div> -->
         </div>
     </div>
 </div>
