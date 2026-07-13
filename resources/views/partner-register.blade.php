@@ -189,7 +189,7 @@
 
 
 
-                            <div class="col-12">
+                            <div class="col-12" id="google_map_link_container">
                                 <input type="text" class="form-control bg-light border-0" placeholder="Google Map Link (Optional)"
                                     style="height: 55px;" name="clinic_google_map_link" id="clinic_google_map_link" value="{{ old('clinic_google_map_link') }}">
                             </div>
@@ -324,17 +324,30 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
 $(document).ready(function() {
+    function toggleGoogleMapLink() {
+        if ($('#doctor').is(':checked')) {
+            $('#google_map_link_container').hide();
+            $('#clinic_google_map_link').val(''); // clear the value when hiding
+        } else {
+            $('#google_map_link_container').show();
+        }
+    }
+
     // Registration Type Logic
     $('#opd, #pathology').on('change', function() {
         if ($(this).is(':checked')) {
             $('#doctor').prop('checked', false);
         }
+        toggleGoogleMapLink();
     });
     $('#doctor').on('change', function() {
         if ($(this).is(':checked')) {
             $('#opd, #pathology').prop('checked', false);
         }
+        toggleGoogleMapLink();
     });
+
+    toggleGoogleMapLink();
 
     // jQuery Validation
     $("#partnerRegisterForm").validate({
