@@ -26,7 +26,7 @@
 </head>
 
 <!-- Partner Login Start -->
-<div class="container-fluid bg-primary bg-appointment mb-5 wow fadeInUp" data-wow-delay="0.1s"
+<div class="container-fluid bg-primary bg-appointment mb-5"
     style="margin-top: 90px;">
     <div class="container">
         <div class="row gx-5">
@@ -39,7 +39,7 @@
                     <h1 class="display-5 text-white mb-4">Why Clinics Partner with DoctorWala.info</h1>
                     <p class="text-white mb-0">Clinics join DoctorWala.info to expand their digital presence, reach more local patients, and simplify their service promotion. By partnering with us, they get a dedicated profile, can showcase their doctors, OPD schedules, pathology services, and receive direct inquiries from patients. It’s a powerful way to grow trust, visibility, and patient engagement — all in one platform.</p>
                 </div>
-                <div class="video-container mt-4 wow zoomIn" data-wow-delay="0.3s">
+                <div class="video-container mt-4">
                     <div class="ratio ratio-16x9 rounded shadow-lg overflow-hidden border border-white border-2">
                         <iframe src="https://www.youtube.com/embed/rtWdQz1Kmjk?si=lUWDuibF2wXeHp8s&autoplay=0&mute=1" 
                             title="YouTube video player" 
@@ -59,8 +59,7 @@
 
 
             <div class="col-lg-6">
-                <div class="appointment-form h-100 d-flex flex-column justify-content-center text-center p-5 wow zoomIn"
-                    data-wow-delay="0.6s">
+                <div class="appointment-form h-100 d-flex flex-column justify-content-center text-center p-5">
                     <h1 class="text-white mb-4">Partner Login</h1>
                     <form id="partnerLoginForm" action="{{route('partnerpanel.partner-login')}}" method="POST">
                         @csrf
@@ -175,6 +174,9 @@
     </div>
 </div>
 
+@endsection
+
+@section('scripts')
 <script>
 
 
@@ -209,7 +211,6 @@
 </script>
 
 <!-- jQuery Validate & SweetAlert -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
@@ -230,7 +231,10 @@ $(document).ready(function() {
         },
         highlight: function(element) { $(element).addClass('is-invalid'); },
         unhighlight: function(element) { $(element).removeClass('is-invalid'); },
-        submitHandler: function(form) {
+        submitHandler: function(form, event) {
+            if (event) {
+                event.preventDefault();
+            }
             var submitBtn = $(form).find('button[type="submit"]');
             var originalText = submitBtn.text();
             submitBtn.prop('disabled', true).text('Processing...');
@@ -239,6 +243,10 @@ $(document).ready(function() {
                 url: $(form).attr('action'),
                 type: 'POST',
                 data: $(form).serialize(),
+                headers: {
+                    'Accept': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
                 success: function(response) {
                     Swal.fire({
                         icon: 'success',
@@ -290,5 +298,4 @@ $(document).ready(function() {
     @endif
 });
 </script>
-
 @endsection
