@@ -152,16 +152,17 @@ class DwPartnerController extends Controller
 
 
 
-        // $partnerCount = DwPartnerModel::count();
-        // $partnerId = 'DWPTR' . ($partnerCount + 1);
-        $partnerId = 'DWPTR' . (DwPartnerModel::max('id') + 1);
-
         try {
-            // Create and save the partner
+            // Create and save the partner with a temporary partner_id to avoid Duplicate Entry exceptions
+            // caused by race conditions or soft-deleted rows throwing off max('id').
             $dwuser = new DwPartnerModel($validated);
-            $dwuser->partner_id = $partnerId;
+            $dwuser->partner_id = 'TMP_' . uniqid(); 
             $dwuser->partner_password = bcrypt($request->partner_password);
             $dwuser->registration_type = json_encode($request->registration_type);
+            $dwuser->save();
+            
+            // Now that we have the true auto-incremented ID, we update partner_id securely
+            $dwuser->partner_id = 'DWPTR' . $dwuser->id;
             $dwuser->save();
 
             $regTypes = $request->registration_type ?? [];

@@ -25,7 +25,7 @@
 </head>
 
 <!-- Partner Register Start -->
-<div class="container-fluid bg-primary bg-appointment mb-5 wow fadeInUp" data-wow-delay="0.1s"
+<div class="container-fluid bg-primary bg-appointment mb-5"
     style="margin-top: 90px;">
     <div class="container">
         <div class="row gx-5">
@@ -36,7 +36,7 @@
                     <h1 class="display-5 text-white mb-4">Why Clinics Partner with DoctorWala.info</h1>
                     <p class="text-white mb-0">Clinics join DoctorWala.info to expand their digital presence, reach more local patients, and simplify their service promotion. By partnering with us, they get a dedicated profile, can showcase their doctors, OPD schedules, pathology services, and receive direct inquiries from patients. It’s a powerful way to grow trust, visibility, and patient engagement — all in one platform.</p>
                 </div>
-                <div class="video-container mt-4 wow zoomIn" data-wow-delay="0.3s">
+                <div class="video-container mt-4">
                     <div class="ratio ratio-16x9 rounded shadow-lg overflow-hidden border border-white border-2">
                         <iframe src="https://www.youtube.com/embed/rtWdQz1Kmjk?si=lUWDuibF2wXeHp8s&autoplay=0&mute=0" 
                             title="YouTube video player" 
@@ -55,15 +55,45 @@
 
 
             <div class="col-lg-6">
-                <div class="appointment-form h-100 d-flex flex-column justify-content-center text-center p-5 wow zoomIn"
-                    data-wow-delay="0.6s">
+                <div class="appointment-form h-100 d-flex flex-column justify-content-center text-center p-5">
                     <h1 class="text-white mb-4">Partner Registration</h1>
                     <form id="partnerRegisterForm" action="{{route('partnerRegForm')}}" method="POST" enctype="multipart/form-data" autocomplete="off">
                         @csrf
                         <div class="row g-3">
 
+                            <div class="col-12">
+                                <p class="text-white fw-bold" style="text-align: left;">Registration Type <span
+                                        class="text-dark">*</span></p>
 
+                                <div class="form-check form-check-inline"
+                                    style="display: flex;  justify-content: space-between; align-items: center;">
 
+                                    <p>
+                                        <label for="opd" class="form-check-label text-white"
+                                            style="font-size: 1.3rem; font-weight: 700;">OPD&nbsp;</label>
+                                        <input type="checkbox" name="registration_type[]" id="opd" value="OPD"
+                                            style="transform: scale(1.5); cursor: pointer;"
+                                            {{ is_array(old('registration_type')) && in_array('OPD', old('registration_type')) ? 'checked' : '' }}>&nbsp;
+                                    </p>
+
+                                    <p>
+                                        <label for="pathology" class="form-check-label text-white"
+                                            style="font-size: 1.3rem; font-weight: 700;">Path&nbsp;</label>
+                                        <input type="checkbox" name="registration_type[]" id="pathology" value="Pathology"
+                                            style="transform: scale(1.5); cursor: pointer;"
+                                            {{ is_array(old('registration_type')) && in_array('Pathology', old('registration_type')) ? 'checked' : '' }}>&nbsp;
+                                    </p>
+
+                                    <p>
+                                        <label for="doctor" class="form-check-label text-white"
+                                            style="font-size: 1.3rem; font-weight: 700;">Doctor&nbsp;</label>
+                                        <input type="checkbox" name="registration_type[]" id="doctor" value="Doctor"
+                                            style="transform: scale(1.5); cursor: pointer;"
+                                            {{ is_array(old('registration_type')) && in_array('Doctor', old('registration_type')) ? 'checked' : '' }}>&nbsp;
+                                    </p>
+
+                                </div>
+                            </div>
                             <div class="col-12 col-sm-6">
                                 <input type="text" class="form-control bg-light border-0"
                                     placeholder="Clinic Name *" style="height: 55px;" name="partner_clinic_name"
@@ -226,39 +256,6 @@
                                     </div>
                                 </div> -->
 
-                            <div class="col-12">
-                                <p class="text-white fw-bold" style="text-align: left;">Registration Type <span
-                                        class="text-dark">*</span></p>
-
-                                <div class="form-check form-check-inline"
-                                    style="display: flex;  justify-content: space-between; align-items: center;">
-
-                                    <p>
-                                        <label for="opd" class="form-check-label text-white"
-                                            style="font-size: 1.3rem; font-weight: 700;">OPD&nbsp;</label>
-                                        <input type="checkbox" name="registration_type[]" id="opd" value="OPD"
-                                            style="transform: scale(1.5); cursor: pointer;"
-                                            {{ is_array(old('registration_type')) && in_array('OPD', old('registration_type')) ? 'checked' : '' }}>&nbsp;
-                                    </p>
-
-                                    <p>
-                                        <label for="pathology" class="form-check-label text-white"
-                                            style="font-size: 1.3rem; font-weight: 700;">Path&nbsp;</label>
-                                        <input type="checkbox" name="registration_type[]" id="pathology" value="Pathology"
-                                            style="transform: scale(1.5); cursor: pointer;"
-                                            {{ is_array(old('registration_type')) && in_array('Pathology', old('registration_type')) ? 'checked' : '' }}>&nbsp;
-                                    </p>
-
-                                    <p>
-                                        <label for="doctor" class="form-check-label text-white"
-                                            style="font-size: 1.3rem; font-weight: 700;">Doctor&nbsp;</label>
-                                        <input type="checkbox" name="registration_type[]" id="doctor" value="Doctor"
-                                            style="transform: scale(1.5); cursor: pointer;"
-                                            {{ is_array(old('registration_type')) && in_array('Doctor', old('registration_type')) ? 'checked' : '' }}>&nbsp;
-                                    </p>
-
-                                </div>
-                            </div>
 
 
                             <div class="col-12">
@@ -319,8 +316,10 @@
 </div> -->
 <!-- Testimonial End -->
 
+@endsection
+
+@section('scripts')
 <!-- jQuery Validate & SweetAlert -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
@@ -366,7 +365,10 @@ $(document).ready(function() {
         },
         highlight: function(element) { $(element).addClass('is-invalid'); },
         unhighlight: function(element) { $(element).removeClass('is-invalid'); },
-        submitHandler: function(form) {
+        submitHandler: function(form, event) {
+            if (event) {
+                event.preventDefault();
+            }
             var submitBtn = $(form).find('button[type="submit"]');
             var originalText = submitBtn.text();
             submitBtn.prop('disabled', true).text('Processing...');
@@ -377,6 +379,10 @@ $(document).ready(function() {
                 data: new FormData(form),
                 processData: false,
                 contentType: false,
+                headers: {
+                    'Accept': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
                 success: function(response) {
                     Swal.fire({
                         icon: 'success',
@@ -391,11 +397,13 @@ $(document).ready(function() {
                 error: function(xhr) {
                     submitBtn.prop('disabled', false).text(originalText);
                     var errorMessage = 'Profile Is Not Registered. Please try again.';
-                    if(xhr.responseJSON && xhr.responseJSON.message) {
-                        errorMessage = xhr.responseJSON.message;
-                    } else if(xhr.responseJSON && xhr.responseJSON.errors) {
+                    
+                    if (xhr.responseJSON && xhr.responseJSON.errors) {
                         errorMessage = Object.values(xhr.responseJSON.errors).map(e => e.join('<br>')).join('<br>');
+                    } else if (xhr.responseJSON && xhr.responseJSON.message) {
+                        errorMessage = xhr.responseJSON.message;
                     }
+
                     Swal.fire({
                         icon: 'error',
                         title: 'Registration Failed',
@@ -483,5 +491,4 @@ $(document).ready(function() {
         }
     });
 </script>
-
 @endsection

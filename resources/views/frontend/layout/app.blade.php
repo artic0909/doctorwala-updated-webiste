@@ -161,7 +161,7 @@
 
     @include('frontend.includes.footer')
     @include('frontend.includes.scripts')
-
+    @yield('scripts')
 </body>
 
 </html>
