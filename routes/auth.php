@@ -239,6 +239,10 @@ Route::middleware('auth:web')->group(function () {
     Route::delete('/superadmin/super-all-user/delete/{id}', [SuperAllUserController::class, 'delete'])->name('superadmin.super-all-user.delete');
 
     // All Partners---------------------------------------------------------------------------------------------------------------------------------------->
+    Route::get('/superadmin/importer', [\App\Http\Controllers\Superadmin\SuperPartnerImporterController::class, 'index'])->name('superadmin.importer.index');
+    Route::post('/superadmin/importer', [\App\Http\Controllers\Superadmin\SuperPartnerImporterController::class, 'import'])->name('superadmin.importer.import');
+    Route::get('/superadmin/importer/template', [\App\Http\Controllers\Superadmin\SuperPartnerImporterController::class, 'downloadTemplate'])->name('superadmin.importer.template');
+
     Route::get('/superadmin/super-add-partners', [SuperPartnerHandleController::class, 'addPartnerView']);
     Route::post('/superadmin/super-add-partners', [SuperPartnerHandleController::class, 'addPartners'])->name('superadmin.register.partners');
     Route::put('/superadmin/super-all-partner/update/{id}', [SuperPartnerHandleController::class, 'editPartnerDetails'])->name('superadmin.update.partner');
