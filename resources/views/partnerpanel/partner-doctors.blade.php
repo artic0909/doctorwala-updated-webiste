@@ -430,7 +430,7 @@
                                                         aria-hidden="true"></i>
                                                     Doctor Fees <span class="text-danger">*</span></label>
                                                 <input type="text" class="form-control" id="partner_doctor_fees" name="partner_doctor_fees"
-                                                    value="{{ old('partner_doctor_fees', $contactDetails->partner_doctor_fees ?? '') }}" placeholder="Enter Doctor Fees" style="height: 55px;">
+                                                    value="{{ old('partner_doctor_fees', $contactDetails->partner_doctor_fees ?? '000') }}" placeholder="Enter Doctor Fees" style="height: 55px;">
                                             </div>
 
                                             <div class="col-4 form-group">
