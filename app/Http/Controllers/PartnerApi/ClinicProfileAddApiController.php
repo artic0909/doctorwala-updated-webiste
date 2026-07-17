@@ -71,7 +71,7 @@ class ClinicProfileAddApiController extends Controller
             'clinic_pincode' => 'required|numeric|digits:6',
             'clinic_state' => 'required|string|max:255',
             'clinic_city' => 'required|string|max:255',
-            'clinic_google_map_link' => 'nullable|string|max:500',
+            'clinic_google_map_link' => 'nullable|string',
             'clinic_address' => 'required|string',
             'opdbanner' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
         ]);
@@ -205,7 +205,7 @@ class ClinicProfileAddApiController extends Controller
             'clinic_pincode' => 'required|numeric|digits:6',
             'clinic_state' => 'required|string|max:255',
             'clinic_city' => 'required|string|max:255',
-            'clinic_google_map_link' => 'nullable|string|max:500',
+            'clinic_google_map_link' => 'nullable|string',
             'clinic_address' => 'required|string',
             'pathologybanner' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
         ]);

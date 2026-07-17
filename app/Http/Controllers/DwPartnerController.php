@@ -144,7 +144,7 @@ class DwPartnerController extends Controller
             'partner_city' => 'required|string',
             'partner_pincode' => 'required|string',
             'partner_landmark' => 'required|string',
-            'clinic_google_map_link' => 'nullable|string|max:500',
+            'clinic_google_map_link' => 'nullable|string',
             'partner_address' => 'required|string',
             'partner_password' => 'required|string',
             'registration_type' => 'required|array',

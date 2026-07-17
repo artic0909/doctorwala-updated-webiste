@@ -102,7 +102,7 @@ class SuperAllOPDHandleController extends Controller
             'clinic_pincode' => 'numeric|digits:6',
             'clinic_state' => 'string|max:255',
             'clinic_city' => 'string|max:255',
-            'clinic_google_map_link' => 'nullable|string|max:500',
+            'clinic_google_map_link' => 'nullable|string',
             'clinic_address' => 'string',
         ]);
 
