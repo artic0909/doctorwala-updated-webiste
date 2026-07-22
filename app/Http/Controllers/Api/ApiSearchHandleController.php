@@ -35,11 +35,17 @@ class ApiSearchHandleController extends Controller
             $paths = collect();
             $docs  = collect();
 
+            $user_city = $request->get('user_city', '');
+
             // ── OPD Search ─────────────────────────────────────────────────
             if (in_array($category, ['all', 'opd'])) {
 
-                $directOPD = PartnerOPDContactModel::where('status', 'active')
-                    ->where(function ($q) use ($query) {
+                $directOPDQuery = PartnerOPDContactModel::where('status', 'active');
+                if ($user_city !== '') {
+                    $directOPDQuery->where('clinic_city', $user_city);
+                }
+                
+                $directOPD = $directOPDQuery->where(function ($q) use ($query) {
                         $q->where('clinic_name',                 'like', "%{$query}%")
                             ->orWhere('clinic_address',            'like', "%{$query}%")
                             ->orWhere('clinic_city',               'like', "%{$query}%")
@@ -66,9 +72,13 @@ class ApiSearchHandleController extends Controller
                 $opdPartnerIds = PartnerAllOPDDoctorModel::where('doctor_specialist', 'like', "%{$query}%")
                     ->pluck('currently_loggedin_partner_id');
 
-                $bySpecialistOPD = PartnerOPDContactModel::whereIn('currently_loggedin_partner_id', $opdPartnerIds)
-                    ->where('status', 'active')
-                    ->with(['banner', 'doctors'])
+                $bySpecialistOPDQuery = PartnerOPDContactModel::whereIn('currently_loggedin_partner_id', $opdPartnerIds)
+                    ->where('status', 'active');
+                if ($user_city !== '') {
+                    $bySpecialistOPDQuery->where('clinic_city', $user_city);
+                }
+
+                $bySpecialistOPD = $bySpecialistOPDQuery->with(['banner', 'doctors'])
                     ->get([
                         'id',
                         'clinic_name',
@@ -88,8 +98,12 @@ class ApiSearchHandleController extends Controller
             // ── Pathology Search ───────────────────────────────────────────
             if (in_array($category, ['all', 'pathology'])) {
 
-                $directPath = PartnerPathologyContactModel::where('status', 'active')
-                    ->where(function ($q) use ($query) {
+                $directPathQuery = PartnerPathologyContactModel::where('status', 'active');
+                if ($user_city !== '') {
+                    $directPathQuery->where('clinic_city', $user_city);
+                }
+
+                $directPath = $directPathQuery->where(function ($q) use ($query) {
                         $q->where('clinic_name',                 'like', "%{$query}%")
                             ->orWhere('clinic_address',            'like', "%{$query}%")
                             ->orWhere('clinic_city',               'like', "%{$query}%")
@@ -116,9 +130,13 @@ class ApiSearchHandleController extends Controller
                 $pathPartnerIds = PartnerAllPathologyTestModel::where('test_type', 'like', "%{$query}%")
                     ->pluck('currently_loggedin_partner_id');
 
-                $byTestPath = PartnerPathologyContactModel::whereIn('currently_loggedin_partner_id', $pathPartnerIds)
-                    ->where('status', 'active')
-                    ->with(['banner', 'tests'])
+                $byTestPathQuery = PartnerPathologyContactModel::whereIn('currently_loggedin_partner_id', $pathPartnerIds)
+                    ->where('status', 'active');
+                if ($user_city !== '') {
+                    $byTestPathQuery->where('clinic_city', $user_city);
+                }
+
+                $byTestPath = $byTestPathQuery->with(['banner', 'tests'])
                     ->get([
                         'id',
                         'clinic_name',
@@ -138,8 +156,12 @@ class ApiSearchHandleController extends Controller
             // ── Doctor Search ──────────────────────────────────────────────
             if (in_array($category, ['all', 'doctor'])) {
 
-                $docs = PartnerDoctorContactModel::where('status', 'active')
-                    ->where(function ($q) use ($query) {
+                $docsQuery = PartnerDoctorContactModel::where('status', 'active');
+                if ($user_city !== '') {
+                    $docsQuery->where('partner_doctor_city', $user_city);
+                }
+
+                $docs = $docsQuery->where(function ($q) use ($query) {
                         $q->where('partner_doctor_name',         'like', "%{$query}%")
                             ->orWhere('partner_doctor_specialist',  'like', "%{$query}%")
                             ->orWhere('partner_doctor_designation', 'like', "%{$query}%")

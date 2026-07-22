@@ -48,9 +48,14 @@ class ApiAllOPDController extends Controller
     {
         try {
             $query = trim($request->get('query', ''));
+            $user_city = trim($request->get('user_city', ''));
 
             $dbQuery = PartnerOPDContactModel::with('banner')
                 ->where('status', 'active');
+
+            if ($user_city !== '') {
+                $dbQuery->where('clinic_city', $user_city);
+            }
 
             if ($query !== '') {
                 // Search mode — also check specialist via related doctor model

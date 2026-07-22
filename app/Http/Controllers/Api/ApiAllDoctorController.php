@@ -32,9 +32,14 @@ class ApiAllDoctorController extends Controller
     {
         try {
             $query = trim($request->get('query', ''));
+            $user_city = trim($request->get('user_city', ''));
 
             $dbQuery = PartnerDoctorContactModel::with('banner')
                 ->where('status', 'active');
+
+            if ($user_city !== '') {
+                $dbQuery->where('partner_doctor_city', $user_city);
+            }
 
             if ($query !== '') {
                 // Search mode — full table, no pagination
