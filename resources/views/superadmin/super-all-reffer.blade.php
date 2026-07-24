@@ -375,6 +375,7 @@
                                                     <th>People Referred</th>
                                                     <th>UPI ID / Bank Payout</th>
                                                     <th>Medical Card</th>
+                                                    <th>IP Address</th>
                                                     <th>App Screenshot</th>
                                                 </tr>
                                             </thead>
@@ -441,6 +442,11 @@
                                                     <!-- Medical Card -->
                                                     <td>
                                                         <p class="m-0" style="font-weight: 700;">{{$ref->medical_card_number}}</p>
+                                                    </td>
+
+                                                    <!-- IP Address -->
+                                                    <td>
+                                                        <p class="m-0" style="font-weight: 700;">{{$ref->ip_address ?? 'N/A'}}</p>
                                                     </td>
 
                                                     <!-- App Screenshot -->
