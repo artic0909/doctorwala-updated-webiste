@@ -1088,7 +1088,7 @@
 
                 <!-- Submit -->
                 <button type="submit" class="submit-btn" id="submit-form-btn">
-                    <i class="fa fa-share-nodes"></i> Generate Referral Link
+                    <i class="fa-solid fa-arrow-right-to-bracket"></i> SUBMIT
                 </button>
             </form>
         </div>
