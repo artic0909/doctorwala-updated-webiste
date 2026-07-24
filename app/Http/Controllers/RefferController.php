@@ -64,6 +64,15 @@ class RefferController extends Controller
             return back()->withErrors(['medical_card_number' => 'We couldn\'t find a Doctorwala account with this medical card number. Please ensure you\'ve entered it correctly. If you\'re a new user, please download our app from the Play Store and create an account first.'])->withInput();
         }
 
+        // Check if this user is already registered for referrals
+        $existingReffer = \App\Models\Reffer::where('phone', $dwUser->user_mobile)
+            ->orWhere('medical_card_number', $dwUser->medical_card_no)
+            ->first();
+
+        if ($existingReffer) {
+            return back()->withErrors(['medical_card_number' => 'You are already registered for the referral program!'])->withInput();
+        }
+
         // Upload Profile Screenshot to storage/screenshots
         $screenshotPath = '';
         if ($request->hasFile('profile_screenshot')) {
