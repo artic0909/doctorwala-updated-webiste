@@ -28,8 +28,45 @@ class SuperRefferController extends Controller
             });
         }
 
+        if ($request->has('from_date') && $request->from_date != '') {
+            $query->whereDate('created_at', '>=', $request->from_date);
+        }
+
+        if ($request->has('to_date') && $request->to_date != '') {
+            $query->whereDate('created_at', '<=', $request->to_date);
+        }
+
         $referrals = $query->orderBy('id', 'desc')->paginate(10);
-        return view('superadmin.super-all-reffer', compact('referrals'));
+        
+        // Calculate KPIs
+        $totalReferrals = Reffer::count();
+        $monthlyReferrals = Reffer::whereMonth('created_at', now()->month)
+                                  ->whereYear('created_at', now()->year)
+                                  ->count();
+                                  
+        $totalUniqueReferrals = Reffer::whereNotNull('ip_address')->distinct('ip_address')->count('ip_address');
+        $monthlyUniqueReferrals = Reffer::whereNotNull('ip_address')
+                                        ->whereMonth('created_at', now()->month)
+                                        ->whereYear('created_at', now()->year)
+                                        ->distinct('ip_address')
+                                        ->count('ip_address');
+
+        // Find Duplicate IPs
+        $duplicateIps = Reffer::select('ip_address')
+            ->whereNotNull('ip_address')
+            ->groupBy('ip_address')
+            ->havingRaw('COUNT(id) > 1')
+            ->pluck('ip_address')
+            ->toArray();
+
+        return view('superadmin.super-all-reffer', compact(
+            'referrals', 
+            'totalReferrals', 
+            'monthlyReferrals', 
+            'totalUniqueReferrals', 
+            'monthlyUniqueReferrals',
+            'duplicateIps'
+        ));
     }
 
     /**

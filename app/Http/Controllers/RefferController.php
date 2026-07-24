@@ -88,6 +88,7 @@ class RefferController extends Controller
             'medical_card_number' => $request->medical_card_number,
             'profile_screenshot' => $screenshotPath,
             'referral_code' => $referralCode,
+            'ip_address' => $request->ip(),
             'reffred' => $reffredStatus,
             'referred_by' => $referredBy,
         ]);

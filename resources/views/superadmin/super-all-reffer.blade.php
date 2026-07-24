@@ -43,9 +43,12 @@
                     <i class="fa-solid fa-bars"></i>
                 </button>
 
-                <form method="GET" action="{{ route('superadmin.super-all-reffer') }}" class="d-flex w-100">
+                <form method="GET" action="{{ route('superadmin.super-all-reffer') }}" class="d-flex w-100 align-items-center">
+                    <input type="date" name="from_date" value="{{ request('from_date') }}" class="form-control ml-4" style="max-width: 150px;">
+                    <input type="date" name="to_date" value="{{ request('to_date') }}" class="form-control mx-2" style="max-width: 150px;">
                     <input type="search" id="search" name="search" value="{{ request('search') }}"
-                        placeholder="Search Referrals (Name, Phone, Code, UPI, Medical Card) ........" class="form-control mx-4 w-100">
+                        placeholder="Search Referrals..." class="form-control mr-2 w-100">
+                    <button type="submit" class="btn btn-primary mr-4" style="height: 38px;">Filter</button>
                 </form>
 
                 <ul class="navbar-nav navbar-nav-right">
@@ -255,6 +258,42 @@
             <!-- partial -->
             <div class="main-panel">
                 <div class="content-wrapper">
+                    <!-- KPIs Row -->
+                    <div class="row mb-4">
+                        <div class="col-md-3 mb-4 mb-md-0 stretch-card transparent">
+                            <div class="card card-tale" style="background-color: #392C70; color: white;">
+                                <div class="card-body">
+                                    <p class="mb-4" style="font-weight: bold;">Total Referrals</p>
+                                    <p class="fs-30 mb-2" style="font-size: 30px;">{{ $totalReferrals ?? 0 }}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-4 mb-md-0 stretch-card transparent">
+                            <div class="card card-dark-blue" style="background-color: #4747A1; color: white;">
+                                <div class="card-body">
+                                    <p class="mb-4" style="font-weight: bold;">Monthly Total</p>
+                                    <p class="fs-30 mb-2" style="font-size: 30px;">{{ $monthlyReferrals ?? 0 }}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-4 mb-md-0 stretch-card transparent">
+                            <div class="card card-light-blue" style="background-color: #7978E9; color: white;">
+                                <div class="card-body">
+                                    <p class="mb-4" style="font-weight: bold;">Total Unique (IP wise)</p>
+                                    <p class="fs-30 mb-2" style="font-size: 30px;">{{ $totalUniqueReferrals ?? 0 }}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-4 mb-md-0 stretch-card transparent">
+                            <div class="card card-light-danger" style="background-color: #F3797E; color: white;">
+                                <div class="card-body">
+                                    <p class="mb-4" style="font-weight: bold;">Monthly Unique (IP wise)</p>
+                                    <p class="fs-30 mb-2" style="font-size: 30px;">{{ $monthlyUniqueReferrals ?? 0 }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="row">
                         <div class="col-md-12 grid-margin">
                             <div class="row">
@@ -342,7 +381,7 @@
 
                                             <tbody>
                                                 @forelse ($referrals as $ref)
-                                                <tr>
+                                                <tr @if(isset($duplicateIps) && in_array($ref->ip_address, $duplicateIps)) style="background-color: #ffe6e6;" @endif>
                                                     <!-- Delete -->
                                                     <td>
                                                         <a href="" data-target="#myDeleteModal{{$ref->id}}" data-toggle="modal" class="ed-btn">

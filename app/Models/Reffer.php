@@ -15,6 +15,7 @@ class Reffer extends Model
         'medical_card_number',
         'profile_screenshot',
         'referral_code',
+        'ip_address',
         'reffred',
         'referred_by',
     ];
