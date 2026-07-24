@@ -843,14 +843,14 @@
                     <h4>Instructions / নির্দেশাবলী</h4>
                 </div>
                 <div class="lang-tabs">
-                    <button type="button" class="lang-tab-btn active" data-lang="bengali">বাংলা</button>
-                    <button type="button" class="lang-tab-btn" data-lang="english">English</button>
+                    <button type="button" class="lang-tab-btn" data-lang="bengali">বাংলা</button>
+                    <button type="button" class="lang-tab-btn active" data-lang="english">English</button>
                 </div>
             </div>
             
             <div class="modal-body">
                 <!-- Bengali Instructions -->
-                <div class="lang-content active" id="lang-bengali">
+                <div class="lang-content" id="lang-bengali">
                     <p class="intro-text">রেফারেল বোনাস পেতে নিচের ধাপগুলো অনুসরণ করুন:</p>
                     <ul class="instruction-list">
                         <li>
@@ -875,7 +875,7 @@
                 </div>
 
                 <!-- English Instructions -->
-                <div class="lang-content" id="lang-english">
+                <div class="lang-content active" id="lang-english">
                     <p class="intro-text">Follow these steps to claim your referral rewards:</p>
                     <ul class="instruction-list">
                         <li>

@@ -61,7 +61,7 @@ class RefferController extends Controller
         $dwUser = \App\Models\DwUserModel::whereRaw("REPLACE(medical_card_no, ' ', '') = ?", [$inputMedicalCard])->first();
 
         if (!$dwUser) {
-            return back()->withErrors(['medical_card_number' => 'You are not a doctorwala user, first install the app from playstore then create account then put you medical number from your profile or if already have account carefully enter you medical card numbere here'])->withInput();
+            return back()->withErrors(['medical_card_number' => 'We couldn\'t find a Doctorwala account with this medical card number. Please ensure you\'ve entered it correctly. If you\'re a new user, please download our app from the Play Store and create an account first.'])->withInput();
         }
 
         // Upload Profile Screenshot to storage/screenshots
