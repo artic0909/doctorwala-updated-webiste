@@ -452,7 +452,6 @@
             </div>
             
             <h2 class="title">Registration Successful!</h2>
-            <p class="desc">Your referral profile is active. You can now invite friends to earn rewards.</p>
 
             @if(session('success'))
                 <div style="background-color: #f0fdf4; color: #166534; border: 1px solid #bbf7d0; border-radius: 12px; padding: 12px 16px; font-size: 0.88rem; margin-bottom: 20px; text-align: left;">

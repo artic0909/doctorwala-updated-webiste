@@ -112,7 +112,7 @@ class RefferController extends Controller
         ]);
 
         return redirect()->route('reffer.success', ['code' => $reffer->referral_code])
-            ->with('success', 'Your registration is complete! You can now share your referral link.');
+            ->with('success', 'Your registration is complete');
     }
 
     /**
