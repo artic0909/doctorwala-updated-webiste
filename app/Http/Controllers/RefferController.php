@@ -55,6 +55,15 @@ class RefferController extends Controller
             'referred_by_code.exists' => 'The referral link used is invalid.',
         ]);
 
+        $inputMedicalCard = str_replace(' ', '', $request->medical_card_number);
+
+        // Check if user exists in dw_user_models (ignoring spaces in both input and db column)
+        $dwUser = \App\Models\DwUserModel::whereRaw("REPLACE(medical_card_no, ' ', '') = ?", [$inputMedicalCard])->first();
+
+        if (!$dwUser) {
+            return back()->withErrors(['medical_card_number' => 'You are not a doctorwala user, first install the app from playstore then create account then put you medical number from your profile or if already have account carefully enter you medical card numbere here'])->withInput();
+        }
+
         // Upload Profile Screenshot to storage/screenshots
         $screenshotPath = '';
         if ($request->hasFile('profile_screenshot')) {
@@ -82,10 +91,10 @@ class RefferController extends Controller
 
         // Create the Reffer record
         $reffer = Reffer::create([
-            // 'name' => $request->name,
-            // 'phone' => $request->phone,
+            'name' => $dwUser->user_name ?? 'N/A',
+            'phone' => $dwUser->user_mobile ?? 'N/A',
             // 'upi' => $request->upi,
-            'medical_card_number' => $request->medical_card_number,
+            'medical_card_number' => $dwUser->medical_card_no, // Save exactly as it is in the DB, or $request->medical_card_number
             'profile_screenshot' => $screenshotPath,
             'referral_code' => $referralCode,
             'ip_address' => $request->ip(),
