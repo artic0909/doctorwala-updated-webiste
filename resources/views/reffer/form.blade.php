@@ -835,7 +835,7 @@
 <body>
 
     <!-- Instructions Modal (Bilingual) -->
-    <div class="instructions-modal-overlay" id="instructions-modal">
+    <div class="instructions-modal-overlay" id="instructions-modal" @if($errors->any()) style="display: none; opacity: 0;" @endif>
         <div class="instructions-modal-content">
             <div class="modal-header">
                 <div class="modal-logo">
