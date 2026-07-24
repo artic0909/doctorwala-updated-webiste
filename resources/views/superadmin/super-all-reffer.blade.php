@@ -369,9 +369,9 @@
                                                     <th>Delete</th>
                                                     <th>Date Joined</th>
                                                     <th>Name & Contact</th>
-                                                    <th>Referred By</th>
+                                                    <th>Referral Code</th>
                                                     <th>People Referred</th>
-                                                    <th>UPI ID / Bank Payout</th>
+                                                    <th>Total Reffered</th>
                                                     <th>Medical Card</th>
                                                     <th>IP Address</th>
                                                     <th>App Screenshot</th>
