@@ -368,10 +368,8 @@
                                                 <tr>
                                                     <th>Delete</th>
                                                     <th>Date Joined</th>
-                                                    <th>Name</th>
-                                                    <th>Contact (Mobile)</th>
-                                                    <th>Referral Code</th>
-                                                    <!-- <th>Referred By</th> -->
+                                                    <th>Name & Contact</th>
+                                                    <th>Referred By</th>
                                                     <th>People Referred</th>
                                                     <th>UPI ID / Bank Payout</th>
                                                     <th>Medical Card</th>
@@ -397,18 +395,13 @@
 
                                                     <!-- Name -->
                                                     <td>
-                                                        <p class="m-0" style="font-weight: 700;">{{$ref->name}}</p>
+                                                        <p class="m-0" style="font-weight: 700;">{{$ref->name}}
+                                                            <br>
+                                                             {{$ref->phone}}
+
+                                                            </p>
                                                     </td>
 
-                                                    <!-- Contact (Mobile) -->
-                                                    <td>
-                                                        <div class="d-flex justify-content-between align-items-center gap-2">
-                                                            <p class="m-0" style="font-weight: 700;">{{$ref->phone}}</p>
-                                                            <a href="tel:{{$ref->phone}}" class="ed-btn">
-                                                                <i class="fa fa-phone" aria-hidden="true" style="font-size: 1rem;"></i>
-                                                            </a>
-                                                        </div>
-                                                    </td>
 
                                                     <!-- Referral Code -->
                                                     <td>
@@ -432,11 +425,6 @@
                                                                 {{ $ref->referees_count }}
                                                             </span>
                                                         </div>
-                                                    </td>
-
-                                                    <!-- UPI ID / Bank Payout -->
-                                                    <td>
-                                                        <p class="m-0" style="font-weight: 700; max-width: 150px; overflow-wrap: break-word;">{{$ref->upi}}</p>
                                                     </td>
 
                                                     <!-- Medical Card -->
