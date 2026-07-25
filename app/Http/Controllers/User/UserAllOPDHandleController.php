@@ -26,13 +26,11 @@ class UserAllOPDHandleController extends Controller
 
         $states = PartnerOPDContactModel::distinct()->pluck('clinic_state')->toArray();
 
-        $cities = PartnerOPDContactModel::distinct()->pluck('clinic_city')->toArray();
-
         $opds = PartnerOPDContactModel::with(['banner', 'doctors'])
             ->where('status', 'active')
             ->paginate(12);
 
-        return view('opd', compact('aboutDetails', 'user', 'opds', 'states', 'cities'));
+        return view('opd', compact('aboutDetails', 'user', 'opds', 'states'));
     }
 
     public function opdFilterSearch(Request $request)
@@ -41,8 +39,6 @@ class UserAllOPDHandleController extends Controller
         $aboutDetails = SuperAboutusModel::get();
         $states = PartnerOPDContactModel::where('status', 'active')
             ->distinct()->pluck('clinic_state')->toArray();
-        $cities = PartnerOPDContactModel::where('status', 'active')
-            ->distinct()->pluck('clinic_city')->toArray();
 
         // Apply filters
         $opds = PartnerOPDContactModel::with('banner')
@@ -50,13 +46,10 @@ class UserAllOPDHandleController extends Controller
             ->when($request->filled('state'), function ($query) use ($request) {
                 return $query->where('clinic_state', $request->state);
             })
-            ->when($request->filled('city'), function ($query) use ($request) {
-                return $query->where('clinic_city', $request->city);
-            })
             ->paginate(6)
             ->appends($request->query());
 
-        return view('opd', compact('aboutDetails', 'user', 'opds', 'states', 'cities'));
+        return view('opd', compact('aboutDetails', 'user', 'opds', 'states'));
     }
 
     public function singleOPDView($slug)

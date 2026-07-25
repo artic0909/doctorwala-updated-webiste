@@ -25,13 +25,11 @@ class UserAllPathologyHandleController extends Controller
 
         $states = PartnerPathologyContactModel::distinct()->pluck('clinic_state')->toArray();
 
-        $cities = PartnerPathologyContactModel::distinct()->pluck('clinic_city')->toArray();
-
         $paths = PartnerPathologyContactModel::with(['banner', 'tests'])
             ->where('status', 'active')
             ->paginate(12);
 
-        return view('pathology', compact('aboutDetails', 'user', 'paths', 'states', 'cities'));
+        return view('pathology', compact('aboutDetails', 'user', 'paths', 'states'));
     }
 
 
@@ -43,8 +41,6 @@ class UserAllPathologyHandleController extends Controller
         $aboutDetails = SuperAboutusModel::get();
         $states = PartnerPathologyContactModel::where('status', 'active')
             ->distinct()->pluck('clinic_state')->toArray();
-        $cities = PartnerPathologyContactModel::where('status', 'active')
-            ->distinct()->pluck('clinic_city')->toArray();
 
         // Apply filters
         $paths = PartnerPathologyContactModel::with('banner')
@@ -52,13 +48,10 @@ class UserAllPathologyHandleController extends Controller
             ->when($request->filled('state'), function ($query) use ($request) {
                 return $query->where('clinic_state', $request->state);
             })
-            ->when($request->filled('city'), function ($query) use ($request) {
-                return $query->where('clinic_city', $request->city);
-            })
             ->paginate(6)
             ->appends($request->query());
 
-        return view('pathology', compact('aboutDetails', 'user', 'paths', 'states', 'cities'));
+        return view('pathology', compact('aboutDetails', 'user', 'paths', 'states'));
     }
 
 

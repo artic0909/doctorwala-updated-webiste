@@ -49,27 +49,17 @@
             </div>
             <div>
                 <h3>Sort Results By</h3>
-                <p>Filter OPD clinics by state and city</p>
+                <p>Filter OPD clinics by state</p>
             </div>
         </div>
         <form action="{{ route('filter.search') }}" method="GET">
             <div class="row g-3 align-items-center">
-                <div class="col-md-4">
+                <div class="col-md-8">
                     <div class="opd-filter-wrap">
                         <i class="bi bi-geo-fill"></i>
                         <select name="state" class="form-select">
                             @foreach($states as $state)
-                            <option value="{{ $state }}">{{ $state }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="opd-filter-wrap">
-                        <i class="bi bi-building"></i>
-                        <select name="city" class="form-select">
-                            @foreach($cities as $city)
-                            <option value="{{ $city }}">{{ $city }}</option>
+                            <option value="{{ $state }}" {{ request('state') == $state ? 'selected' : '' }}>{{ $state }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -96,27 +86,17 @@
             </div>
             <div>
                 <h3>Sort Results By</h3>
-                <p>Filter OPD clinics by state and city</p>
+                <p>Filter OPD clinics by state</p>
             </div>
         </div>
         <form action="{{ route('opd.filter.search') }}" method="GET">
             <div class="row g-3 align-items-center">
-                <div class="col-md-4">
+                <div class="col-md-8">
                     <div class="opd-filter-wrap">
                         <i class="bi bi-geo-fill"></i>
                         <select name="state" class="form-select">
                             @foreach($states as $state)
-                            <option value="{{ $state }}">{{ $state }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="opd-filter-wrap">
-                        <i class="bi bi-building"></i>
-                        <select name="city" class="form-select">
-                            @foreach($cities as $city)
-                            <option value="{{ $city }}">{{ $city }}</option>
+                            <option value="{{ $state }}" {{ request('state') == $state ? 'selected' : '' }}>{{ $state }}</option>
                             @endforeach
                         </select>
                     </div>

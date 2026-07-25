@@ -25,13 +25,11 @@ class UserAllDoctorHandleController extends Controller
 
         $states = PartnerDoctorContactModel::distinct()->pluck('partner_doctor_state')->toArray();
 
-        $cities = PartnerDoctorContactModel::distinct()->pluck('partner_doctor_city')->toArray();
-
         $docs = PartnerDoctorContactModel::with('banner')
             ->where('status', 'active')
             ->paginate(12);
 
-        return view('doctor', compact('aboutDetails', 'user', 'docs', 'states', 'cities'));
+        return view('doctor', compact('aboutDetails', 'user', 'docs', 'states'));
     }
 
 
@@ -44,8 +42,6 @@ class UserAllDoctorHandleController extends Controller
         $aboutDetails = SuperAboutusModel::get();
         $states = PartnerDoctorContactModel::where('status', 'active')
             ->distinct()->pluck('partner_doctor_state')->toArray();
-        $cities = PartnerDoctorContactModel::where('status', 'active')
-            ->distinct()->pluck('partner_doctor_city')->toArray();
 
         // Apply filters
         $docs = PartnerDoctorContactModel::with('banner')
@@ -53,13 +49,10 @@ class UserAllDoctorHandleController extends Controller
             ->when($request->filled('state'), function ($query) use ($request) {
                 return $query->where('partner_doctor_state', $request->state);
             })
-            ->when($request->filled('city'), function ($query) use ($request) {
-                return $query->where('partner_doctor_city', $request->city);
-            })
             ->paginate(6)
             ->appends($request->query());
 
-        return view('doctor', compact('aboutDetails', 'user', 'docs', 'states', 'cities'));
+        return view('doctor', compact('aboutDetails', 'user', 'docs', 'states'));
     }
 
 
