@@ -27,7 +27,7 @@ class UserAllPathologyHandleController extends Controller
 
         $paths = PartnerPathologyContactModel::with(['banner', 'tests'])
             ->where('status', 'active')
-            ->paginate(12);
+            ->paginate(15);
 
         return view('pathology', compact('aboutDetails', 'user', 'paths', 'states'));
     }
@@ -48,7 +48,7 @@ class UserAllPathologyHandleController extends Controller
             ->when($request->filled('state'), function ($query) use ($request) {
                 return $query->where('clinic_state', $request->state);
             })
-            ->paginate(6)
+            ->paginate(15)
             ->appends($request->query());
 
         return view('pathology', compact('aboutDetails', 'user', 'paths', 'states'));

@@ -27,7 +27,7 @@ class UserAllDoctorHandleController extends Controller
 
         $docs = PartnerDoctorContactModel::with('banner')
             ->where('status', 'active')
-            ->paginate(12);
+            ->paginate(15);
 
         return view('doctor', compact('aboutDetails', 'user', 'docs', 'states'));
     }
@@ -49,7 +49,7 @@ class UserAllDoctorHandleController extends Controller
             ->when($request->filled('state'), function ($query) use ($request) {
                 return $query->where('partner_doctor_state', $request->state);
             })
-            ->paginate(6)
+            ->paginate(15)
             ->appends($request->query());
 
         return view('doctor', compact('aboutDetails', 'user', 'docs', 'states'));

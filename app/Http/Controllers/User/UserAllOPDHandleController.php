@@ -28,7 +28,7 @@ class UserAllOPDHandleController extends Controller
 
         $opds = PartnerOPDContactModel::with(['banner', 'doctors'])
             ->where('status', 'active')
-            ->paginate(12);
+            ->paginate(15);
 
         return view('opd', compact('aboutDetails', 'user', 'opds', 'states'));
     }
@@ -46,7 +46,7 @@ class UserAllOPDHandleController extends Controller
             ->when($request->filled('state'), function ($query) use ($request) {
                 return $query->where('clinic_state', $request->state);
             })
-            ->paginate(6)
+            ->paginate(15)
             ->appends($request->query());
 
         return view('opd', compact('aboutDetails', 'user', 'opds', 'states'));
