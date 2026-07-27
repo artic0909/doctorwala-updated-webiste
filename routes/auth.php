@@ -14,6 +14,7 @@ use App\Http\Controllers\Superadmin\SuperAboutusController;
 use App\Http\Controllers\Superadmin\SuperAllFeedbacksController;
 use App\Http\Controllers\Superadmin\SuperAllOnlyDoctorHandleController;
 use App\Http\Controllers\Superadmin\SuperAllOPDHandleController;
+use App\Http\Controllers\Superadmin\SuperBulkMessageController;
 use App\Http\Controllers\Superadmin\SuperAllPathologyHandleController;
 use App\Http\Controllers\Superadmin\SuperAllPatientInquiryController;
 use App\Http\Controllers\Superadmin\SuperAllUserController;
@@ -398,6 +399,10 @@ Route::middleware('auth:web')->group(function () {
     // Referral Program Superadmin Routes
     Route::get('/superadmin/super-all-reffer', [SuperRefferController::class, 'index'])->name('superadmin.super-all-reffer');
     Route::delete('/superadmin/super-all-reffer/delete/{id}', [SuperRefferController::class, 'delete'])->name('superadmin.super-all-reffer.delete');
+
+    // WhatsApp Bulk Broadcast
+    Route::get('/superadmin/bulkmessage', [SuperBulkMessageController::class, 'index'])->name('superadmin.bulkmessage.index');
+    Route::post('/superadmin/bulkmessage/send', [SuperBulkMessageController::class, 'sendBroadcast'])->name('superadmin.bulkmessage.send');
 
     Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
         ->name('logout');
