@@ -45,17 +45,15 @@ class SendWhatsAppBulkMessage implements ShouldQueue
 
             $client = new Client($twilioSid, $twilioAuthToken);
 
-            // Using the Twilio WhatsApp API
+            // Using the Twilio WhatsApp Content API with the approved template SID
             $message = $client->messages->create(
                 "whatsapp:" . $this->phoneNumber, // to
                 [
                     "from" => $twilioWhatsAppNumber,
-                    // If you want to use a template with variables:
-                    // "contentVariables" => '{"1":"' . basename($this->imageUrl) . '"}',
-                    // "contentSid" => 'HX...', // Content template SID if using Content API
-                    // Or traditional body + media url
-                    "body" => "Hello! Here is your latest update.",
-                    "mediaUrl" => [$this->imageUrl]
+                    "contentSid" => "HX6e98e4b8eb959da4e4c072c9872bccb2",
+                    "contentVariables" => json_encode([
+                        "1" => basename($this->imageUrl)
+                    ])
                 ]
             );
 
