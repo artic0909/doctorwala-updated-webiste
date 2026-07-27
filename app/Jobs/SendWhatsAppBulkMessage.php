@@ -32,10 +32,10 @@ class SendWhatsAppBulkMessage implements ShouldQueue
     public function handle(): void
     {
         try {
-            $twilioSid = env('TWILIO_SID');
-            $twilioAuthToken = env('TWILIO_AUTH_TOKEN');
-            $twilioWhatsAppNumber = env('TWILIO_WHATSAPP_NUMBER'); // e.g. whatsapp:+14155238886
-            $twilioAccountSid = env('TWILIO_ACCOUNT_SID');
+            $twilioSid = config('services.twilio.sid');
+            $twilioAuthToken = config('services.twilio.auth_token');
+            $twilioWhatsAppNumber = config('services.twilio.whatsapp_number');
+            $twilioAccountSid = config('services.twilio.account_sid');
 
             if (!$twilioSid || !$twilioAuthToken || !$twilioWhatsAppNumber) {
                 Log::error('Twilio credentials missing for WhatsApp broadcast.');
