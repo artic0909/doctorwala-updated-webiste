@@ -49,15 +49,12 @@ class SuperBulkMessageController extends Controller
 
             while (($row = fgetcsv($file)) !== false) {
                 if (isset($row[$phoneIndex]) && !empty($row[$phoneIndex])) {
-                    // Clean the phone number (remove spaces, dashes, etc.)
-                    $number = preg_replace('/[^0-9\+]/', '', $row[$phoneIndex]);
+                    // Clean the phone number (remove everything except digits)
+                    $number = preg_replace('/[^0-9]/', '', $row[$phoneIndex]);
                     
-                    // Basic validation to ensure it looks like a phone number
+                    // If the number has at least 10 digits, we grab the last 10 digits and prefix with +91
                     if (strlen($number) >= 10) {
-                        // Ensure it has country code prefix, assume Indian +91 if length is 10
-                        if (strlen($number) == 10) {
-                            $number = '+91' . $number;
-                        }
+                        $number = '+91' . substr($number, -10);
                         $phoneNumbers[] = $number;
                     }
                 }

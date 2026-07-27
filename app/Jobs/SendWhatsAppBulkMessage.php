@@ -35,15 +35,18 @@ class SendWhatsAppBulkMessage implements ShouldQueue
             $twilioSid = env('TWILIO_SID');
             $twilioAuthToken = env('TWILIO_AUTH_TOKEN');
             $twilioWhatsAppNumber = env('TWILIO_WHATSAPP_NUMBER'); // e.g. whatsapp:+14155238886
-            // In a real scenario, the template name might be passed or defined in env
-            // $templateName = 'your_template_name';
+            $twilioAccountSid = env('TWILIO_ACCOUNT_SID');
 
             if (!$twilioSid || !$twilioAuthToken || !$twilioWhatsAppNumber) {
                 Log::error('Twilio credentials missing for WhatsApp broadcast.');
                 return;
             }
 
-            $client = new Client($twilioSid, $twilioAuthToken);
+            if ($twilioAccountSid) {
+                $client = new Client($twilioSid, $twilioAuthToken, $twilioAccountSid);
+            } else {
+                $client = new Client($twilioSid, $twilioAuthToken);
+            }
 
             // Using the Twilio WhatsApp Content API with the approved template SID
             $message = $client->messages->create(
