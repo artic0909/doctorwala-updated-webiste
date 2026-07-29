@@ -42,6 +42,11 @@ class SendWhatsAppBulkMessage implements ShouldQueue
                 return;
             }
 
+            // Force the 'whatsapp:' prefix just in case the .env doesn't have it
+            if (!str_starts_with($twilioWhatsAppNumber, 'whatsapp:')) {
+                $twilioWhatsAppNumber = 'whatsapp:' . $twilioWhatsAppNumber;
+            }
+
             if ($twilioAccountSid) {
                 $client = new Client($twilioSid, $twilioAuthToken, $twilioAccountSid);
             } else {
