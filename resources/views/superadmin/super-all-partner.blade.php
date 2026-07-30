@@ -30,6 +30,34 @@
         crossorigin="anonymous" referrerpolicy="no-referrer" />
 
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <style>
+        .select2-container--default .select2-selection--single {
+            height: 46px !important; 
+            padding: 10px 15px; 
+            border: 1px solid #ced4da; 
+            border-radius: 5px; 
+            display: flex;
+            align-items: center;
+        }
+        .select2-container--default .select2-selection--single .select2-selection__arrow {
+            height: 100% !important;
+            top: 0;
+            right: 10px;
+            display: flex;
+            align-items: center;
+        }
+        .select2-container--default .select2-selection--single .select2-selection__rendered {
+            padding-left: 0;
+            padding-right: 0;
+            line-height: normal;
+            color: #495057;
+        }
+        .select2-container--default .select2-selection--single .select2-selection__clear {
+            margin-right: 10px;
+            color: #dc3545;
+            font-weight: bold;
+        }
+    </style>
 
 </head>
 
