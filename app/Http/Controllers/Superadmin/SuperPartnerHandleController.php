@@ -207,6 +207,8 @@ class SuperPartnerHandleController extends Controller
     public function allPartnersShow(Request $request)
     {
         $partners = DwPartnerModel::withCount('followups');
+        $cities = DwPartnerModel::select('partner_city')->whereNotNull('partner_city')->where('partner_city', '!=', '')->distinct()->orderBy('partner_city')->pluck('partner_city');
+
 
         if ($request->has('search') && $request->search != '') {
             $search = $request->search;
@@ -226,6 +228,11 @@ class SuperPartnerHandleController extends Controller
             $partners->whereDate('created_at', $request->date);
         }
 
+        if ($request->has('city') && $request->city != '') {
+            $partners->where('partner_city', $request->city);
+        }
+
+
         $sort = $request->get('sort', 'newest');
         if ($sort == 'oldest') {
             $partners->orderBy('created_at', 'asc');
@@ -241,7 +248,7 @@ class SuperPartnerHandleController extends Controller
                 : (is_null($partner->registration_type) ? [] : $partner->registration_type); // Default empty array
         }
 
-        return view('superadmin.super-all-partner', compact('partners'));
+        return view('superadmin.super-all-partner', compact('partners', 'cities'));
     }
 
 

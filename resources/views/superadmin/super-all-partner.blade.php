@@ -29,6 +29,7 @@
         integrity="sha512-5Hs3dF2AEPkpNAR7UiOHba+lRSJNeM2ECkwxUIxC1Q/FLycGTbNapWXB4tP889k5T5Ju8fs4b1P5z/iB4nMfSQ=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
 
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 
 </head>
 
@@ -389,17 +390,27 @@
                                                         <option value="oldest" {{ request('sort') == 'oldest' ? 'selected' : '' }}>Oldest first</option>
                                                     </select>
                                                     
+                                                    <div style="min-width: 150px;" class="mr-2">
+                                                        <select name="city" id="city-filter" class="form-control w-100" style="border-radius: 5px;">
+                                                            <option value="">All Cities</option>
+                                                            @foreach($cities as $city)
+                                                                <option value="{{ $city }}" {{ request('city') == $city ? 'selected' : '' }}>{{ $city }}</option>
+                                                            @endforeach
+                                                        </select>
+                                                    </div>
+                                                    
                                                     <input type="date" name="date" class="form-control mr-2" value="{{ request('date') }}" style="border-radius: 5px;">
                                                     
                                                     <div class="input-group-append">
                                                         <button type="submit" class="btn btn-primary px-3" style="border-radius: 5px;">
                                                             <i class="fa fa-search"></i>
                                                         </button>
-                                                        @if(request('date') || request('sort') == 'oldest')
+                                                        @if(request('date') || request('sort') == 'oldest' || request('city'))
                                                             <a href="{{ route('superadmin.super-all-partner.get', ['search' => request('search')]) }}" class="btn btn-light ml-2 border" style="border-radius: 5px;" title="Reset Filters">
                                                                 <i class="fa-solid fa-rotate-left"></i>
                                                             </a>
                                                         @endif
+
                                                     </div>
                                                 </div>
                                             </form>
@@ -1041,8 +1052,17 @@
     <script src="{{asset('../partner-assets/js/Chart.roundedBarCharts.js')}}"></script>
     <!-- End custom js for this page-->
 
-
-
+    <!-- Select2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#city-filter').select2({
+                placeholder: "All Cities",
+                allowClear: true,
+                width: '100%'
+            });
+        });
+    </script>
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {
