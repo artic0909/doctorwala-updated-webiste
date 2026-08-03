@@ -51,14 +51,13 @@ class TwilioWhatsAppService
             $messagingServiceSid = config('services.twilio.messaging_service_sid');
 
             $messagePayload = [
+                'from' => $this->fromNumber,
                 'contentSid' => $contentSid,
                 'contentVariables' => json_encode($variables)
             ];
 
             if ($messagingServiceSid) {
                 $messagePayload['messagingServiceSid'] = $messagingServiceSid;
-            } else {
-                $messagePayload['from'] = $this->fromNumber;
             }
 
             $message = $this->client->messages->create(
