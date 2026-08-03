@@ -88,7 +88,7 @@ class TwilioWhatsAppService
 
     public function sendPartnerWelcome($mobile, $partnerName, $clinicName, $clinicType)
     {
-        $sid = 'HXd15710888d9eb58723afe9c2ced6e73f';
+        $sid = 'HX2e0e68821e09e7d25f8dacab2deea06f';
         // Hi {{1}}, Your {{2}} {{3}} account has been created successfully.
         return $this->sendTemplateMessage($mobile, $sid, [
             '1' => $partnerName,
