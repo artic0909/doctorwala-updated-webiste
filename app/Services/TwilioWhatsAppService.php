@@ -34,9 +34,11 @@ class TwilioWhatsAppService
     {
         // Ensure standard E.164 format. Assuming India +91 if length is 10
         $mobile = preg_replace('/[^0-9]/', '', $mobile);
+        $mobile = ltrim($mobile, '0');
+        
         if (strlen($mobile) == 10) {
             $mobile = '+91' . $mobile;
-        } elseif (strlen($mobile) > 10 && substr($mobile, 0, 1) != '+') {
+        } elseif (strlen($mobile) > 10) {
             $mobile = '+' . $mobile;
         }
         return 'whatsapp:' . $mobile;
