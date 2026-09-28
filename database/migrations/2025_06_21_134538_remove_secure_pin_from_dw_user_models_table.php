@@ -11,11 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('dw_user_models', function (Blueprint $table) {
+        if (Schema::hasColumn('dw_user_models', 'secure_pin')) {
             Schema::table('dw_user_models', function (Blueprint $table) {
                 $table->dropColumn('secure_pin');
             });
-        });
+        }
     }
 
     /**

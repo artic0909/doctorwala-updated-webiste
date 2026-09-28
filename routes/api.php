@@ -86,6 +86,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/appointments/{id}/complete',          [ApiAppointmentsController::class, 'markAsCompleted']);
     Route::post('/appointments/{id}/cancel',            [ApiAppointmentsController::class, 'cancelAppointment']);
 
+    // Video Appointment RTC Call
+    Route::post('/appointments/{id}/video-token',       [\App\Http\Controllers\Api\ApiVideoAppointmentController::class, 'generateToken'])->middleware('throttle:15,1');
+    Route::post('/appointments/{id}/video-status',      [\App\Http\Controllers\Api\ApiVideoAppointmentController::class, 'updateVideoStatus']);
+
     // Generate Medical Card
     Route::post('/generate-medical-card', [ApiGenerateMedicalCard::class, 'generateMedicalCard']);
 });

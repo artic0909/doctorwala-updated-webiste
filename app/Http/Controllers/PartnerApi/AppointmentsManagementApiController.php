@@ -210,7 +210,32 @@ class AppointmentsManagementApiController extends Controller
 
         $oldStatus = $appointment->status ?? 'Upcoming';
         $appointment->status = $formattedStatus;
+
+        // If appointment is confirmed and is a video consultation, ensure video channel and scheduled status
+        $isVideo = $appointment->is_video || in_array(strtolower($appointment->visit_mode ?? ''), ['online', 'video']);
+        if ($isVideo) {
+            $appointment->is_video = true;
+            if ($formattedStatus === 'Confirmed' && empty($appointment->video_channel)) {
+                $appointment->video_channel = 'dw_vc_' . \Illuminate\Support\Str::random(24);
+                $appointment->video_status = 'scheduled';
+            } elseif ($formattedStatus === 'Cancelled') {
+                $appointment->video_status = 'cancelled';
+            } elseif ($formattedStatus === 'Completed') {
+                $appointment->video_status = 'completed';
+            }
+        }
+
         $appointment->save();
+
+        // If confirmed and is a video consultation, dispatch FCM notification to patient
+        if ($formattedStatus === 'Confirmed' && $isVideo && $oldStatus !== 'Confirmed') {
+            try {
+                $fcmService = new \App\Services\FcmNotificationService();
+                $fcmService->sendVideoAppointmentAcceptedNotification($appointment);
+            } catch (\Exception $e) {
+                \Illuminate\Support\Facades\Log::error('FCM Notification Error on Confirmation: ' . $e->getMessage());
+            }
+        }
 
         // Send Twilio WhatsApp Message on Status Change
         if ($appointment->user_mobile) {

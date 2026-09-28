@@ -11,9 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        \Illuminate\Support\Facades\DB::statement('ALTER TABLE reffers MODIFY COLUMN name VARCHAR(255) NULL');
-        \Illuminate\Support\Facades\DB::statement('ALTER TABLE reffers MODIFY COLUMN phone VARCHAR(255) NULL');
-        \Illuminate\Support\Facades\DB::statement('ALTER TABLE reffers MODIFY COLUMN upi VARCHAR(255) NULL');
+        if (\Illuminate\Support\Facades\DB::getDriverName() === 'mysql') {
+            \Illuminate\Support\Facades\DB::statement('ALTER TABLE reffers MODIFY COLUMN name VARCHAR(255) NULL');
+            \Illuminate\Support\Facades\DB::statement('ALTER TABLE reffers MODIFY COLUMN phone VARCHAR(255) NULL');
+            \Illuminate\Support\Facades\DB::statement('ALTER TABLE reffers MODIFY COLUMN upi VARCHAR(255) NULL');
+        } else {
+            Schema::table('reffers', function (Blueprint $table) {
+                $table->string('name')->nullable()->change();
+                $table->string('phone')->nullable()->change();
+                $table->string('upi')->nullable()->change();
+            });
+        }
     }
 
     /**
@@ -21,8 +29,10 @@ return new class extends Migration
      */
     public function down(): void
     {
-        \Illuminate\Support\Facades\DB::statement('ALTER TABLE reffers MODIFY COLUMN name VARCHAR(255) NOT NULL');
-        \Illuminate\Support\Facades\DB::statement('ALTER TABLE reffers MODIFY COLUMN phone VARCHAR(255) NOT NULL');
-        \Illuminate\Support\Facades\DB::statement('ALTER TABLE reffers MODIFY COLUMN upi VARCHAR(255) NOT NULL');
+        if (\Illuminate\Support\Facades\DB::getDriverName() === 'mysql') {
+            \Illuminate\Support\Facades\DB::statement('ALTER TABLE reffers MODIFY COLUMN name VARCHAR(255) NOT NULL');
+            \Illuminate\Support\Facades\DB::statement('ALTER TABLE reffers MODIFY COLUMN phone VARCHAR(255) NOT NULL');
+            \Illuminate\Support\Facades\DB::statement('ALTER TABLE reffers MODIFY COLUMN upi VARCHAR(255) NOT NULL');
+        }
     }
 };

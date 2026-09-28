@@ -51,6 +51,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/appointments', [AppointmentsManagementApiController::class, 'index']);
     Route::get('/appointments/stats', [AppointmentsManagementApiController::class, 'stats']);
     Route::post('/appointments/{id}/status', [AppointmentsManagementApiController::class, 'updateStatus']);
+    Route::post('/appointments/{id}/video-token', [\App\Http\Controllers\Api\ApiVideoAppointmentController::class, 'generateToken'])->middleware('throttle:15,1');
+    Route::post('/appointments/{id}/video-status', [\App\Http\Controllers\Api\ApiVideoAppointmentController::class, 'updateVideoStatus']);
 
     // Medical Card Access Routes
     Route::get('/medical-card-access/meta', [MedicalCardAccessController::class, 'index']);
