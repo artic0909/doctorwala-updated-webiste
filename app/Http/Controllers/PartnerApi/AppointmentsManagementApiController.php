@@ -12,7 +12,7 @@ class AppointmentsManagementApiController extends Controller
 {
     /**
      * Get appointments for the authenticated partner.
-     * Supports optional status filtering (Upcoming, Completed, Cancelled).
+     * Supports optional status filtering (Upcoming, Confirmed, Completed, Cancelled).
      */
     public function index(Request $request)
     {
@@ -26,20 +26,56 @@ class AppointmentsManagementApiController extends Controller
 
         $status = $request->query('status');
 
-        $query = PartnerPatientInquiry::where('currently_loggedin_partner_id', $partner->id)
-            ->with(['user', 'doctor', 'test']);
+        $query = PartnerPatientInquiry::where(function ($q) use ($partner) {
+                $q->where('currently_loggedin_partner_id', $partner->id);
+                if (!empty($partner->partner_id)) {
+                    $q->orWhere('currently_loggedin_partner_id', $partner->partner_id);
+                }
+            })
+            ->with(['user', 'doctor', 'test', 'doctorContact', 'opdContact', 'pathologyContact']);
 
         if ($status) {
             if (str_contains($status, ',')) {
                 $statuses = array_map('trim', explode(',', $status));
-                $query->whereIn('status', $statuses);
             } else {
-                $query->where('status', trim($status));
+                $statuses = [trim($status)];
             }
+
+            $query->where(function ($q) use ($statuses) {
+                $hasUpcoming = in_array('Upcoming', $statuses, true) || in_array('upcoming', $statuses, true);
+                $hasConfirmed = in_array('Confirmed', $statuses, true) || in_array('confirmed', $statuses, true);
+                $hasCompleted = in_array('Completed', $statuses, true) || in_array('completed', $statuses, true);
+                $hasCancelled = in_array('Cancelled', $statuses, true) || in_array('cancelled', $statuses, true);
+
+                $targetStatuses = [];
+                if ($hasUpcoming) {
+                    $targetStatuses = array_merge($targetStatuses, ['Upcoming', 'upcoming', 'Pending', 'pending']);
+                }
+                if ($hasConfirmed) {
+                    $targetStatuses = array_merge($targetStatuses, ['Confirmed', 'confirmed']);
+                }
+                if ($hasCompleted) {
+                    $targetStatuses = array_merge($targetStatuses, ['Completed', 'completed']);
+                }
+                if ($hasCancelled) {
+                    $targetStatuses = array_merge($targetStatuses, ['Cancelled', 'cancelled']);
+                }
+
+                if (!empty($targetStatuses)) {
+                    $q->whereIn('status', array_unique($targetStatuses));
+                }
+
+                // If filtering for upcoming or confirmed, also capture appointments with empty or null status
+                if ($hasUpcoming || $hasConfirmed) {
+                    $q->orWhereNull('status')->orWhere('status', '');
+                }
+            });
         }
 
         $appointments = $query->orderBy('booking_date', 'desc')
             ->orderBy('booking_time', 'desc')
+            ->orderBy('created_at', 'desc')
+            ->orderBy('id', 'desc')
             ->get();
 
         return response()->json([
@@ -61,23 +97,38 @@ class AppointmentsManagementApiController extends Controller
             ], 401);
         }
 
-        $partnerId = $partner->id;
+        $partnerFilter = function ($q) use ($partner) {
+            $q->where('currently_loggedin_partner_id', $partner->id);
+            if (!empty($partner->partner_id)) {
+                $q->orWhere('currently_loggedin_partner_id', $partner->partner_id);
+            }
+        };
+
         $todayDate = Carbon::today()->format('Y-m-d');
 
-        $upcomingCount = PartnerPatientInquiry::where('currently_loggedin_partner_id', $partnerId)
-            ->where('status', 'Upcoming')
+        $upcomingCount = PartnerPatientInquiry::where($partnerFilter)
+            ->where(function ($q) {
+                $q->whereIn('status', ['Upcoming', 'upcoming', 'Confirmed', 'confirmed', 'Pending', 'pending'])
+                  ->orWhereNull('status')
+                  ->orWhere('status', '');
+            })
             ->count();
 
-        $completedCount = PartnerPatientInquiry::where('currently_loggedin_partner_id', $partnerId)
-            ->where('status', 'Completed')
+        $completedCount = PartnerPatientInquiry::where($partnerFilter)
+            ->whereIn('status', ['Completed', 'completed'])
             ->count();
 
-        $cancelledCount = PartnerPatientInquiry::where('currently_loggedin_partner_id', $partnerId)
-            ->where('status', 'Cancelled')
+        $cancelledCount = PartnerPatientInquiry::where($partnerFilter)
+            ->whereIn('status', ['Cancelled', 'cancelled'])
             ->count();
 
-        $todayCount = PartnerPatientInquiry::where('currently_loggedin_partner_id', $partnerId)
+        $todayCount = PartnerPatientInquiry::where($partnerFilter)
             ->whereDate('booking_date', $todayDate)
+            ->where(function ($q) {
+                $q->whereIn('status', ['Upcoming', 'upcoming', 'Confirmed', 'confirmed', 'Pending', 'pending', 'Completed', 'completed'])
+                  ->orWhereNull('status')
+                  ->orWhere('status', '');
+            })
             ->count();
 
         return response()->json([
@@ -105,11 +156,18 @@ class AppointmentsManagementApiController extends Controller
         }
 
         $request->validate([
-            'status' => 'required|in:Pending,Upcoming,Confirmed,Completed,Cancelled'
+            'status' => 'required|in:Pending,Upcoming,Confirmed,Completed,Cancelled,pending,upcoming,confirmed,completed,cancelled'
         ]);
 
-        $appointment = PartnerPatientInquiry::where('currently_loggedin_partner_id', $partner->id)
-            ->with(['doctor', 'test']) // Eager load relationships for Twilio templates
+        $formattedStatus = ucfirst(strtolower($request->status));
+
+        $appointment = PartnerPatientInquiry::where(function ($q) use ($partner) {
+                $q->where('currently_loggedin_partner_id', $partner->id);
+                if (!empty($partner->partner_id)) {
+                    $q->orWhere('currently_loggedin_partner_id', $partner->partner_id);
+                }
+            })
+            ->with(['doctor', 'test'])
             ->where('id', $id)
             ->first();
 
@@ -120,8 +178,8 @@ class AppointmentsManagementApiController extends Controller
             ], 404);
         }
 
-        $oldStatus = $appointment->status;
-        $appointment->status = $request->status;
+        $oldStatus = $appointment->status ?? 'Upcoming';
+        $appointment->status = $formattedStatus;
         $appointment->save();
 
         // Send Twilio WhatsApp Message on Status Change
@@ -130,11 +188,11 @@ class AppointmentsManagementApiController extends Controller
                 $twilioService = new \App\Services\TwilioWhatsAppService();
                 
                 // Confirm appointment
-                if ($request->status === 'Confirmed' && $oldStatus !== 'Confirmed') {
+                if ($formattedStatus === 'Confirmed' && $oldStatus !== 'Confirmed') {
                     $twilioService->sendUserConfirmationAlert($appointment);
                 } 
                 // Cancel appointment
-                elseif ($request->status === 'Cancelled' && $oldStatus !== 'Cancelled') {
+                elseif ($formattedStatus === 'Cancelled' && $oldStatus !== 'Cancelled') {
                     $twilioService->sendUserCancellationAlert($appointment);
                 }
             } catch (\Exception $e) {
@@ -144,7 +202,7 @@ class AppointmentsManagementApiController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => "Appointment status updated from {$oldStatus} to {$request->status} successfully.",
+            'message' => "Appointment status updated from {$oldStatus} to {$formattedStatus} successfully.",
             'appointment' => $appointment
         ]);
     }
