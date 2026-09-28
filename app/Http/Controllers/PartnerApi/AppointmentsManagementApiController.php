@@ -11,6 +11,53 @@ use Carbon\Carbon;
 class AppointmentsManagementApiController extends Controller
 {
     /**
+     * Build base query for inquiries belonging to this partner across all associations.
+     */
+    protected function getPartnerInquiriesQuery($partner)
+    {
+        $partnerIds = array_values(array_filter([$partner->id, $partner->partner_id]));
+
+        $opdContacts = \App\Models\PartnerOPDContactModel::whereIn('currently_loggedin_partner_id', $partnerIds)->get();
+        $pathContacts = \App\Models\PartnerPathologyContactModel::whereIn('currently_loggedin_partner_id', $partnerIds)->get();
+        $docContacts = \App\Models\PartnerDoctorContactModel::whereIn('currently_loggedin_partner_id', $partnerIds)->get();
+
+        $opdClinics = $opdContacts->pluck('clinic_name')->filter()->toArray();
+        $pathClinics = $pathContacts->pluck('clinic_name')->filter()->toArray();
+        $docClinics = $docContacts->pluck('partner_doctor_name')->filter()->toArray();
+
+        $allClinicNames = array_values(array_filter(array_unique(array_merge(
+            [$partner->partner_clinic_name ?? null],
+            $opdClinics,
+            $pathClinics,
+            $docClinics
+        ))));
+
+        $contactIds = array_values(array_filter(array_unique(array_merge(
+            $opdContacts->pluck('id')->toArray(),
+            $pathContacts->pluck('id')->toArray(),
+            $docContacts->pluck('id')->toArray()
+        ))));
+
+        $doctorIds = \App\Models\PartnerAllOPDDoctorModel::whereIn('currently_loggedin_partner_id', $partnerIds)
+            ->pluck('id')
+            ->filter()
+            ->toArray();
+
+        return PartnerPatientInquiry::where(function ($q) use ($partnerIds, $contactIds, $allClinicNames, $doctorIds) {
+            $q->whereIn('currently_loggedin_partner_id', $partnerIds);
+            if (!empty($contactIds)) {
+                $q->orWhereIn('currently_loggedin_partner_id', $contactIds);
+            }
+            if (!empty($allClinicNames)) {
+                $q->orWhereIn('clinic_name', $allClinicNames);
+            }
+            if (!empty($doctorIds)) {
+                $q->orWhereIn('doctor_id', $doctorIds);
+            }
+        });
+    }
+
+    /**
      * Get appointments for the authenticated partner.
      * Supports optional status filtering (Upcoming, Confirmed, Completed, Cancelled).
      */
@@ -26,12 +73,7 @@ class AppointmentsManagementApiController extends Controller
 
         $status = $request->query('status');
 
-        $query = PartnerPatientInquiry::where(function ($q) use ($partner) {
-                $q->where('currently_loggedin_partner_id', $partner->id);
-                if (!empty($partner->partner_id)) {
-                    $q->orWhere('currently_loggedin_partner_id', $partner->partner_id);
-                }
-            })
+        $query = $this->getPartnerInquiriesQuery($partner)
             ->with(['user', 'doctor', 'test', 'doctorContact', 'opdContact', 'pathologyContact']);
 
         if ($status) {
@@ -97,16 +139,9 @@ class AppointmentsManagementApiController extends Controller
             ], 401);
         }
 
-        $partnerFilter = function ($q) use ($partner) {
-            $q->where('currently_loggedin_partner_id', $partner->id);
-            if (!empty($partner->partner_id)) {
-                $q->orWhere('currently_loggedin_partner_id', $partner->partner_id);
-            }
-        };
-
         $todayDate = Carbon::today()->format('Y-m-d');
 
-        $upcomingCount = PartnerPatientInquiry::where($partnerFilter)
+        $upcomingCount = $this->getPartnerInquiriesQuery($partner)
             ->where(function ($q) {
                 $q->whereIn('status', ['Upcoming', 'upcoming', 'Confirmed', 'confirmed', 'Pending', 'pending'])
                   ->orWhereNull('status')
@@ -114,15 +149,15 @@ class AppointmentsManagementApiController extends Controller
             })
             ->count();
 
-        $completedCount = PartnerPatientInquiry::where($partnerFilter)
+        $completedCount = $this->getPartnerInquiriesQuery($partner)
             ->whereIn('status', ['Completed', 'completed'])
             ->count();
 
-        $cancelledCount = PartnerPatientInquiry::where($partnerFilter)
+        $cancelledCount = $this->getPartnerInquiriesQuery($partner)
             ->whereIn('status', ['Cancelled', 'cancelled'])
             ->count();
 
-        $todayCount = PartnerPatientInquiry::where($partnerFilter)
+        $todayCount = $this->getPartnerInquiriesQuery($partner)
             ->whereDate('booking_date', $todayDate)
             ->where(function ($q) {
                 $q->whereIn('status', ['Upcoming', 'upcoming', 'Confirmed', 'confirmed', 'Pending', 'pending', 'Completed', 'completed'])
@@ -161,12 +196,7 @@ class AppointmentsManagementApiController extends Controller
 
         $formattedStatus = ucfirst(strtolower($request->status));
 
-        $appointment = PartnerPatientInquiry::where(function ($q) use ($partner) {
-                $q->where('currently_loggedin_partner_id', $partner->id);
-                if (!empty($partner->partner_id)) {
-                    $q->orWhere('currently_loggedin_partner_id', $partner->partner_id);
-                }
-            })
+        $appointment = $this->getPartnerInquiriesQuery($partner)
             ->with(['doctor', 'test'])
             ->where('id', $id)
             ->first();

@@ -31,8 +31,46 @@ class PartnerPatientInquiryController extends Controller
 
         $aboutDetails = PartnerAboutDetailsModel::where('currently_loggedin_partner_id', $partnerId)->first();
 
+        $partnerIds = array_values(array_filter([$partner->id, $partner->partner_id]));
 
-        $patientInquiries = PartnerPatientInquiry::where('currently_loggedin_partner_id', $partnerId)
+        $opdContacts = \App\Models\PartnerOPDContactModel::whereIn('currently_loggedin_partner_id', $partnerIds)->get();
+        $pathContacts = \App\Models\PartnerPathologyContactModel::whereIn('currently_loggedin_partner_id', $partnerIds)->get();
+        $docContacts = \App\Models\PartnerDoctorContactModel::whereIn('currently_loggedin_partner_id', $partnerIds)->get();
+
+        $opdClinics = $opdContacts->pluck('clinic_name')->filter()->toArray();
+        $pathClinics = $pathContacts->pluck('clinic_name')->filter()->toArray();
+        $docClinics = $docContacts->pluck('partner_doctor_name')->filter()->toArray();
+
+        $allClinicNames = array_values(array_filter(array_unique(array_merge(
+            [$partner->partner_clinic_name ?? null],
+            $opdClinics,
+            $pathClinics,
+            $docClinics
+        ))));
+
+        $contactIds = array_values(array_filter(array_unique(array_merge(
+            $opdContacts->pluck('id')->toArray(),
+            $pathContacts->pluck('id')->toArray(),
+            $docContacts->pluck('id')->toArray()
+        ))));
+
+        $doctorIds = \App\Models\PartnerAllOPDDoctorModel::whereIn('currently_loggedin_partner_id', $partnerIds)
+            ->pluck('id')
+            ->filter()
+            ->toArray();
+
+        $patientInquiries = PartnerPatientInquiry::where(function ($q) use ($partnerIds, $contactIds, $allClinicNames, $doctorIds) {
+                $q->whereIn('currently_loggedin_partner_id', $partnerIds);
+                if (!empty($contactIds)) {
+                    $q->orWhereIn('currently_loggedin_partner_id', $contactIds);
+                }
+                if (!empty($allClinicNames)) {
+                    $q->orWhereIn('clinic_name', $allClinicNames);
+                }
+                if (!empty($doctorIds)) {
+                    $q->orWhereIn('doctor_id', $doctorIds);
+                }
+            })
             ->orderBy('created_at', 'desc')
             ->get();
 
