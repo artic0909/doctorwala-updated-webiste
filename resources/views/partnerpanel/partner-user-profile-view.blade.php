@@ -981,15 +981,20 @@
                     <div class="up-next-appt__info">
                         <div class="up-next-appt__label">Upcoming Appointment</div>
 
-                        @if ($latestSingleBooking->clinic_type === 'OPD' && $latestSingleBooking->doctor)
-                        <div class="up-next-appt__title">{{ $latestSingleBooking->doctor->doctor_name }}</div>
-                        <div class="up-next-appt__title" style="color:yellow">{{ $latestSingleBooking->doctor->doctor_specialist }} | {{ $latestSingleBooking->opdContact->clinic_name }}</div>
+                        @if ($latestSingleBooking->clinic_type === 'OPD')
+                        <div class="up-next-appt__title">{{ $latestSingleBooking->doctor->doctor_name ?? $latestSingleBooking->clinic_name }}</div>
+                        <div class="up-next-appt__title" style="color:yellow">{{ $latestSingleBooking->doctor->doctor_specialist ?? 'Doctor' }} | {{ $latestSingleBooking->opdContact->clinic_name ?? $latestSingleBooking->clinic_name }}</div>
+                        @if(!empty($latestSingleBooking->doctor?->doctor_more))
                         <small class="up-next-appt__sub">{{ $latestSingleBooking->doctor->doctor_more }}</small><br>
+                        @endif
+                        @if(!empty($latestSingleBooking->opdContact))
                         <small class="up-next-appt__sub">{{ $latestSingleBooking->opdContact->clinic_city }}, {{ $latestSingleBooking->opdContact->clinic_state }}, {{ $latestSingleBooking->opdContact->clinic_pincode }}</small>
+                        @endif
 
-                        @elseif ($latestSingleBooking->clinic_type === 'Pathology' && $latestSingleBooking->test)
-                        <div class="up-next-appt__title">{{ $latestSingleBooking->test->test_name }}</div>
-                        <div class="up-next-appt__title" style="color:yellow">{{ $latestSingleBooking->test->test_type }} | {{ $latestSingleBooking->pathologyContact->clinic_name }}</div>
+                        @elseif ($latestSingleBooking->clinic_type === 'Pathology')
+                        <div class="up-next-appt__title">{{ $latestSingleBooking->test->test_name ?? $latestSingleBooking->clinic_name }}</div>
+                        <div class="up-next-appt__title" style="color:yellow">{{ $latestSingleBooking->test->test_type ?? 'Lab Test' }} | {{ $latestSingleBooking->pathologyContact->clinic_name ?? $latestSingleBooking->clinic_name }}</div>
+                        @if(!empty($latestSingleBooking->pathologyContact))
                         <small class="up-next-appt__sub">
                             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:inline;vertical-align:middle">
                                 <path d="M21 10c0 6-9 12-9 12S3 16 3 10a9 9 0 1 1 18 0z" />
@@ -997,10 +1002,12 @@
                             </svg>
                             {{ $latestSingleBooking->pathologyContact->clinic_city }}, {{ $latestSingleBooking->pathologyContact->clinic_state }}, {{ $latestSingleBooking->pathologyContact->clinic_pincode }}
                         </small>
+                        @endif
 
-                        @elseif ($latestSingleBooking->clinic_type === 'Doctor' && $latestSingleBooking->doctorContact)
-                        <div class="up-next-appt__title">{{ $latestSingleBooking->doctorContact->partner_doctor_name }}</div>
-                        <div class="up-next-appt__title" style="color:yellow">{{ $latestSingleBooking->doctorContact->partner_doctor_specialist }}</div>
+                        @elseif ($latestSingleBooking->clinic_type === 'Doctor')
+                        <div class="up-next-appt__title">Dr. {{ $latestSingleBooking->doctorContact->partner_doctor_name ?? $latestSingleBooking->clinic_name }}</div>
+                        <div class="up-next-appt__title" style="color:yellow">{{ $latestSingleBooking->doctorContact->partner_doctor_specialist ?? 'Doctor' }}</div>
+                        @if(!empty($latestSingleBooking->doctorContact))
                         <small class="up-next-appt__sub">
                             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:inline;vertical-align:middle">
                                 <path d="M21 10c0 6-9 12-9 12S3 16 3 10a9 9 0 1 1 18 0z" />
@@ -1008,6 +1015,7 @@
                             </svg>
                             {{ $latestSingleBooking->doctorContact->partner_doctor_city }}, {{ $latestSingleBooking->doctorContact->partner_doctor_state }}, {{ $latestSingleBooking->doctorContact->partner_doctor_pincode }}
                         </small>
+                        @endif
                         @endif
 
                         <div class="up-next-appt__sub">
@@ -1024,21 +1032,21 @@
                     </div>
 
                     {{-- Map link --}}
-                    @if ($latestSingleBooking->clinic_type === 'OPD' && $latestSingleBooking->doctor)
+                    @if ($latestSingleBooking->clinic_type === 'OPD' && !empty($latestSingleBooking->opdContact?->clinic_google_map_link))
                     <a href="{{ $latestSingleBooking->opdContact->clinic_google_map_link }}" target="_blank" class="up-next-appt__action" style="color:#1B9AAA;">
                         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:inline;vertical-align:middle">
                             <path d="M21 10c0 6-9 12-9 12S3 16 3 10a9 9 0 1 1 18 0z" />
                             <circle cx="12" cy="10" r="3" />
                         </svg> MAP
                     </a>
-                    @elseif ($latestSingleBooking->clinic_type === 'Pathology' && $latestSingleBooking->test)
+                    @elseif ($latestSingleBooking->clinic_type === 'Pathology' && !empty($latestSingleBooking->pathologyContact?->clinic_google_map_link))
                     <a href="{{ $latestSingleBooking->pathologyContact->clinic_google_map_link }}" target="_blank" class="up-next-appt__action" style="color:#1B9AAA;">
                         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:inline;vertical-align:middle">
                             <path d="M21 10c0 6-9 12-9 12S3 16 3 10a9 9 0 1 1 18 0z" />
                             <circle cx="12" cy="10" r="3" />
                         </svg> MAP
                     </a>
-                    @elseif ($latestSingleBooking->clinic_type === 'Doctor' && $latestSingleBooking->doctorContact)
+                    @elseif ($latestSingleBooking->clinic_type === 'Doctor' && !empty($latestSingleBooking->doctorContact?->partner_doctor_google_map_link))
                     <a href="{{ $latestSingleBooking->doctorContact->partner_doctor_google_map_link }}" target="_blank" class="up-next-appt__action" style="color:#1B9AAA;">
                         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:inline;vertical-align:middle">
                             <path d="M21 10c0 6-9 12-9 12S3 16 3 10a9 9 0 1 1 18 0z" />
