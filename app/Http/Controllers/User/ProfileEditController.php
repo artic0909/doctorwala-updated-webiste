@@ -54,7 +54,7 @@ class ProfileEditController extends Controller
         $otherBanners = SuperOtherBannerModel::get();
         $user = Auth::guard('dwuser')->user();
         $latestSingleBooking = PartnerPatientInquiry::where('dw_user_id', $user->id)
-            ->where('status', '=', 'Upcoming')
+            ->where(function () { ->whereIn('status', ['Upcoming', 'upcoming', 'Confirmed', 'confirmed', 'Pending', 'pending'])->orWhereNull('status')->orWhere('status', ''); })
             ->with(['opdContact.banner', 'pathologyContact.banner', 'doctorContact.banner', 'user', 'doctor', 'test'])
             ->latest()
             ->first();
@@ -213,7 +213,7 @@ class ProfileEditController extends Controller
         $otherBanners = SuperOtherBannerModel::get();
         $user = Auth::guard('dwuser')->user();
         $latestSingleBooking = PartnerPatientInquiry::where('dw_user_id', $user->id)
-            ->where('status', '=', 'Upcoming')
+            ->where(function () { ->whereIn('status', ['Upcoming', 'upcoming', 'Confirmed', 'confirmed', 'Pending', 'pending'])->orWhereNull('status')->orWhere('status', ''); })
             ->with(['opdContact.banner', 'pathologyContact.banner', 'doctorContact.banner', 'user', 'doctor', 'test'])
             ->latest()
             ->first();

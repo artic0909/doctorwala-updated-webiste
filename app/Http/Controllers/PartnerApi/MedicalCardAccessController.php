@@ -273,7 +273,7 @@ class MedicalCardAccessController extends Controller
         $doctorBanner = PartnerDoctorBannerModel::where('currently_loggedin_partner_id', $partnerId)->first();
 
         $latestSingleBooking = PartnerPatientInquiry::where('dw_user_id', $dwUserId)
-            ->where('status', 'Upcoming')
+            ->where(function () { ->whereIn('status', ['Upcoming', 'upcoming', 'Confirmed', 'confirmed', 'Pending', 'pending'])->orWhereNull('status')->orWhere('status', ''); })
             ->with(['opdContact.banner', 'pathologyContact.banner', 'doctorContact.banner', 'user', 'doctor', 'test'])
             ->latest()
             ->first();
