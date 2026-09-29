@@ -260,7 +260,7 @@ class PatientProfileAccessController extends Controller
             : $partner->registration_type;
 
         $latestSingleBooking = PartnerPatientInquiry::where('dw_user_id', $dwUserId)
-            ->where(function () { ->whereIn('status', ['Upcoming', 'upcoming', 'Confirmed', 'confirmed', 'Pending', 'pending'])->orWhereNull('status')->orWhere('status', ''); })
+            ->where(function ($query) { $query->whereIn('status', ['Upcoming', 'upcoming', 'Confirmed', 'confirmed', 'Pending', 'pending'])->orWhereNull('status')->orWhere('status', ''); })
             ->with(['opdContact.banner', 'pathologyContact.banner', 'doctorContact.banner', 'user', 'doctor', 'test'])
             ->latest()
             ->first();
@@ -411,7 +411,7 @@ class PatientProfileAccessController extends Controller
 
     //     // Latest upcoming appointment for this patient
     //     $latestSingleBooking = PartnerPatientInquiry::where('dw_user_id', $dwUserId)
-    //         ->where(function () { ->whereIn('status', ['Upcoming', 'upcoming', 'Confirmed', 'confirmed', 'Pending', 'pending'])->orWhereNull('status')->orWhere('status', ''); })
+    //         ->where(function ($query) { $query->whereIn('status', ['Upcoming', 'upcoming', 'Confirmed', 'confirmed', 'Pending', 'pending'])->orWhereNull('status')->orWhere('status', ''); })
     //         ->with([
     //             'opdContact.banner',
     //             'pathologyContact.banner',
