@@ -437,6 +437,7 @@
                                                 <th scope="col">More</th>
                                                 <th scope="col">Day & Time</th>
                                                 <th scope="col">Fees</th>
+                                                <th scope="col">Updated At</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -507,10 +508,16 @@
                                                 <td style="font-size: 1.03rem;">
                                                     <p class="m-0"><b>₹ {{ $data->doctor_fees }}</b></p>
                                                 </td>
+
+                                                <!-- Updated At -->
+                                                <td style="font-size: 1.03rem;">
+                                                    <p class="m-0"><b>{{ $data->updated_at ? \Carbon\Carbon::parse($data->updated_at)->format('d M Y') : 'N/A' }}</b></p>
+                                                    <span style="font-size: 11px; color: #94a3b8;">{{ $data->updated_at ? \Carbon\Carbon::parse($data->updated_at)->format('h:i A') : '' }}</span>
+                                                </td>
                                             </tr>
                                             @empty
                                             <tr>
-                                                <td colspan="8" class="text-center">
+                                                <td colspan="11" class="text-center">
                                                     <p>No OPD Doctor Details Found.</p>
                                                 </td>
                                             </tr>

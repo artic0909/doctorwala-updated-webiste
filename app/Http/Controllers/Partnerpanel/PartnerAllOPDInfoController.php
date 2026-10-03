@@ -101,7 +101,7 @@ class PartnerAllOPDInfoController extends Controller
         $opdBanner = PartnerOPDBannerModel::where('currently_loggedin_partner_id', $partnerId)->first();
         $pathologyBanner = PartnerPathologyBannerModel::where('currently_loggedin_partner_id', $partnerId)->first();
         $doctorBanner = PartnerDoctorBannerModel::where('currently_loggedin_partner_id', $partnerId)->first();
-        $storedData = PartnerAllOPDDoctorModel::where('currently_loggedin_partner_id', $partnerId)->paginate(6);
+        $storedData = PartnerAllOPDDoctorModel::where('currently_loggedin_partner_id', $partnerId)->latest('updated_at')->paginate(6);
         foreach ($storedData as $data) {
             $data->visit_day_time = json_decode($data->visit_day_time, true);
         }

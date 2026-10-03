@@ -97,7 +97,7 @@ class PartnerAllPathologyInfoController extends Controller
         $opdBanner = PartnerOPDBannerModel::where('currently_loggedin_partner_id', $partnerId)->first();
         $pathologyBanner = PartnerPathologyBannerModel::where('currently_loggedin_partner_id', $partnerId)->first();
         $doctorBanner = PartnerDoctorBannerModel::where('currently_loggedin_partner_id', $partnerId)->first();
-        $storedData = PartnerAllPathologyTestModel::where('currently_loggedin_partner_id', $partnerId)->paginate(6);
+        $storedData = PartnerAllPathologyTestModel::where('currently_loggedin_partner_id', $partnerId)->latest('updated_at')->paginate(6);
         $allpaths = PartnerAllPathologyTestModel::where('currently_loggedin_partner_id', $partnerId)->count();
         foreach ($storedData as $data) {
             $data->test_day_time = json_decode($data->test_day_time, true);
