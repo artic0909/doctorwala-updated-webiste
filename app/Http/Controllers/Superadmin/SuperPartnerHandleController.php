@@ -77,6 +77,7 @@ class SuperPartnerHandleController extends Controller
                 'partner_doctor_city' => 'null',
                 'partner_doctor_address' => 'null',
                 'visit_day_time' => json_encode([]),
+                'status' => $dwuser->status ?? 'Active',
             ]);
         }
 
@@ -96,7 +97,12 @@ class SuperPartnerHandleController extends Controller
         $partner = DwPartnerModel::findOrFail($id);
 
         // Get the old registration types
-        $oldRegistrationTypes = json_decode($partner->registration_type, true);
+        $oldRegistrationTypes = is_array($partner->registration_type)
+            ? $partner->registration_type
+            : (json_decode($partner->registration_type, true) ?? []);
+        if (!is_array($oldRegistrationTypes)) {
+            $oldRegistrationTypes = [];
+        }
 
         // Validate the incoming request
         $validated = $request->validate([
@@ -132,48 +138,83 @@ class SuperPartnerHandleController extends Controller
             PartnerAllPathologyTestModel::where('currently_loggedin_partner_id', $partner->id)->delete();
         }
 
+        if (in_array('Doctor', $removedTypes)) {
+            PartnerDoctorContactModel::where('currently_loggedin_partner_id', $partner->id)->delete();
+            PartnerDoctorBannerModel::where('currently_loggedin_partner_id', $partner->id)->delete();
+        }
+
         // Handle addition of new registration types
         $addedTypes = array_diff($newRegistrationTypes, $oldRegistrationTypes);
 
-        // Add null records for newly added types
+        // Add records for newly added types
         foreach ($addedTypes as $type) {
             if ($type == 'OPD') {
-                PartnerOPDContactModel::create([
-                    'currently_loggedin_partner_id' => $partner->id,
-                    'clinic_registration_type' => 'OPD',
-                    'clinic_contact_person_name' => 'Doctorwala Name',
-                    'clinic_name' => 'Doctorwala Clinic',
-                    'clinic_gstin' => 'Doctorwala GSTIN',
-                    'clinic_mobile_number' => '1234567890',
-                    'clinic_email' => 'doctorwala@example.com',
-                    'clinic_landmark' => 'DoctorWala Landmark',
-                    'clinic_pincode' => '123456',
-                    'clinic_state' => 'State',
-                    'clinic_city' => 'City',
-                    'clinic_google_map_link' => 'https://www.google.com/maps',
-                    'clinic_address' => 'Address',
-                ]);
+                $existingOpd = PartnerOPDContactModel::where('currently_loggedin_partner_id', $partner->id)->first();
+                if (!$existingOpd) {
+                    PartnerOPDContactModel::create([
+                        'currently_loggedin_partner_id' => $partner->id,
+                        'clinic_registration_type' => 'OPD',
+                        'clinic_contact_person_name' => $validated['partner_contact_person_name'],
+                        'clinic_name' => $validated['partner_clinic_name'],
+                        'clinic_gstin' => null,
+                        'clinic_mobile_number' => $validated['partner_mobile_number'],
+                        'clinic_email' => $validated['partner_email'],
+                        'clinic_landmark' => $validated['partner_landmark'],
+                        'clinic_pincode' => $validated['partner_pincode'],
+                        'clinic_state' => $validated['partner_state'],
+                        'clinic_city' => $validated['partner_city'],
+                        'clinic_google_map_link' => $partner->clinic_google_map_link ?? 'https://www.google.com/maps',
+                        'clinic_address' => $validated['partner_address'],
+                        'status' => $partner->status ?? 'Active',
+                    ]);
+                }
             }
 
             if ($type == 'Pathology') {
-                PartnerPathologyContactModel::create([
-                    'currently_loggedin_partner_id' => $partner->id,
-                    'clinic_registration_type' => 'Pathology',
-                    'clinic_contact_person_name' => 'Doctorwala Name',
-                    'clinic_name' => 'Doctorwala Clinic',
-                    'clinic_gstin' => 'Doctorwala GSTIN',
-                    'clinic_mobile_number' => '1234567890',
-                    'clinic_email' => 'doctorwala@example.com',
-                    'clinic_landmark' => 'DoctorWala Landmark',
-                    'clinic_pincode' => '123456',
-                    'clinic_state' => 'State',
-                    'clinic_city' => 'City',
-                    'clinic_google_map_link' => 'https://www.google.com/maps',
-                    'clinic_address' => 'Address',
-                ]);
+                $existingPath = PartnerPathologyContactModel::where('currently_loggedin_partner_id', $partner->id)->first();
+                if (!$existingPath) {
+                    PartnerPathologyContactModel::create([
+                        'currently_loggedin_partner_id' => $partner->id,
+                        'clinic_registration_type' => 'Pathology',
+                        'clinic_contact_person_name' => $validated['partner_contact_person_name'],
+                        'clinic_name' => $validated['partner_clinic_name'],
+                        'clinic_gstin' => null,
+                        'clinic_mobile_number' => $validated['partner_mobile_number'],
+                        'clinic_email' => $validated['partner_email'],
+                        'clinic_landmark' => $validated['partner_landmark'],
+                        'clinic_pincode' => $validated['partner_pincode'],
+                        'clinic_state' => $validated['partner_state'],
+                        'clinic_city' => $validated['partner_city'],
+                        'clinic_google_map_link' => $partner->clinic_google_map_link ?? 'https://www.google.com/maps',
+                        'clinic_address' => $validated['partner_address'],
+                        'status' => $partner->status ?? 'Active',
+                    ]);
+                }
             }
 
-            // Repeat the same for other registration types as needed (like Doctor)
+            if ($type == 'Doctor') {
+                $existingDoc = PartnerDoctorContactModel::where('currently_loggedin_partner_id', $partner->id)->first();
+                if (!$existingDoc) {
+                    PartnerDoctorContactModel::create([
+                        'currently_loggedin_partner_id' => $partner->id,
+                        'clinic_registration_type' => 'Doctor',
+                        'partner_doctor_name' => $validated['partner_contact_person_name'],
+                        'partner_doctor_specialist' => 'null',
+                        'partner_doctor_designation' => 'null',
+                        'partner_doctor_fees' => '1000',
+                        'partner_doctor_mobile' => $validated['partner_mobile_number'],
+                        'partner_doctor_email' => $validated['partner_email'],
+                        'partner_doctor_landmark' => $validated['partner_landmark'],
+                        'partner_doctor_pincode' => $validated['partner_pincode'],
+                        'partner_doctor_google_map_link' => $partner->clinic_google_map_link ?? 'https://www.google.com/maps',
+                        'partner_doctor_state' => $validated['partner_state'],
+                        'partner_doctor_city' => $validated['partner_city'],
+                        'partner_doctor_address' => $validated['partner_address'],
+                        'visit_day_time' => json_encode([]),
+                        'status' => $partner->status ?? 'Active',
+                    ]);
+                }
+            }
         }
 
         // Update partner details
@@ -187,7 +228,7 @@ class SuperPartnerHandleController extends Controller
         $partner->partner_pincode = $validated['partner_pincode'];
         $partner->partner_landmark = $validated['partner_landmark'];
         $partner->partner_address = $validated['partner_address'];
-        $partner->registration_type = json_encode($newRegistrationTypes);
+        $partner->registration_type = $newRegistrationTypes;
 
         // Save changes
         $partner->save();

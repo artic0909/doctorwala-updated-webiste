@@ -40,6 +40,9 @@ class PartnerDoctorContactModel extends Model
         parent::boot();
 
         static::creating(function ($model) {
+            if (empty($model->status)) {
+                $model->status = 'Active';
+            }
             if (empty($model->slug)) {
                 $model->slug = static::generateUniqueSlug($model->partner_doctor_name);
             }

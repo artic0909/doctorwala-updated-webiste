@@ -35,6 +35,9 @@ class PartnerPathologyContactModel extends Model
         parent::boot();
 
         static::creating(function ($model) {
+            if (empty($model->status)) {
+                $model->status = 'Active';
+            }
             if (empty($model->slug)) {
                 $model->slug = static::generateUniqueSlug($model->clinic_name);
             }
