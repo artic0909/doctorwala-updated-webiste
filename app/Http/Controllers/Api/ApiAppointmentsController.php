@@ -44,25 +44,76 @@ class ApiAppointmentsController extends Controller
     }
 
     /**
+     * Get single appointment detail
+     */
+    public function getAppointmentDetail(Request $request, $id)
+    {
+        try {
+            $booking = PartnerPatientInquiry::where('id', $id)
+                ->where('dw_user_id', $request->user()->id)
+                ->with([
+                    'opdContact.banner',
+                    'pathologyContact.banner',
+                    'doctorContact.banner',
+                    'user',
+                    'doctor',
+                    'test'
+                ])
+                ->firstOrFail();
+
+            return response()->json([
+                'status'  => true,
+                'message' => 'Appointment detail fetched successfully.',
+                'data'    => $this->formatBooking($booking),
+            ], 200);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return response()->json([
+                'status'  => false,
+                'message' => 'Appointment not found or unauthorized.',
+            ], 404);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status'  => false,
+                'message' => 'Something went wrong. Please try again.',
+            ], 500);
+        }
+    }
+
+    /**
      * Get appointments filtered by status
-     * Allowed: Upcoming | Completed | Cancelled
+     * Allowed: Upcoming | Confirmed | Completed | Cancelled
      */
     public function getAppointmentsByStatus(Request $request, $status)
     {
         try {
-            // UPDATED: Changed 'Pending' to 'Upcoming'
-            $allowed = ['Upcoming', 'Confirmed', 'Completed', 'Cancelled'];
+            $normalizedStatus = ucfirst(strtolower(trim($status)));
+            $allowed = ['Upcoming', 'Confirmed', 'Completed', 'Cancelled', 'Pending'];
 
-            if (!in_array($status, $allowed)) {
+            if (!in_array($normalizedStatus, $allowed)) {
                 return response()->json([
                     'status'  => false,
                     'message' => 'Invalid status. Allowed: Upcoming, Confirmed, Completed, Cancelled.',
                 ], 422);
             }
 
-            $bookings = PartnerPatientInquiry::where('dw_user_id', $request->user()->id)
-                ->where('status', $status)
-                ->with([
+            $query = PartnerPatientInquiry::where('dw_user_id', $request->user()->id);
+
+            if ($normalizedStatus === 'Upcoming' || $normalizedStatus === 'Pending') {
+                // Appointments that are upcoming include pending/upcoming and confirmed appointments
+                $query->where(function ($q) {
+                    $q->whereIn('status', ['Upcoming', 'upcoming', 'Confirmed', 'confirmed', 'Pending', 'pending'])
+                      ->orWhereNull('status')
+                      ->orWhere('status', '');
+                });
+            } elseif ($normalizedStatus === 'Confirmed') {
+                $query->whereIn('status', ['Confirmed', 'confirmed']);
+            } elseif ($normalizedStatus === 'Completed') {
+                $query->whereIn('status', ['Completed', 'completed']);
+            } elseif ($normalizedStatus === 'Cancelled') {
+                $query->whereIn('status', ['Cancelled', 'cancelled']);
+            }
+
+            $bookings = $query->with([
                     'opdContact.banner',
                     'pathologyContact.banner',
                     'doctorContact.banner',
@@ -76,7 +127,7 @@ class ApiAppointmentsController extends Controller
 
             return response()->json([
                 'status'  => true,
-                'message' => ucfirst($status) . ' appointments fetched successfully.',
+                'message' => $normalizedStatus . ' appointments fetched successfully.',
                 'total'   => $bookings->count(),
                 'data'    => $bookings,
             ], 200);

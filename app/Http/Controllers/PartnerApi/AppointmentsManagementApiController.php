@@ -91,7 +91,7 @@ class AppointmentsManagementApiController extends Controller
 
                 $targetStatuses = [];
                 if ($hasUpcoming) {
-                    $targetStatuses = array_merge($targetStatuses, ['Upcoming', 'upcoming', 'Pending', 'pending']);
+                    $targetStatuses = array_merge($targetStatuses, ['Upcoming', 'upcoming', 'Confirmed', 'confirmed', 'Pending', 'pending']);
                 }
                 if ($hasConfirmed) {
                     $targetStatuses = array_merge($targetStatuses, ['Confirmed', 'confirmed']);

@@ -1275,7 +1275,7 @@
                 </a>
                 @endif
 
-                @if ($latestSingleBooking->status === 'Upcoming')
+                @if (in_array($latestSingleBooking->status, ['Upcoming', 'upcoming', 'Confirmed', 'confirmed', 'Pending', 'pending', '']))
 
                 <button
                     type="button"
@@ -1507,7 +1507,7 @@
                                     All <span class="up-filter-count" id="count-all">{{ $bookings->count() }}</span>
                                 </button>
                                 <button class="up-filter-btn" onclick="filterAppts(this, 'Upcoming')">
-                                    Upcoming <span class="up-filter-count" id="count-upcoming">{{ $bookings->where('status', 'Upcoming')->count() }}</span>
+                                    Upcoming <span class="up-filter-count" id="count-upcoming">{{ $bookings->filter(fn($b) => in_array($b->status ?? 'Upcoming', ['Upcoming', 'upcoming', 'Confirmed', 'confirmed', 'Pending', 'pending', '']))->count() }}</span>
                                 </button>
                                 <button class="up-filter-btn" onclick="filterAppts(this, 'Completed')">
                                     Completed <span class="up-filter-count" id="count-completed">{{ $bookings->where('status', 'Completed')->count() }}</span>
@@ -1544,6 +1544,8 @@
                                         $status = $booking->status ?? 'Upcoming';
                                         $statusMap = [
                                         'Upcoming' => ['class' => 'up-status--upcoming', 'label' => 'Upcoming'],
+                                        'Pending' => ['class' => 'up-status--upcoming', 'label' => 'Upcoming'],
+                                        'Confirmed' => ['class' => 'up-status--confirmed', 'label' => 'Confirmed'],
                                         'Completed' => ['class' => 'up-status--done', 'label' => 'Completed'],
                                         'Cancelled' => ['class' => 'up-status--cancelled','label' => 'Cancelled'],
                                         ];
@@ -2045,6 +2047,10 @@
             document.querySelectorAll('#apptTableBody .appt-row').forEach(row => {
                 if (filter === 'all') {
                     row.classList.remove('is-hidden');
+                } else if (filter === 'Upcoming') {
+                    const rowStatus = row.getAttribute('data-status');
+                    const isUpcoming = ['Upcoming', 'upcoming', 'Confirmed', 'confirmed', 'Pending', 'pending'].includes(rowStatus);
+                    row.classList.toggle('is-hidden', !isUpcoming);
                 } else {
                     const rowStatus = row.getAttribute('data-status');
                     row.classList.toggle('is-hidden', rowStatus !== filter);

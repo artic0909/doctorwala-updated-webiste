@@ -953,6 +953,13 @@ body {
     background: var(--p);
     animation: pulse-dot 1.5s ease-in-out infinite;
 }
+.up-status--confirmed {
+    background: #ecfdf5;
+    color: #065f46;
+}
+.up-status--confirmed .dot {
+    background: #10b981;
+}
 .up-status--cancelled {
     background: var(--rose-lt);
     color: #be123c;
