@@ -609,6 +609,13 @@
                         </a>
                     </li>
 
+                    <!-- EP & GP -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="/superadmin/super-ep-gp">
+                            <i class="fa-solid fa-address-card" aria-hidden="true"></i>&nbsp; <span class="menu-title">EP & GP</span>
+                        </a>
+                    </li>
+
 
 
                     <!-- all partners lists -->
