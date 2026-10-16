@@ -333,7 +333,7 @@
                                     <span class="code-pill ml-2">{{ $gp->code }}</span>
                                 </h3>
                                 <p class="text-muted mb-0 small">
-                                    Displaying all patients/users who registered using Gram Panchayat code <strong>{{ $gp->code }}</strong>.
+                                    Displaying all patients/users who registered using Ground Partner code <strong>{{ $gp->code }}</strong>.
                                 </p>
                             </div>
                         </div>

@@ -355,9 +355,9 @@
                     <div class="d-flex justify-content-between align-items-center flex-wrap mb-4">
                         <div>
                             <h3 class="font-weight-bold text-dark mb-1">
-                                <i class="fa-solid fa-users-gear text-success mr-2"></i>Gram Panchayat (GP) Management
+                                <i class="fa-solid fa-users-gear text-success mr-2"></i>Ground Partner (GP) Management
                             </h3>
-                            <p class="text-muted mb-0">Create, manage, and monitor Gram Panchayats linked under Executive Partners (EP).</p>
+                            <p class="text-muted mb-0">Create, manage, and monitor Ground Partners linked under Executive Partners (EP).</p>
                         </div>
                         <div class="mt-2 mt-md-0 d-flex">
                             <a href="{{ route('superadmin.super-ep') }}" class="btn btn-outline-primary mr-2 rounded font-weight-bold">
@@ -513,7 +513,7 @@
                     <div class="card shadow-sm" style="border-radius: 12px; border: none; overflow: hidden;">
                         <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center flex-wrap">
                             <h5 class="mb-0 font-weight-bold text-dark">
-                                <i class="fa-solid fa-list-check text-success mr-2"></i>Gram Panchayats (GP) List
+                                <i class="fa-solid fa-list-check text-success mr-2"></i>Ground Partners (GP) List
                                 <span class="badge badge-secondary ml-2">{{ $records->total() }}</span>
                             </h5>
                             <button type="button" class="btn btn-sm btn-success font-weight-bold rounded" data-toggle="modal" data-target="#addGpModal">
@@ -624,7 +624,7 @@
                                             <td colspan="9" class="text-center py-5">
                                                 <div class="py-4">
                                                     <i class="fa-solid fa-users-slash fa-3x text-muted mb-3 d-block"></i>
-                                                    <h5 class="text-muted font-weight-bold">No Gram Panchayats (GP) Found</h5>
+                                                    <h5 class="text-muted font-weight-bold">No Ground Partners (GP) Found</h5>
                                                     <p class="text-muted small">Try modifying search filters or click "Add New GP" to register one.</p>
                                                     <button type="button" class="btn btn-success btn-sm mt-2 rounded" data-toggle="modal" data-target="#addGpModal">
                                                         <i class="fa fa-plus mr-1"></i> Add First GP
@@ -664,7 +664,7 @@
                         <div class="modal-content" style="border-radius: 14px; overflow: hidden; border: none; box-shadow: 0 10px 30px rgba(0,0,0,0.15);">
                             <div class="modal-header bg-success text-white">
                                 <h5 class="modal-title font-weight-bold" id="addGpModalLabel">
-                                    <i class="fa-solid fa-users-gear mr-2"></i> Add New Gram Panchayat (GP)
+                                    <i class="fa-solid fa-users-gear mr-2"></i> Add New Ground Partner (GP)
                                 </h5>
                                 <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
@@ -806,7 +806,7 @@
                                     <div class="mb-3">
                                         <i class="fa-solid fa-trash-can fa-3x text-danger"></i>
                                     </div>
-                                    <h4 class="font-weight-bold mb-2">Delete Gram Panchayat?</h4>
+                                    <h4 class="font-weight-bold mb-2">Delete Ground Partner?</h4>
                                     <p class="text-muted mb-3">
                                         Are you sure you want to delete <strong>{{ $item->name }}</strong> ({{ $item->code }})?
                                         <br><span class="text-danger small">This action cannot be undone.</span>

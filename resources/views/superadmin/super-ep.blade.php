@@ -346,7 +346,7 @@
                             <h3 class="font-weight-bold text-dark mb-1">
                                 <i class="fa-solid fa-user-tie text-primary mr-2"></i>Executive Partner (EP) Management
                             </h3>
-                            <p class="text-muted mb-0">Create, manage, and monitor all Executive Partners and their linked Gram Panchayats (GP).</p>
+                            <p class="text-muted mb-0">Create, manage, and monitor all Executive Partners and their linked Ground Partners (GP).</p>
                         </div>
                         <div class="mt-2 mt-md-0 d-flex">
                             <a href="{{ route('superadmin.super-gp') }}" class="btn btn-outline-info mr-2 rounded font-weight-bold">
