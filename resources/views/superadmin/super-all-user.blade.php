@@ -154,10 +154,17 @@
                         </a>
                     </li>
 
-                    <!-- EP & GP -->
+                    <!-- EP Management -->
                     <li class="nav-item">
-                        <a class="nav-link" href="/superadmin/super-ep-gp">
-                            <i class="fa-solid fa-address-card" aria-hidden="true"></i>&nbsp; <span class="menu-title">EP & GP</span>
+                        <a class="nav-link" href="/superadmin/super-ep">
+                            <i class="fa-solid fa-user-tie" aria-hidden="true"></i>&nbsp; <span class="menu-title">EP Management</span>
+                        </a>
+                    </li>
+
+                    <!-- GP Management -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="/superadmin/super-gp">
+                            <i class="fa-solid fa-users-gear" aria-hidden="true"></i>&nbsp; <span class="menu-title">GP Management</span>
                         </a>
                     </li>
 

@@ -29,7 +29,8 @@ use App\Http\Controllers\Superadmin\SuperTicketController;
 use App\Http\Controllers\Superadmin\SuperUserInquiryController;
 use App\Http\Controllers\Superadmin\SuperFollowupController;
 use App\Http\Controllers\Superadmin\SuperRefferController;
-use App\Http\Controllers\Superadmin\SuperEpGpController;
+use App\Http\Controllers\Superadmin\SuperEpController;
+use App\Http\Controllers\Superadmin\SuperGpController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('guest:web')->group(function () {
@@ -401,12 +402,19 @@ Route::middleware('auth:web')->group(function () {
     Route::get('/superadmin/super-all-reffer', [SuperRefferController::class, 'index'])->name('superadmin.super-all-reffer');
     Route::delete('/superadmin/super-all-reffer/delete/{id}', [SuperRefferController::class, 'delete'])->name('superadmin.super-all-reffer.delete');
 
-    // EP GP Superadmin Routes
-    Route::get('/superadmin/super-ep-gp', [SuperEpGpController::class, 'index'])->name('superadmin.super-ep-gp');
-    Route::post('/superadmin/super-ep-gp/store', [SuperEpGpController::class, 'store'])->name('superadmin.super-ep-gp.store');
-    Route::put('/superadmin/super-ep-gp/update/{id}', [SuperEpGpController::class, 'update'])->name('superadmin.super-ep-gp.update');
-    Route::delete('/superadmin/super-ep-gp/delete/{id}', [SuperEpGpController::class, 'delete'])->name('superadmin.super-ep-gp.delete');
-    Route::patch('/superadmin/super-ep-gp/toggle-status/{id}', [SuperEpGpController::class, 'toggleStatus'])->name('superadmin.super-ep-gp.toggle-status');
+    // EP Superadmin Routes
+    Route::get('/superadmin/super-ep', [SuperEpController::class, 'index'])->name('superadmin.super-ep');
+    Route::post('/superadmin/super-ep/store', [SuperEpController::class, 'store'])->name('superadmin.super-ep.store');
+    Route::put('/superadmin/super-ep/update/{id}', [SuperEpController::class, 'update'])->name('superadmin.super-ep.update');
+    Route::delete('/superadmin/super-ep/delete/{id}', [SuperEpController::class, 'delete'])->name('superadmin.super-ep.delete');
+    Route::patch('/superadmin/super-ep/toggle-status/{id}', [SuperEpController::class, 'toggleStatus'])->name('superadmin.super-ep.toggle-status');
+
+    // GP Superadmin Routes
+    Route::get('/superadmin/super-gp', [SuperGpController::class, 'index'])->name('superadmin.super-gp');
+    Route::post('/superadmin/super-gp/store', [SuperGpController::class, 'store'])->name('superadmin.super-gp.store');
+    Route::put('/superadmin/super-gp/update/{id}', [SuperGpController::class, 'update'])->name('superadmin.super-gp.update');
+    Route::delete('/superadmin/super-gp/delete/{id}', [SuperGpController::class, 'delete'])->name('superadmin.super-gp.delete');
+    Route::patch('/superadmin/super-gp/toggle-status/{id}', [SuperGpController::class, 'toggleStatus'])->name('superadmin.super-gp.toggle-status');
 
     // WhatsApp Bulk Broadcast
     Route::get('/superadmin/bulkmessage', [SuperBulkMessageController::class, 'index'])->name('superadmin.bulkmessage.index');
