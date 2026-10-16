@@ -2,9 +2,7 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
-
-class EpgpRefferal extends Model
+class EpgpRefferal extends GpReferral
 {
-    //
+    // Alias to GpReferral
 }

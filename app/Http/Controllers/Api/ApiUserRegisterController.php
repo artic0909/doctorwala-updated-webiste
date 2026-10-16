@@ -21,6 +21,7 @@ class ApiUserRegisterController extends Controller
             'user_city'     => 'required|string|max:255',
             'user_email'    => 'required|email|max:255|unique:dw_user_models,user_email',
             'user_password' => 'required|string|min:8',
+            'gp_code'       => 'nullable|string|max:50',
         ], [
             'user_name.required'     => 'Full name is required.',
             'user_name.max'          => 'Name must not exceed 255 characters.',
@@ -41,6 +42,20 @@ class ApiUserRegisterController extends Controller
                 'message' => $validator->errors()->first(),
                 'errors'  => $validator->errors()
             ], 422);
+        }
+
+        // Validate GP Code if present
+        $gp = null;
+        if ($request->filled('gp_code')) {
+            $inputGpCode = trim($request->gp_code);
+            $gp = \App\Models\Gp::where('code', $inputGpCode)->first();
+            if (!$gp) {
+                return response()->json([
+                    'status'  => false,
+                    'message' => "Invalid GP Code '{$inputGpCode}'. Please verify the code or leave it blank.",
+                    'errors'  => ['gp_code' => ["Invalid GP Code '{$inputGpCode}'."]]
+                ], 422);
+            }
         }
 
         try {
@@ -73,7 +88,22 @@ class ApiUserRegisterController extends Controller
             $dwuser->memberid        = $memberId;
             $dwuser->medical_card_no = $medicalCardNo;
 
+            if ($gp) {
+                $dwuser->gp_id = $gp->id;
+                $dwuser->ep_id = $gp->ep_id;
+            }
+
             $dwuser->save();
+
+            // Insert into gp_refferals table
+            if ($gp) {
+                \App\Models\GpReferral::create([
+                    'dw_user_id' => $dwuser->id,
+                    'gp_id'      => $gp->id,
+                    'ep_id'      => $gp->ep_id,
+                    'gp_code'    => $gp->code,
+                ]);
+            }
 
             // Send Welcome Email
             try {

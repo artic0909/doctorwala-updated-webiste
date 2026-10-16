@@ -27,6 +27,14 @@ class Ep extends Model
     }
 
     /**
+     * Get the users registered under this EP.
+     */
+    public function users()
+    {
+        return $this->hasMany(DwUserModel::class, 'ep_id');
+    }
+
+    /**
      * Scope for filtering by status.
      */
     public function scopeStatus($query, $status)

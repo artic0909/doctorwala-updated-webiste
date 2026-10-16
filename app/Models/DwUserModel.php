@@ -32,6 +32,8 @@ class DwUserModel extends Authenticatable
         'emergency_contact',
         'allergies',
         'chronic_conditions',
+        'ep_id',
+        'gp_id',
     ];
 
     protected $hidden = [
@@ -48,5 +50,20 @@ class DwUserModel extends Authenticatable
     public function patientInquiries()
     {
         return $this->hasMany(PartnerPatientInquiry::class, 'dw_user_id');
+    }
+
+    public function gp()
+    {
+        return $this->belongsTo(Gp::class, 'gp_id');
+    }
+
+    public function ep()
+    {
+        return $this->belongsTo(Ep::class, 'ep_id');
+    }
+
+    public function gpReferrals()
+    {
+        return $this->hasMany(GpReferral::class, 'dw_user_id');
     }
 }

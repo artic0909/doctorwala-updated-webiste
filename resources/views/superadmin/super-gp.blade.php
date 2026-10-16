@@ -531,9 +531,10 @@
                                             <th>Name</th>
                                             <th>Assigned EP</th>
                                             <th>Mobile</th>
+                                            <th class="text-center">Referred Users</th>
                                             <th class="text-center">Status</th>
                                             <th>Registered At</th>
-                                            <th class="text-center" style="width: 140px;">Actions</th>
+                                            <th class="text-center" style="width: 170px;">Actions</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -577,6 +578,14 @@
                                             </td>
 
                                             <td class="text-center">
+                                                <a href="{{ route('superadmin.super-gp.users', $item->id) }}"
+                                                   class="badge badge-info p-2 font-weight-bold"
+                                                   title="Click to view users registered under this GP">
+                                                    <i class="fa-solid fa-users mr-1"></i> {{ $item->users_count }} Users
+                                                </a>
+                                            </td>
+
+                                            <td class="text-center">
                                                 <form action="{{ route('superadmin.super-gp.toggle-status', $item->id) }}" method="POST" style="display:inline;">
                                                     @csrf
                                                     @method('PATCH')
@@ -595,6 +604,11 @@
                                             </td>
 
                                             <td class="text-center">
+                                                <a href="{{ route('superadmin.super-gp.users', $item->id) }}"
+                                                   class="btn btn-inverse-info btn-sm p-2 mr-1"
+                                                   title="View Users registered under this GP">
+                                                    <i class="fa-solid fa-eye"></i>
+                                                </a>
                                                 <button type="button" class="btn btn-inverse-primary btn-sm p-2 mr-1"
                                                     data-toggle="modal" data-target="#editGpModal{{ $item->id }}" title="Edit GP">
                                                     <i class="fa-solid fa-pen-to-square"></i>
@@ -607,7 +621,7 @@
                                         </tr>
                                         @empty
                                         <tr>
-                                            <td colspan="8" class="text-center py-5">
+                                            <td colspan="9" class="text-center py-5">
                                                 <div class="py-4">
                                                     <i class="fa-solid fa-users-slash fa-3x text-muted mb-3 d-block"></i>
                                                     <h5 class="text-muted font-weight-bold">No Gram Panchayats (GP) Found</h5>

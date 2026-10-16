@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Superadmin;
 use App\Http\Controllers\Controller;
 use App\Models\Ep;
 use App\Models\Gp;
+use App\Models\DwUserModel;
 use Illuminate\Http\Request;
 
 class SuperGpController extends Controller
@@ -14,7 +15,7 @@ class SuperGpController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Gp::with('ep');
+        $query = Gp::with('ep')->withCount('users');
 
         // Search by keyword (name, code, mobile, or parent EP name)
         if ($request->filled('search')) {
@@ -150,5 +151,56 @@ class SuperGpController extends Controller
         $gp->delete();
 
         return redirect()->back()->with('success', "GP '{$name}' deleted successfully!");
+    }
+
+    /**
+     * Display a listing of all users registered under this specific GP.
+     */
+    public function users(Request $request, $id)
+    {
+        $gp = Gp::with('ep')->findOrFail($id);
+
+        $query = DwUserModel::where('gp_id', $gp->id);
+
+        // Search by keyword (name, email, mobile, memberid, medical_card_no, city)
+        if ($request->filled('search')) {
+            $search = trim($request->search);
+            $query->where(function ($q) use ($search) {
+                $q->where('user_name', 'like', "%{$search}%")
+                  ->orWhere('user_email', 'like', "%{$search}%")
+                  ->orWhere('user_mobile', 'like', "%{$search}%")
+                  ->orWhere('memberid', 'like', "%{$search}%")
+                  ->orWhere('medical_card_no', 'like', "%{$search}%")
+                  ->orWhere('user_city', 'like', "%{$search}%");
+            });
+        }
+
+        // Filter by date range (Registration Date)
+        if ($request->filled('from_date')) {
+            $query->whereDate('created_at', '>=', $request->from_date);
+        }
+        if ($request->filled('to_date')) {
+            $query->whereDate('created_at', '<=', $request->to_date);
+        }
+
+        $users = $query->orderBy('id', 'desc')->paginate(15)->withQueryString();
+
+        // Metrics for summary cards
+        $totalUsers = DwUserModel::where('gp_id', $gp->id)->count();
+        $thisMonthUsers = DwUserModel::where('gp_id', $gp->id)
+            ->whereMonth('created_at', now()->month)
+            ->whereYear('created_at', now()->year)
+            ->count();
+        $todayUsers = DwUserModel::where('gp_id', $gp->id)
+            ->whereDate('created_at', now()->toDateString())
+            ->count();
+
+        return view('superadmin.super-gp-users', compact(
+            'gp',
+            'users',
+            'totalUsers',
+            'thisMonthUsers',
+            'todayUsers'
+        ));
     }
 }

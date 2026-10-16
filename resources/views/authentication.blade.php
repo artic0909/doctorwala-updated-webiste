@@ -1182,13 +1182,13 @@
                     @endif
 
                     {{-- VALIDATION errors (required fields, email format, etc.) --}}
-                    @if($errors->hasAny(['user_name','user_mobile','user_city','user_email','user_password']))
+                    @if($errors->hasAny(['user_name','user_mobile','user_city','user_email','user_password','gp_code']))
                     <div class="alert-box alert-error" role="alert">
                         <i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i>
                         <div>
                             <strong>Please fix the following errors:</strong>
                             <ul class="alert-list">
-                                @foreach(['user_name','user_mobile','user_city','user_email','user_password'] as $f)
+                                @foreach(['user_name','user_mobile','user_city','user_email','user_password','gp_code'] as $f)
                                 @foreach($errors->get($f) as $e)<li>{{ $e }}</li>@endforeach
                                 @endforeach
                             </ul>
@@ -1268,6 +1268,20 @@
                                     </button>
                                 </div>
                                 @error('user_password')
+                                <p class="field-error" role="alert"><i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i>{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <div class="field field-full">
+                                <label for="gp_code"><i class="fa-solid fa-barcode" aria-hidden="true"></i> GP Code (Optional)</label>
+                                <div class="input-wrap">
+                                    <i class="fa-solid fa-users-gear input-icon" aria-hidden="true"></i>
+                                    <input type="text" id="gp_code" name="gp_code"
+                                        placeholder="Enter GP Referral Code (e.g. GP123456)" autocomplete="off"
+                                        value="{{ old('gp_code') }}"
+                                        class="{{ $errors->has('gp_code') ? 'is-invalid' : '' }}">
+                                </div>
+                                @error('gp_code')
                                 <p class="field-error" role="alert"><i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i>{{ $message }}</p>
                                 @enderror
                             </div>

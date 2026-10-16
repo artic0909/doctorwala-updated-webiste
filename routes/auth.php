@@ -411,6 +411,7 @@ Route::middleware('auth:web')->group(function () {
 
     // GP Superadmin Routes
     Route::get('/superadmin/super-gp', [SuperGpController::class, 'index'])->name('superadmin.super-gp');
+    Route::get('/superadmin/super-gp/{id}/users', [SuperGpController::class, 'users'])->name('superadmin.super-gp.users');
     Route::post('/superadmin/super-gp/store', [SuperGpController::class, 'store'])->name('superadmin.super-gp.store');
     Route::put('/superadmin/super-gp/update/{id}', [SuperGpController::class, 'update'])->name('superadmin.super-gp.update');
     Route::delete('/superadmin/super-gp/delete/{id}', [SuperGpController::class, 'delete'])->name('superadmin.super-gp.delete');

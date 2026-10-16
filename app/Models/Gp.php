@@ -28,6 +28,22 @@ class Gp extends Model
     }
 
     /**
+     * Get the users registered under this GP.
+     */
+    public function users()
+    {
+        return $this->hasMany(DwUserModel::class, 'gp_id');
+    }
+
+    /**
+     * Get the referrals logged under this GP.
+     */
+    public function referrals()
+    {
+        return $this->hasMany(GpReferral::class, 'gp_id');
+    }
+
+    /**
      * Scope for filtering by status.
      */
     public function scopeStatus($query, $status)
