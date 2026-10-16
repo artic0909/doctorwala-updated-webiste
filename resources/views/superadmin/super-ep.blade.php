@@ -323,7 +323,7 @@
                     </div>
                     @endif
 
-                    @if ($errors->any())
+                    @if (isset($errors) && $errors->any())
                     <div class="alert alert-danger alert-dismissible fade show shadow-sm" role="alert" style="border-radius: 10px;">
                         <div class="d-flex align-items-center mb-1 font-weight-bold">
                             <i class="fa-solid fa-circle-exclamation fa-lg mr-2"></i>
@@ -430,19 +430,22 @@
                         <div class="card-body py-3">
                             <form method="GET" action="{{ route('superadmin.super-ep') }}">
                                 <div class="row align-items-end">
-                                    <div class="col-md-4 col-sm-6 mb-2">
-                                        <label class="small font-weight-bold text-muted mb-1">Search Keywords</label>
+                                    <!-- Search -->
+                                    <div class="col-lg-3 col-md-6 col-12 mb-2">
+                                        <label class="small font-weight-bold text-muted mb-1">
+                                            <i class="fa fa-search text-muted mr-1"></i> Search Keywords
+                                        </label>
                                         <div class="input-group input-group-sm">
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-text bg-white"><i class="fa fa-search text-muted"></i></span>
-                                            </div>
                                             <input type="text" name="search" class="form-control form-control-sm"
                                                 placeholder="Name, Code, or Mobile..." value="{{ request('search') }}">
                                         </div>
                                     </div>
 
-                                    <div class="col-md-3 col-sm-6 mb-2">
-                                        <label class="small font-weight-bold text-muted mb-1">Status</label>
+                                    <!-- Status -->
+                                    <div class="col-lg-3 col-md-6 col-12 mb-2">
+                                        <label class="small font-weight-bold text-muted mb-1">
+                                            <i class="fa fa-toggle-on text-muted mr-1"></i> Status
+                                        </label>
                                         <select name="status" class="form-control form-control-sm">
                                             <option value="">All Statuses</option>
                                             <option value="Active" {{ request('status') === 'Active' ? 'selected' : '' }}>Active</option>
@@ -450,20 +453,29 @@
                                         </select>
                                     </div>
 
-                                    <div class="col-md-3 col-sm-6 mb-2">
-                                        <label class="small font-weight-bold text-muted mb-1">Registered Date</label>
-                                        <div class="d-flex">
-                                            <input type="date" name="from_date" value="{{ request('from_date') }}" class="form-control form-control-sm mr-1" title="From date">
-                                            <input type="date" name="to_date" value="{{ request('to_date') }}" class="form-control form-control-sm" title="To date">
-                                        </div>
+                                    <!-- From Date -->
+                                    <div class="col-lg-2 col-md-4 col-sm-6 col-12 mb-2">
+                                        <label class="small font-weight-bold text-muted mb-1">
+                                            <i class="fa fa-calendar text-muted mr-1"></i> From Date
+                                        </label>
+                                        <input type="date" name="from_date" value="{{ request('from_date') }}" class="form-control form-control-sm">
                                     </div>
 
-                                    <div class="col-md-2 col-sm-6 mb-2 d-flex">
-                                        <button type="submit" class="btn btn-primary btn-sm btn-block font-weight-bold mr-1">
+                                    <!-- To Date -->
+                                    <div class="col-lg-2 col-md-4 col-sm-6 col-12 mb-2">
+                                        <label class="small font-weight-bold text-muted mb-1">
+                                            <i class="fa fa-calendar text-muted mr-1"></i> To Date
+                                        </label>
+                                        <input type="date" name="to_date" value="{{ request('to_date') }}" class="form-control form-control-sm">
+                                    </div>
+
+                                    <!-- Action Buttons -->
+                                    <div class="col-lg-2 col-md-4 col-12 mb-2 d-flex align-items-end">
+                                        <button type="submit" class="btn btn-primary btn-sm px-3 mr-2 font-weight-bold rounded shadow-sm" style="min-width: 85px;">
                                             <i class="fa fa-filter mr-1"></i> Filter
                                         </button>
-                                        <a href="{{ route('superadmin.super-ep') }}" class="btn btn-outline-secondary btn-sm" title="Clear Filters">
-                                            <i class="fa fa-rotate-left"></i>
+                                        <a href="{{ route('superadmin.super-ep') }}" class="btn btn-outline-secondary btn-sm px-3 font-weight-bold rounded" title="Clear Filters">
+                                            <i class="fa fa-rotate-left mr-1"></i> Reset
                                         </a>
                                     </div>
                                 </div>
