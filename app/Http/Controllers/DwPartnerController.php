@@ -148,17 +148,38 @@ class DwPartnerController extends Controller
             'partner_address' => 'required|string',
             'partner_password' => 'required|string',
             'registration_type' => 'required|array',
+            'ep_code' => 'nullable|string',
         ]);
 
-
+        // Check EP Code if entered
+        $ep = null;
+        if ($request->filled('ep_code')) {
+            $inputEpCode = trim($request->ep_code);
+            $ep = \App\Models\Ep::whereRaw('UPPER(code) = ?', [strtoupper($inputEpCode)])->first();
+            if (!$ep) {
+                $errorMsg = 'EP code is not correct, please enter correct EP code.';
+                if ($request->ajax()) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => $errorMsg,
+                        'errors'  => ['ep_code' => [$errorMsg]],
+                    ], 422);
+                }
+                return back()->withInput()->withErrors(['ep_code' => $errorMsg])->with('unsuccess', $errorMsg);
+            }
+        }
 
         try {
             // Create and save the partner with a temporary partner_id to avoid Duplicate Entry exceptions
             // caused by race conditions or soft-deleted rows throwing off max('id').
-            $dwuser = new DwPartnerModel($validated);
+            $partnerData = collect($validated)->except(['ep_code'])->toArray();
+            $dwuser = new DwPartnerModel($partnerData);
             $dwuser->partner_id = 'TMP_' . uniqid(); 
             $dwuser->partner_password = bcrypt($request->partner_password);
             $dwuser->registration_type = json_encode($request->registration_type);
+            if ($ep) {
+                $dwuser->ep_id = $ep->id;
+            }
             $dwuser->save();
             
             // Now that we have the true auto-incremented ID, we update partner_id securely

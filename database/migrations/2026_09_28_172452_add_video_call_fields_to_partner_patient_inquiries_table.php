@@ -12,9 +12,15 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('partner_patient_inquiries', function (Blueprint $table) {
-            $table->boolean('is_video')->default(false)->after('visit_mode')->index();
-            $table->string('video_channel', 100)->nullable()->unique()->after('is_video');
-            $table->string('video_status', 30)->nullable()->default('scheduled')->after('video_channel')->index();
+            if (!Schema::hasColumn('partner_patient_inquiries', 'is_video')) {
+                $table->boolean('is_video')->default(false)->after('visit_mode')->index();
+            }
+            if (!Schema::hasColumn('partner_patient_inquiries', 'video_channel')) {
+                $table->string('video_channel', 100)->nullable()->unique()->after('is_video');
+            }
+            if (!Schema::hasColumn('partner_patient_inquiries', 'video_status')) {
+                $table->string('video_status', 30)->nullable()->default('scheduled')->after('video_channel')->index();
+            }
         });
 
         // Set is_video for existing online/video bookings

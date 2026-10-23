@@ -31,6 +31,7 @@ class AuthApiController extends Controller
             'partner_password' => 'required|string|min:6',
             'registration_type' => 'required|array',
             'registration_type.*' => 'string',
+            'ep_code' => 'nullable|string',
         ]);
 
         if ($validator->fails()) {
@@ -41,12 +42,28 @@ class AuthApiController extends Controller
             ], 422);
         }
 
+        $ep = null;
+        if ($request->filled('ep_code')) {
+            $inputEpCode = trim($request->ep_code);
+            $ep = \App\Models\Ep::whereRaw('UPPER(code) = ?', [strtoupper($inputEpCode)])->first();
+            if (!$ep) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'EP code is not correct, please enter correct EP code.',
+                    'errors' => ['ep_code' => ['EP code is not correct, please enter correct EP code.']]
+                ], 422);
+            }
+        }
+
         try {
             // Generate standard DwPartner ID
             $partnerId = 'DWPTR' . (DwPartnerModel::max('id') + 1);
 
             $partner = new DwPartnerModel();
             $partner->partner_id = $partnerId;
+            if ($ep) {
+                $partner->ep_id = $ep->id;
+            }
             $partner->partner_clinic_name = $request->partner_clinic_name;
             $partner->partner_contact_person_name = $request->partner_contact_person_name;
             $partner->partner_mobile_number = $request->partner_mobile_number;

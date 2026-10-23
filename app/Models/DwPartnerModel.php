@@ -16,6 +16,7 @@ class DwPartnerModel extends Authenticatable
 
     public $fillable = [
         'partner_id',
+        'ep_id',
         'partner_clinic_name',
         'partner_contact_person_name',
         'partner_mobile_number',
@@ -52,8 +53,10 @@ class DwPartnerModel extends Authenticatable
         return $this->partner_clinic_name;
     }
 
-
-
+    public function ep()
+    {
+        return $this->belongsTo(Ep::class, 'ep_id');
+    }
 
     public function opdContact()
     {

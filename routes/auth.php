@@ -404,6 +404,7 @@ Route::middleware('auth:web')->group(function () {
 
     // EP Superadmin Routes
     Route::get('/superadmin/super-ep', [SuperEpController::class, 'index'])->name('superadmin.super-ep');
+    Route::get('/superadmin/super-ep/{id}/partners', [SuperEpController::class, 'partners'])->name('superadmin.super-ep.partners');
     Route::post('/superadmin/super-ep/store', [SuperEpController::class, 'store'])->name('superadmin.super-ep.store');
     Route::put('/superadmin/super-ep/update/{id}', [SuperEpController::class, 'update'])->name('superadmin.super-ep.update');
     Route::delete('/superadmin/super-ep/delete/{id}', [SuperEpController::class, 'delete'])->name('superadmin.super-ep.delete');

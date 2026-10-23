@@ -12,7 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('dw_partner_models', function (Blueprint $table) {
-            $table->text('clinic_google_map_link')->nullable()->after('partner_address');
+            if (!Schema::hasColumn('dw_partner_models', 'clinic_google_map_link')) {
+                $table->text('clinic_google_map_link')->nullable()->after('partner_address');
+            }
         });
     }
 

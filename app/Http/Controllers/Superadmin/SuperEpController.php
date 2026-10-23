@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Superadmin;
 use App\Http\Controllers\Controller;
 use App\Models\Ep;
 use App\Models\Gp;
+use App\Models\DwPartnerModel;
 use Illuminate\Http\Request;
 
 class SuperEpController extends Controller
@@ -14,7 +15,7 @@ class SuperEpController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Ep::withCount('gps');
+        $query = Ep::withCount(['gps', 'partners']);
 
         // Search by keyword (name, code, mobile)
         if ($request->filled('search')) {
@@ -133,5 +134,63 @@ class SuperEpController extends Controller
         $ep->delete();
 
         return redirect()->back()->with('success', "EP '{$name}' deleted successfully!");
+    }
+
+    /**
+     * Display a listing of all partners registered under this specific EP.
+     */
+    public function partners(Request $request, $id)
+    {
+        $ep = Ep::findOrFail($id);
+
+        $query = DwPartnerModel::where('ep_id', $ep->id);
+
+        // Search by keyword (clinic name, contact person, mobile, email, partner_id, city)
+        if ($request->filled('search')) {
+            $search = trim($request->search);
+            $query->where(function ($q) use ($search) {
+                $q->where('partner_clinic_name', 'like', "%{$search}%")
+                  ->orWhere('partner_contact_person_name', 'like', "%{$search}%")
+                  ->orWhere('partner_mobile_number', 'like', "%{$search}%")
+                  ->orWhere('partner_email', 'like', "%{$search}%")
+                  ->orWhere('partner_id', 'like', "%{$search}%")
+                  ->orWhere('partner_city', 'like', "%{$search}%");
+            });
+        }
+
+        // Filter by status (Active / Inactive / Pending)
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        // Filter by registration date range
+        if ($request->filled('from_date')) {
+            $query->whereDate('created_at', '>=', $request->from_date);
+        }
+        if ($request->filled('to_date')) {
+            $query->whereDate('created_at', '<=', $request->to_date);
+        }
+
+        $partners = $query->orderBy('id', 'desc')->paginate(15)->withQueryString();
+
+        // Metrics for summary cards
+        $totalPartners = DwPartnerModel::where('ep_id', $ep->id)->count();
+        $activePartners = DwPartnerModel::where('ep_id', $ep->id)->where('status', 'Active')->count();
+        $thisMonthPartners = DwPartnerModel::where('ep_id', $ep->id)
+            ->whereMonth('created_at', now()->month)
+            ->whereYear('created_at', now()->year)
+            ->count();
+        $todayPartners = DwPartnerModel::where('ep_id', $ep->id)
+            ->whereDate('created_at', now()->toDateString())
+            ->count();
+
+        return view('superadmin.super-ep-partners', compact(
+            'ep',
+            'partners',
+            'totalPartners',
+            'activePartners',
+            'thisMonthPartners',
+            'todayPartners'
+        ));
     }
 }

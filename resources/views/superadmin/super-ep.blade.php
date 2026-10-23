@@ -505,6 +505,7 @@
                                             <th>Name</th>
                                             <th>Mobile</th>
                                             <th class="text-center">Linked GPs</th>
+                                            <th class="text-center">Partners</th>
                                             <th class="text-center">Status</th>
                                             <th>Registered At</th>
                                             <th class="text-center" style="width: 140px;">Actions</th>
@@ -529,7 +530,7 @@
                                                 <div class="d-flex align-items-center">
                                                     <i class="fa fa-phone text-muted mr-1 small"></i>
                                                     <a href="tel:{{ $item->mobile }}" class="text-dark font-weight-500 mr-2">
-                                                        {{ $item->mobile }}
+                                                         {{ $item->mobile }}
                                                     </a>
                                                     <a href="https://wa.me/91{{ preg_replace('/[^0-9]/', '', $item->mobile) }}" target="_blank"
                                                         class="badge badge-success p-1" title="Chat on WhatsApp">
@@ -543,6 +544,14 @@
                                                    class="badge badge-info p-2 font-weight-bold"
                                                    title="Click to view GPs linked with this EP">
                                                     <i class="fa-solid fa-users-gear mr-1"></i> {{ $item->gps_count }} GPs
+                                                </a>
+                                            </td>
+
+                                            <td class="text-center">
+                                                <a href="{{ route('superadmin.super-ep.partners', $item->id) }}"
+                                                   class="badge badge-primary p-2 font-weight-bold"
+                                                   title="Click to view partners registered under this EP">
+                                                    <i class="fa-solid fa-handshake mr-1"></i> {{ $item->partners_count }} Partners
                                                 </a>
                                             </td>
 
@@ -565,6 +574,11 @@
                                             </td>
 
                                             <td class="text-center">
+                                                <a href="{{ route('superadmin.super-ep.partners', $item->id) }}"
+                                                   class="btn btn-inverse-info btn-sm p-2 mr-1"
+                                                   title="View Partners registered under this EP">
+                                                    <i class="fa-solid fa-eye"></i>
+                                                </a>
                                                 <button type="button" class="btn btn-inverse-primary btn-sm p-2 mr-1"
                                                     data-toggle="modal" data-target="#editEpModal{{ $item->id }}" title="Edit EP">
                                                     <i class="fa-solid fa-pen-to-square"></i>
@@ -577,7 +591,7 @@
                                         </tr>
                                         @empty
                                         <tr>
-                                            <td colspan="8" class="text-center py-5">
+                                            <td colspan="9" class="text-center py-5">
                                                 <div class="py-4">
                                                     <i class="fa-solid fa-user-slash fa-3x text-muted mb-3 d-block"></i>
                                                     <h5 class="text-muted font-weight-bold">No Executive Partners Found</h5>

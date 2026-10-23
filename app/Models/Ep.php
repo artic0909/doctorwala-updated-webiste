@@ -35,6 +35,14 @@ class Ep extends Model
     }
 
     /**
+     * Get the partners registered under this EP.
+     */
+    public function partners()
+    {
+        return $this->hasMany(DwPartnerModel::class, 'ep_id');
+    }
+
+    /**
      * Scope for filtering by status.
      */
     public function scopeStatus($query, $status)
