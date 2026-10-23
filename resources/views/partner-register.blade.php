@@ -185,7 +185,7 @@
                                     style="height: 55px;" name="partner_landmark" id="partner_landmark" required value="{{ old('partner_landmark') }}">
                             </div>
 
-                            <div class="col-12 col-sm-6">
+                            <div class="col-12">
                                 <input type="text" class="form-control bg-light border-0" placeholder="EP Code (Optional)"
                                     style="height: 55px;" name="ep_code" id="ep_code"
                                     value="{{ old('ep_code') }}" autocomplete="off">
