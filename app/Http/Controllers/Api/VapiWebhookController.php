@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Calling;
+use App\Services\VapiTranscriptExtractor;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -17,18 +18,13 @@ class VapiWebhookController extends Controller
     {
         Log::info('Vapi Webhook received:', [
             'type' => $request->input('message.type') ?? $request->input('type') ?? 'direct',
-            'all' => $request->all(),
         ]);
 
         $payload = $request->all();
         $message = $request->input('message', []);
 
         // 1. Extract Vapi Call ID
-        $vapiCallId = $request->input('message.call.id')
-            ?? $request->input('call.id')
-            ?? $request->input('callId')
-            ?? $request->input('vapi_call_id')
-            ?? $request->input('id');
+        $vapiCallId = $this->extractCallId($request);
 
         // 2. Extract Customer / Recipient Phone Number automatically
         $phoneNumber = $this->extractPhoneNumber($request);
@@ -56,7 +52,7 @@ class VapiWebhookController extends Controller
             $calling->vapi_call_id = $vapiCallId;
         }
 
-        if (!empty($phoneNumber) && empty($calling->phone_number)) {
+        if (!empty($phoneNumber)) {
             $calling->phone_number = $phoneNumber;
         }
 
@@ -67,7 +63,6 @@ class VapiWebhookController extends Controller
         $results = [];
 
         // 4. Handle Tool Calls / Function Calls
-        // Vapi sends tool-calls array or legacy function-call
         $toolCalls = $request->input('message.toolCalls')
             ?? $request->input('toolCalls')
             ?? [];
@@ -77,8 +72,8 @@ class VapiWebhookController extends Controller
 
         if (!empty($singleFunctionCall)) {
             $toolCalls[] = [
-              'id' => $singleFunctionCall['id'] ?? 'legacy_func',
-              'function' => $singleFunctionCall,
+                'id' => $singleFunctionCall['id'] ?? 'legacy_func',
+                'function' => $singleFunctionCall,
             ];
         }
 
@@ -123,9 +118,14 @@ class VapiWebhookController extends Controller
         // 7. Handle direct flat fields if posted directly to webhook
         $this->processDirectFields($calling, $request);
 
+        // 8. AUTOMATIC TRANSCRIPT EXTRACTION FALLBACK
+        // If provider_name, provider_type, location, etc. are still empty (e.g. LLM didn't call save_lead during call),
+        // extract all discovery data directly from transcript and messages!
+        $this->extractDataFromTranscriptFallback($calling, $request);
+
         $calling->save();
 
-        // 8. Return response format expected by Vapi
+        // 9. Return response format expected by Vapi
         if (!empty($results)) {
             return response()->json([
                 'results' => $results,
@@ -153,11 +153,41 @@ class VapiWebhookController extends Controller
     }
 
     /**
+     * Extract Vapi Call ID from multiple payload paths
+     */
+    protected function extractCallId(Request $request): ?string
+    {
+        $candidates = [
+            $request->input('message.artifact.variables.call.id'),
+            $request->input('message.artifact.variableValues.call.id'),
+            $request->input('artifact.variables.call.id'),
+            $request->input('artifact.variableValues.call.id'),
+            $request->input('message.call.id'),
+            $request->input('call.id'),
+            $request->input('callId'),
+            $request->input('vapi_call_id'),
+            $request->input('id'),
+        ];
+
+        foreach ($candidates as $c) {
+            if (!empty($c) && is_string($c)) {
+                return trim($c);
+            }
+        }
+
+        return null;
+    }
+
+    /**
      * Automatically extract phone number from various Vapi payload formats
      */
     protected function extractPhoneNumber(Request $request): ?string
     {
         $candidates = [
+            $request->input('message.artifact.variables.customer.number'),
+            $request->input('message.artifact.variableValues.customer.number'),
+            $request->input('artifact.variables.customer.number'),
+            $request->input('artifact.variableValues.customer.number'),
             $request->input('message.call.customer.number'),
             $request->input('call.customer.number'),
             $request->input('message.customer.number'),
@@ -172,6 +202,7 @@ class VapiWebhookController extends Controller
             $request->input('From'),
             $request->input('recipient'),
             $request->input('message.call.phone_number.number'),
+            $request->input('message.artifact.variables.phoneNumber.number'),
         ];
 
         foreach ($candidates as $candidate) {
@@ -190,7 +221,6 @@ class VapiWebhookController extends Controller
     {
         Log::info("Processing Vapi tool call: {$funcName}", $args);
 
-        // Check if phone was passed inside arguments
         if (empty($calling->phone_number)) {
             if (!empty($args['phone_number'])) {
                 $calling->phone_number = $args['phone_number'];
@@ -273,7 +303,6 @@ class VapiWebhookController extends Controller
                 return "Call completed and recorded.";
 
             default:
-                // If any generic field matches, update
                 foreach ($args as $key => $val) {
                     if (in_array($key, [
                         'provider_name', 'provider_type', 'location', 'doctors_and_timings',
@@ -294,12 +323,25 @@ class VapiWebhookController extends Controller
     {
         $message = $request->input('message', []);
 
-        // Duration in seconds
+        // Duration calculation
         $duration = $message['durationSeconds']
             ?? $request->input('durationSeconds')
             ?? $request->input('duration')
             ?? $request->input('message.call.durationSeconds')
             ?? null;
+
+        // If durationSeconds is null, calculate from startedAt and endedAt
+        if ($duration === null) {
+            $startedAt = $message['startedAt'] ?? $request->input('startedAt');
+            $endedAt = $message['endedAt'] ?? $request->input('endedAt');
+            if ($startedAt && $endedAt) {
+                try {
+                    $duration = abs(Carbon::parse($endedAt)->diffInSeconds(Carbon::parse($startedAt)));
+                } catch (\Exception $e) {
+                    // ignore
+                }
+            }
+        }
 
         if ($duration !== null) {
             $calling->duration_seconds = (int)$duration;
@@ -339,6 +381,8 @@ class VapiWebhookController extends Controller
             ?? $request->input('recordingUrl')
             ?? $request->input('message.artifact.recordingUrl')
             ?? $request->input('artifact.recordingUrl')
+            ?? $request->input('message.artifact.recording.mono.combinedUrl')
+            ?? $request->input('message.artifact.presignedMonoUrl')
             ?? null;
 
         if (!empty($recordingUrl)) {
@@ -352,7 +396,7 @@ class VapiWebhookController extends Controller
             ?? $request->input('analysis.summary')
             ?? null;
 
-        if (!empty($summary)) {
+        if (!empty($summary) && is_string($summary)) {
             $calling->summary = $summary;
         }
 
@@ -366,7 +410,7 @@ class VapiWebhookController extends Controller
             $calling->cost = (string)$cost;
         }
 
-        // Structured Data from Vapi Analysis (if configured)
+        // Structured Data from Vapi Analysis
         $structuredData = $request->input('message.analysis.structuredData')
             ?? $request->input('analysis.structuredData')
             ?? [];
@@ -384,6 +428,65 @@ class VapiWebhookController extends Controller
                         $calling->$k = is_array($val) ? json_encode($val) : (string)$val;
                     }
                 }
+            }
+        }
+    }
+
+    /**
+     * Automatic fallback extraction from transcript and messages
+     */
+    protected function extractDataFromTranscriptFallback(Calling $calling, Request $request): void
+    {
+        $transcript = $calling->transcript
+            ?? $request->input('message.artifact.transcript')
+            ?? $request->input('artifact.transcript')
+            ?? $request->input('message.transcript')
+            ?? '';
+
+        $messages = $request->input('message.artifact.messages')
+            ?? $request->input('artifact.messages')
+            ?? [];
+
+        if (empty($transcript) && !empty($messages)) {
+            $transcript = VapiTranscriptExtractor::buildTranscriptFromMessages($messages);
+            $calling->transcript = $transcript;
+        }
+
+        if (empty($transcript)) {
+            return;
+        }
+
+        $extracted = VapiTranscriptExtractor::extract($transcript, $messages);
+
+        if (!empty($extracted)) {
+            // Fill any missing field
+            foreach ([
+                'provider_name', 'provider_type', 'location', 'doctors_and_timings',
+                'consultation_modes', 'doctor_fee_known', 'tests_offered',
+                'rates_list_exists', 'home_sample_collection', 'language',
+            ] as $field) {
+                if (empty($calling->$field) && !empty($extracted[$field])) {
+                    $calling->$field = $extracted[$field];
+                }
+            }
+
+            if (!$calling->app_link_sent && !empty($extracted['app_link_sent'])) {
+                $calling->app_link_sent = true;
+            }
+
+            if (!$calling->callback_scheduled && !empty($extracted['callback_scheduled'])) {
+                $calling->callback_scheduled = true;
+                if (!empty($extracted['callback_notes'])) {
+                    $calling->callback_notes = $extracted['callback_notes'];
+                }
+            }
+
+            if (!$calling->is_dnd && !empty($extracted['is_dnd'])) {
+                $calling->is_dnd = true;
+            }
+
+            if (empty($calling->summary) && !empty($extracted['summary'])) {
+                $calling->summary = $extracted['summary'];
             }
         }
     }
@@ -418,4 +521,3 @@ class VapiWebhookController extends Controller
         }
     }
 }
-
