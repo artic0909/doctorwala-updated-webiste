@@ -31,6 +31,7 @@ use App\Http\Controllers\Superadmin\SuperFollowupController;
 use App\Http\Controllers\Superadmin\SuperRefferController;
 use App\Http\Controllers\Superadmin\SuperEpController;
 use App\Http\Controllers\Superadmin\SuperGpController;
+use App\Http\Controllers\Superadmin\SuperCallingController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('guest:web')->group(function () {
@@ -421,6 +422,11 @@ Route::middleware('auth:web')->group(function () {
     // WhatsApp Bulk Broadcast
     Route::get('/superadmin/bulkmessage', [SuperBulkMessageController::class, 'index'])->name('superadmin.bulkmessage.index');
     Route::post('/superadmin/bulkmessage/send', [SuperBulkMessageController::class, 'sendBroadcast'])->name('superadmin.bulkmessage.send');
+
+    // AI Voice Calling Leads & Logs (Riya Calling Assistant)
+    Route::get('/superadmin/super-callings', [SuperCallingController::class, 'index'])->name('superadmin.super-callings');
+    Route::delete('/superadmin/super-callings/delete/{id}', [SuperCallingController::class, 'delete'])->name('superadmin.super-callings.delete');
+    Route::get('/superadmin/export-callings', [SuperCallingController::class, 'exportAsExcel'])->name('superadmin.export.callings');
 
     Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
         ->name('logout');

@@ -676,6 +676,13 @@
                         </a>
                     </li>
 
+                    <!-- AI Voice Callings -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="/superadmin/super-callings">
+                            <i class="fa-solid fa-headset" aria-hidden="true"></i>&nbsp; <span class="menu-title">AI Callings</span>
+                        </a>
+                    </li>
+
 
 
                     <!-- about us -->
@@ -1097,6 +1104,21 @@
                                                 <img src="{{asset('../img/gif/feed.gif')}}" class="rounded" width="50" alt="">
                                                 <p class="fs-30 m-0 p-0 ml-2 text-uppercase"
                                                     style="font-weight: 700; cursor: pointer; font-size: 1.1rem;">All Feedbacks</p>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+
+                                <div class="col-md-4 mb-4 stretch-card transparent">
+                                    <a href="/superadmin/super-callings" class="card"
+                                        style="cursor: pointer; text-decoration: none; background: linear-gradient(135deg, #392C70 0%, #4B49AC 100%); color: white; border-radius: 10px;">
+                                        <div class="card-body">
+                                            <div class="prof d-flex align-items-center">
+                                                <div class="d-flex align-items-center justify-content-center rounded" style="width: 50px; height: 50px; background: rgba(255,255,255,0.2);">
+                                                    <i class="fa-solid fa-headset fa-2x text-white"></i>
+                                                </div>
+                                                <p class="fs-30 m-0 p-0 ml-2 text-uppercase text-white"
+                                                    style="font-weight: 700; cursor: pointer; font-size: 1.1rem;">AI Callings</p>
                                             </div>
                                         </div>
                                     </a>

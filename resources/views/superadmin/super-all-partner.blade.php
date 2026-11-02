@@ -230,6 +230,13 @@
                         </a>
                     </li>
 
+                    <!-- AI Voice Callings -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="/superadmin/super-callings">
+                            <i class="fa-solid fa-headset" aria-hidden="true"></i>&nbsp; <span class="menu-title">AI Callings</span>
+                        </a>
+                    </li>
+
 
 
                     <!-- about us -->

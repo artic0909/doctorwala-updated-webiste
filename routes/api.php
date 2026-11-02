@@ -22,6 +22,7 @@ use App\Http\Controllers\Api\ApiSearchHandleController;
 use App\Http\Controllers\Api\ApiVitalsController;
 use Illuminate\Http\Request;
 use App\Http\Controllers\TwilioWebhookController;
+use App\Http\Controllers\Api\VapiWebhookController;
 
 
 // create api routes here for flutter app ------------------------------->
@@ -40,6 +41,10 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 // Twilio WhatsApp Webhook
 Route::post('/twilio/webhook', [TwilioWebhookController::class, 'handle']);
+
+// Vapi AI Calling Assistant Webhook
+Route::get('/vapi/webhook', [VapiWebhookController::class, 'ping']);
+Route::post('/vapi/webhook', [VapiWebhookController::class, 'handle']);
 
 
 Route::middleware('auth:sanctum')->group(function () {
