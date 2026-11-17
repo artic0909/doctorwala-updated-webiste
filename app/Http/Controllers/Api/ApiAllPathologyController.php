@@ -8,51 +8,18 @@ use App\Models\PartnerAllPathologyTestModel;
 use App\Models\PartnerGalleryModel;
 use App\Models\PartnerPathologyContactModel;
 use App\Models\PartnerServiceListModel;
-use App\Models\SuperAboutusModel;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class ApiAllPathologyController extends Controller
 {
-    // public function allPathologyData()
-    // {
-    //     $allPathologyContacts = PartnerPathologyContactModel::with('banner')->inRandomOrder()->get();
-
-    //     $finalData = $allPathologyContacts->map(function ($contact) {
-    //         if ($contact->banner && $contact->banner->pathologybanner) {
-    //             $contact->banner->pathologybanner = asset('storage/' . $contact->banner->pathologybanner);
-    //         }
-
-    //         $partnerId = $contact->currently_loggedin_partner_id;
-
-    //         $tests = PartnerAllPathologyTestModel::where('currently_loggedin_partner_id', $partnerId)->get();
-    //         foreach ($tests as $test) {
-    //             $test->test_day_time = json_decode($test->test_day_time, true);
-    //         }
-
-    //         return [
-    //             'pathologyContact' => $contact,
-    //             'tests' => $tests,
-    //             'services' => PartnerServiceListModel::where('currently_loggedin_partner_id', $partnerId)->get(),
-    //             'images' => PartnerGalleryModel::where('currently_loggedin_partner_id', $partnerId)->get(),
-    //             'aboutClinics' => PartnerAboutDetailsModel::where('currently_loggedin_partner_id', $partnerId)->get(),
-    //             'testsDetailsData' => PartnerAllPathologyTestModel::where('currently_loggedin_partner_id', $partnerId)->get(),
-
-    //         ];
-    //     });
-
-    //     return response()->json([
-    //         'status' => true,
-    //         'count' => $finalData->count(),
-    //         'data' => $finalData,
-    //     ]);
-    // }
-
     // ── Pathology ──────────────────────────────────────────────────────────────
     public function allPathologyData(Request $request)
     {
         try {
             $query = trim($request->get('query', ''));
             $user_city = trim($request->get('user_city', ''));
+            $page = (int) $request->get('page', 1);
 
             $dbQuery = PartnerPathologyContactModel::with('banner')
                 ->where('status', 'active');
@@ -78,8 +45,8 @@ class ApiAllPathologyController extends Controller
                         ->orWhereIn('currently_loggedin_partner_id', $pathPartnerIds);
                 });
 
-                $paths     = $dbQuery->get();
-                $finalData = $paths->map(fn($c) => $this->formatPathology($c));
+                $paths = $dbQuery->get();
+                $finalData = $this->formatPathologyCollection($paths);
 
                 return response()->json([
                     'status'    => true,
@@ -88,20 +55,22 @@ class ApiAllPathologyController extends Controller
                     'data'      => $finalData,
                 ]);
             } else {
-                // Normal mode — 10 random paginated
-                $paginated = $dbQuery->inRandomOrder()->paginate(10);
+                // Normal mode with 10-minute caching to eliminate N+1 & RAND() database bottlenecks
+                $cacheKey = "api_all_path_v2_{$user_city}_page_{$page}";
 
-                $finalData = $paginated->getCollection()
-                    ->map(fn($c) => $this->formatPathology($c));
+                return Cache::remember($cacheKey, now()->addMinutes(10), function () use ($dbQuery) {
+                    $paginated = $dbQuery->inRandomOrder()->paginate(10);
+                    $finalData = $this->formatPathologyCollection($paginated->getCollection());
 
-                return response()->json([
-                    'status'       => true,
-                    'is_search'    => false,
-                    'total'        => $paginated->total(),
-                    'current_page' => $paginated->currentPage(),
-                    'last_page'    => $paginated->lastPage(),
-                    'data'         => $finalData,
-                ]);
+                    return response()->json([
+                        'status'       => true,
+                        'is_search'    => false,
+                        'total'        => $paginated->total(),
+                        'current_page' => $paginated->currentPage(),
+                        'last_page'    => $paginated->lastPage(),
+                        'data'         => $finalData,
+                    ]);
+                });
             }
         } catch (\Exception $e) {
             return response()->json([
@@ -111,25 +80,43 @@ class ApiAllPathologyController extends Controller
         }
     }
 
-    private function formatPathology(PartnerPathologyContactModel $contact): array
+    private function formatPathologyCollection($contacts)
     {
-        if ($contact->banner && $contact->banner->pathologybanner) {
-            $contact->banner->pathologybanner = asset('storage/' . $contact->banner->pathologybanner);
-        }
+        $partnerIds = $contacts->pluck('currently_loggedin_partner_id')->filter()->unique();
 
-        $partnerId = $contact->currently_loggedin_partner_id;
+        $allTests = PartnerAllPathologyTestModel::whereIn('currently_loggedin_partner_id', $partnerIds)->get()
+            ->groupBy('currently_loggedin_partner_id');
 
-        $tests = PartnerAllPathologyTestModel::where('currently_loggedin_partner_id', $partnerId)->get();
-        foreach ($tests as $test) {
-            $test->test_day_time = json_decode($test->test_day_time, true);
-        }
+        $allServices = PartnerServiceListModel::whereIn('currently_loggedin_partner_id', $partnerIds)->get()
+            ->groupBy('currently_loggedin_partner_id');
 
-        return [
-            'pathologyContact' => $contact,
-            'tests'            => $tests,
-            'services'         => PartnerServiceListModel::where('currently_loggedin_partner_id', $partnerId)->get(),
-            'images'           => PartnerGalleryModel::where('currently_loggedin_partner_id', $partnerId)->get(),
-            'aboutClinics'     => PartnerAboutDetailsModel::where('currently_loggedin_partner_id', $partnerId)->get(),
-        ];
+        $allImages = PartnerGalleryModel::whereIn('currently_loggedin_partner_id', $partnerIds)->get()
+            ->groupBy('currently_loggedin_partner_id');
+
+        $allAbout = PartnerAboutDetailsModel::whereIn('currently_loggedin_partner_id', $partnerIds)->get()
+            ->groupBy('currently_loggedin_partner_id');
+
+        return $contacts->map(function ($contact) use ($allTests, $allServices, $allImages, $allAbout) {
+            if ($contact->banner && $contact->banner->pathologybanner) {
+                $contact->banner->pathologybanner = asset('storage/' . $contact->banner->pathologybanner);
+            }
+
+            $partnerId = $contact->currently_loggedin_partner_id;
+
+            $tests = $allTests->get($partnerId, collect());
+            foreach ($tests as $test) {
+                if (is_string($test->test_day_time)) {
+                    $test->test_day_time = json_decode($test->test_day_time, true);
+                }
+            }
+
+            return [
+                'pathologyContact' => $contact,
+                'tests'            => $tests->values(),
+                'services'         => $allServices->get($partnerId, collect())->values(),
+                'images'           => $allImages->get($partnerId, collect())->values(),
+                'aboutClinics'     => $allAbout->get($partnerId, collect())->values(),
+            ];
+        });
     }
 }

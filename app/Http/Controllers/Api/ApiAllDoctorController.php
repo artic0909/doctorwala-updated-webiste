@@ -5,34 +5,17 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\PartnerDoctorContactModel;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class ApiAllDoctorController extends Controller
 {
-    // public function allDoctorData()
-    // {
-    //     $allDoctorContacts = PartnerDoctorContactModel::with('banner')->inRandomOrder()->get();
-
-    //     $allDoctorContacts = $allDoctorContacts->map(function ($contact) {
-    //         if ($contact->banner && $contact->banner->doctorbanner) {
-    //             // Fix path with full URL using asset or url()
-    //             $contact->banner->doctorbanner = asset('storage/' . $contact->banner->doctorbanner);
-    //         }
-    //         return $contact;
-    //     });
-
-    //     return response()->json([
-    //         'status' => true,
-    //         'count' => $allDoctorContacts->count(),
-    //         'allDoctorContacts' => $allDoctorContacts,
-    //     ]);
-    // }
-
     // ── Doctors ────────────────────────────────────────────────────────────────
     public function allDoctorData(Request $request)
     {
         try {
             $query = trim($request->get('query', ''));
             $user_city = trim($request->get('user_city', ''));
+            $page = (int) $request->get('page', 1);
 
             $dbQuery = PartnerDoctorContactModel::with('banner')
                 ->where('status', 'active');
@@ -56,7 +39,6 @@ class ApiAllDoctorController extends Controller
                 });
 
                 $doctors = $dbQuery->get();
-
                 $finalData = $doctors->map(fn($d) => $this->formatDoctor($d));
 
                 return response()->json([
@@ -66,20 +48,22 @@ class ApiAllDoctorController extends Controller
                     'data'          => $finalData,
                 ]);
             } else {
-                // Normal mode — 10 random paginated
-                $paginated = $dbQuery->inRandomOrder()->paginate(10);
+                // Normal mode with 10-minute caching to eliminate RAND() database bottleneck
+                $cacheKey = "api_all_doc_v2_{$user_city}_page_{$page}";
 
-                $finalData = $paginated->getCollection()
-                    ->map(fn($d) => $this->formatDoctor($d));
+                return Cache::remember($cacheKey, now()->addMinutes(10), function () use ($dbQuery) {
+                    $paginated = $dbQuery->inRandomOrder()->paginate(10);
+                    $finalData = $paginated->getCollection()->map(fn($d) => $this->formatDoctor($d));
 
-                return response()->json([
-                    'status'        => true,
-                    'is_search'     => false,
-                    'total'         => $paginated->total(),
-                    'current_page'  => $paginated->currentPage(),
-                    'last_page'     => $paginated->lastPage(),
-                    'data'          => $finalData,
-                ]);
+                    return response()->json([
+                        'status'        => true,
+                        'is_search'     => false,
+                        'total'         => $paginated->total(),
+                        'current_page'  => $paginated->currentPage(),
+                        'last_page'     => $paginated->lastPage(),
+                        'data'          => $finalData,
+                    ]);
+                });
             }
         } catch (\Exception $e) {
             return response()->json([
