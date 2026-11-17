@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Superadmin;
 
 use App\Http\Controllers\Controller;
 use App\Models\SuperOtherBannerModel;
+use App\Services\ImageCompressionService;
 use Illuminate\Http\Request;
 
 class SuperOtherBannerController extends Controller
@@ -25,9 +26,14 @@ class SuperOtherBannerController extends Controller
 
         if ($request->hasFile('banner_image')) {
             try {
-                $file = $request->file('banner_image');
-                $fileName = time() . '_' . $file->getClientOriginalName();
-                $filePath = $file->storeAs('uploads/otherbanner', $fileName, 'public');
+                $filePath = ImageCompressionService::compressAndStore(
+                    $request->file('banner_image'),
+                    'uploads/otherbanner',
+                    'public',
+                    1920,
+                    1080,
+                    80
+                );
             } catch (\Exception $e) {
                 return back()->withErrors(['banner_image' => 'File upload failed. Please try again.']);
             }
@@ -53,13 +59,17 @@ class SuperOtherBannerController extends Controller
             if ($request->hasFile('banner_image')) {
 
                 if (file_exists(public_path('storage/' . $otherBannerInfo->banner_image))) {
-                    unlink(public_path('storage/' . $otherBannerInfo->banner_image));
+                    @unlink(public_path('storage/' . $otherBannerInfo->banner_image));
                 }
 
-
-                $file = $request->file('banner_image');
-                $fileName = time() . '_' . $file->getClientOriginalName();
-                $filePath = $file->storeAs('uploads/otherbanner', $fileName, 'public');
+                $filePath = ImageCompressionService::compressAndStore(
+                    $request->file('banner_image'),
+                    'uploads/otherbanner',
+                    'public',
+                    1920,
+                    1080,
+                    80
+                );
                 $otherBannerInfo->banner_image = $filePath;
             }
 

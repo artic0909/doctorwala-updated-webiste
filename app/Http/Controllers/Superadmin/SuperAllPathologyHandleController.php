@@ -9,6 +9,7 @@ use App\Models\PartnerPathologyBannerModel;
 use App\Models\PartnerPathologyContactModel;
 use App\Exports\PathExport;
 use Maatwebsite\Excel\Facades\Excel;
+use App\Services\ImageCompressionService;
 use Illuminate\Http\Request;
 
 class SuperAllPathologyHandleController extends Controller
@@ -273,7 +274,14 @@ class SuperAllPathologyHandleController extends Controller
     private function uploadpathBanner(Request $request)
     {
         if ($request->hasFile('pathologybanner')) {
-            return $request->file('pathologybanner')->store('partner-pathology-profile', 'public');
+            return ImageCompressionService::compressAndStore(
+                $request->file('pathologybanner'),
+                'partner-pathology-profile',
+                'public',
+                1920,
+                1080,
+                80
+            );
         }
 
         return null;

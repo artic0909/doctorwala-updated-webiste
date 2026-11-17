@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Superadmin;
 
 use App\Http\Controllers\Controller;
 use App\Models\SuperHomeBannerModel;
+use App\Services\ImageCompressionService;
 use Illuminate\Http\Request;
 
 class SuperHomeBannerController extends Controller
@@ -27,9 +28,14 @@ class SuperHomeBannerController extends Controller
 
         if ($request->hasFile('banner_image')) {
             try {
-                $file = $request->file('banner_image');
-                $fileName = time() . '_' . $file->getClientOriginalName();
-                $filePath = $file->storeAs('uploads/homebanner', $fileName, 'public');
+                $filePath = ImageCompressionService::compressAndStore(
+                    $request->file('banner_image'),
+                    'uploads/homebanner',
+                    'public',
+                    1920,
+                    1080,
+                    80
+                );
             } catch (\Exception $e) {
                 return back()->withErrors(['banner_image' => 'File upload failed. Please try again.']);
             }
@@ -59,13 +65,17 @@ class SuperHomeBannerController extends Controller
             if ($request->hasFile('banner_image')) {
                 
                 if (file_exists(public_path('storage/' . $homeBannerInfo->banner_image))) {
-                    unlink(public_path('storage/' . $homeBannerInfo->banner_image));
+                    @unlink(public_path('storage/' . $homeBannerInfo->banner_image));
                 }
 
-               
-                $file = $request->file('banner_image');
-                $fileName = time() . '_' . $file->getClientOriginalName();
-                $filePath = $file->storeAs('uploads/homebanner', $fileName, 'public');
+                $filePath = ImageCompressionService::compressAndStore(
+                    $request->file('banner_image'),
+                    'uploads/homebanner',
+                    'public',
+                    1920,
+                    1080,
+                    80
+                );
                 $homeBannerInfo->banner_image = $filePath;
             }
 

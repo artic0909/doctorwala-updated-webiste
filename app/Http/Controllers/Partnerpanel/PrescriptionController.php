@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use App\Models\SystemPrescription;
+use App\Services\ImageCompressionService;
 use Carbon\Carbon;
 
 class PrescriptionController extends Controller
@@ -102,8 +103,9 @@ class PrescriptionController extends Controller
 
         if ($request->hasFile('images')) {
             foreach ($request->file('images') as $file) {
-                // Store under storage/app/public/medical_histories/{dw_user_id}/
-                $path = $file->store(
+                // Store under storage/app/public/medical_histories/{dw_user_id}/ compressed
+                $path = ImageCompressionService::compressAndStore(
+                    $file,
                     'medical_histories/' . $request->dw_user_id,
                     'public'
                 );
@@ -174,7 +176,11 @@ class PrescriptionController extends Controller
         // ── 2. Store newly uploaded files ─────────────────────────
         if ($request->hasFile('new_images')) {
             foreach ($request->file('new_images') as $file) {
-                $path = $file->store('medical_histories/' . $record->dw_user_id, 'public');
+                $path = ImageCompressionService::compressAndStore(
+                    $file,
+                    'medical_histories/' . $record->dw_user_id,
+                    'public'
+                );
                 $imagePaths[] = $path;
             }
         }

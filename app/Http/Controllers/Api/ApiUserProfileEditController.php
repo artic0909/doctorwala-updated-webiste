@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Services\ImageCompressionService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -94,14 +95,17 @@ class ApiUserProfileEditController extends Controller
                 // Delete old image if exists
                 $oldImage = DB::table('dw_user_models')->where('id', $user->id)->value('image');
                 if ($oldImage && file_exists(public_path('storage/' . $oldImage))) {
-                    unlink(public_path('storage/' . $oldImage));
+                    @unlink(public_path('storage/' . $oldImage));
                 }
 
-                $file     = $request->file('image');
-                $fileName = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
-                $file->move(public_path('storage/images'), $fileName);
-
-                $data['image'] = 'images/' . $fileName;
+                $data['image'] = ImageCompressionService::compressAndStore(
+                    $request->file('image'),
+                    'images',
+                    'public',
+                    800,
+                    800,
+                    80
+                );
             }
 
             DB::table('dw_user_models')

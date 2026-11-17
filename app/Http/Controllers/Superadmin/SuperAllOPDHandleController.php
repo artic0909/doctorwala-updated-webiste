@@ -9,6 +9,7 @@ use App\Models\PartnerAllOPDDoctorModel;
 use App\Models\PartnerOPDBannerModel;
 use App\Exports\OpdExport;
 use Maatwebsite\Excel\Facades\Excel;
+use App\Services\ImageCompressionService;
 use Illuminate\Http\Request;
 
 class SuperAllOPDHandleController extends Controller
@@ -282,7 +283,14 @@ class SuperAllOPDHandleController extends Controller
     private function uploadOpdBanner(Request $request)
     {
         if ($request->hasFile('opdbanner')) {
-            return $request->file('opdbanner')->store('partner-opd-profile', 'public');
+            return ImageCompressionService::compressAndStore(
+                $request->file('opdbanner'),
+                'partner-opd-profile',
+                'public',
+                1920,
+                1080,
+                80
+            );
         }
 
         return null;

@@ -21,6 +21,7 @@ use App\Models\SuperAboutusModel;
 use App\Models\SuperHomeBannerModel;
 use App\Models\SuperOtherBannerModel;
 use App\Models\Vital;
+use App\Services\ImageCompressionService;
 use Illuminate\Support\Facades\Storage;
 
 class ProfileEditController extends Controller
@@ -131,14 +132,17 @@ class ProfileEditController extends Controller
                 // Delete old image if exists
                 $oldImage = DB::table('dw_user_models')->where('id', $userId)->value('image');
                 if ($oldImage && file_exists(public_path('storage/' . $oldImage))) {
-                    unlink(public_path('storage/' . $oldImage));
+                    @unlink(public_path('storage/' . $oldImage));
                 }
 
-                $file = $request->file('image');
-                $fileName = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
-                $file->move(public_path('storage/images'), $fileName);
-
-                $data['image'] = 'images/' . $fileName;
+                $data['image'] = ImageCompressionService::compressAndStore(
+                    $request->file('image'),
+                    'images',
+                    'public',
+                    800,
+                    800,
+                    80
+                );
             }
 
             DB::table('dw_user_models')
@@ -276,8 +280,9 @@ class ProfileEditController extends Controller
 
         if ($request->hasFile('images')) {
             foreach ($request->file('images') as $file) {
-                // Store under storage/app/public/medical_histories/{user_id}/
-                $path = $file->store(
+                // Store under storage/app/public/medical_histories/{user_id}/ compressed
+                $path = ImageCompressionService::compressAndStore(
+                    $file,
                     'medical_histories/' . Auth::id(),
                     'public'
                 );
@@ -330,7 +335,11 @@ class ProfileEditController extends Controller
         // ── 2. Store newly uploaded files ─────────────────────────
         if ($request->hasFile('new_images')) {
             foreach ($request->file('new_images') as $file) {
-                $path = $file->store('medical_histories/' . Auth::id(), 'public');
+                $path = ImageCompressionService::compressAndStore(
+                    $file,
+                    'medical_histories/' . Auth::id(),
+                    'public'
+                );
                 $imagePaths[] = $path;
             }
         }

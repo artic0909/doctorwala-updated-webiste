@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\MedicalHistory;
 use App\Models\SystemPrescription;
+use App\Services\ImageCompressionService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
@@ -185,7 +186,8 @@ class ApiMedicalHistoryController extends Controller
 
             if ($request->hasFile('images')) {
                 foreach ($request->file('images') as $file) {
-                    $path = $file->store(
+                    $path = ImageCompressionService::compressAndStore(
+                        $file,
                         'medical_histories/' . $request->user()->id,
                         'public'
                     );
@@ -258,7 +260,11 @@ class ApiMedicalHistoryController extends Controller
             // ── 2. Store newly uploaded files ──────────────────────
             if ($request->hasFile('new_images')) {
                 foreach ($request->file('new_images') as $file) {
-                    $path = $file->store('medical_histories/' . $request->user()->id, 'public');
+                    $path = ImageCompressionService::compressAndStore(
+                        $file,
+                        'medical_histories/' . $request->user()->id,
+                        'public'
+                    );
                     $imagePaths[] = $path;
                 }
             }

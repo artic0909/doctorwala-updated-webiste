@@ -8,6 +8,7 @@ use App\Models\PartnerDoctorBannerModel;
 use App\Models\PartnerDoctorContactModel;
 use App\Exports\DocExport;
 use Maatwebsite\Excel\Facades\Excel;
+use App\Services\ImageCompressionService;
 use Illuminate\Http\Request;
 
 class SuperAllOnlyDoctorHandleController extends Controller
@@ -186,7 +187,14 @@ class SuperAllOnlyDoctorHandleController extends Controller
     private function uploadpathBanner(Request $request)
     {
         if ($request->hasFile('doctorbanner')) {
-            return $request->file('doctorbanner')->store('partner-doctor-profile', 'public');
+            return ImageCompressionService::compressAndStore(
+                $request->file('doctorbanner'),
+                'partner-doctor-profile',
+                'public',
+                1920,
+                1080,
+                80
+            );
         }
 
         return null;

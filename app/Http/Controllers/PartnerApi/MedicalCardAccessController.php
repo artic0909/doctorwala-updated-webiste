@@ -15,6 +15,7 @@ use App\Models\PartnerPathologyBannerModel;
 use App\Models\PartnerPatientInquiry;
 use App\Models\SystemPrescription;
 use App\Models\Vital;
+use App\Services\ImageCompressionService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Contracts\Encryption\DecryptException;
@@ -636,11 +637,12 @@ class MedicalCardAccessController extends Controller
             ], 403);
         }
 
-        // Store images
+        // Store images compressed
         $imagePaths = [];
         if ($request->hasFile('images')) {
             foreach ($request->file('images') as $file) {
-                $path = $file->store(
+                $path = ImageCompressionService::compressAndStore(
+                    $file,
                     'medical_histories/' . $request->dw_user_id,
                     'public'
                 );

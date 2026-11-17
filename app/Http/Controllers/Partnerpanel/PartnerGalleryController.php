@@ -7,6 +7,7 @@ use App\Models\PartnerGalleryModel;
 use App\Models\PartnerDoctorBannerModel;
 use App\Models\PartnerOPDBannerModel;
 use App\Models\PartnerPathologyBannerModel;
+use App\Services\ImageCompressionService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -46,13 +47,20 @@ class PartnerGalleryController extends Controller
         $partnerId = Auth::guard('partner')->id();
 
         $request->validate([
-            'images.*' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'images.*' => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:20480',
         ]);
 
         $uploadedImages = [];
         if ($request->hasFile('images')) {
             foreach ($request->file('images') as $image) {
-                $path = $image->store('partner-gallery', 'public');
+                $path = ImageCompressionService::compressAndStore(
+                    $image,
+                    'partner-gallery',
+                    'public',
+                    1600,
+                    1600,
+                    80
+                );
                 $uploadedImages[] = $path;
             }
         }
@@ -65,26 +73,28 @@ class PartnerGalleryController extends Controller
         return redirect()->route('partner.gallery.index')->with('success', 'Images added successfully.');
     }
 
-
-
-
-
-
     // Update an image (replace existing)
     public function update(Request $request, $index)
     {
         $partnerId = Auth::guard('partner')->id();
 
         $request->validate([
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:20480',
         ]);
 
         $gallery = PartnerGalleryModel::where('currently_loggedin_partner_id', $partnerId)->firstOrFail();
         $images = $gallery->images;
 
         if (isset($images[$index])) {
-            // Replace the existing image
-            $path = $request->file('image')->store('partner-gallery', 'public');
+            // Replace the existing image with compressed version
+            $path = ImageCompressionService::compressAndStore(
+                $request->file('image'),
+                'partner-gallery',
+                'public',
+                1600,
+                1600,
+                80
+            );
             $images[$index] = $path;
             $gallery->images = $images;
             $gallery->save();

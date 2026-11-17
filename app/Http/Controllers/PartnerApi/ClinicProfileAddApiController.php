@@ -9,6 +9,7 @@ use App\Models\PartnerDoctorContactModel;
 use App\Models\PartnerOPDBannerModel;
 use App\Models\PartnerPathologyBannerModel;
 use App\Models\PartnerDoctorBannerModel;
+use App\Services\ImageCompressionService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -120,7 +121,14 @@ class ClinicProfileAddApiController extends Controller
             // Handle OPD banner upload
             $opdBannerPath = null;
             if ($request->hasFile('opdbanner')) {
-                $opdBannerPath = $request->file('opdbanner')->store('partner-opd-profile', 'public');
+                $opdBannerPath = ImageCompressionService::compressAndStore(
+                    $request->file('opdbanner'),
+                    'partner-opd-profile',
+                    'public',
+                    1920,
+                    1080,
+                    80
+                );
             }
 
             $opdBanner = null;
@@ -254,7 +262,14 @@ class ClinicProfileAddApiController extends Controller
             // Handle Pathology banner upload
             $pathologyBannerPath = null;
             if ($request->hasFile('pathologybanner')) {
-                $pathologyBannerPath = $request->file('pathologybanner')->store('partner-pathology-profile', 'public');
+                $pathologyBannerPath = ImageCompressionService::compressAndStore(
+                    $request->file('pathologybanner'),
+                    'partner-pathology-profile',
+                    'public',
+                    1920,
+                    1080,
+                    80
+                );
             }
 
             $pathologyBanner = null;
@@ -395,7 +410,14 @@ class ClinicProfileAddApiController extends Controller
             // Handle Doctor banner upload
             $doctorBannerPath = null;
             if ($request->hasFile('doctorbanner')) {
-                $doctorBannerPath = $request->file('doctorbanner')->store('partner-doctor-profile', 'public');
+                $doctorBannerPath = ImageCompressionService::compressAndStore(
+                    $request->file('doctorbanner'),
+                    'partner-doctor-profile',
+                    'public',
+                    1920,
+                    1080,
+                    80
+                );
             }
 
             $doctorBanner = null;
