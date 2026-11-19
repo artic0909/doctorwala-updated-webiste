@@ -26,6 +26,40 @@
     </div>
 </div>
 
+<!-- Filter Bar Card -->
+<div class="filter-card">
+    <form action="{{ route('partner.pathology.show') }}" method="GET" class="row align-items-end g-2">
+        <div class="col-12 col-md-4 mb-2">
+            <label><i class="fa-solid fa-magnifying-glass text-warning mr-1"></i> Search Diagnostic Test</label>
+            <input type="text" name="search" class="form-control" placeholder="Test name, category, notes..." value="{{ request('search') }}">
+        </div>
+        <div class="col-6 col-md-2 mb-2">
+            <label><i class="fa-solid fa-toggle-on text-warning mr-1"></i> Status</label>
+            <select name="status" class="form-control">
+                <option value="">All Status</option>
+                <option value="Available" {{ request('status') === 'Available' ? 'selected' : '' }}>Available</option>
+                <option value="Unavailable" {{ request('status') === 'Unavailable' ? 'selected' : '' }}>Unavailable</option>
+            </select>
+        </div>
+        <div class="col-6 col-md-2 mb-2">
+            <label><i class="fa-regular fa-calendar text-warning mr-1"></i> From Date</label>
+            <input type="date" name="from_date" class="form-control" value="{{ request('from_date') }}">
+        </div>
+        <div class="col-6 col-md-2 mb-2">
+            <label><i class="fa-regular fa-calendar text-warning mr-1"></i> To Date</label>
+            <input type="date" name="to_date" class="form-control" value="{{ request('to_date') }}">
+        </div>
+        <div class="col-6 col-md-2 mb-2 d-flex">
+            <button type="submit" class="btn btn-warning text-white flex-grow-1 mr-1 font-weight-bold" style="border-radius: 8px;">
+                <i class="fa-solid fa-filter mr-1"></i> Filter
+            </button>
+            <a href="{{ route('partner.pathology.show') }}" class="btn btn-outline-secondary font-weight-bold" style="border-radius: 8px;" title="Reset Filters">
+                <i class="fa-solid fa-rotate-left"></i>
+            </a>
+        </div>
+    </form>
+</div>
+
 <!-- Pathology Test List Card -->
 <div class="doc-card">
     <div class="doc-card-header d-flex justify-content-between align-items-center">
@@ -136,9 +170,9 @@
     </div>
 
     <!-- Pagination Footer -->
-    <div class="doc-card-footer d-flex justify-content-between align-items-center flex-wrap">
+    <div class="table-pagination-footer d-flex justify-content-between align-items-center flex-wrap">
         <div class="text-muted small mb-2 mb-md-0">
-            Showing {{ $storedData->firstItem() ?? 0 }} to {{ $storedData->lastItem() ?? 0 }} of {{ $storedData->total() }} tests
+            Showing <b>{{ $storedData->firstItem() ?? 0 }}</b> to <b>{{ $storedData->lastItem() ?? 0 }}</b> of <b>{{ $storedData->total() }}</b> tests
         </div>
         <div>
             {{ $storedData->links('pagination::bootstrap-4') }}

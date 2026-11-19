@@ -10,6 +10,29 @@
             </a>
         </li>
 
+        {{-- Appointments (Top Level) --}}
+        @php
+            $isAppointmentsActive = request()->is('superadmin/super-opd-inquiry*') || 
+                                    request()->is('superadmin/super-path-inquiry*') || 
+                                    request()->is('superadmin/super-doc-inquiry*') || 
+                                    request()->is('superadmin/super-user-inquiry*');
+        @endphp
+        <li class="nav-item {{ $isAppointmentsActive ? 'active' : '' }}">
+            <a class="nav-link" data-toggle="collapse" href="#ui-appointments" aria-expanded="{{ $isAppointmentsActive ? 'true' : 'false' }}" aria-controls="ui-appointments">
+                <i class="fa-solid fa-calendar-check nav-icon"></i>
+                <span class="menu-title">Appointments</span>
+                <i class="menu-arrow"></i>
+            </a>
+            <div class="collapse {{ $isAppointmentsActive ? 'show' : '' }}" id="ui-appointments">
+                <ul class="nav flex-column sub-menu">
+                    <li class="nav-item"><a class="nav-link {{ request()->is('superadmin/super-opd-inquiry*') ? 'active' : '' }}" href="/superadmin/super-opd-inquiry">OPD Appointments</a></li>
+                    <li class="nav-item"><a class="nav-link {{ request()->is('superadmin/super-path-inquiry*') ? 'active' : '' }}" href="/superadmin/super-path-inquiry">Pathology Bookings</a></li>
+                    <li class="nav-item"><a class="nav-link {{ request()->is('superadmin/super-doc-inquiry*') ? 'active' : '' }}" href="/superadmin/super-doc-inquiry">Doctor Appointments</a></li>
+                    <li class="nav-item"><a class="nav-link {{ request()->is('superadmin/super-user-inquiry*') ? 'active' : '' }}" href="/superadmin/super-user-inquiry">User Inquiries</a></li>
+                </ul>
+            </div>
+        </li>
+
         <li class="nav-item {{ request()->is('superadmin/super-callings*') ? 'active' : '' }}">
             <a class="nav-link" href="/superadmin/super-callings">
                 <i class="fa-solid fa-headset nav-icon"></i>
@@ -149,28 +172,20 @@
         <!-- Section: Support & Platform -->
         <li class="sidebar-category-header">Patient Care & Support</li>
 
-        {{-- 5. Support & Inquiries --}}
+        {{-- 5. Support & Helpdesk --}}
         @php
-            $isSupportActive = request()->is('superadmin/super-opd-inquiry*') || 
-                               request()->is('superadmin/super-path-inquiry*') || 
-                               request()->is('superadmin/super-doc-inquiry*') || 
-                               request()->is('superadmin/super-user-inquiry*') ||
-                               request()->is('superadmin/super-all-tickets*') || 
+            $isSupportActive = request()->is('superadmin/super-all-tickets*') || 
                                request()->is('superadmin/super-ticket-replies*') || 
                                request()->is('superadmin/super-all-feedback*');
         @endphp
         <li class="nav-item {{ $isSupportActive ? 'active' : '' }}">
             <a class="nav-link" data-toggle="collapse" href="#ui-support" aria-expanded="{{ $isSupportActive ? 'true' : 'false' }}" aria-controls="ui-support">
                 <i class="fa-solid fa-headset nav-icon"></i>
-                <span class="menu-title">Helpdesk & Inquiries</span>
+                <span class="menu-title">Helpdesk & Support</span>
                 <i class="menu-arrow"></i>
             </a>
             <div class="collapse {{ $isSupportActive ? 'show' : '' }}" id="ui-support">
                 <ul class="nav flex-column sub-menu">
-                    <li class="nav-item"><a class="nav-link {{ request()->is('superadmin/super-user-inquiry*') ? 'active' : '' }}" href="/superadmin/super-user-inquiry">User Inquiries</a></li>
-                    <li class="nav-item"><a class="nav-link {{ request()->is('superadmin/super-opd-inquiry*') ? 'active' : '' }}" href="/superadmin/super-opd-inquiry">OPD Inquiries</a></li>
-                    <li class="nav-item"><a class="nav-link {{ request()->is('superadmin/super-path-inquiry*') ? 'active' : '' }}" href="/superadmin/super-path-inquiry">Pathology Inquiries</a></li>
-                    <li class="nav-item"><a class="nav-link {{ request()->is('superadmin/super-doc-inquiry*') ? 'active' : '' }}" href="/superadmin/super-doc-inquiry">Doctor Inquiries</a></li>
                     <li class="nav-item"><a class="nav-link {{ request()->is('superadmin/super-all-tickets*') ? 'active' : '' }}" href="/superadmin/super-all-tickets">All Tickets</a></li>
                     <li class="nav-item"><a class="nav-link {{ request()->is('superadmin/super-ticket-replies*') ? 'active' : '' }}" href="/superadmin/super-ticket-replies">Ticket Replies</a></li>
                     <li class="nav-item"><a class="nav-link {{ request()->is('superadmin/super-all-feedback*') ? 'active' : '' }}" href="/superadmin/super-all-feedback">Patient Feedbacks</a></li>

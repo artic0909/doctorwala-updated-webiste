@@ -94,27 +94,59 @@ class PartnerAllOPDInfoController extends Controller
 
 
 
-    public function showStoredData()
+    public function showStoredData(Request $request)
     {
+        $partner = Auth::guard('partner')->user();
+        $partnerId = $partner->id;
+        $partnerIds = array_values(array_filter([$partner->id, $partner->partner_id]));
 
-        $partnerId = Auth::guard('partner')->id();
-        $opdBanner = PartnerOPDBannerModel::where('currently_loggedin_partner_id', $partnerId)->first();
-        $pathologyBanner = PartnerPathologyBannerModel::where('currently_loggedin_partner_id', $partnerId)->first();
-        $doctorBanner = PartnerDoctorBannerModel::where('currently_loggedin_partner_id', $partnerId)->first();
-        $storedData = PartnerAllOPDDoctorModel::where('currently_loggedin_partner_id', $partnerId)->latest('updated_at')->paginate(6);
-        foreach ($storedData as $data) {
-            $data->visit_day_time = json_decode($data->visit_day_time, true);
+        $opdBanner = PartnerOPDBannerModel::whereIn('currently_loggedin_partner_id', $partnerIds)->first();
+        $pathologyBanner = PartnerPathologyBannerModel::whereIn('currently_loggedin_partner_id', $partnerIds)->first();
+        $doctorBanner = PartnerDoctorBannerModel::whereIn('currently_loggedin_partner_id', $partnerIds)->first();
+
+        $query = PartnerAllOPDDoctorModel::whereIn('currently_loggedin_partner_id', $partnerIds);
+
+        if ($request->filled('search')) {
+            $search = trim($request->search);
+            $query->where(function($q) use ($search) {
+                $q->where('doctor_name', 'like', "%{$search}%")
+                  ->orWhere('doctor_specialist', 'like', "%{$search}%")
+                  ->orWhere('doctor_designation', 'like', "%{$search}%")
+                  ->orWhere('doctor_more', 'like', "%{$search}%");
+            });
         }
 
-        $partner = Auth::guard('partner')->user();
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        if ($request->filled('from_date')) {
+            $query->whereDate('created_at', '>=', $request->from_date);
+        }
+
+        if ($request->filled('to_date')) {
+            $query->whereDate('created_at', '<=', $request->to_date);
+        }
+
+        $storedData = $query->latest('updated_at')->paginate(15)->withQueryString();
+        foreach ($storedData as $data) {
+            if (is_string($data->visit_day_time)) {
+                $data->visit_day_time = json_decode($data->visit_day_time, true) ?? [];
+            } elseif (!is_array($data->visit_day_time)) {
+                $data->visit_day_time = [];
+            }
+        }
+
+        $allOPDs = PartnerAllOPDDoctorModel::whereIn('currently_loggedin_partner_id', $partnerIds)->count();
+        $availableOPDs = PartnerAllOPDDoctorModel::whereIn('currently_loggedin_partner_id', $partnerIds)->where('status', 'Available')->count();
+
         $registrationTypes = $partner->registration_type;
 
         if (is_string($registrationTypes)) {
             $registrationTypes = json_decode($registrationTypes, true);
         }
 
-
-        return view('partnerpanel.opd.index', compact('opdBanner', 'pathologyBanner','doctorBanner', 'storedData', 'registrationTypes'));
+        return view('partnerpanel.opd.index', compact('opdBanner', 'pathologyBanner', 'doctorBanner', 'storedData', 'registrationTypes', 'allOPDs', 'availableOPDs'));
     }
 
 

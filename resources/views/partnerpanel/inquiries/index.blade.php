@@ -1,15 +1,15 @@
 @extends('layouts.partner')
 
-@section('title', 'Patient Inquiries | Partner Panel')
+@section('title', 'Patient Appointments | Partner Panel')
 
 @section('content')
 <div class="row mb-4">
     <div class="col-12 d-flex flex-wrap justify-content-between align-items-center">
         <div>
             <h3 class="font-weight-bold text-dark mb-1">
-                <i class="fa-solid fa-hand-holding-medical text-primary mr-2"></i>Patient Inquiries & Messages
+                <i class="fa-solid fa-calendar-check text-primary mr-2"></i>Patient Appointments & Consultation Bookings
             </h3>
-            <p class="text-muted mb-0">Messages and consultation inquiries sent by patients through the Doctorwala directory portal.</p>
+            <p class="text-muted mb-0">Appointments and consultation bookings submitted by patients through the Doctorwala portal.</p>
         </div>
     </div>
 </div>
@@ -54,7 +54,7 @@
 <div class="card border-0 shadow-sm" style="border-radius: 14px;">
     <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
         <h5 class="mb-0 font-weight-bold text-dark">
-            <i class="fa-solid fa-comments text-primary mr-2"></i>Inquiries Inbox
+            <i class="fa-solid fa-calendar-check text-primary mr-2"></i>Appointments & Bookings Inbox
             <span class="badge badge-secondary ml-2">{{ $patientInquiries->total() }}</span>
         </h5>
     </div>

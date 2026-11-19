@@ -118,18 +118,41 @@ class PartnerSubscriptionController extends Controller
     }
 
 
-        public function showInvoice()
+    public function showInvoice(Request $request)
     {
         $partner = Auth::guard('partner')->user();
+        $partnerIds = array_values(array_filter([$partner->id, $partner->partner_id]));
         $subs = SuperSubscriptionModel::all();
-        $opdBanner = PartnerOPDBannerModel::where('currently_loggedin_partner_id', $partner)->first();
-        $pathologyBanner = PartnerPathologyBannerModel::where('currently_loggedin_partner_id', $partner)->first();
-        $doctorBanner = PartnerDoctorBannerModel::where('currently_loggedin_partner_id', $partner)->first();
+        $opdBanner = PartnerOPDBannerModel::whereIn('currently_loggedin_partner_id', $partnerIds)->first();
+        $pathologyBanner = PartnerPathologyBannerModel::whereIn('currently_loggedin_partner_id', $partnerIds)->first();
+        $doctorBanner = PartnerDoctorBannerModel::whereIn('currently_loggedin_partner_id', $partnerIds)->first();
         $registrationTypes = $partner->registration_type;
 
         if (is_string($registrationTypes)) {
             $registrationTypes = json_decode($registrationTypes, true);
         }
-        return view('partnerpanel.subscription.invoices', compact('subs', 'partner', 'opdBanner', 'pathologyBanner', 'doctorBanner', 'registrationTypes'));
+
+        $query = SubscriptionHolder::whereIn('currently_loggedin_partner_id', $partnerIds);
+
+        if ($request->filled('search')) {
+            $search = trim($request->search);
+            $query->where(function($q) use ($search) {
+                $q->where('subscription_title', 'like', "%{$search}%")
+                  ->orWhere('transaction_id', 'like', "%{$search}%")
+                  ->orWhere('partner_clinic_name', 'like', "%{$search}%");
+            });
+        }
+
+        if ($request->filled('from_date')) {
+            $query->whereDate('created_at', '>=', $request->from_date);
+        }
+
+        if ($request->filled('to_date')) {
+            $query->whereDate('created_at', '<=', $request->to_date);
+        }
+
+        $invoices = $query->latest('id')->paginate(15)->withQueryString();
+
+        return view('partnerpanel.subscription.invoices', compact('subs', 'partner', 'opdBanner', 'pathologyBanner', 'doctorBanner', 'registrationTypes', 'invoices'));
     }
 }

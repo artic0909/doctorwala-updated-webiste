@@ -113,24 +113,140 @@ class DwPartnerController extends Controller
 
     public function partnerdashboardview()
     {
-        $partnerId = Auth::guard('partner')->id();
-        $opdBanner = PartnerOPDBannerModel::where('currently_loggedin_partner_id', $partnerId)->first();
-        $pathologyBanner = PartnerPathologyBannerModel::where('currently_loggedin_partner_id', $partnerId)->first();
-        $doctorBanner = PartnerDoctorBannerModel::where('currently_loggedin_partner_id', $partnerId)->first();
-
-
         $partner = Auth::guard('partner')->user();
-        $registrationTypes = $partner->registration_type;
+        $partnerId = $partner->id;
+        $partnerIds = array_values(array_filter([$partner->id, $partner->partner_id]));
 
+        $opdBanner = PartnerOPDBannerModel::whereIn('currently_loggedin_partner_id', $partnerIds)->first();
+        $pathologyBanner = PartnerPathologyBannerModel::whereIn('currently_loggedin_partner_id', $partnerIds)->first();
+        $doctorBanner = PartnerDoctorBannerModel::whereIn('currently_loggedin_partner_id', $partnerIds)->first();
+
+        $registrationTypes = $partner->registration_type;
         if (is_string($registrationTypes)) {
             $registrationTypes = json_decode($registrationTypes, true);
         }
-
+        $registrationTypes = is_array($registrationTypes) ? $registrationTypes : [];
 
         $clinicName = $partner->partner_clinic_name;
         $partnerName = $partner->partner_contact_person_name;
+        $partnerCode = $partner->partner_id ?? ('#DWPTR' . $partner->id);
 
-        return view('partnerpanel.dashboard.index', compact('opdBanner', 'pathologyBanner', 'doctorBanner', 'registrationTypes', 'partnerName', 'clinicName'));
+        // --- KPI METRICS ---
+
+        // 1. Doctors (OPD)
+        $totalDoctors = \App\Models\PartnerAllOPDDoctorModel::whereIn('currently_loggedin_partner_id', $partnerIds)->count();
+        $availableDoctors = \App\Models\PartnerAllOPDDoctorModel::whereIn('currently_loggedin_partner_id', $partnerIds)->where('status', 'Available')->count();
+
+        // 2. Pathology Tests
+        $totalTests = \App\Models\PartnerAllPathologyTestModel::whereIn('currently_loggedin_partner_id', $partnerIds)->count();
+        $availableTests = \App\Models\PartnerAllPathologyTestModel::whereIn('currently_loggedin_partner_id', $partnerIds)->where('status', 'Available')->count();
+
+        // 3. Patient Inquiries (Leads)
+        $opdContacts = \App\Models\PartnerOPDContactModel::whereIn('currently_loggedin_partner_id', $partnerIds)->get();
+        $pathContacts = \App\Models\PartnerPathologyContactModel::whereIn('currently_loggedin_partner_id', $partnerIds)->get();
+        $docContacts = \App\Models\PartnerDoctorContactModel::whereIn('currently_loggedin_partner_id', $partnerIds)->get();
+
+        $opdClinics = $opdContacts->pluck('clinic_name')->filter()->toArray();
+        $pathClinics = $pathContacts->pluck('clinic_name')->filter()->toArray();
+        $docClinics = $docContacts->pluck('partner_doctor_name')->filter()->toArray();
+
+        $allClinicNames = array_values(array_filter(array_unique(array_merge(
+            [$partner->partner_clinic_name ?? null],
+            $opdClinics,
+            $pathClinics,
+            $docClinics
+        ))));
+
+        $contactIds = array_values(array_filter(array_unique(array_merge(
+            $opdContacts->pluck('id')->toArray(),
+            $pathContacts->pluck('id')->toArray(),
+            $docContacts->pluck('id')->toArray()
+        ))));
+
+        $doctorIds = \App\Models\PartnerAllOPDDoctorModel::whereIn('currently_loggedin_partner_id', $partnerIds)
+            ->pluck('id')
+            ->filter()
+            ->toArray();
+
+        $inquiryQuery = \App\Models\PartnerPatientInquiry::where(function ($q) use ($partnerIds, $contactIds, $allClinicNames, $doctorIds) {
+            $q->whereIn('currently_loggedin_partner_id', $partnerIds);
+            if (!empty($contactIds)) {
+                $q->orWhereIn('currently_loggedin_partner_id', $contactIds);
+            }
+            if (!empty($allClinicNames)) {
+                $q->orWhereIn('clinic_name', $allClinicNames);
+            }
+            if (!empty($doctorIds)) {
+                $q->orWhereIn('doctor_id', $doctorIds);
+            }
+        });
+
+        $totalInquiries = (clone $inquiryQuery)->count();
+        $todayInquiries = (clone $inquiryQuery)->whereDate('created_at', now()->today())->count();
+        $recentInquiries = (clone $inquiryQuery)->latest('created_at')->take(5)->get();
+
+        // 4. Patient Health Record Requests
+        $requestQuery = \App\Models\AccessRequest::whereIn('currently_loggedin_partner_id', $partnerIds);
+        $totalRequests = (clone $requestQuery)->count();
+        $acceptedRequests = (clone $requestQuery)->where('req_status', 'accepted')->count();
+        $pendingRequests = (clone $requestQuery)->where('req_status', 'pending')->count();
+        $recentRequests = (clone $requestQuery)->with(['patient', 'doctor'])->latest('created_at')->take(5)->get();
+
+        // 5. Patient Reviews / Ratings
+        $totalFeedbacks = \App\Models\PartnerFeedback::whereIn('currently_loggedin_partner_id', $partnerIds)->count();
+        $avgRating = $totalFeedbacks > 0 ? round(\App\Models\PartnerFeedback::whereIn('currently_loggedin_partner_id', $partnerIds)->avg('rating'), 1) : 5.0;
+        $recentFeedbacks = \App\Models\PartnerFeedback::whereIn('currently_loggedin_partner_id', $partnerIds)->latest('created_at')->take(3)->get();
+
+        // 6. Helpdesk Support Tickets
+        $totalTickets = \App\Models\PartnerInquiryModel::whereIn('currently_loggedin_partner_id', $partnerIds)->count();
+        $pendingTickets = \App\Models\PartnerInquiryModel::whereIn('currently_loggedin_partner_id', $partnerIds)->where(function($q) {
+            $q->whereNull('partner_problem_reply')->orWhere('partner_problem_reply', '');
+        })->count();
+
+        // 7. Subscription / Plan Status
+        $activeSub = \App\Models\SubscriptionHolder::whereIn('currently_loggedin_partner_id', $partnerIds)->latest('id')->first();
+        $couponSub = \App\Models\CouponHolderModel::whereIn('currently_loggedin_partner_id', $partnerIds)->latest('id')->first();
+        $subPlanName = 'Free / Standard';
+        $subDaysRemaining = null;
+
+        if ($activeSub && $activeSub->close_date) {
+            $subPlanName = $activeSub->subscription_title ?? 'Partner Premium';
+            $close = \Carbon\Carbon::parse($activeSub->close_date);
+            $subDaysRemaining = max(0, (int) now()->diffInDays($close, false));
+        } elseif ($couponSub && $couponSub->coupon_end_date) {
+            $subPlanName = 'Coupon Partner Plan';
+            $close = \Carbon\Carbon::parse($couponSub->coupon_end_date);
+            $subDaysRemaining = max(0, (int) now()->diffInDays($close, false));
+        }
+
+        return view('partnerpanel.dashboard.index', compact(
+            'partner',
+            'opdBanner',
+            'pathologyBanner',
+            'doctorBanner',
+            'registrationTypes',
+            'partnerName',
+            'clinicName',
+            'partnerCode',
+            'totalDoctors',
+            'availableDoctors',
+            'totalTests',
+            'availableTests',
+            'totalInquiries',
+            'todayInquiries',
+            'recentInquiries',
+            'totalRequests',
+            'acceptedRequests',
+            'pendingRequests',
+            'recentRequests',
+            'totalFeedbacks',
+            'avgRating',
+            'recentFeedbacks',
+            'totalTickets',
+            'pendingTickets',
+            'subPlanName',
+            'subDaysRemaining'
+        ));
     }
 
     public function partnerRegForm(Request $request)

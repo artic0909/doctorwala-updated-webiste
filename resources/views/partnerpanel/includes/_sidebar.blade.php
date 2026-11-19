@@ -25,6 +25,13 @@
             </a>
         </li>
 
+        <li class="nav-item {{ request()->is('partnerpanel/partner-inquiry-from-patients*') ? 'active' : '' }}">
+            <a class="nav-link" href="/partnerpanel/partner-inquiry-from-patients">
+                <i class="fa-solid fa-calendar-check nav-icon"></i>
+                <span class="menu-title">Appointments</span>
+            </a>
+        </li>
+
         <!-- Section: Clinic & Profile -->
         <li class="sidebar-category-header">Clinic & Profile</li>
 
@@ -105,13 +112,6 @@
                     <li class="nav-item"><a class="nav-link {{ request()->is('partnerpanel/patient-profile-all-request') ? 'active' : '' }}" href="/partnerpanel/patient-profile-all-request">All Profiles</a></li>
                 </ul>
             </div>
-        </li>
-
-        <li class="nav-item {{ request()->is('partnerpanel/partner-inquiry-from-patients*') ? 'active' : '' }}">
-            <a class="nav-link" href="/partnerpanel/partner-inquiry-from-patients">
-                <i class="fa-solid fa-hand-holding-medical nav-icon"></i>
-                <span class="menu-title">Patient Inquiries</span>
-            </a>
         </li>
 
         <li class="nav-item {{ request()->is('partnerpanel/partner-feedbacks*') ? 'active' : '' }}">

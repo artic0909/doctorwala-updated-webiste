@@ -9,7 +9,7 @@ class SubscriptionHolder extends Model
 {
     use HasFactory;
 
-    protected $table = 'subscription_holder';
+    protected $table = 'subscription_holders';
 
     protected $fillable = [
         'currently_loggedin_partner_id',
