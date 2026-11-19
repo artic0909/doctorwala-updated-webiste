@@ -421,84 +421,94 @@
 
 <!-- Edit Partner Modal -->
 <div class="modal fade" id="editPartnerModal" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content" style="border-radius: 12px;">
-            <div class="modal-header border-0 pb-0">
-                <h5 class="modal-title font-weight-bold text-dark">
-                    <i class="fa-solid fa-pen-to-square text-primary mr-2"></i> Edit Partner: {{ $partner->partner_clinic_name }}
-                </h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
+    <div class="modal-dialog modal-dialog-centered" role="document" style="max-width: 580px;">
+        <div class="modal-content border-0 shadow-lg" style="border-radius: 16px; overflow: hidden;">
+            <div class="modal-header border-0 pb-0 pt-4 px-4 bg-white d-flex align-items-center justify-content-between">
+                <div class="d-flex align-items-center">
+                    <div class="rounded-circle d-flex align-items-center justify-content-center mr-3" style="width: 42px; height: 42px; background: #e0f2fe; color: #0284c7;">
+                        <i class="fa-solid fa-pen-to-square"></i>
+                    </div>
+                    <div>
+                        <h5 class="font-weight-bold text-dark mb-0" style="font-size: 1.05rem;">Edit Partner Profile</h5>
+                        <small class="text-muted font-weight-500">{{ $partner->partner_clinic_name }}</small>
+                    </div>
+                </div>
+                <button type="button" class="close text-muted p-2" data-dismiss="modal" aria-label="Close" style="outline: none;">
+                    <span aria-hidden="true" style="font-size: 1.4rem;">&times;</span>
                 </button>
             </div>
+
             <form action="{{ route('superadmin.update.partner', $partner->id) }}" method="POST">
                 @csrf
                 @method('PUT')
-                <div class="modal-body pt-3">
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label class="font-weight-bold small">Clinic / Facility Name</label>
-                            <input type="text" class="form-control" name="partner_clinic_name" value="{{ $partner->partner_clinic_name }}" required style="border-radius: 8px;">
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="font-weight-bold small">Contact Person Name</label>
-                            <input type="text" class="form-control" name="partner_contact_person_name" value="{{ $partner->partner_contact_person_name }}" required style="border-radius: 8px;">
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="font-weight-bold small">Mobile Number</label>
-                            <input type="text" class="form-control" name="partner_mobile_number" value="{{ $partner->partner_mobile_number }}" required style="border-radius: 8px;">
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="font-weight-bold small">Email Address</label>
-                            <input type="email" class="form-control" name="partner_email" value="{{ $partner->partner_email }}" required style="border-radius: 8px;">
-                        </div>
-                        <div class="col-md-4 mb-3">
-                            <label class="font-weight-bold small">City</label>
-                            <input type="text" class="form-control" name="partner_city" value="{{ $partner->partner_city }}" required style="border-radius: 8px;">
-                        </div>
-                        <div class="col-md-4 mb-3">
-                            <label class="font-weight-bold small">State</label>
-                            <input type="text" class="form-control" name="partner_state" value="{{ $partner->partner_state }}" required style="border-radius: 8px;">
-                        </div>
-                        <div class="col-md-4 mb-3">
-                            <label class="font-weight-bold small">Pincode</label>
-                            <input type="text" class="form-control" name="partner_pincode" value="{{ $partner->partner_pincode }}" required style="border-radius: 8px;">
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="font-weight-bold small">Landmark</label>
-                            <input type="text" class="form-control" name="partner_landmark" value="{{ $partner->partner_landmark }}" required style="border-radius: 8px;">
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="font-weight-bold small">Full Address</label>
-                            <input type="text" class="form-control" name="partner_address" value="{{ $partner->partner_address }}" required style="border-radius: 8px;">
-                        </div>
-
-                        <div class="col-12 mb-3">
-                            <label class="font-weight-bold small">Registration Types</label>
-                            <div class="d-flex flex-wrap" style="gap: 15px;">
-                                @php
-                                    $regTypes = is_array($partner->registration_type) ? $partner->registration_type : [];
-                                @endphp
-                                <label class="custom-control custom-checkbox mb-0">
-                                    <input type="checkbox" class="custom-control-input" name="registration_type[]" value="OPD" {{ in_array('OPD', $regTypes) ? 'checked' : '' }}>
-                                    <span class="custom-control-label font-weight-bold">OPD</span>
-                                </label>
-                                <label class="custom-control custom-checkbox mb-0">
-                                    <input type="checkbox" class="custom-control-input" name="registration_type[]" value="Pathology" {{ in_array('Pathology', $regTypes) ? 'checked' : '' }}>
-                                    <span class="custom-control-label font-weight-bold">Pathology</span>
-                                </label>
-                                <label class="custom-control custom-checkbox mb-0">
-                                    <input type="checkbox" class="custom-control-input" name="registration_type[]" value="Doctor" {{ in_array('Doctor', $regTypes) ? 'checked' : '' }}>
-                                    <span class="custom-control-label font-weight-bold">Doctor</span>
-                                </label>
+                <div class="modal-body px-4 py-3">
+                    <!-- Service Type Checkboxes -->
+                    <div class="p-3 rounded mb-3" style="background: #f8fafc; border: 1px solid #e2e8f0;">
+                        <label class="font-weight-bold text-dark small mb-2 d-block">
+                            <i class="fa-solid fa-sitemap text-primary mr-1"></i> Registration Type <span class="text-danger">*</span>
+                        </label>
+                        <div class="d-flex align-items-center flex-wrap" style="gap: 16px;">
+                            @php
+                                $regTypes = is_array($partner->registration_type) ? $partner->registration_type : (json_decode($partner->registration_type, true) ?? []);
+                            @endphp
+                            <div class="custom-control custom-checkbox">
+                                <input type="checkbox" class="custom-control-input" name="registration_type[]" id="view_opd" value="OPD" {{ in_array('OPD', $regTypes) ? 'checked' : '' }}>
+                                <label class="custom-control-label font-weight-bold text-dark small" for="view_opd">OPD Chamber</label>
+                            </div>
+                            <div class="custom-control custom-checkbox">
+                                <input type="checkbox" class="custom-control-input" name="registration_type[]" id="view_path" value="Pathology" {{ in_array('Pathology', $regTypes) ? 'checked' : '' }}>
+                                <label class="custom-control-label font-weight-bold text-dark small" for="view_path">Pathology Lab</label>
+                            </div>
+                            <div class="custom-control custom-checkbox">
+                                <input type="checkbox" class="custom-control-input" name="registration_type[]" id="view_doc" value="Doctor" {{ in_array('Doctor', $regTypes) ? 'checked' : '' }}>
+                                <label class="custom-control-label font-weight-bold text-dark small" for="view_doc">Doctor</label>
                             </div>
                         </div>
                     </div>
+
+                    <div class="row g-2">
+                        <div class="col-md-6 form-group mb-2">
+                            <label class="font-weight-bold text-secondary small mb-1"><i class="fa fa-hospital text-primary mr-1"></i> Clinic / Facility <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control form-control-sm" name="partner_clinic_name" value="{{ $partner->partner_clinic_name }}" required style="height: 38px; border-radius: 8px;">
+                        </div>
+                        <div class="col-md-6 form-group mb-2">
+                            <label class="font-weight-bold text-secondary small mb-1"><i class="fa-solid fa-user text-primary mr-1"></i> Contact Person <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control form-control-sm" name="partner_contact_person_name" value="{{ $partner->partner_contact_person_name }}" required style="height: 38px; border-radius: 8px;">
+                        </div>
+                        <div class="col-md-6 form-group mb-2">
+                            <label class="font-weight-bold text-secondary small mb-1"><i class="fa fa-phone text-primary mr-1"></i> Mobile Number <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control form-control-sm" name="partner_mobile_number" value="{{ $partner->partner_mobile_number }}" required style="height: 38px; border-radius: 8px;">
+                        </div>
+                        <div class="col-md-6 form-group mb-2">
+                            <label class="font-weight-bold text-secondary small mb-1"><i class="fa-envelope text-primary mr-1"></i> Email Address <span class="text-danger">*</span></label>
+                            <input type="email" class="form-control form-control-sm" name="partner_email" value="{{ $partner->partner_email }}" required style="height: 38px; border-radius: 8px;">
+                        </div>
+                        <div class="col-md-6 form-group mb-2">
+                            <label class="font-weight-bold text-secondary small mb-1"><i class="fa-solid fa-globe text-primary mr-1"></i> State <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control form-control-sm" name="partner_state" value="{{ $partner->partner_state }}" required style="height: 38px; border-radius: 8px;">
+                        </div>
+                        <div class="col-md-6 form-group mb-2">
+                            <label class="font-weight-bold text-secondary small mb-1"><i class="fa-solid fa-city text-primary mr-1"></i> City <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control form-control-sm" name="partner_city" value="{{ $partner->partner_city }}" required style="height: 38px; border-radius: 8px;">
+                        </div>
+                        <div class="col-md-6 form-group mb-2">
+                            <label class="font-weight-bold text-secondary small mb-1"><i class="fa-solid fa-map-pin text-primary mr-1"></i> Landmark</label>
+                            <input type="text" class="form-control form-control-sm" name="partner_landmark" value="{{ $partner->partner_landmark }}" style="height: 38px; border-radius: 8px;">
+                        </div>
+                        <div class="col-md-6 form-group mb-2">
+                            <label class="font-weight-bold text-secondary small mb-1"><i class="fa-solid fa-location-pin-lock text-primary mr-1"></i> Pin Code</label>
+                            <input type="text" class="form-control form-control-sm" name="partner_pincode" value="{{ $partner->partner_pincode }}" style="height: 38px; border-radius: 8px;">
+                        </div>
+                        <div class="col-12 form-group mb-2">
+                            <label class="font-weight-bold text-secondary small mb-1"><i class="fa-solid fa-location-dot text-primary mr-1"></i> Full Address <span class="text-danger">*</span></label>
+                            <textarea name="partner_address" class="form-control form-control-sm" rows="2" style="border-radius: 8px;">{{ $partner->partner_address }}</textarea>
+                        </div>
+                    </div>
                 </div>
-                <div class="modal-footer border-0 pt-0">
-                    <button type="button" class="btn btn-light" data-dismiss="modal" style="border-radius: 8px;">Cancel</button>
-                    <button type="submit" class="btn btn-primary font-weight-bold" style="border-radius: 8px;">
-                        <i class="fa-solid fa-floppy-disk mr-1"></i> Save Changes
+                <div class="modal-footer border-0 px-4 py-3 bg-light d-flex justify-content-end" style="gap: 10px;">
+                    <button type="button" class="btn btn-light font-weight-bold px-3 py-2" data-dismiss="modal" style="border-radius: 8px;">Cancel</button>
+                    <button type="submit" class="btn btn-primary font-weight-bold px-4 py-2" style="border-radius: 8px; background: #0284c7; border-color: #0284c7;">
+                        <i class="fa-solid fa-check mr-1"></i> Save Changes
                     </button>
                 </div>
             </form>

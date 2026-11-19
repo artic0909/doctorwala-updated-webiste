@@ -259,56 +259,59 @@
 
 <!-- Add GP Modal -->
 <div class="modal fade" id="addGpModal" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content border-0 shadow" style="border-radius: 14px;">
-            <div class="modal-header bg-success text-white" style="border-top-left-radius: 14px; border-top-right-radius: 14px;">
-                <h5 class="modal-title font-weight-bold">
-                    <i class="fa-solid fa-users-gear mr-2"></i> Add New Ground Partner (GP)
-                </h5>
-                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
+    <div class="modal-dialog modal-dialog-centered" role="document" style="max-width: 480px;">
+        <div class="modal-content border-0 shadow-lg" style="border-radius: 16px; overflow: hidden;">
+            <div class="modal-header border-0 pb-0 pt-4 px-4 bg-white d-flex align-items-center justify-content-between">
+                <div class="d-flex align-items-center">
+                    <div class="rounded-circle d-flex align-items-center justify-content-center mr-3" style="width: 42px; height: 42px; background: #e0f2fe; color: #0284c7;">
+                        <i class="fa-solid fa-user-plus"></i>
+                    </div>
+                    <div>
+                        <h5 class="font-weight-bold text-dark mb-0" style="font-size: 1.05rem;">Add Ground Partner (GP)</h5>
+                        <small class="text-muted font-weight-500">Assign GP under parent EP</small>
+                    </div>
+                </div>
+                <button type="button" class="close text-muted p-2" data-dismiss="modal" aria-label="Close" style="outline: none;">
+                    <span aria-hidden="true" style="font-size: 1.4rem;">&times;</span>
                 </button>
             </div>
             <form action="{{ route('superadmin.super-gp.store') }}" method="POST">
                 @csrf
-                <div class="modal-body p-4">
-                    <div class="form-group mb-3">
-                        <label class="font-weight-bold text-dark"><i class="fa-solid fa-user-tie text-success mr-1"></i> Executive Partner (EP) <span class="text-danger">*</span></label>
-                        <select class="form-control" name="ep_id" style="border-radius: 8px;" required>
-                            <option value="">-- Select Parent EP --</option>
+                <div class="modal-body px-4 py-3">
+                    <div class="form-group mb-2">
+                        <label class="font-weight-bold text-secondary small mb-1"><i class="fa-solid fa-user-tie text-primary mr-1"></i> Parent Executive Partner (EP) <span class="text-danger">*</span></label>
+                        <select class="form-control form-control-sm" name="ep_id" style="height: 38px; border-radius: 8px;" required>
+                            <option value="">-- Choose EP --</option>
                             @foreach ($allEps as $ep)
-                                <option value="{{ $ep->id }}" {{ old('ep_id') == $ep->id ? 'selected' : '' }}>
+                                <option value="{{ $ep->id }}" {{ (old('ep_id', $selectedEpId) == $ep->id) ? 'selected' : '' }}>
                                     {{ $ep->name }} ({{ $ep->code }})
                                 </option>
                             @endforeach
                         </select>
                     </div>
-                    <div class="form-group mb-3">
-                        <label class="font-weight-bold text-dark"><i class="fa fa-user text-success mr-1"></i> Full Name <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control" name="name" value="{{ old('name') }}" placeholder="Enter GP full name" style="border-radius: 8px;" required>
+                    <div class="form-group mb-2">
+                        <label class="font-weight-bold text-secondary small mb-1"><i class="fa fa-user text-primary mr-1"></i> Full Name <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control form-control-sm" name="name" value="{{ old('name') }}" placeholder="e.g. Rahul Sharma" style="height: 38px; border-radius: 8px;" required>
                     </div>
-                    <div class="form-group mb-3">
-                        <label class="font-weight-bold text-dark"><i class="fa fa-phone text-success mr-1"></i> Mobile Number <span class="text-danger">*</span></label>
-                        <input type="tel" class="form-control" name="mobile" value="{{ old('mobile') }}" placeholder="10-digit mobile number" style="border-radius: 8px;" required>
+                    <div class="form-group mb-2">
+                        <label class="font-weight-bold text-secondary small mb-1"><i class="fa fa-phone text-primary mr-1"></i> Mobile Number <span class="text-danger">*</span></label>
+                        <input type="tel" class="form-control form-control-sm" name="mobile" value="{{ old('mobile') }}" placeholder="10-digit mobile" style="height: 38px; border-radius: 8px;" required>
                     </div>
-                    <div class="form-group mb-3">
-                        <label class="font-weight-bold text-dark">
-                            <i class="fa fa-barcode text-success mr-1"></i> GP Code
-                            <small class="text-muted font-italic">(Optional - auto-generated if blank)</small>
-                        </label>
-                        <input type="text" class="form-control" name="code" value="{{ old('code') }}" placeholder="Leave blank to auto-generate (e.g. GP839210)" style="border-radius: 8px;">
+                    <div class="form-group mb-2">
+                        <label class="font-weight-bold text-secondary small mb-1"><i class="fa fa-barcode text-primary mr-1"></i> GP Code <small class="text-muted">(Optional)</small></label>
+                        <input type="text" class="form-control form-control-sm" name="code" value="{{ old('code') }}" placeholder="Auto-generated if blank" style="height: 38px; border-radius: 8px;">
                     </div>
                     <div class="form-group mb-0">
-                        <label class="font-weight-bold text-dark"><i class="fa fa-toggle-on text-success mr-1"></i> Initial Status <span class="text-danger">*</span></label>
-                        <select class="form-control" name="status" style="border-radius: 8px;" required>
+                        <label class="font-weight-bold text-secondary small mb-1"><i class="fa fa-toggle-on text-primary mr-1"></i> Initial Status <span class="text-danger">*</span></label>
+                        <select class="form-control form-control-sm" name="status" style="height: 38px; border-radius: 8px;" required>
                             <option value="Active" {{ old('status', 'Active') === 'Active' ? 'selected' : '' }}>Active</option>
                             <option value="Inactive" {{ old('status') === 'Inactive' ? 'selected' : '' }}>Inactive</option>
                         </select>
                     </div>
                 </div>
-                <div class="modal-footer bg-light" style="border-bottom-left-radius: 14px; border-bottom-right-radius: 14px;">
-                    <button type="button" class="btn btn-secondary" style="border-radius: 8px;" data-dismiss="modal">Cancel</button>
-                    <button type="submit" class="btn btn-success px-4 font-weight-bold" style="border-radius: 8px;">
+                <div class="modal-footer border-0 px-4 py-3 bg-light d-flex justify-content-end" style="gap: 10px;">
+                    <button type="button" class="btn btn-light font-weight-bold px-3 py-2" style="border-radius: 8px;" data-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary font-weight-bold px-4 py-2" style="border-radius: 8px; background: #0284c7; border-color: #0284c7;">
                         <i class="fa fa-check mr-1"></i> Save GP
                     </button>
                 </div>
@@ -320,23 +323,29 @@
 <!-- Edit GP Modals -->
 @foreach ($records as $item)
 <div class="modal fade" id="editGpModal{{ $item->id }}" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content border-0 shadow" style="border-radius: 14px;">
-            <div class="modal-header bg-dark text-white" style="border-top-left-radius: 14px; border-top-right-radius: 14px;">
-                <h5 class="modal-title font-weight-bold">
-                    <i class="fa-solid fa-pen-to-square mr-2"></i> Edit GP: {{ $item->name }}
-                </h5>
-                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
+    <div class="modal-dialog modal-dialog-centered" role="document" style="max-width: 480px;">
+        <div class="modal-content border-0 shadow-lg" style="border-radius: 16px; overflow: hidden;">
+            <div class="modal-header border-0 pb-0 pt-4 px-4 bg-white d-flex align-items-center justify-content-between">
+                <div class="d-flex align-items-center">
+                    <div class="rounded-circle d-flex align-items-center justify-content-center mr-3" style="width: 42px; height: 42px; background: #e0f2fe; color: #0284c7;">
+                        <i class="fa-solid fa-pen-to-square"></i>
+                    </div>
+                    <div>
+                        <h5 class="font-weight-bold text-dark mb-0" style="font-size: 1.05rem;">Edit Ground Partner</h5>
+                        <small class="text-muted font-weight-500">{{ $item->name }} ({{ $item->code }})</small>
+                    </div>
+                </div>
+                <button type="button" class="close text-muted p-2" data-dismiss="modal" aria-label="Close" style="outline: none;">
+                    <span aria-hidden="true" style="font-size: 1.4rem;">&times;</span>
                 </button>
             </div>
             <form action="{{ route('superadmin.super-gp.update', $item->id) }}" method="POST">
                 @csrf
                 @method('PUT')
-                <div class="modal-body p-4">
-                    <div class="form-group mb-3">
-                        <label class="font-weight-bold text-dark"><i class="fa-solid fa-user-tie text-primary mr-1"></i> Parent Executive Partner (EP) <span class="text-danger">*</span></label>
-                        <select class="form-control" name="ep_id" style="border-radius: 8px;" required>
+                <div class="modal-body px-4 py-3">
+                    <div class="form-group mb-2">
+                        <label class="font-weight-bold text-secondary small mb-1"><i class="fa-solid fa-user-tie text-primary mr-1"></i> Parent Executive Partner (EP) <span class="text-danger">*</span></label>
+                        <select class="form-control form-control-sm" name="ep_id" style="height: 38px; border-radius: 8px;" required>
                             @foreach ($allEps as $ep)
                                 <option value="{{ $ep->id }}" {{ old('ep_id', $item->ep_id) == $ep->id ? 'selected' : '' }}>
                                     {{ $ep->name }} ({{ $ep->code }})
@@ -344,30 +353,30 @@
                             @endforeach
                         </select>
                     </div>
-                    <div class="form-group mb-3">
-                        <label class="font-weight-bold text-dark"><i class="fa fa-user text-primary mr-1"></i> Full Name <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control" name="name" value="{{ old('name', $item->name) }}" style="border-radius: 8px;" required>
+                    <div class="form-group mb-2">
+                        <label class="font-weight-bold text-secondary small mb-1"><i class="fa fa-user text-primary mr-1"></i> Full Name <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control form-control-sm" name="name" value="{{ old('name', $item->name) }}" style="height: 38px; border-radius: 8px;" required>
                     </div>
-                    <div class="form-group mb-3">
-                        <label class="font-weight-bold text-dark"><i class="fa fa-phone text-primary mr-1"></i> Mobile Number <span class="text-danger">*</span></label>
-                        <input type="tel" class="form-control" name="mobile" value="{{ old('mobile', $item->mobile) }}" style="border-radius: 8px;" required>
+                    <div class="form-group mb-2">
+                        <label class="font-weight-bold text-secondary small mb-1"><i class="fa fa-phone text-primary mr-1"></i> Mobile Number <span class="text-danger">*</span></label>
+                        <input type="tel" class="form-control form-control-sm" name="mobile" value="{{ old('mobile', $item->mobile) }}" style="height: 38px; border-radius: 8px;" required>
                     </div>
-                    <div class="form-group mb-3">
-                        <label class="font-weight-bold text-dark"><i class="fa fa-barcode text-primary mr-1"></i> GP Code <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control" name="code" value="{{ old('code', $item->code) }}" style="border-radius: 8px;" required>
+                    <div class="form-group mb-2">
+                        <label class="font-weight-bold text-secondary small mb-1"><i class="fa fa-barcode text-primary mr-1"></i> GP Code <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control form-control-sm" name="code" value="{{ old('code', $item->code) }}" style="height: 38px; border-radius: 8px;" required>
                     </div>
                     <div class="form-group mb-0">
-                        <label class="font-weight-bold text-dark"><i class="fa fa-toggle-on text-primary mr-1"></i> Status <span class="text-danger">*</span></label>
-                        <select class="form-control" name="status" style="border-radius: 8px;" required>
+                        <label class="font-weight-bold text-secondary small mb-1"><i class="fa fa-toggle-on text-primary mr-1"></i> Status <span class="text-danger">*</span></label>
+                        <select class="form-control form-control-sm" name="status" style="height: 38px; border-radius: 8px;" required>
                             <option value="Active" {{ $item->status === 'Active' ? 'selected' : '' }}>Active</option>
                             <option value="Inactive" {{ $item->status === 'Inactive' ? 'selected' : '' }}>Inactive</option>
                         </select>
                     </div>
                 </div>
-                <div class="modal-footer bg-light" style="border-bottom-left-radius: 14px; border-bottom-right-radius: 14px;">
-                    <button type="button" class="btn btn-secondary" style="border-radius: 8px;" data-dismiss="modal">Cancel</button>
-                    <button type="submit" class="btn btn-success px-4 font-weight-bold" style="border-radius: 8px;">
-                        <i class="fa fa-save mr-1"></i> Update Changes
+                <div class="modal-footer border-0 px-4 py-3 bg-light d-flex justify-content-end" style="gap: 10px;">
+                    <button type="button" class="btn btn-light font-weight-bold px-3 py-2" style="border-radius: 8px;" data-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary font-weight-bold px-4 py-2" style="border-radius: 8px; background: #0284c7; border-color: #0284c7;">
+                        <i class="fa fa-check mr-1"></i> Update GP
                     </button>
                 </div>
             </form>

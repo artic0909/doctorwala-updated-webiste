@@ -124,44 +124,50 @@
 
 <!-- Add Modal -->
 <div class="modal fade" id="myAddModal" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-        <div class="modal-content border-0 shadow" style="border-radius: 14px;">
-            <div class="modal-header bg-light" style="border-radius: 14px 14px 0 0;">
-                <h5 class="modal-title font-weight-bold text-dark">
-                    <i class="fa-solid fa-plus-circle text-primary mr-2"></i>Create New Blog Post
-                </h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
+    <div class="modal-dialog modal-dialog-centered" role="document" style="max-width: 620px;">
+        <div class="modal-content border-0 shadow-lg" style="border-radius: 16px; overflow: hidden;">
+            <div class="modal-header border-0 pb-0 pt-4 px-4 bg-white d-flex align-items-center justify-content-between">
+                <div class="d-flex align-items-center">
+                    <div class="rounded-circle d-flex align-items-center justify-content-center mr-3" style="width: 42px; height: 42px; background: #e0f2fe; color: #0284c7;">
+                        <i class="fa-solid fa-plus-circle"></i>
+                    </div>
+                    <div>
+                        <h5 class="font-weight-bold text-dark mb-0" style="font-size: 1.05rem;">Create New Blog Post</h5>
+                        <small class="text-muted font-weight-500">Publish articles & medical tips</small>
+                    </div>
+                </div>
+                <button type="button" class="close text-muted p-2" data-dismiss="modal" aria-label="Close" style="outline: none;">
+                    <span aria-hidden="true" style="font-size: 1.4rem;">&times;</span>
                 </button>
             </div>
             <form action="{{ route('superadmin.super-blog.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
-                <div class="modal-body p-4">
-                    <div class="form-group mb-3">
-                        <label class="font-weight-bold text-dark">
+                <div class="modal-body px-4 py-3">
+                    <div class="form-group mb-2">
+                        <label class="font-weight-bold text-secondary small mb-1">
                             <i class="fa-solid fa-image text-primary mr-1"></i> Cover Image <span class="text-danger">*</span>
                         </label>
-                        <input type="file" class="form-control" name="blg_image" id="blg_image" accept="image/*" style="border-radius: 8px;" required>
-                        <small class="text-muted">Recommended dimension: 1200x630 px (JPEG, PNG, WEBP, Max 2MB).</small>
+                        <input type="file" class="form-control form-control-sm" name="blg_image" id="blg_image" accept="image/*" style="border-radius: 8px;" required>
+                        <small class="text-muted" style="font-size: 0.75rem;">Recommended dimension: 1200x630 px (JPEG, PNG, WEBP, Max 2MB).</small>
                     </div>
 
-                    <div class="form-group mb-3">
-                        <label class="font-weight-bold text-dark">
+                    <div class="form-group mb-2">
+                        <label class="font-weight-bold text-secondary small mb-1">
                             <i class="fa-solid fa-heading text-primary mr-1"></i> Blog Title <span class="text-danger">*</span>
                         </label>
-                        <input type="text" class="form-control" name="blg_title" id="blg_title" placeholder="Enter an engaging blog headline..." style="border-radius: 8px;" required>
+                        <input type="text" class="form-control form-control-sm" name="blg_title" id="blg_title" placeholder="Enter blog headline..." style="height: 38px; border-radius: 8px;" required>
                     </div>
 
                     <div class="form-group mb-0">
-                        <label class="font-weight-bold text-dark">
+                        <label class="font-weight-bold text-secondary small mb-1">
                             <i class="fa-solid fa-paragraph text-primary mr-1"></i> Content & Details <span class="text-danger">*</span>
                         </label>
-                        <textarea name="blg_desc" id="blg_desc" class="form-control editor" rows="8"></textarea>
+                        <textarea name="blg_desc" id="blg_desc" class="form-control editor" rows="6" style="border-radius: 8px;"></textarea>
                     </div>
                 </div>
-                <div class="modal-footer bg-light" style="border-radius: 0 0 14px 14px;">
-                    <button type="button" class="btn btn-secondary font-weight-bold" style="border-radius: 8px;" data-dismiss="modal">Cancel</button>
-                    <button type="submit" class="btn btn-primary font-weight-bold" style="border-radius: 8px; background: #0284c7; border-color: #0284c7;">
+                <div class="modal-footer border-0 px-4 py-3 bg-light d-flex justify-content-end" style="gap: 10px;">
+                    <button type="button" class="btn btn-light font-weight-bold px-3 py-2" style="border-radius: 8px;" data-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary font-weight-bold px-4 py-2" style="border-radius: 8px; background: #0284c7; border-color: #0284c7;">
                         <i class="fa-solid fa-upload mr-1"></i> Publish Blog
                     </button>
                 </div>
@@ -173,51 +179,57 @@
 <!-- Edit Modals -->
 @foreach ($blogs as $blog)
 <div class="modal fade" id="myEditModal{{ $blog->id }}" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-        <div class="modal-content border-0 shadow" style="border-radius: 14px;">
-            <div class="modal-header bg-light" style="border-radius: 14px 14px 0 0;">
-                <h5 class="modal-title font-weight-bold text-dark">
-                    <i class="fa-solid fa-pen-to-square text-primary mr-2"></i>Edit Blog Post
-                </h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
+    <div class="modal-dialog modal-dialog-centered" role="document" style="max-width: 620px;">
+        <div class="modal-content border-0 shadow-lg" style="border-radius: 16px; overflow: hidden;">
+            <div class="modal-header border-0 pb-0 pt-4 px-4 bg-white d-flex align-items-center justify-content-between">
+                <div class="d-flex align-items-center">
+                    <div class="rounded-circle d-flex align-items-center justify-content-center mr-3" style="width: 42px; height: 42px; background: #e0f2fe; color: #0284c7;">
+                        <i class="fa-solid fa-pen-to-square"></i>
+                    </div>
+                    <div>
+                        <h5 class="font-weight-bold text-dark mb-0" style="font-size: 1.05rem;">Edit Blog Post</h5>
+                        <small class="text-muted font-weight-500">Update content & cover photo</small>
+                    </div>
+                </div>
+                <button type="button" class="close text-muted p-2" data-dismiss="modal" aria-label="Close" style="outline: none;">
+                    <span aria-hidden="true" style="font-size: 1.4rem;">&times;</span>
                 </button>
             </div>
             <form action="{{ route('superadmin.super-blog.update', $blog->id) }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
-                <div class="modal-body p-4">
+                <div class="modal-body px-4 py-3">
                     @if($blog->blg_image)
-                    <div class="mb-3 text-center">
-                        <img src="{{ asset('storage/' . $blog->blg_image) }}" alt="Cover" style="max-height: 180px; width: auto; border-radius: 10px; border: 1px solid #e2e8f0;">
-                        <div class="small text-muted mt-1">Current Cover Image</div>
+                    <div class="mb-2 text-center p-2 rounded" style="background: #f8fafc; border: 1px solid #e2e8f0;">
+                        <img src="{{ asset('storage/' . $blog->blg_image) }}" alt="Cover" style="max-height: 120px; width: auto; border-radius: 8px;">
+                        <div class="text-muted mt-1" style="font-size: 0.75rem;">Current Cover Image</div>
                     </div>
                     @endif
 
-                    <div class="form-group mb-3">
-                        <label class="font-weight-bold text-dark">
-                            <i class="fa-solid fa-image text-primary mr-1"></i> Replace Image (Optional)
+                    <div class="form-group mb-2">
+                        <label class="font-weight-bold text-secondary small mb-1">
+                            <i class="fa-solid fa-image text-primary mr-1"></i> Replace Image <small class="text-muted">(Optional)</small>
                         </label>
-                        <input type="file" class="form-control" name="blg_image" accept="image/*" style="border-radius: 8px;">
+                        <input type="file" class="form-control form-control-sm" name="blg_image" accept="image/*" style="border-radius: 8px;">
                     </div>
 
-                    <div class="form-group mb-3">
-                        <label class="font-weight-bold text-dark">
+                    <div class="form-group mb-2">
+                        <label class="font-weight-bold text-secondary small mb-1">
                             <i class="fa-solid fa-heading text-primary mr-1"></i> Blog Title <span class="text-danger">*</span>
                         </label>
-                        <input type="text" class="form-control" name="blg_title" value="{{ $blog->blg_title }}" style="border-radius: 8px;" required>
+                        <input type="text" class="form-control form-control-sm" name="blg_title" value="{{ $blog->blg_title }}" style="height: 38px; border-radius: 8px;" required>
                     </div>
 
                     <div class="form-group mb-0">
-                        <label class="font-weight-bold text-dark">
+                        <label class="font-weight-bold text-secondary small mb-1">
                             <i class="fa-solid fa-paragraph text-primary mr-1"></i> Content & Details <span class="text-danger">*</span>
                         </label>
-                        <textarea name="blg_desc" id="blg_desc_{{ $blog->id }}" class="form-control editor" rows="8">{{ $blog->blg_desc }}</textarea>
+                        <textarea name="blg_desc" id="blg_desc_{{ $blog->id }}" class="form-control editor" rows="6" style="border-radius: 8px;">{{ $blog->blg_desc }}</textarea>
                     </div>
                 </div>
-                <div class="modal-footer bg-light" style="border-radius: 0 0 14px 14px;">
-                    <button type="button" class="btn btn-secondary font-weight-bold" style="border-radius: 8px;" data-dismiss="modal">Cancel</button>
-                    <button type="submit" class="btn btn-success font-weight-bold" style="border-radius: 8px;">
+                <div class="modal-footer border-0 px-4 py-3 bg-light d-flex justify-content-end" style="gap: 10px;">
+                    <button type="button" class="btn btn-light font-weight-bold px-3 py-2" style="border-radius: 8px;" data-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary font-weight-bold px-4 py-2" style="border-radius: 8px; background: #0284c7; border-color: #0284c7;">
                         <i class="fa-solid fa-check mr-1"></i> Update Post
                     </button>
                 </div>
@@ -230,9 +242,9 @@
 <!-- Preview Modals -->
 @foreach ($blogs as $blog)
 <div class="modal fade" id="myDescModal{{ $blog->id }}" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-        <div class="modal-content border-0 shadow" style="border-radius: 14px;">
-            <div class="modal-header bg-light" style="border-radius: 14px 14px 0 0;">
+    <div class="modal-dialog modal-dialog-centered" role="document" style="max-width: 600px;">
+        <div class="modal-content border-0 shadow-lg" style="border-radius: 16px; overflow: hidden;">
+            <div class="modal-header bg-light border-0 py-3" style="border-radius: 14px 14px 0 0;">
                 <h5 class="modal-title font-weight-bold text-dark">
                     <i class="fa-solid fa-book-open text-primary mr-2"></i>{{ $blog->blg_title }}
                 </h5>

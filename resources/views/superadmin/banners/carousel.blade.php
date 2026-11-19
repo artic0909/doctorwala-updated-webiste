@@ -114,35 +114,43 @@
 
 <!-- Add Modal -->
 <div class="modal fade" id="myAddModal" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content border-0 shadow" style="border-radius: 14px;">
-            <div class="modal-header bg-primary text-white" style="border-top-left-radius: 14px; border-top-right-radius: 14px;">
-                <h5 class="modal-title font-weight-bold">
-                    <i class="fa-solid fa-plus mr-2"></i> Add Carousel Slide
-                </h5>
-                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
+    <div class="modal-dialog modal-dialog-centered" role="document" style="max-width: 500px;">
+        <div class="modal-content border-0 shadow-lg" style="border-radius: 16px; overflow: hidden;">
+            <div class="modal-header border-0 pb-0 pt-4 px-4 bg-white d-flex align-items-center justify-content-between">
+                <div class="d-flex align-items-center">
+                    <div class="rounded-circle d-flex align-items-center justify-content-center mr-3" style="width: 42px; height: 42px; background: #e0f2fe; color: #0284c7;">
+                        <i class="fa-solid fa-plus"></i>
+                    </div>
+                    <div>
+                        <h5 class="font-weight-bold text-dark mb-0" style="font-size: 1.05rem;">Add Carousel Slide</h5>
+                        <small class="text-muted font-weight-500">Upload hero banner image</small>
+                    </div>
+                </div>
+                <button type="button" class="close text-muted p-2" data-dismiss="modal" aria-label="Close" style="outline: none;">
+                    <span aria-hidden="true" style="font-size: 1.4rem;">&times;</span>
                 </button>
             </div>
             <form action="{{route('superadmin.partnercarousel.store')}}" method="POST" enctype="multipart/form-data">
                 @csrf
-                <div class="modal-body p-4">
-                    <div class="form-group mb-3">
-                        <label class="font-weight-bold text-dark"><i class="fa-solid fa-image text-primary mr-1"></i> Slide Image <span class="text-danger">*</span></label>
-                        <input type="file" class="form-control" name="image" accept="image/*" style="border-radius: 8px;" required>
+                <div class="modal-body px-4 py-3">
+                    <div class="form-group mb-2">
+                        <label class="font-weight-bold text-secondary small mb-1"><i class="fa-solid fa-image text-primary mr-1"></i> Slide Image <span class="text-danger">*</span></label>
+                        <input type="file" class="form-control form-control-sm" name="image" accept="image/*" style="border-radius: 8px;" required>
                     </div>
-                    <div class="form-group mb-3">
-                        <label class="font-weight-bold text-dark"><i class="fa-solid fa-heading text-primary mr-1"></i> Headline Title <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control" name="title" placeholder="Slide headline" style="border-radius: 8px;" required>
+                    <div class="form-group mb-2">
+                        <label class="font-weight-bold text-secondary small mb-1"><i class="fa-solid fa-heading text-primary mr-1"></i> Headline Title <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control form-control-sm" name="title" placeholder="Slide headline" style="height: 38px; border-radius: 8px;" required>
                     </div>
                     <div class="form-group mb-0">
-                        <label class="font-weight-bold text-dark"><i class="fa-solid fa-align-left text-primary mr-1"></i> Description <span class="text-danger">*</span></label>
-                        <textarea class="form-control" name="description" rows="3" placeholder="Brief slide text" style="border-radius: 8px;" required></textarea>
+                        <label class="font-weight-bold text-secondary small mb-1"><i class="fa-solid fa-align-left text-primary mr-1"></i> Description <span class="text-danger">*</span></label>
+                        <textarea class="form-control form-control-sm" name="description" rows="3" placeholder="Brief slide text" style="border-radius: 8px;" required></textarea>
                     </div>
                 </div>
-                <div class="modal-footer bg-light" style="border-bottom-left-radius: 14px; border-bottom-right-radius: 14px;">
-                    <button type="button" class="btn btn-secondary" style="border-radius: 8px;" data-dismiss="modal">Cancel</button>
-                    <button type="submit" class="btn btn-primary px-4 font-weight-bold" style="border-radius: 8px;">Upload Slide</button>
+                <div class="modal-footer border-0 px-4 py-3 bg-light d-flex justify-content-end" style="gap: 10px;">
+                    <button type="button" class="btn btn-light font-weight-bold px-3 py-2" style="border-radius: 8px;" data-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary font-weight-bold px-4 py-2" style="border-radius: 8px; background: #0284c7; border-color: #0284c7;">
+                        <i class="fa-solid fa-upload mr-1"></i> Upload Slide
+                    </button>
                 </div>
             </form>
         </div>
@@ -152,39 +160,47 @@
 <!-- Edit Modals -->
 @foreach ($carousels as $carousel)
 <div class="modal fade" id="myEditModal{{$carousel->id}}" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content border-0 shadow" style="border-radius: 14px;">
-            <div class="modal-header bg-dark text-white" style="border-top-left-radius: 14px; border-top-right-radius: 14px;">
-                <h5 class="modal-title font-weight-bold">
-                    <i class="fa-solid fa-pen-to-square mr-2"></i> Edit Carousel Slide
-                </h5>
-                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
+    <div class="modal-dialog modal-dialog-centered" role="document" style="max-width: 500px;">
+        <div class="modal-content border-0 shadow-lg" style="border-radius: 16px; overflow: hidden;">
+            <div class="modal-header border-0 pb-0 pt-4 px-4 bg-white d-flex align-items-center justify-content-between">
+                <div class="d-flex align-items-center">
+                    <div class="rounded-circle d-flex align-items-center justify-content-center mr-3" style="width: 42px; height: 42px; background: #e0f2fe; color: #0284c7;">
+                        <i class="fa-solid fa-pen-to-square"></i>
+                    </div>
+                    <div>
+                        <h5 class="font-weight-bold text-dark mb-0" style="font-size: 1.05rem;">Edit Carousel Slide</h5>
+                        <small class="text-muted font-weight-500">Update slide details</small>
+                    </div>
+                </div>
+                <button type="button" class="close text-muted p-2" data-dismiss="modal" aria-label="Close" style="outline: none;">
+                    <span aria-hidden="true" style="font-size: 1.4rem;">&times;</span>
                 </button>
             </div>
             <form action="{{route('superadmin.partnercarousel.update', $carousel->id)}}" method="POST" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
-                <div class="modal-body p-4">
-                    <div class="mb-3 text-center">
-                        <img src="{{ asset('storage/' . $carousel->image) }}" alt="Preview" style="max-height: 120px; border-radius: 8px; border: 1px solid #e2e8f0;">
+                <div class="modal-body px-4 py-3">
+                    <div class="mb-2 text-center p-2 rounded" style="background: #f8fafc; border: 1px solid #e2e8f0;">
+                        <img src="{{ asset('storage/' . $carousel->image) }}" alt="Preview" style="max-height: 100px; border-radius: 8px;">
                     </div>
-                    <div class="form-group mb-3">
-                        <label class="font-weight-bold text-dark"><i class="fa-solid fa-image text-primary mr-1"></i> Replace Image <small class="text-muted">(Optional)</small></label>
-                        <input type="file" class="form-control" name="image" accept="image/*" style="border-radius: 8px;">
+                    <div class="form-group mb-2">
+                        <label class="font-weight-bold text-secondary small mb-1"><i class="fa-solid fa-image text-primary mr-1"></i> Replace Image <small class="text-muted">(Optional)</small></label>
+                        <input type="file" class="form-control form-control-sm" name="image" accept="image/*" style="border-radius: 8px;">
                     </div>
-                    <div class="form-group mb-3">
-                        <label class="font-weight-bold text-dark"><i class="fa-solid fa-heading text-primary mr-1"></i> Headline Title <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control" name="title" value="{{$carousel->title}}" style="border-radius: 8px;" required>
+                    <div class="form-group mb-2">
+                        <label class="font-weight-bold text-secondary small mb-1"><i class="fa-solid fa-heading text-primary mr-1"></i> Headline Title <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control form-control-sm" name="title" value="{{$carousel->title}}" style="height: 38px; border-radius: 8px;" required>
                     </div>
                     <div class="form-group mb-0">
-                        <label class="font-weight-bold text-dark"><i class="fa-solid fa-align-left text-primary mr-1"></i> Description <span class="text-danger">*</span></label>
-                        <textarea class="form-control" name="description" rows="3" style="border-radius: 8px;" required>{{$carousel->description}}</textarea>
+                        <label class="font-weight-bold text-secondary small mb-1"><i class="fa-solid fa-align-left text-primary mr-1"></i> Description <span class="text-danger">*</span></label>
+                        <textarea class="form-control form-control-sm" name="description" rows="3" style="border-radius: 8px;" required>{{$carousel->description}}</textarea>
                     </div>
                 </div>
-                <div class="modal-footer bg-light" style="border-bottom-left-radius: 14px; border-bottom-right-radius: 14px;">
-                    <button type="button" class="btn btn-secondary" style="border-radius: 8px;" data-dismiss="modal">Cancel</button>
-                    <button type="submit" class="btn btn-success px-4 font-weight-bold" style="border-radius: 8px;">Update Slide</button>
+                <div class="modal-footer border-0 px-4 py-3 bg-light d-flex justify-content-end" style="gap: 10px;">
+                    <button type="button" class="btn btn-light font-weight-bold px-3 py-2" style="border-radius: 8px;" data-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary font-weight-bold px-4 py-2" style="border-radius: 8px; background: #0284c7; border-color: #0284c7;">
+                        <i class="fa-solid fa-check mr-1"></i> Update Slide
+                    </button>
                 </div>
             </form>
         </div>

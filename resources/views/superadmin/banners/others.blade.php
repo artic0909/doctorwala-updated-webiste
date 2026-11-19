@@ -106,28 +106,35 @@
 
 <!-- Add Modal -->
 <div class="modal fade" id="myAddModal" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content border-0 shadow" style="border-radius: 14px;">
-            <div class="modal-header bg-primary text-white" style="border-top-left-radius: 14px; border-top-right-radius: 14px;">
-                <h5 class="modal-title font-weight-bold">
-                    <i class="fa-solid fa-plus mr-2"></i> Add Other Banner
-                </h5>
-                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
+    <div class="modal-dialog modal-dialog-centered" role="document" style="max-width: 480px;">
+        <div class="modal-content border-0 shadow-lg" style="border-radius: 16px; overflow: hidden;">
+            <div class="modal-header border-0 pb-0 pt-4 px-4 bg-white d-flex align-items-center justify-content-between">
+                <div class="d-flex align-items-center">
+                    <div class="rounded-circle d-flex align-items-center justify-content-center mr-3" style="width: 42px; height: 42px; background: #e0f2fe; color: #0284c7;">
+                        <i class="fa-solid fa-plus"></i>
+                    </div>
+                    <div>
+                        <h5 class="font-weight-bold text-dark mb-0" style="font-size: 1.05rem;">Add Secondary Banner</h5>
+                        <small class="text-muted font-weight-500">Upload promotional banner</small>
+                    </div>
+                </div>
+                <button type="button" class="close text-muted p-2" data-dismiss="modal" aria-label="Close" style="outline: none;">
+                    <span aria-hidden="true" style="font-size: 1.4rem;">&times;</span>
                 </button>
             </div>
             <form action="{{route('superadmin.otherbanner.store')}}" method="POST" enctype="multipart/form-data">
                 @csrf
-                <div class="modal-body p-4">
+                <div class="modal-body px-4 py-3">
                     <div class="form-group mb-0">
-                        <label class="font-weight-bold text-dark"><i class="fa-solid fa-image text-primary mr-1"></i> Select Banner Graphic <span class="text-danger">*</span></label>
-                        <input type="file" class="form-control" name="banner_image" accept="image/*" style="border-radius: 8px;" required>
-                        <small class="text-muted">Recommended: High-resolution PNG or JPG graphic.</small>
+                        <label class="font-weight-bold text-secondary small mb-1"><i class="fa-solid fa-image text-primary mr-1"></i> Banner Graphic <span class="text-danger">*</span></label>
+                        <input type="file" class="form-control form-control-sm" name="banner_image" accept="image/*" style="border-radius: 8px;" required>
                     </div>
                 </div>
-                <div class="modal-footer bg-light" style="border-bottom-left-radius: 14px; border-bottom-right-radius: 14px;">
-                    <button type="button" class="btn btn-secondary" style="border-radius: 8px;" data-dismiss="modal">Cancel</button>
-                    <button type="submit" class="btn btn-primary px-4 font-weight-bold" style="border-radius: 8px;">Upload Banner</button>
+                <div class="modal-footer border-0 px-4 py-3 bg-light d-flex justify-content-end" style="gap: 10px;">
+                    <button type="button" class="btn btn-light font-weight-bold px-3 py-2" style="border-radius: 8px;" data-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary font-weight-bold px-4 py-2" style="border-radius: 8px; background: #0284c7; border-color: #0284c7;">
+                        <i class="fa-solid fa-upload mr-1"></i> Upload Banner
+                    </button>
                 </div>
             </form>
         </div>
@@ -137,31 +144,39 @@
 <!-- Edit Modals -->
 @foreach ($banners as $banner)
 <div class="modal fade" id="myEditModal{{$banner->id}}" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content border-0 shadow" style="border-radius: 14px;">
-            <div class="modal-header bg-dark text-white" style="border-top-left-radius: 14px; border-top-right-radius: 14px;">
-                <h5 class="modal-title font-weight-bold">
-                    <i class="fa-solid fa-pen-to-square mr-2"></i> Edit Other Banner
-                </h5>
-                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
+    <div class="modal-dialog modal-dialog-centered" role="document" style="max-width: 480px;">
+        <div class="modal-content border-0 shadow-lg" style="border-radius: 16px; overflow: hidden;">
+            <div class="modal-header border-0 pb-0 pt-4 px-4 bg-white d-flex align-items-center justify-content-between">
+                <div class="d-flex align-items-center">
+                    <div class="rounded-circle d-flex align-items-center justify-content-center mr-3" style="width: 42px; height: 42px; background: #e0f2fe; color: #0284c7;">
+                        <i class="fa-solid fa-pen-to-square"></i>
+                    </div>
+                    <div>
+                        <h5 class="font-weight-bold text-dark mb-0" style="font-size: 1.05rem;">Edit Banner</h5>
+                        <small class="text-muted font-weight-500">Replace banner image</small>
+                    </div>
+                </div>
+                <button type="button" class="close text-muted p-2" data-dismiss="modal" aria-label="Close" style="outline: none;">
+                    <span aria-hidden="true" style="font-size: 1.4rem;">&times;</span>
                 </button>
             </div>
             <form action="{{route('superadmin.otherbanner.update' , $banner->id)}}" method="POST" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
-                <div class="modal-body p-4">
-                    <div class="mb-3 text-center">
-                        <img src="{{ asset('storage/' . $banner->banner_image) }}" alt="Preview" style="max-height: 120px; border-radius: 8px; border: 1px solid #e2e8f0;">
+                <div class="modal-body px-4 py-3">
+                    <div class="mb-3 text-center p-2 rounded" style="background: #f8fafc; border: 1px solid #e2e8f0;">
+                        <img src="{{ asset('storage/' . $banner->banner_image) }}" alt="Preview" style="max-height: 100px; border-radius: 8px;">
                     </div>
                     <div class="form-group mb-0">
-                        <label class="font-weight-bold text-dark"><i class="fa-solid fa-image text-primary mr-1"></i> Replace Image <span class="text-danger">*</span></label>
-                        <input type="file" class="form-control" name="banner_image" accept="image/*" style="border-radius: 8px;" required>
+                        <label class="font-weight-bold text-secondary small mb-1"><i class="fa-solid fa-image text-primary mr-1"></i> Replace Image <span class="text-danger">*</span></label>
+                        <input type="file" class="form-control form-control-sm" name="banner_image" accept="image/*" style="border-radius: 8px;" required>
                     </div>
                 </div>
-                <div class="modal-footer bg-light" style="border-bottom-left-radius: 14px; border-bottom-right-radius: 14px;">
-                    <button type="button" class="btn btn-secondary" style="border-radius: 8px;" data-dismiss="modal">Cancel</button>
-                    <button type="submit" class="btn btn-success px-4 font-weight-bold" style="border-radius: 8px;">Update Banner</button>
+                <div class="modal-footer border-0 px-4 py-3 bg-light d-flex justify-content-end" style="gap: 10px;">
+                    <button type="button" class="btn btn-light font-weight-bold px-3 py-2" style="border-radius: 8px;" data-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary font-weight-bold px-4 py-2" style="border-radius: 8px; background: #0284c7; border-color: #0284c7;">
+                        <i class="fa-solid fa-check mr-1"></i> Update Banner
+                    </button>
                 </div>
             </form>
         </div>

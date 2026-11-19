@@ -1093,3 +1093,200 @@ nav[role="navigation"] svg {
     color: var(--doc-primary);
     white-space: nowrap;
 }
+
+/* ==========================================================================
+   Doctorwala Universal Modal Perfection (Layout, Spacing & Center Alignment)
+   ========================================================================== */
+.modal {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    background: rgba(15, 23, 42, 0.45);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+}
+
+.modal-backdrop {
+    background-color: #0f172a !important;
+}
+
+.modal-backdrop.show {
+    opacity: 0.45 !important;
+}
+
+/* True Middle & Horizontal Centering on Screen */
+.modal-dialog,
+.modal-dialog.modal-dialog-centered {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    min-height: calc(100% - 3.5rem) !important;
+    margin: 1.75rem auto !important;
+    max-width: 560px;
+    width: 94%;
+}
+
+.modal-dialog.modal-lg,
+.modal-lg {
+    max-width: 620px !important;
+}
+
+.modal-dialog.modal-sm,
+.modal-sm {
+    max-width: 400px !important;
+}
+
+/* Kill broken template ::before that pushes dialog off-screen */
+.modal-dialog::before,
+.modal-dialog.modal-dialog-centered::before {
+    display: none !important;
+    height: 0 !important;
+    content: none !important;
+}
+
+@media (max-width: 576px) {
+    .modal-dialog,
+    .modal-dialog.modal-dialog-centered {
+        min-height: calc(100% - 1.5rem) !important;
+        margin: 0.75rem auto !important;
+        width: calc(100% - 1rem) !important;
+    }
+}
+
+/* Modal Card Box */
+.modal-content {
+    position: relative !important;
+    display: flex !important;
+    flex-direction: column !important;
+    width: 100% !important;
+    border: none !important;
+    border-radius: 16px !important;
+    background: #ffffff !important;
+    box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.25) !important;
+    outline: 0 !important;
+    overflow: hidden !important;
+    max-height: calc(100vh - 3.5rem) !important;
+}
+
+/* Modal Header - Fixed at Top & Vertically Aligned */
+.modal-header {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    padding: 1.15rem 1.4rem !important;
+    background: #ffffff !important;
+    border-bottom: 1px solid var(--doc-border) !important;
+    flex-shrink: 0 !important;
+}
+
+.modal-header .modal-title {
+    font-size: 1.05rem !important;
+    font-weight: 700 !important;
+    color: var(--doc-text-main) !important;
+    margin-bottom: 0 !important;
+    line-height: 1.3 !important;
+}
+
+.modal-header .close {
+    margin: 0 !important;
+    padding: 6px 10px !important;
+    font-size: 1.35rem !important;
+    line-height: 1 !important;
+    color: var(--doc-text-muted) !important;
+    opacity: 0.65 !important;
+    background: transparent !important;
+    border: none !important;
+    border-radius: 8px !important;
+    transition: all 0.2s ease !important;
+    cursor: pointer !important;
+    outline: none !important;
+    align-self: center !important;
+}
+
+.modal-header .close:hover {
+    color: var(--doc-text-main) !important;
+    opacity: 1 !important;
+    background: var(--doc-border-light) !important;
+}
+
+/* Modal Body - Smooth Scroll & Clean Spacing */
+.modal-body {
+    position: relative !important;
+    flex: 1 1 auto !important;
+    padding: 1.25rem 1.4rem !important;
+    overflow-y: auto !important;
+    background: #ffffff !important;
+}
+
+/* Modal Footer - Fixed at Bottom */
+.modal-footer {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-end !important;
+    gap: 10px !important;
+    padding: 0.95rem 1.4rem !important;
+    background: #f8fafc !important;
+    border-top: 1px solid var(--doc-border) !important;
+    flex-shrink: 0 !important;
+}
+
+.modal-footer > * {
+    margin: 0 !important;
+}
+
+/* Universal Form & Grid Spacing inside Modals */
+.modal-body .row {
+    margin-left: -6px !important;
+    margin-right: -6px !important;
+}
+
+.modal-body .row > [class*="col"] {
+    padding-left: 6px !important;
+    padding-right: 6px !important;
+}
+
+.modal-body .form-group {
+    margin-bottom: 0.9rem !important;
+}
+
+.modal-body .form-group:last-child {
+    margin-bottom: 0 !important;
+}
+
+.modal-body label {
+    font-size: 0.8rem !important;
+    font-weight: 600 !important;
+    color: var(--doc-text-muted) !important;
+    margin-bottom: 0.35rem !important;
+    display: block !important;
+}
+
+.modal-body .form-control {
+    height: 40px !important;
+    border-radius: var(--doc-radius-sm) !important;
+    border: 1px solid var(--doc-border) !important;
+    font-size: 0.88rem !important;
+    padding: 0.45rem 0.75rem !important;
+    transition: border-color 0.2s, box-shadow 0.2s !important;
+    background-color: #ffffff !important;
+    color: var(--doc-text-main) !important;
+}
+
+.modal-body textarea.form-control {
+    height: auto !important;
+    min-height: 70px !important;
+}
+
+.modal-body .form-control:focus {
+    border-color: var(--doc-primary) !important;
+    box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.12) !important;
+    outline: none !important;
+}
+
+.modal-body .custom-control-label {
+    font-size: 0.85rem !important;
+    font-weight: 600 !important;
+    color: var(--doc-text-main) !important;
+    cursor: pointer !important;
+}

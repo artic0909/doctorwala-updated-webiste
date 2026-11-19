@@ -99,58 +99,64 @@
 
 <!-- Add Modal -->
 <div class="modal fade" id="myAddModal" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-        <div class="modal-content border-0 shadow" style="border-radius: 14px;">
-            <div class="modal-header bg-light" style="border-radius: 14px 14px 0 0;">
-                <h5 class="modal-title font-weight-bold text-dark">
-                    <i class="fa-solid fa-plus-circle text-primary mr-2"></i>Create About Us Details
-                </h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
+    <div class="modal-dialog modal-dialog-centered" role="document" style="max-width: 620px;">
+        <div class="modal-content border-0 shadow-lg" style="border-radius: 16px; overflow: hidden;">
+            <div class="modal-header border-0 pb-0 pt-4 px-4 bg-white d-flex align-items-center justify-content-between">
+                <div class="d-flex align-items-center">
+                    <div class="rounded-circle d-flex align-items-center justify-content-center mr-3" style="width: 42px; height: 42px; background: #e0f2fe; color: #0284c7;">
+                        <i class="fa-solid fa-plus-circle"></i>
+                    </div>
+                    <div>
+                        <h5 class="font-weight-bold text-dark mb-0" style="font-size: 1.05rem;">Create About Us Details</h5>
+                        <small class="text-muted font-weight-500">Configure company story and vision</small>
+                    </div>
+                </div>
+                <button type="button" class="close text-muted p-2" data-dismiss="modal" aria-label="Close" style="outline: none;">
+                    <span aria-hidden="true" style="font-size: 1.4rem;">&times;</span>
                 </button>
             </div>
             <form action="{{ route('superadmin.super-aboutus.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
-                <div class="modal-body p-4">
-                    <div class="row">
-                        <div class="col-md-6 form-group mb-3">
-                            <label class="font-weight-bold text-dark"><i class="fa-solid fa-image text-primary mr-1"></i> Cover Image</label>
-                            <input type="file" class="form-control" name="about_image" accept="image/*" style="border-radius: 8px;">
+                <div class="modal-body px-4 py-3">
+                    <div class="row g-2">
+                        <div class="col-md-6 form-group mb-2">
+                            <label class="font-weight-bold text-secondary small mb-1"><i class="fa-solid fa-image text-primary mr-1"></i> Section Image <span class="text-danger">*</span></label>
+                            <input type="file" class="form-control form-control-sm" name="about_image" accept="image/*" style="border-radius: 8px;" required>
                         </div>
-                        <div class="col-md-6 form-group mb-3">
-                            <label class="font-weight-bold text-dark"><i class="fa-solid fa-heading text-primary mr-1"></i> Section Title</label>
-                            <input type="text" class="form-control" name="ab_title" placeholder="e.g. Revolutionizing Healthcare" style="border-radius: 8px;">
+                        <div class="col-md-6 form-group mb-2">
+                            <label class="font-weight-bold text-secondary small mb-1"><i class="fa-solid fa-heading text-primary mr-1"></i> Section Title <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control form-control-sm" name="ab_title" placeholder="e.g. About Doctorwala" style="height: 38px; border-radius: 8px;" required>
                         </div>
-                        <div class="col-md-4 form-group mb-3">
-                            <label class="font-weight-bold text-dark"><i class="fa-solid fa-bolt text-primary mr-1"></i> Bold Subtitle / Highlight</label>
-                            <input type="text" class="form-control" name="ab_b_txt" placeholder="e.g. 24/7 Digital Health" style="border-radius: 8px;">
+                        <div class="col-md-4 form-group mb-2">
+                            <label class="font-weight-bold text-secondary small mb-1"><i class="fa-solid fa-bolt text-primary mr-1"></i> Highlight Subtitle</label>
+                            <input type="text" class="form-control form-control-sm" name="ab_b_txt" placeholder="Punchline" style="height: 38px; border-radius: 8px;">
                         </div>
-                        <div class="col-md-4 form-group mb-3">
-                            <label class="font-weight-bold text-dark"><i class="fa-solid fa-phone text-primary mr-1"></i> Helpline Number</label>
-                            <input type="text" class="form-control" name="number" placeholder="e.g. +91 9876543210" style="border-radius: 8px;">
+                        <div class="col-md-4 form-group mb-2">
+                            <label class="font-weight-bold text-secondary small mb-1"><i class="fa-solid fa-phone text-primary mr-1"></i> Helpline Number</label>
+                            <input type="text" class="form-control form-control-sm" name="number" placeholder="Phone" style="height: 38px; border-radius: 8px;">
                         </div>
-                        <div class="col-md-4 form-group mb-3">
-                            <label class="font-weight-bold text-dark"><i class="fa-solid fa-envelope text-primary mr-1"></i> Support Email</label>
-                            <input type="email" class="form-control" name="email" placeholder="e.g. support@doctorwala.info" style="border-radius: 8px;">
+                        <div class="col-md-4 form-group mb-2">
+                            <label class="font-weight-bold text-secondary small mb-1"><i class="fa-solid fa-envelope text-primary mr-1"></i> Support Email</label>
+                            <input type="email" class="form-control form-control-sm" name="email" placeholder="Email" style="height: 38px; border-radius: 8px;">
                         </div>
-                        <div class="col-12 form-group mb-3">
-                            <label class="font-weight-bold text-dark"><i class="fa-solid fa-file-lines text-primary mr-1"></i> Company Story / Description</label>
-                            <textarea name="ab_desc" class="form-control" rows="4" placeholder="Overview of Doctorwala and what problems it solves..." style="border-radius: 8px;"></textarea>
+                        <div class="col-12 form-group mb-2">
+                            <label class="font-weight-bold text-secondary small mb-1"><i class="fa-solid fa-file-lines text-primary mr-1"></i> Company Story / Description <span class="text-danger">*</span></label>
+                            <textarea name="ab_desc" class="form-control form-control-sm" rows="3" style="border-radius: 8px;" required></textarea>
                         </div>
-                        <div class="col-md-6 form-group mb-3">
-                            <label class="font-weight-bold text-dark"><i class="fa-solid fa-bullseye text-success mr-1"></i> Mission Statement</label>
-                            <textarea name="ab_mission" class="form-control" rows="4" placeholder="Our purpose and mission..." style="border-radius: 8px;"></textarea>
+                        <div class="col-md-6 form-group mb-2">
+                            <label class="font-weight-bold text-secondary small mb-1"><i class="fa-solid fa-bullseye text-success mr-1"></i> Mission Statement</label>
+                            <textarea name="ab_mission" class="form-control form-control-sm" rows="2" style="border-radius: 8px;"></textarea>
                         </div>
-                        <div class="col-md-6 form-group mb-3">
-                            <label class="font-weight-bold text-dark"><i class="fa-solid fa-eye text-primary mr-1"></i> Vision Statement</label>
-                            <textarea name="ab_vision" class="form-control" rows="4" placeholder="Future goals and aspirations..." style="border-radius: 8px;"></textarea>
+                        <div class="col-md-6 form-group mb-2">
+                            <label class="font-weight-bold text-secondary small mb-1"><i class="fa-solid fa-eye text-primary mr-1"></i> Vision Statement</label>
+                            <textarea name="ab_vision" class="form-control form-control-sm" rows="2" style="border-radius: 8px;"></textarea>
                         </div>
                     </div>
                 </div>
-                <div class="modal-footer bg-light" style="border-radius: 0 0 14px 14px;">
-                    <button type="button" class="btn btn-secondary font-weight-bold" style="border-radius: 8px;" data-dismiss="modal">Cancel</button>
-                    <button type="submit" class="btn btn-primary font-weight-bold" style="border-radius: 8px; background: #0284c7; border-color: #0284c7;">
-                        <i class="fa-solid fa-save mr-1"></i> Save Details
+                <div class="modal-footer border-0 px-4 py-3 bg-light d-flex justify-content-end" style="gap: 10px;">
+                    <button type="button" class="btn btn-light font-weight-bold px-3 py-2" style="border-radius: 8px;" data-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary font-weight-bold px-4 py-2" style="border-radius: 8px; background: #0284c7; border-color: #0284c7;">
+                        <i class="fa-solid fa-check mr-1"></i> Save Details
                     </button>
                 </div>
             </form>
@@ -161,65 +167,70 @@
 <!-- Edit Modals -->
 @foreach($abouts as $about)
 <div class="modal fade" id="myEditModal{{ $about->id }}" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-        <div class="modal-content border-0 shadow" style="border-radius: 14px;">
-            <div class="modal-header bg-light" style="border-radius: 14px 14px 0 0;">
-                <h5 class="modal-title font-weight-bold text-dark">
-                    <i class="fa-solid fa-pen-to-square text-primary mr-2"></i>Edit About Details
-                </h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
+    <div class="modal-dialog modal-dialog-centered" role="document" style="max-width: 620px;">
+        <div class="modal-content border-0 shadow-lg" style="border-radius: 16px; overflow: hidden;">
+            <div class="modal-header border-0 pb-0 pt-4 px-4 bg-white d-flex align-items-center justify-content-between">
+                <div class="d-flex align-items-center">
+                    <div class="rounded-circle d-flex align-items-center justify-content-center mr-3" style="width: 42px; height: 42px; background: #e0f2fe; color: #0284c7;">
+                        <i class="fa-solid fa-pen-to-square"></i>
+                    </div>
+                    <div>
+                        <h5 class="font-weight-bold text-dark mb-0" style="font-size: 1.05rem;">Edit About Details</h5>
+                        <small class="text-muted font-weight-500">Update company story & contact</small>
+                    </div>
+                </div>
+                <button type="button" class="close text-muted p-2" data-dismiss="modal" aria-label="Close" style="outline: none;">
+                    <span aria-hidden="true" style="font-size: 1.4rem;">&times;</span>
                 </button>
             </div>
             <form action="{{ route('superadmin.super-aboutus.update', $about->id) }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
-                <div class="modal-body p-4">
+                <div class="modal-body px-4 py-3">
                     @if($about->about_image)
-                    <div class="mb-3 text-center">
-                        <img src="{{ asset('storage/' . $about->about_image) }}" alt="Cover" style="max-height: 160px; width: auto; border-radius: 8px; border: 1px solid #e2e8f0;">
-                        <div class="small text-muted mt-1">Current Cover Image</div>
+                    <div class="mb-2 text-center p-2 rounded" style="background: #f8fafc; border: 1px solid #e2e8f0;">
+                        <img src="{{ asset('storage/' . $about->about_image) }}" alt="Cover" style="max-height: 100px; width: auto; border-radius: 8px;">
                     </div>
                     @endif
 
-                    <div class="row">
-                        <div class="col-md-6 form-group mb-3">
-                            <label class="font-weight-bold text-dark"><i class="fa-solid fa-image text-primary mr-1"></i> Replace Image</label>
-                            <input type="file" class="form-control" name="about_image" accept="image/*" style="border-radius: 8px;">
+                    <div class="row g-2">
+                        <div class="col-md-6 form-group mb-2">
+                            <label class="font-weight-bold text-secondary small mb-1"><i class="fa-solid fa-image text-primary mr-1"></i> Replace Image</label>
+                            <input type="file" class="form-control form-control-sm" name="about_image" accept="image/*" style="border-radius: 8px;">
                         </div>
-                        <div class="col-md-6 form-group mb-3">
-                            <label class="font-weight-bold text-dark"><i class="fa-solid fa-heading text-primary mr-1"></i> Section Title</label>
-                            <input type="text" class="form-control" name="ab_title" value="{{ $about->ab_title }}" style="border-radius: 8px;">
+                        <div class="col-md-6 form-group mb-2">
+                            <label class="font-weight-bold text-secondary small mb-1"><i class="fa-solid fa-heading text-primary mr-1"></i> Section Title</label>
+                            <input type="text" class="form-control form-control-sm" name="ab_title" value="{{ $about->ab_title }}" style="height: 38px; border-radius: 8px;">
                         </div>
-                        <div class="col-md-4 form-group mb-3">
-                            <label class="font-weight-bold text-dark"><i class="fa-solid fa-bolt text-primary mr-1"></i> Bold Subtitle / Highlight</label>
-                            <input type="text" class="form-control" name="ab_b_txt" value="{{ $about->ab_b_txt }}" style="border-radius: 8px;">
+                        <div class="col-md-4 form-group mb-2">
+                            <label class="font-weight-bold text-secondary small mb-1"><i class="fa-solid fa-bolt text-primary mr-1"></i> Bold Subtitle</label>
+                            <input type="text" class="form-control form-control-sm" name="ab_b_txt" value="{{ $about->ab_b_txt }}" style="height: 38px; border-radius: 8px;">
                         </div>
-                        <div class="col-md-4 form-group mb-3">
-                            <label class="font-weight-bold text-dark"><i class="fa-solid fa-phone text-primary mr-1"></i> Helpline Number</label>
-                            <input type="text" class="form-control" name="number" value="{{ $about->number }}" style="border-radius: 8px;">
+                        <div class="col-md-4 form-group mb-2">
+                            <label class="font-weight-bold text-secondary small mb-1"><i class="fa-solid fa-phone text-primary mr-1"></i> Helpline Number</label>
+                            <input type="text" class="form-control form-control-sm" name="number" value="{{ $about->number }}" style="height: 38px; border-radius: 8px;">
                         </div>
-                        <div class="col-md-4 form-group mb-3">
-                            <label class="font-weight-bold text-dark"><i class="fa-solid fa-envelope text-primary mr-1"></i> Support Email</label>
-                            <input type="email" class="form-control" name="email" value="{{ $about->email }}" style="border-radius: 8px;">
+                        <div class="col-md-4 form-group mb-2">
+                            <label class="font-weight-bold text-secondary small mb-1"><i class="fa-solid fa-envelope text-primary mr-1"></i> Support Email</label>
+                            <input type="email" class="form-control form-control-sm" name="email" value="{{ $about->email }}" style="height: 38px; border-radius: 8px;">
                         </div>
-                        <div class="col-12 form-group mb-3">
-                            <label class="font-weight-bold text-dark"><i class="fa-solid fa-file-lines text-primary mr-1"></i> Company Story / Description</label>
-                            <textarea name="ab_desc" class="form-control" rows="4" style="border-radius: 8px;">{{ $about->ab_desc }}</textarea>
+                        <div class="col-12 form-group mb-2">
+                            <label class="font-weight-bold text-secondary small mb-1"><i class="fa-solid fa-file-lines text-primary mr-1"></i> Company Story / Description</label>
+                            <textarea name="ab_desc" class="form-control form-control-sm" rows="3" style="border-radius: 8px;">{{ $about->ab_desc }}</textarea>
                         </div>
-                        <div class="col-md-6 form-group mb-3">
-                            <label class="font-weight-bold text-dark"><i class="fa-solid fa-bullseye text-success mr-1"></i> Mission Statement</label>
-                            <textarea name="ab_mission" class="form-control" rows="4" style="border-radius: 8px;">{{ $about->ab_mission }}</textarea>
+                        <div class="col-md-6 form-group mb-2">
+                            <label class="font-weight-bold text-secondary small mb-1"><i class="fa-solid fa-bullseye text-success mr-1"></i> Mission Statement</label>
+                            <textarea name="ab_mission" class="form-control form-control-sm" rows="2" style="border-radius: 8px;">{{ $about->ab_mission }}</textarea>
                         </div>
-                        <div class="col-md-6 form-group mb-3">
-                            <label class="font-weight-bold text-dark"><i class="fa-solid fa-eye text-primary mr-1"></i> Vision Statement</label>
-                            <textarea name="ab_vision" class="form-control" rows="4" style="border-radius: 8px;">{{ $about->ab_vision }}</textarea>
+                        <div class="col-md-6 form-group mb-2">
+                            <label class="font-weight-bold text-secondary small mb-1"><i class="fa-solid fa-eye text-primary mr-1"></i> Vision Statement</label>
+                            <textarea name="ab_vision" class="form-control form-control-sm" rows="2" style="border-radius: 8px;">{{ $about->ab_vision }}</textarea>
                         </div>
                     </div>
                 </div>
-                <div class="modal-footer bg-light" style="border-radius: 0 0 14px 14px;">
-                    <button type="button" class="btn btn-secondary font-weight-bold" style="border-radius: 8px;" data-dismiss="modal">Cancel</button>
-                    <button type="submit" class="btn btn-success font-weight-bold" style="border-radius: 8px;">
+                <div class="modal-footer border-0 px-4 py-3 bg-light d-flex justify-content-end" style="gap: 10px;">
+                    <button type="button" class="btn btn-light font-weight-bold px-3 py-2" style="border-radius: 8px;" data-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary font-weight-bold px-4 py-2" style="border-radius: 8px; background: #0284c7; border-color: #0284c7;">
                         <i class="fa-solid fa-check mr-1"></i> Update Details
                     </button>
                 </div>
