@@ -119,7 +119,7 @@
 
     <script src="{{ asset('partner-assets/js/off-canvas.js') }}"></script>
     <script src="{{ asset('partner-assets/js/hoverable-collapse.js') }}"></script>
-    <script src="{{ asset('partner-assets/js/template.js') }}"></script>
+    <script src="{{ asset('partner-assets/js/template.js') }}?v={{ filemtime(public_path('partner-assets/js/template.js')) }}"></script>
     <script src="{{ asset('partner-assets/js/settings.js') }}"></script>
     <script src="{{ asset('partner-assets/js/todolist.js') }}"></script>
 
