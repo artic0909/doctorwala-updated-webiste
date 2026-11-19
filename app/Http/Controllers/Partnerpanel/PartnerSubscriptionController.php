@@ -59,7 +59,7 @@ class PartnerSubscriptionController extends Controller
         $successUrl = route('partnerpanel.payment.callback');
         $failureUrl = route('partnerpanel.payment.callback');
 
-        return view('partnerpanel.payu_payment', compact('txnid', 'amount', 'productInfo', 'firstname', 'email', 'successUrl', 'failureUrl', 'hash', 'payuUrl', 'merchantKey', 'merchantSalt', 'txnid'));
+        return view('partnerpanel.subscription.payu_payment', compact('txnid', 'amount', 'productInfo', 'firstname', 'email', 'successUrl', 'failureUrl', 'hash', 'payuUrl', 'merchantKey', 'merchantSalt', 'txnid'));
     }
 
     public function paymentCallback(Request $request)

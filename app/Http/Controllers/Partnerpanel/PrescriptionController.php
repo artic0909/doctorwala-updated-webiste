@@ -45,7 +45,7 @@ class PrescriptionController extends Controller
         [$dwUserId, $patient, $blocked, $partner, $partnerId] = $this->resolvePatient($encryptedId);
 
         if ($blocked) {
-            return view('partnerpanel.block', compact('patient'));
+            return view('partnerpanel.patients.block', compact('patient'));
         }
 
         $vital = \App\Models\Vital::where('dw_user_id', $dwUserId)->latest()->first();
@@ -57,7 +57,7 @@ class PrescriptionController extends Controller
 
         $encryptedPatientId = $encryptedId;
 
-        return view('partnerpanel.make-prescription', compact('encryptedId', 'patient', 'vital', 'dwUserId', 'clinicName', 'doctors', 'partnerId', 'encryptedPatientId'));
+        return view('partnerpanel.prescriptions.make', compact('encryptedId', 'patient', 'vital', 'dwUserId', 'clinicName', 'doctors', 'partnerId', 'encryptedPatientId'));
     }
 
     public function edit($encryptedId)
@@ -83,7 +83,7 @@ class PrescriptionController extends Controller
 
         $encryptedPatientId = Crypt::encryptString($record->dw_user_id);
 
-        return view('partnerpanel.make-prescription', compact('encryptedId', 'patient', 'vital', 'dwUserId', 'clinicName', 'doctors', 'partnerIdNum', 'record', 'encryptedPatientId'));
+        return view('partnerpanel.prescriptions.make', compact('encryptedId', 'patient', 'vital', 'dwUserId', 'clinicName', 'doctors', 'partnerIdNum', 'record', 'encryptedPatientId'));
     }
 
     public function storeImageReportOrPrescription(Request $request)
@@ -310,7 +310,7 @@ class PrescriptionController extends Controller
             abort(403, 'Unauthorized access to this prescription.');
         }
 
-        return view('partnerpanel.view-digital-prescription', compact('prescription', 'patient', 'partner'));
+        return view('partnerpanel.prescriptions.view', compact('prescription', 'patient', 'partner'));
     }
 
     public function viewPrescriptionUser($id)
@@ -324,7 +324,7 @@ class PrescriptionController extends Controller
         // Find the partner info for the header
         $partner = \App\Models\DwPartnerModel::find($prescription->partner_id);
 
-        return view('partnerpanel.view-digital-prescription', compact('prescription', 'patient', 'partner'));
+        return view('partnerpanel.prescriptions.view', compact('prescription', 'patient', 'partner'));
     }
 
     public function viewPrescriptionShared($encryptedId)
@@ -352,6 +352,6 @@ class PrescriptionController extends Controller
             $partner = \App\Models\PartnerOPDContactModel::where('id', $prescription->partner_id)->first();
         }
 
-        return view('partnerpanel.view-digital-prescription', compact('prescription', 'patient', 'partner'));
+        return view('partnerpanel.prescriptions.view', compact('prescription', 'patient', 'partner'));
     }
 }

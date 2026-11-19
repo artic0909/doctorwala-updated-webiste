@@ -289,7 +289,7 @@ class PatientProfileAccessController extends Controller
         [$dwUserId, $patient, $blocked, $partner, $partnerId] = $this->resolvePatient($encryptedId);
 
         if ($blocked) {
-            return view('partnerpanel.block', compact('patient'));
+            return view('partnerpanel.patients.block', compact('patient'));
         }
 
         extract($this->partnerMeta($partnerId));
@@ -322,7 +322,7 @@ class PatientProfileAccessController extends Controller
 
         $encryptedPatientId = Crypt::encryptString((string) $dwUserId);
 
-        return view('partnerpanel.partner-user-profile-view', compact(
+        return view('partnerpanel.patients.profile-view', compact(
             'partner',
             'patient',
             'opdBanner',
@@ -345,7 +345,7 @@ class PatientProfileAccessController extends Controller
         [$dwUserId, $patient, $blocked, $partner, $partnerId] = $this->resolvePatient($encryptedId);
 
         if ($blocked) {
-            return view('partnerpanel.block', compact('patient'));
+            return view('partnerpanel.patients.block', compact('patient'));
         }
 
         extract($this->partnerMeta($partnerId));
@@ -381,7 +381,7 @@ class PatientProfileAccessController extends Controller
 
         $encryptedPatientId = Crypt::encryptString((string) $dwUserId);
 
-        return view('partnerpanel.patient-user-medical-history-view', compact(
+        return view('partnerpanel.patients.medical-history', compact(
             'partner',
             'patient',
             'opdBanner',
@@ -422,10 +422,10 @@ class PatientProfileAccessController extends Controller
 
         if ($blocked) {
             $patient = DwUserModel::findOrFail($dwUserId);
-            return view('partnerpanel.block', compact('patient'));
+            return view('partnerpanel.patients.block', compact('patient'));
         }
 
-        return view('partnerpanel.patient-view-report-images', compact('record'));
+        return view('partnerpanel.patients.report-images', compact('record'));
     }
 
 

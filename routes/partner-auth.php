@@ -73,20 +73,11 @@ Route::middleware(['auth:partner', 'verified'])->group(function () {
         return redirect()->route('partnerpanel.partner-dashboard')->with('info', 'Coupon is not required.');
     })->name('partnerpanel.partner-coupon');
 
-    Route::get('/partnerpanel/partner-show-invoice', [PartnerSubscriptionController::class , 'showInvoice'])->name('partnerpanel.partner-invoice');
-    Route::post('/partnerpanel/payment/initiate', [PartnerSubscriptionController::class , 'payment'])->name('partnerpanel.payment.initiate');
-    Route::post('/partnerpanel/payment-callback', [PartnerSubscriptionController::class , 'paymentCallback'])->name('partnerpanel.payment.callback');
+    Route::get('/partnerpanel/partner-show-invoice', function () {
+        return redirect()->route('partnerpanel.partner-dashboard');
+    })->name('partnerpanel.partner-invoice');
 
     Route::get('/partnerpanel/partner-dashboard', [DwPartnerController::class , 'partnerdashboardview'])->name('partnerpanel.partner-dashboard');
-
-
-
-
-    // Failed Payment Route
-    Route::get('/partnerpanel/failed', function () {
-            return view('subscription_failed');
-        }
-        )->name('partnerpanel.sub-fail');
 
 
 
@@ -154,14 +145,6 @@ Route::middleware(['auth:partner', 'verified'])->group(function () {
         }
         )->name('partnerpanel.partner-inquiry-from-patients');
 
-        // Route::get('/partnerpanel/partner-get-subscription', function () {
-        //     return view('partnerpanel.subscription.index');
-        // })->name('partnerpanel.partner-get-subscription');
-    
-        // Route::get('/partnerpanel/partner-show-invoice', function () {
-        //     return view('partnerpanel.subscription.invoices');
-        // })->name('partnerpanel.partner-show-invoice');
-    
         Route::get('/partnerpanel/partner-get-ticket', function () {
             return view('partnerpanel.tickets.create');
         }
