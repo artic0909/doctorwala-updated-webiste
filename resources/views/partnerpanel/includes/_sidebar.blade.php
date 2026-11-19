@@ -121,22 +121,8 @@
             </a>
         </li>
 
-        <!-- Section: Billing & Help -->
-        <li class="sidebar-category-header">Billing & Support</li>
-
-        <li class="nav-item {{ $isSubActive ? 'active' : '' }}">
-            <a class="nav-link" data-toggle="collapse" href="#ui-partner-sub" aria-expanded="{{ $isSubActive ? 'true' : 'false' }}" aria-controls="ui-partner-sub">
-                <i class="fa-solid fa-credit-card nav-icon"></i>
-                <span class="menu-title">Subscription</span>
-                <i class="menu-arrow"></i>
-            </a>
-            <div class="collapse {{ $isSubActive ? 'show' : '' }}" id="ui-partner-sub">
-                <ul class="nav flex-column sub-menu">
-                    <li class="nav-item"><a class="nav-link {{ request()->is('partnerpanel/partner-get-subscription') ? 'active' : '' }}" href="/partnerpanel/partner-get-subscription">My Plan & Renewal</a></li>
-                    <li class="nav-item"><a class="nav-link {{ request()->is('partnerpanel/partner-show-invoice') ? 'active' : '' }}" href="/partnerpanel/partner-show-invoice">Billing Invoices</a></li>
-                </ul>
-            </div>
-        </li>
+        <!-- Section: Help & Support -->
+        <li class="sidebar-category-header">Help & Support</li>
 
         <li class="nav-item {{ $isTicketsActive ? 'active' : '' }}">
             <a class="nav-link" data-toggle="collapse" href="#ui-partner-tickets" aria-expanded="{{ $isTicketsActive ? 'true' : 'false' }}" aria-controls="ui-partner-tickets">

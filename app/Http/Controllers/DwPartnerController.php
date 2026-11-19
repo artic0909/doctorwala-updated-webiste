@@ -50,12 +50,7 @@ class DwPartnerController extends Controller
 
     public function partnerCouponCodeAddView()
     {
-
-        $aboutDetails = SuperAboutusModel::get();
-        $otherBanners = SuperOtherBannerModel::get();
-
-        $partnerID = Auth::guard('partner')->user();
-        return view('payments', compact('partnerID', 'aboutDetails', 'otherBanners'));
+        return redirect()->route('partnerpanel.partner-dashboard')->with('info', 'Your account is already active.');
     }
 
 
@@ -293,6 +288,7 @@ class DwPartnerController extends Controller
             $dwuser->partner_id = 'TMP_' . uniqid(); 
             $dwuser->partner_password = bcrypt($request->partner_password);
             $dwuser->registration_type = json_encode($request->registration_type);
+            $dwuser->status = 'Active';
             if ($ep) {
                 $dwuser->ep_id = $ep->id;
             }
@@ -300,10 +296,11 @@ class DwPartnerController extends Controller
             
             // Now that we have the true auto-incremented ID, we update partner_id securely
             $dwuser->partner_id = 'DWPTR' . $dwuser->id;
+            $dwuser->status = 'Active';
             $dwuser->save();
 
             $regTypes = $request->registration_type ?? [];
-            $partnerStatus = $dwuser->status ?? 'Pending';
+            $partnerStatus = 'Active';
 
             if (in_array('OPD', $regTypes)) {
                 \App\Models\PartnerOPDContactModel::create([
@@ -319,7 +316,7 @@ class DwPartnerController extends Controller
                     'clinic_city' => $dwuser->partner_city,
                     'clinic_google_map_link' => $request->clinic_google_map_link,
                     'clinic_address' => $dwuser->partner_address,
-                    'status' => $partnerStatus,
+                    'status' => 'Active',
                 ]);
             }
 
@@ -337,7 +334,28 @@ class DwPartnerController extends Controller
                     'clinic_city' => $dwuser->partner_city,
                     'clinic_google_map_link' => $request->clinic_google_map_link,
                     'clinic_address' => $dwuser->partner_address,
-                    'status' => $partnerStatus,
+                    'status' => 'Active',
+                ]);
+            }
+
+            if (in_array('Doctor', $regTypes)) {
+                \App\Models\PartnerDoctorContactModel::create([
+                    'currently_loggedin_partner_id' => $dwuser->id,
+                    'clinic_registration_type' => 'Doctor',
+                    'partner_doctor_name' => $dwuser->partner_contact_person_name,
+                    'partner_doctor_specialist' => 'General Physician',
+                    'partner_doctor_designation' => 'Doctor',
+                    'partner_doctor_fees' => '500',
+                    'partner_doctor_mobile' => $dwuser->partner_mobile_number,
+                    'partner_doctor_email' => $dwuser->partner_email,
+                    'partner_doctor_landmark' => $dwuser->partner_landmark,
+                    'partner_doctor_pincode' => $dwuser->partner_pincode,
+                    'partner_doctor_google_map_link' => $request->clinic_google_map_link ?? 'https://www.google.com/maps',
+                    'partner_doctor_state' => $dwuser->partner_state,
+                    'partner_doctor_city' => $dwuser->partner_city,
+                    'partner_doctor_address' => $dwuser->partner_address,
+                    'visit_day_time' => json_encode([]),
+                    'status' => 'Active',
                 ]);
             }
 
@@ -354,13 +372,13 @@ class DwPartnerController extends Controller
                 );
             }
 
-            // Authenticate and redirect
+            // Authenticate and redirect directly to partner dashboard
             if (Auth::guard('partner')->loginUsingId($dwuser->id)) {
                 $request->session()->regenerate(); // Regenerate session for security
                 if ($request->ajax()) {
-                    return response()->json(['success' => true, 'redirect' => route('partnerpanel.partner-coupon')]);
+                    return response()->json(['success' => true, 'redirect' => route('partnerpanel.partner-dashboard')]);
                 }
-                return redirect()->route('partnerpanel.partner-coupon')
+                return redirect()->route('partnerpanel.partner-dashboard')
                     ->with('success', 'Registration successful! Welcome to your dashboard.');
             }
         } catch (\Exception $e) {

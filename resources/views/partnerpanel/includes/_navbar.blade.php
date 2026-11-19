@@ -58,9 +58,6 @@
                     <a class="dropdown-item py-2" href="/partnerpanel/partner-profile" style="font-size: 0.85rem; border-radius: 6px;">
                         <i class="fa-solid fa-user-gear text-primary mr-2"></i> Profile Settings
                     </a>
-                    <a class="dropdown-item py-2" href="/partnerpanel/partner-get-subscription" style="font-size: 0.85rem; border-radius: 6px;">
-                        <i class="fa-solid fa-crown text-warning mr-2"></i> Subscription Plan
-                    </a>
 
                     <div class="dropdown-divider"></div>
 

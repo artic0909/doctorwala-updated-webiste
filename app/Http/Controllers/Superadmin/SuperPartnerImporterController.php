@@ -41,12 +41,6 @@ class SuperPartnerImporterController extends Controller
         // Remove BOM from the first header column if it exists
         $header[0] = preg_replace('/[\xef\xbb\xbf]/', '', $header[0]);
 
-        $couponCode = 'DWCPNFREE01';
-        $coupon = SuperCouponModel::where('coupon_code', $couponCode)->first();
-        if (!$coupon) {
-            return back()->with('error', 'Required Coupon (' . $couponCode . ') not found in the database. Please create it first.');
-        }
-
         $successCount = 0;
         $duplicateCount = 0;
         $errorCount = 0;
@@ -157,15 +151,6 @@ class SuperPartnerImporterController extends Controller
                         'status' => 'Active',
                     ]);
                 }
-
-                // Add Coupon
-                CouponHolderModel::create([
-                    'currently_loggedin_partner_id' => $dwuser->id,
-                    'coupon_code' => $coupon->coupon_code,
-                    'coupon_amount' => $coupon->coupon_amount,
-                    'coupon_start_date' => $coupon->coupon_start_date ?? date('Y-m-d'),
-                    'coupon_end_date' => $coupon->coupon_end_date ?? date('Y-m-d', strtotime('+1 year')),
-                ]);
 
                 // Send WhatsApp Welcome
                 if ($dwuser->partner_mobile_number) {

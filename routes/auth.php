@@ -179,24 +179,7 @@ Route::middleware('auth:web')->group(function () {
     })->middleware(['auth', 'verified'])->name('superadmin.super-user-inquiry');
 
 
-    Route::get('/superadmin/super-add-coupons', function () {
-        return view('superadmin.coupons.create');
-    })->middleware(['auth', 'verified'])->name('superadmin.super-add-coupons');
-
-
-    Route::get('/superadmin/super-show-coupons', function () {
-        return view('superadmin.coupons.index');
-    })->middleware(['auth', 'verified'])->name('superadmin.super-show-coupons');
-
-
-    Route::get('/superadmin/super-add-subscriptions', function () {
-        return view('superadmin.subscriptions.create');
-    })->middleware(['auth', 'verified'])->name('superadmin.super-add-subscriptions');
-
-
-    Route::get('/superadmin/super-show-subscription', function () {
-        return view('superadmin.subscriptions.index');
-    })->middleware(['auth', 'verified'])->name('superadmin.super-show-subscription');
+    // Coupons & Subscriptions removed as per requirements
 
 
     Route::get('/superadmin/super-opd-inquiry', function () {
@@ -268,6 +251,8 @@ Route::middleware('auth:web')->group(function () {
     Route::put('/superadmin/super-all-partner/update/{id}', [SuperPartnerHandleController::class, 'editPartnerDetails'])->name('superadmin.update.partner');
     Route::get('/superadmin/super-all-partner', [SuperPartnerHandleController::class, 'allPartnersShow'])->name('superadmin.super-all-partner.get');
     Route::get('/superadmin/super-all-partners', [SuperPartnerHandleController::class, 'allPartnersShow'])->name('superadmin.super-all-partner');
+    Route::get('/superadmin/partner-view/{id}', [SuperPartnerHandleController::class, 'partnerView'])->name('superadmin.partner.view');
+    Route::get('/superadmin/partner-login-direct/{id}', [SuperPartnerHandleController::class, 'loginAsPartner'])->name('superadmin.partner.login-direct');
     Route::put('/superadmin/super-all-partner/status/{id}', [SuperPartnerHandleController::class, 'statusEdit'])->name('superadmin.status.edit');
     Route::delete('/superadmin/super-all-partner/delete/{id}', [SuperPartnerHandleController::class, 'deletePartner'])->name('superadmin.status.delete');
 
@@ -353,26 +338,6 @@ Route::middleware('auth:web')->group(function () {
     Route::post('/superadmin/super-blogs', [SuperBlogController::class, 'store'])->name('superadmin.super-blog.store');
     Route::put('/superadmin/super-blogs/update/{id}', [SuperBlogController::class, 'update'])->name('superadmin.super-blog.update');
     Route::delete('/superadmin/super-blogs/delete/{id}', [SuperBlogController::class, 'delete'])->name('superadmin.super-blog.delete');
-
-
-    // Coupons Routes---------------------------------------------------------------------------------------------------------------------------------------->
-    Route::get('/superadmin/super-add-coupons', [SuperCouponController::class, 'index'])->name('superadmin.super-coupon.index');
-    Route::post('/superadmin/super-add-coupons', [SuperCouponController::class, 'store'])->name('superadmin.super-coupon.store');
-    Route::get('/superadmin/super-show-coupons', [SuperCouponController::class, 'show'])->name('superadmin.super-coupon.show');
-    Route::put('/superadmin/super-show-coupons/update/{id}', [SuperCouponController::class, 'update'])->name('superadmin.super-coupon.update');
-    Route::put('/superadmin/super-show-coupons/status/{id}', [SuperCouponController::class, 'updateStatus'])->name('superadmin.super-coupon.update.status');
-    Route::delete('/superadmin/super-show-coupons/delete/{id}', [SuperCouponController::class, 'delete'])->name('superadmin.super-coupon.delete');
-
-
-
-    // Subscription Routes---------------------------------------------------------------------------------------------------------------------------------------->
-    Route::get('/superadmin/super-add-subscriptions', [SuperSubscriptionController::class, 'index'])->name('superadmin.super-subs.index');
-    Route::post('/superadmin/super-add-subscriptions', [SuperSubscriptionController::class, 'store'])->name('superadmin.super-subs.store');
-    Route::get('/superadmin/super-show-subscription', [SuperSubscriptionController::class, 'show'])->name('superadmin.super-subs.show');
-    Route::put('/superadmin/super-show-subscription/update/{id}', [SuperSubscriptionController::class, 'update'])->name('superadmin.super-subs.update');
-    Route::put('/superadmin/super-show-subscription/status/{id}', [SuperSubscriptionController::class, 'updateStatus'])->name('superadmin.super-subs.update.status');
-    Route::delete('/superadmin/super-show-subscription/delete/{id}', [SuperSubscriptionController::class, 'delete'])->name('superadmin.super-subs.delete');
-
 
 
     // Tickets Routes---------------------------------------------------------------------------------------------------------------------------------------->

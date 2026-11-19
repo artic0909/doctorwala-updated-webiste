@@ -64,19 +64,20 @@ Route::middleware(['auth:partner', 'verified'])->group(function () {
 
 
 
-    // Payments GateWate--------------------------------------------------------------------------------------------------------------------------->
+    // Subscriptions & Coupons removed as per requirement
+    Route::get('/partnerpanel/partner-get-subscription', function () {
+        return redirect()->route('partnerpanel.partner-dashboard')->with('info', 'Subscription is not required.');
+    })->name('partnerpanel.partner-subscription');
+
+    Route::get('/partnerpanel/partner-coupon', function () {
+        return redirect()->route('partnerpanel.partner-dashboard')->with('info', 'Coupon is not required.');
+    })->name('partnerpanel.partner-coupon');
+
     Route::get('/partnerpanel/partner-show-invoice', [PartnerSubscriptionController::class , 'showInvoice'])->name('partnerpanel.partner-invoice');
-    Route::get('/partnerpanel/partner-get-subscription', [PartnerSubscriptionController::class , 'allSubscriptions'])->name('partnerpanel.partner-subscription');
     Route::post('/partnerpanel/payment/initiate', [PartnerSubscriptionController::class , 'payment'])->name('partnerpanel.payment.initiate');
-
-
     Route::post('/partnerpanel/payment-callback', [PartnerSubscriptionController::class , 'paymentCallback'])->name('partnerpanel.payment.callback');
 
-
-
     Route::get('/partnerpanel/partner-dashboard', [DwPartnerController::class , 'partnerdashboardview'])->name('partnerpanel.partner-dashboard');
-
-    Route::get('/partnerpanel/partner-coupon', [DwPartnerController::class , 'partnerCouponCodeAddView'])->name('partnerpanel.partner-coupon');
 
 
 

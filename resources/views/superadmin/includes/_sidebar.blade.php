@@ -146,29 +146,6 @@
             </div>
         </li>
 
-        {{-- 4. Plans & Coupons --}}
-        @php
-            $isPlansActive = request()->is('superadmin/super-add-subscriptions*') || 
-                             request()->is('superadmin/super-show-subscription*') ||
-                             request()->is('superadmin/super-add-coupons*') || 
-                             request()->is('superadmin/super-show-coupons*');
-        @endphp
-        <li class="nav-item {{ $isPlansActive ? 'active' : '' }}">
-            <a class="nav-link" data-toggle="collapse" href="#ui-plans" aria-expanded="{{ $isPlansActive ? 'true' : 'false' }}" aria-controls="ui-plans">
-                <i class="fa-solid fa-tags nav-icon"></i>
-                <span class="menu-title">Plans & Coupons</span>
-                <i class="menu-arrow"></i>
-            </a>
-            <div class="collapse {{ $isPlansActive ? 'show' : '' }}" id="ui-plans">
-                <ul class="nav flex-column sub-menu">
-                    <li class="nav-item"><a class="nav-link {{ request()->is('superadmin/super-show-subscription*') ? 'active' : '' }}" href="/superadmin/super-show-subscription">All Subscriptions</a></li>
-                    <li class="nav-item"><a class="nav-link {{ request()->is('superadmin/super-add-subscriptions*') ? 'active' : '' }}" href="/superadmin/super-add-subscriptions">Add Subscription</a></li>
-                    <li class="nav-item"><a class="nav-link {{ request()->is('superadmin/super-show-coupons*') ? 'active' : '' }}" href="/superadmin/super-show-coupons">All Coupons</a></li>
-                    <li class="nav-item"><a class="nav-link {{ request()->is('superadmin/super-add-coupons*') ? 'active' : '' }}" href="/superadmin/super-add-coupons">Add New Coupon</a></li>
-                </ul>
-            </div>
-        </li>
-
         <!-- Section: Support & Platform -->
         <li class="sidebar-category-header">Patient Care & Support</li>
 

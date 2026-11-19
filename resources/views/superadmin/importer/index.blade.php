@@ -29,7 +29,7 @@
                     </div>
                     <div>
                         <h5 class="font-weight-bold text-dark mb-1">Upload Partner CSV</h5>
-                        <p class="text-muted mb-0 small">Automatically assigns default coupon code (<b>DWCPNFREE01</b>) and schedules welcome notifications.</p>
+                        <p class="text-muted mb-0 small">Automatically activates partners and schedules welcome notifications.</p>
                     </div>
                 </div>
 

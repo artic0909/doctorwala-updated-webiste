@@ -37,6 +37,21 @@ class DwPartnerModel extends Authenticatable
         'registration_type' => 'array',
     ];
 
+    protected $attributes = [
+        'status' => 'Active',
+    ];
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($model) {
+            if (empty($model->status)) {
+                $model->status = 'Active';
+            }
+        });
+    }
+
     protected $hidden = [
         'partner_password',
         'remember_token',

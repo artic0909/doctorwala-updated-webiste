@@ -129,15 +129,10 @@
             <thead>
                 <tr>
                     <th style="width: 50px;">SL</th>
-                    <th>Status</th>
+                    <th>Partner Code</th>
+                    <th>Mobile Number</th>
+                    <th>Registration Type</th>
                     <th>Actions</th>
-                    <th>Reg. Date</th>
-                    <th>Partner ID</th>
-                    <th>Services</th>
-                    <th>Facility / Clinic Name</th>
-                    <th>Contact Person</th>
-                    <th>Mobile</th>
-                    <th>Location</th>
                 </tr>
             </thead>
             <tbody>
@@ -148,19 +143,55 @@
                     </td>
 
                     <td>
-                        @if($partner->status == 'Active')
-                        <a href="javascript:void(0)" data-target="#myActiveInactiveModal{{$partner->id}}" data-toggle="modal" class="badge badge-success px-2 py-1 shadow-xs" title="Click to change status" style="font-size: 0.78rem; text-decoration: none;">
-                            <i class="fa-solid fa-circle-check mr-1"></i>Active
+                        <div class="d-flex align-items-center" style="gap: 8px;">
+                            <a href="{{ route('superadmin.partner.view', $partner->id) }}" class="badge badge-light border text-monospace font-weight-bold" style="font-size: 0.88rem; color: #0284c7; text-decoration: none;">
+                                #{{ $partner->partner_id ?? ('DWPTR' . $partner->id) }}
+                            </a>
+                            @if(strtolower($partner->status ?? '') == 'active')
+                                <span class="badge badge-success px-1" style="font-size: 0.7rem;">Active</span>
+                            @else
+                                <span class="badge badge-danger px-1" style="font-size: 0.7rem;">Inactive</span>
+                            @endif
+                        </div>
+                    </td>
+
+                    <td>
+                        <a href="tel:{{ $partner->partner_mobile_number }}" class="text-dark font-weight-bold" style="font-size: 0.9rem; text-decoration: none;">
+                            <i class="fa-solid fa-phone text-muted mr-1" style="font-size: 0.8rem;"></i>
+                            {{ $partner->partner_mobile_number }}
                         </a>
+                    </td>
+
+                    <td>
+                        @if(is_array($partner->registration_type))
+                            @foreach($partner->registration_type as $type)
+                                @if($type === 'OPD')
+                                    <span class="badge badge-info px-2 py-1 mb-1" style="font-size: 0.75rem;">OPD</span>
+                                @elseif($type === 'Pathology')
+                                    <span class="badge badge-warning px-2 py-1 mb-1" style="font-size: 0.75rem; color: #fff;">Pathology</span>
+                                @elseif($type === 'Doctor')
+                                    <span class="badge badge-primary px-2 py-1 mb-1" style="font-size: 0.75rem;">Doctor</span>
+                                @else
+                                    <span class="badge badge-secondary px-2 py-1 mb-1" style="font-size: 0.75rem;">{{ $type }}</span>
+                                @endif
+                            @endforeach
                         @else
-                        <a href="javascript:void(0)" data-target="#myActiveInactiveModal{{$partner->id}}" data-toggle="modal" class="badge badge-danger px-2 py-1 shadow-xs" title="Click to activate" style="font-size: 0.78rem; text-decoration: none;">
-                            <i class="fa-solid fa-circle-xmark mr-1"></i>Inactive
-                        </a>
+                            <span class="badge badge-light border" style="font-size: 0.75rem;">N/A</span>
                         @endif
                     </td>
 
                     <td>
-                        <div class="d-flex align-items-center" style="gap: 6px;">
+                        <div class="d-flex align-items-center flex-wrap" style="gap: 6px;">
+                            <!-- View Details Button -->
+                            <a href="{{ route('superadmin.partner.view', $partner->id) }}" class="btn btn-sm btn-info text-white font-weight-bold" style="border-radius: 6px; padding: 4px 10px;" title="View Partner Account Details">
+                                <i class="fa-solid fa-eye mr-1"></i> View
+                            </a>
+
+                            <!-- Direct Login as Partner Button -->
+                            <a href="{{ route('superadmin.partner.login-direct', $partner->id) }}" target="_blank" class="btn btn-sm btn-success font-weight-bold shadow-xs" style="border-radius: 6px; padding: 4px 10px;" title="Direct Login to Partner Dashboard">
+                                <i class="fa-solid fa-right-to-bracket mr-1"></i> Login
+                            </a>
+
                             @php
                                 $waMessage = "“You are the director / owner of the *" . $partner->partner_clinic_name . "* ?”\n" .
                                             "We are from *Doctorwala Medical Ecosystem*.\n" .
@@ -193,72 +224,10 @@
                             </a>
                         </div>
                     </td>
-
-                    <td>
-                        <span class="text-dark font-weight-bold" style="font-size: 0.85rem;">
-                            {{ $partner->created_at ? $partner->created_at->format('d M, Y') : 'N/A' }}
-                        </span>
-                        <br>
-                        <small class="text-muted">{{ $partner->created_at ? $partner->created_at->format('h:i A') : '' }}</small>
-                    </td>
-
-                    <td>
-                        <span class="badge badge-light border text-monospace font-weight-bold" style="font-size: 0.82rem; color: #0284c7;">
-                            #{{ $partner->partner_id ?? $partner->id }}
-                        </span>
-                    </td>
-
-                    <td>
-                        @if(is_array($partner->registration_type))
-                            @foreach($partner->registration_type as $type)
-                                @if($type === 'OPD')
-                                    <span class="badge badge-info px-2 py-1 mb-1" style="font-size: 0.72rem;">OPD</span>
-                                @elseif($type === 'Pathology')
-                                    <span class="badge badge-warning px-2 py-1 mb-1" style="font-size: 0.72rem; color: #fff;">Pathology</span>
-                                @elseif($type === 'Doctor')
-                                    <span class="badge badge-primary px-2 py-1 mb-1" style="font-size: 0.72rem;">Doctor</span>
-                                @else
-                                    <span class="badge badge-secondary px-2 py-1 mb-1" style="font-size: 0.72rem;">{{ $type }}</span>
-                                @endif
-                            @endforeach
-                        @else
-                            <span class="badge badge-light border" style="font-size: 0.75rem;">N/A</span>
-                        @endif
-                    </td>
-
-                    <td>
-                        <div class="font-weight-bold text-dark" style="font-size: 0.92rem;">
-                            <i class="fa-solid fa-hospital text-primary mr-1" style="font-size: 0.85rem;"></i>
-                            {{ $partner->partner_clinic_name }}
-                        </div>
-                        @if($partner->partner_email)
-                            <small class="text-muted"><i class="fa-solid fa-envelope mr-1"></i>{{ $partner->partner_email }}</small>
-                        @endif
-                    </td>
-
-                    <td>
-                        <div class="font-weight-bold" style="font-size: 0.88rem; color: #334155;">
-                            {{ $partner->partner_contact_person_name }}
-                        </div>
-                    </td>
-
-                    <td>
-                        <a href="tel:{{ $partner->partner_mobile_number }}" class="text-dark font-weight-bold" style="font-size: 0.88rem; text-decoration: none;">
-                            <i class="fa-solid fa-phone text-muted mr-1" style="font-size: 0.75rem;"></i>
-                            {{ $partner->partner_mobile_number }}
-                        </a>
-                    </td>
-
-                    <td>
-                        <span class="text-dark font-weight-bold" style="font-size: 0.85rem;">{{ $partner->partner_city }}</span>
-                        @if($partner->partner_state)
-                            <br><small class="text-muted">{{ $partner->partner_state }}</small>
-                        @endif
-                    </td>
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="10" class="text-center py-5">
+                    <td colspan="5" class="text-center py-5">
                         <div class="text-muted">
                             <i class="fa-solid fa-hospital-slash fa-3x mb-3 text-secondary" style="opacity: 0.4;"></i>
                             <h5>No Partners Found</h5>

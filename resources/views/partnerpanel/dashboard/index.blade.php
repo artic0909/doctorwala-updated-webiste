@@ -342,14 +342,14 @@
         </a>
     </div>
 
-    <!-- Stat 6: Active Subscription Plan -->
+    <!-- Stat 6: Active Status -->
     <div class="col-12 col-sm-6 col-lg-3 mb-3">
-        <a href="/partnerpanel/partner-get-subscription" class="kpi-card">
+        <a href="/partnerpanel/partnerpanel/partner-profile" class="kpi-card">
             <div class="d-flex justify-content-between align-items-start">
                 <div>
-                    <span class="kpi-label">Subscription Plan</span>
-                    <div class="font-weight-bold text-dark mt-1" style="font-size: 1.15rem; line-height: 1.3;">
-                        {{ $subPlanName ?? 'Standard Partner' }}
+                    <span class="kpi-label">Account Status</span>
+                    <div class="font-weight-bold text-success mt-1" style="font-size: 1.15rem; line-height: 1.3;">
+                        <i class="fa-solid fa-circle-check mr-1"></i> Active Partner
                     </div>
                 </div>
                 <div class="kpi-icon-wrap" style="background: #dcfce7; color: #16a34a;">
@@ -357,16 +357,10 @@
                 </div>
             </div>
             <div class="mt-3 d-flex align-items-center justify-content-between pt-2 border-top">
-                @if(isset($subDaysRemaining) && $subDaysRemaining !== null)
-                    <span class="badge badge-success px-2 py-1" style="font-size: 0.75rem;">
-                        <i class="fa-regular fa-clock mr-1"></i>{{ $subDaysRemaining }} Days Left
-                    </span>
-                @else
-                    <span class="badge badge-light border text-success font-weight-bold" style="font-size: 0.75rem;">
-                        <i class="fa-solid fa-circle-check mr-1"></i>Active Membership
-                    </span>
-                @endif
-                <span class="small font-weight-bold text-success">Plan Details <i class="fa-solid fa-arrow-right ml-1"></i></span>
+                <span class="badge badge-light border text-success font-weight-bold" style="font-size: 0.75rem;">
+                    <i class="fa-solid fa-check-double mr-1"></i>Full Access
+                </span>
+                <span class="small font-weight-bold text-success">Profile <i class="fa-solid fa-arrow-right ml-1"></i></span>
             </div>
         </a>
     </div>
@@ -432,17 +426,17 @@
                 </a>
             </div>
 
-            <!-- Subscription -->
+            <!-- Support Tickets -->
             <div class="col-sm-6 mb-3">
-                <a href="/partnerpanel/partner-get-subscription" class="hub-card">
-                    <div class="hub-icon-box" style="background: #dcfce7; color: #16a34a;">
-                        <i class="fa-solid fa-shield-halved"></i>
+                <a href="/partnerpanel/partner-get-ticket" class="hub-card">
+                    <div class="hub-icon-box" style="background: #e0e7ff; color: #4338ca;">
+                        <i class="fa-solid fa-headset"></i>
                     </div>
                     <div class="hub-content">
-                        <h6>Subscription Plan</h6>
-                        <p>Validity & billing invoices</p>
+                        <h6>Helpdesk & Support</h6>
+                        <p>Open ticket or query</p>
                     </div>
-                    <span class="hub-counter-badge badge-light border text-success">Plan</span>
+                    <span class="hub-counter-badge badge-light border text-primary">Support</span>
                 </a>
             </div>
 

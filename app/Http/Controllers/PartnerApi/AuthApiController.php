@@ -75,8 +75,61 @@ class AuthApiController extends Controller
             $partner->partner_address = $request->partner_address;
             $partner->partner_password = bcrypt($request->partner_password);
             $partner->registration_type = json_encode($request->registration_type);
-            $partner->status = 'Pending';
+            $partner->status = 'Active';
             $partner->save();
+
+            $regTypes = (array) $request->registration_type;
+            if (in_array('OPD', $regTypes)) {
+                \App\Models\PartnerOPDContactModel::create([
+                    'currently_loggedin_partner_id' => $partner->id,
+                    'clinic_registration_type' => 'OPD',
+                    'clinic_contact_person_name' => $partner->partner_contact_person_name,
+                    'clinic_name' => $partner->partner_clinic_name,
+                    'clinic_mobile_number' => $partner->partner_mobile_number,
+                    'clinic_email' => $partner->partner_email,
+                    'clinic_landmark' => $partner->partner_landmark,
+                    'clinic_pincode' => $partner->partner_pincode,
+                    'clinic_state' => $partner->partner_state,
+                    'clinic_city' => $partner->partner_city,
+                    'clinic_address' => $partner->partner_address,
+                    'status' => 'Active',
+                ]);
+            }
+            if (in_array('Pathology', $regTypes)) {
+                \App\Models\PartnerPathologyContactModel::create([
+                    'currently_loggedin_partner_id' => $partner->id,
+                    'clinic_registration_type' => 'Pathology',
+                    'clinic_contact_person_name' => $partner->partner_contact_person_name,
+                    'clinic_name' => $partner->partner_clinic_name,
+                    'clinic_mobile_number' => $partner->partner_mobile_number,
+                    'clinic_email' => $partner->partner_email,
+                    'clinic_landmark' => $partner->partner_landmark,
+                    'clinic_pincode' => $partner->partner_pincode,
+                    'clinic_state' => $partner->partner_state,
+                    'clinic_city' => $partner->partner_city,
+                    'clinic_address' => $partner->partner_address,
+                    'status' => 'Active',
+                ]);
+            }
+            if (in_array('Doctor', $regTypes)) {
+                \App\Models\PartnerDoctorContactModel::create([
+                    'currently_loggedin_partner_id' => $partner->id,
+                    'clinic_registration_type' => 'Doctor',
+                    'partner_doctor_name' => $partner->partner_contact_person_name,
+                    'partner_doctor_specialist' => 'General Physician',
+                    'partner_doctor_designation' => 'Doctor',
+                    'partner_doctor_fees' => '500',
+                    'partner_doctor_mobile' => $partner->partner_mobile_number,
+                    'partner_doctor_email' => $partner->partner_email,
+                    'partner_doctor_landmark' => $partner->partner_landmark,
+                    'partner_doctor_pincode' => $partner->partner_pincode,
+                    'partner_doctor_state' => $partner->partner_state,
+                    'partner_doctor_city' => $partner->partner_city,
+                    'partner_doctor_address' => $partner->partner_address,
+                    'visit_day_time' => json_encode([]),
+                    'status' => 'Active',
+                ]);
+            }
 
             // Send WhatsApp Welcome Message
             if ($partner->partner_mobile_number) {

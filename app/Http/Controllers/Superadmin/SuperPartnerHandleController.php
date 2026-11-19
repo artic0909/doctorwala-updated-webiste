@@ -54,35 +54,75 @@ class SuperPartnerHandleController extends Controller
         $dwuser->partner_id = $partnerId;
         $dwuser->partner_password = bcrypt($request->partner_password);
         $dwuser->registration_type = json_encode($request->registration_type);
+        $dwuser->status = 'Active';
 
         // Save partner
         $dwuser->save();
 
+        // Check if OPD is selected
+        if (in_array('OPD', $request->registration_type)) {
+            PartnerOPDContactModel::create([
+                'currently_loggedin_partner_id' => $dwuser->id,
+                'clinic_registration_type' => 'OPD',
+                'clinic_contact_person_name' => $dwuser->partner_contact_person_name,
+                'clinic_name' => $dwuser->partner_clinic_name,
+                'clinic_gstin' => null,
+                'clinic_mobile_number' => $dwuser->partner_mobile_number,
+                'clinic_email' => $dwuser->partner_email,
+                'clinic_landmark' => $dwuser->partner_landmark,
+                'clinic_pincode' => $dwuser->partner_pincode,
+                'clinic_state' => $dwuser->partner_state,
+                'clinic_city' => $dwuser->partner_city,
+                'clinic_google_map_link' => 'https://www.google.com/maps',
+                'clinic_address' => $dwuser->partner_address,
+                'status' => 'Active',
+            ]);
+        }
+
+        // Check if Pathology is selected
+        if (in_array('Pathology', $request->registration_type)) {
+            PartnerPathologyContactModel::create([
+                'currently_loggedin_partner_id' => $dwuser->id,
+                'clinic_registration_type' => 'Pathology',
+                'clinic_contact_person_name' => $dwuser->partner_contact_person_name,
+                'clinic_name' => $dwuser->partner_clinic_name,
+                'clinic_gstin' => null,
+                'clinic_mobile_number' => $dwuser->partner_mobile_number,
+                'clinic_email' => $dwuser->partner_email,
+                'clinic_landmark' => $dwuser->partner_landmark,
+                'clinic_pincode' => $dwuser->partner_pincode,
+                'clinic_state' => $dwuser->partner_state,
+                'clinic_city' => $dwuser->partner_city,
+                'clinic_google_map_link' => 'https://www.google.com/maps',
+                'clinic_address' => $dwuser->partner_address,
+                'status' => 'Active',
+            ]);
+        }
+
         // Check if Doctor is selected as a registration type
         if (in_array('Doctor', $request->registration_type)) {
-            // Create dummy data for Doctor in PartnerDoctorContactModel
             PartnerDoctorContactModel::create([
-                'currently_loggedin_partner_id' => $dwuser->id, // The partner ID from the created partner
-                'clinic_registration_type' => 'Doctor', // Setting registration type as 'Doctor'
-                'partner_doctor_name' => 'null', // Add any necessary default values (e.g., null for now)
-                'partner_doctor_specialist' => 'null',
-                'partner_doctor_designation' => 'null',
-                'partner_doctor_fees' => '1000',
-                'partner_doctor_mobile' => '1234567890',
-                'partner_doctor_email' => 'null@gmail.com',
-                'partner_doctor_landmark' => 'null',
-                'partner_doctor_pincode' => '123456',
-                'partner_doctor_google_map_link' => 'null',
-                'partner_doctor_state' => 'null',
-                'partner_doctor_city' => 'null',
-                'partner_doctor_address' => 'null',
+                'currently_loggedin_partner_id' => $dwuser->id,
+                'clinic_registration_type' => 'Doctor',
+                'partner_doctor_name' => $dwuser->partner_contact_person_name,
+                'partner_doctor_specialist' => 'General Physician',
+                'partner_doctor_designation' => 'Doctor',
+                'partner_doctor_fees' => '500',
+                'partner_doctor_mobile' => $dwuser->partner_mobile_number,
+                'partner_doctor_email' => $dwuser->partner_email,
+                'partner_doctor_landmark' => $dwuser->partner_landmark,
+                'partner_doctor_pincode' => $dwuser->partner_pincode,
+                'partner_doctor_google_map_link' => 'https://www.google.com/maps',
+                'partner_doctor_state' => $dwuser->partner_state,
+                'partner_doctor_city' => $dwuser->partner_city,
+                'partner_doctor_address' => $dwuser->partner_address,
                 'visit_day_time' => json_encode([]),
-                'status' => $dwuser->status ?? 'Active',
+                'status' => 'Active',
             ]);
         }
 
         // Redirect back with success message
-        return redirect()->route('superadmin.super-all-partner.get')->with('success', 'Registration successful! Please log in.');
+        return redirect()->route('superadmin.super-all-partner.get')->with('success', 'Partner registered and activated successfully!');
     }
 
 
@@ -347,5 +387,30 @@ class SuperPartnerHandleController extends Controller
     public function exportAsExel(Request $request)
     {
         return Excel::download(new Partners($request->all()), 'partner_details.xlsx');
+    }
+
+    public function partnerView($id)
+    {
+        $partner = DwPartnerModel::with(['ep', 'followups'])->findOrFail($id);
+
+        $partner->registration_type = is_string($partner->registration_type)
+            ? json_decode($partner->registration_type, true)
+            : (is_null($partner->registration_type) ? [] : $partner->registration_type);
+
+        $opd = PartnerOPDContactModel::with('banner', 'doctors')->where('currently_loggedin_partner_id', $partner->id)->first();
+        $pathology = PartnerPathologyContactModel::with('banner', 'tests')->where('currently_loggedin_partner_id', $partner->id)->first();
+        $doctor = PartnerDoctorContactModel::with('banner')->where('currently_loggedin_partner_id', $partner->id)->first();
+        $inquiriesCount = \App\Models\PartnerPatientInquiry::where('currently_loggedin_partner_id', $partner->id)->count();
+
+        return view('superadmin.partners.view', compact('partner', 'opd', 'pathology', 'doctor', 'inquiriesCount'));
+    }
+
+    public function loginAsPartner($id)
+    {
+        $partner = DwPartnerModel::findOrFail($id);
+
+        \Illuminate\Support\Facades\Auth::guard('partner')->loginUsingId($partner->id);
+
+        return redirect()->route('partnerpanel.partner-dashboard')->with('success', 'Logged in as partner: ' . ($partner->partner_clinic_name ?: $partner->partner_contact_person_name));
     }
 }
