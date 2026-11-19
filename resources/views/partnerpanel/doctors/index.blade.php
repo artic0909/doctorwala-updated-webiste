@@ -121,9 +121,83 @@
                         <label class="font-weight-bold small text-dark"><i class="fa-solid fa-location-dot text-primary mr-1"></i> Complete Chamber Address <span class="text-danger">*</span></label>
                         <textarea name="partner_doctor_address" class="form-control" rows="3" required style="border-radius: 8px;">{{ old('partner_doctor_address', $contactDetails->partner_doctor_address ?? $partner->partner_address ?? '') }}</textarea>
                     </div>
+
+                    <!-- Visiting Hours & Chamber Schedule Section -->
+                    <div class="col-12 mt-3">
+                        <div class="p-3 p-md-4 rounded" style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px;">
+                            <div class="d-flex align-items-center justify-content-between mb-3 pb-2 border-bottom flex-wrap" style="gap: 10px;">
+                                <div class="d-flex align-items-center">
+                                    <div class="mr-2 d-flex align-items-center justify-content-center rounded-circle" style="width: 36px; height: 36px; background: #e0f2fe; color: #0284c7;">
+                                        <i class="fa-regular fa-calendar-days"></i>
+                                    </div>
+                                    <div>
+                                        <h5 class="font-weight-bold text-dark mb-0" style="font-size: 1rem;">Visiting Hours & Chamber Schedule</h5>
+                                        <small class="text-muted">Set up consultation days and chamber timing slots</small>
+                                    </div>
+                                </div>
+                                <button type="button" class="btn btn-outline-primary btn-sm font-weight-bold" onclick="addDoctorScheduleSlot()" style="border-radius: 8px; padding: 6px 14px;">
+                                    <i class="fa-solid fa-plus mr-1"></i> Add Slot
+                                </button>
+                            </div>
+
+                            <div id="doctorScheduleContainer">
+                                @php
+                                    $rawVisitData = $contactDetails->visit_day_time ?? [];
+                                    if (is_string($rawVisitData)) {
+                                        $rawVisitData = json_decode($rawVisitData, true) ?: [];
+                                    }
+                                    $scheduleSlots = is_array($rawVisitData) && count($rawVisitData) > 0 
+                                        ? $rawVisitData 
+                                        : [['day' => 'Monday', 'start_time' => '10:00', 'end_time' => '13:00']];
+                                @endphp
+
+                                @foreach($scheduleSlots as $index => $slot)
+                                    @php
+                                        $slotDay = $slot['day'] ?? $slot['partner_doctor_visit_day'] ?? 'Monday';
+                                        $slotStart = $slot['start_time'] ?? $slot['partner_doctor_visit_start_time'] ?? '';
+                                        $slotEnd = $slot['end_time'] ?? $slot['partner_doctor_visit_end_time'] ?? '';
+                                    @endphp
+                                    <div class="schedule-slot-card p-3 mb-3 rounded border" style="background: #f8fafc; border-color: #e2e8f0 !important; border-radius: 10px;">
+                                        <div class="row g-2 align-items-center">
+                                            <div class="col-md-4 mb-2 mb-md-0">
+                                                <label class="small font-weight-bold text-muted mb-1 d-block">
+                                                    <i class="fa-regular fa-calendar-days text-primary mr-1"></i> Visiting Day
+                                                </label>
+                                                <select name="partner_doctor_visit_day[]" class="form-control" style="height: 44px; border-radius: 8px; border: 1px solid #cbd5e1;" required>
+                                                    @foreach(['All Day', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'] as $dayName)
+                                                        <option value="{{ $dayName }}" {{ strtolower($slotDay) == strtolower($dayName) ? 'selected' : '' }}>{{ $dayName }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                            <div class="col-md-3 mb-2 mb-md-0">
+                                                <label class="small font-weight-bold text-muted mb-1 d-block">
+                                                    <i class="fa-regular fa-clock text-primary mr-1"></i> From Time
+                                                </label>
+                                                <input type="time" name="partner_doctor_visit_start_time[]" class="form-control" value="{{ $slotStart }}" style="height: 44px; border-radius: 8px; border: 1px solid #cbd5e1;">
+                                            </div>
+                                            <div class="col-md-3 mb-2 mb-md-0">
+                                                <label class="small font-weight-bold text-muted mb-1 d-block">
+                                                    <i class="fa-regular fa-clock text-primary mr-1"></i> To Time
+                                                </label>
+                                                <input type="time" name="partner_doctor_visit_end_time[]" class="form-control" value="{{ $slotEnd }}" style="height: 44px; border-radius: 8px; border: 1px solid #cbd5e1;">
+                                            </div>
+                                            <div class="col-md-2 text-right text-md-center pt-md-4">
+                                                <button type="button" class="btn btn-outline-danger" onclick="removeDoctorScheduleSlot(this)" title="Delete Slot" style="border-radius: 8px; height: 42px; width: 44px; display: inline-flex; align-items: center; justify-content: center; border-color: #fca5a5; color: #ef4444;">
+                                                    <i class="fa-solid fa-trash-can"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="text-right mt-3">
+                <div class="d-flex justify-content-end align-items-center mt-4 pt-3 border-top" style="gap: 12px;">
+                    <a href="/partnerpanel/partner-dashboard" class="btn btn-light px-4 font-weight-bold" style="border-radius: 8px; border: 1px solid #e2e8f0;">
+                        Cancel
+                    </a>
                     <button type="submit" class="btn btn-primary font-weight-bold px-4 py-2" style="border-radius: 8px;">
                         <i class="fa-solid fa-floppy-disk mr-2"></i>Save Doctor Details
                     </button>
@@ -132,4 +206,64 @@
         </div>
     </div>
 </div>
+
+@push('scripts')
+<script>
+    function addDoctorScheduleSlot() {
+        var container = document.getElementById('doctorScheduleContainer');
+        if (!container) return;
+
+        var slotCard = document.createElement('div');
+        slotCard.className = 'schedule-slot-card p-3 mb-3 rounded border';
+        slotCard.style = 'background: #f8fafc; border-color: #e2e8f0 !important; border-radius: 10px;';
+        slotCard.innerHTML = `
+            <div class="row g-2 align-items-center">
+                <div class="col-md-4 mb-2 mb-md-0">
+                    <label class="small font-weight-bold text-muted mb-1 d-block">
+                        <i class="fa-regular fa-calendar-days text-primary mr-1"></i> Visiting Day
+                    </label>
+                    <select name="partner_doctor_visit_day[]" class="form-control" style="height: 44px; border-radius: 8px; border: 1px solid #cbd5e1;" required>
+                        <option value="All Day">All Day</option>
+                        <option value="Monday" selected>Monday</option>
+                        <option value="Tuesday">Tuesday</option>
+                        <option value="Wednesday">Wednesday</option>
+                        <option value="Thursday">Thursday</option>
+                        <option value="Friday">Friday</option>
+                        <option value="Saturday">Saturday</option>
+                        <option value="Sunday">Sunday</option>
+                    </select>
+                </div>
+                <div class="col-md-3 mb-2 mb-md-0">
+                    <label class="small font-weight-bold text-muted mb-1 d-block">
+                        <i class="fa-regular fa-clock text-primary mr-1"></i> From Time
+                    </label>
+                    <input type="time" name="partner_doctor_visit_start_time[]" class="form-control" value="10:00" style="height: 44px; border-radius: 8px; border: 1px solid #cbd5e1;">
+                </div>
+                <div class="col-md-3 mb-2 mb-md-0">
+                    <label class="small font-weight-bold text-muted mb-1 d-block">
+                        <i class="fa-regular fa-clock text-primary mr-1"></i> To Time
+                    </label>
+                    <input type="time" name="partner_doctor_visit_end_time[]" class="form-control" value="13:00" style="height: 44px; border-radius: 8px; border: 1px solid #cbd5e1;">
+                </div>
+                <div class="col-md-2 text-right text-md-center pt-md-4">
+                    <button type="button" class="btn btn-outline-danger" onclick="removeDoctorScheduleSlot(this)" title="Delete Slot" style="border-radius: 8px; height: 42px; width: 44px; display: inline-flex; align-items: center; justify-content: center; border-color: #fca5a5; color: #ef4444;">
+                        <i class="fa-solid fa-trash-can"></i>
+                    </button>
+                </div>
+            </div>
+        `;
+        container.appendChild(slotCard);
+    }
+
+    function removeDoctorScheduleSlot(btn) {
+        var card = btn.closest('.schedule-slot-card');
+        var container = card.parentElement;
+        if (container.querySelectorAll('.schedule-slot-card').length > 1) {
+            card.remove();
+        } else {
+            alert('At least one visiting schedule slot is required.');
+        }
+    }
+</script>
+@endpush
 @endsection

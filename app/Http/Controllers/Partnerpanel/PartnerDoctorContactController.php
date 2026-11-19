@@ -68,15 +68,18 @@ class PartnerDoctorContactController extends Controller
             'partner_doctor_fees' => 'required|string',
             'partner_doctor_mobile' => 'required|string|max:15',
             'partner_doctor_email' => 'required|email',
-            'partner_doctor_landmark' => 'required|string',
+            'partner_doctor_landmark' => 'nullable|string',
             'partner_doctor_pincode' => 'required|string|max:10',
             'partner_doctor_google_map_link' => 'nullable|url',
             'partner_doctor_state' => 'required|string',
             'partner_doctor_city' => 'required|string',
             'partner_doctor_address' => 'required|string',
-            'partner_doctor_visit_day.*' => 'required|string',
-            'partner_doctor_visit_start_time.*' => 'date_format:H:i',
-            'partner_doctor_visit_end_time.*' => 'date_format:H:i|after:partner_doctor_visit_start_time.*',
+            'partner_doctor_visit_day' => 'nullable|array',
+            'partner_doctor_visit_day.*' => 'nullable|string',
+            'partner_doctor_visit_start_time' => 'nullable|array',
+            'partner_doctor_visit_start_time.*' => 'nullable|string',
+            'partner_doctor_visit_end_time' => 'nullable|array',
+            'partner_doctor_visit_end_time.*' => 'nullable|string',
         ]);
 
         
