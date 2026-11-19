@@ -1,1 +1,0 @@
-@include('superadmin.pathology.edit')

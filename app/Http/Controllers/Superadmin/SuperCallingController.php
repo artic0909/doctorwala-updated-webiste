@@ -72,7 +72,7 @@ class SuperCallingController extends Controller
 
         $callings = $query->orderBy('id', 'desc')->paginate(15);
 
-        return view('superadmin.super-all-callings', compact(
+        return view('superadmin.callings.index', compact(
             'callings',
             'totalCalls',
             'leadsCaptured',

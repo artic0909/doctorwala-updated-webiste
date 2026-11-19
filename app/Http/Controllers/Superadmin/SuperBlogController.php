@@ -13,7 +13,7 @@ class SuperBlogController extends Controller
 
         $blogs = SuperBlogModel::orderBy('id', 'desc')->get();
 
-        return view('superadmin.super-blogs', compact('blogs'));
+        return view('superadmin.blogs.index', compact('blogs'));
     }
 
 

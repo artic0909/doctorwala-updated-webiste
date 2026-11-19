@@ -49,7 +49,7 @@ class SuperAllOnlyDoctorHandleController extends Controller
             $doc->partner_contact_person_name = $partner->partner_contact_person_name ?? null;
         }
     
-        return view('superadmin.super-all-doctors', compact('docs'));
+        return view('superadmin.doctors.index', compact('docs'));
     }
 
 
@@ -87,7 +87,7 @@ class SuperAllOnlyDoctorHandleController extends Controller
 
         $doc = PartnerDoctorContactModel::findOrFail($id);
 
-        return view('superadmin.super-edit-doctors-details', compact('doc'));
+        return view('superadmin.doctors.edit', compact('doc'));
     }
 
 
@@ -154,7 +154,7 @@ class SuperAllOnlyDoctorHandleController extends Controller
         $docBanner = PartnerDoctorBannerModel::where('currently_loggedin_partner_id', $pid)->first();
 
 
-        return view('superadmin.super-adddoc-banner', compact('pid', 'docBanner'));
+        return view('superadmin.doctors.add-banner', compact('pid', 'docBanner'));
     }
 
 

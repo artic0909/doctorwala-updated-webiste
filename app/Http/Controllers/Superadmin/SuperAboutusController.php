@@ -15,7 +15,7 @@ class SuperAboutusController extends Controller
 
         $hasAboutData = SuperAboutusModel::exists();
 
-        return view('superadmin.super-aboutus', compact('abouts', 'hasAboutData'));
+        return view('superadmin.aboutus.index', compact('abouts', 'hasAboutData'));
     }
 
 

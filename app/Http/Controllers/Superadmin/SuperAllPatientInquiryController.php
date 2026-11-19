@@ -14,7 +14,7 @@ class SuperAllPatientInquiryController extends Controller
 
         $inquiries = PartnerPatientInquiry::orderby('id', 'desc')->where('clinic_type', 'OPD')->paginate(8);
 
-        return view('superadmin.super-opd-inquiry', compact('inquiries'));
+        return view('superadmin.inquiries.opd', compact('inquiries'));
     }
 
 
@@ -40,7 +40,7 @@ class SuperAllPatientInquiryController extends Controller
 
         $inquiries = PartnerPatientInquiry::orderby('id', 'desc')->where('clinic_type', 'Pathology')->paginate(8);
 
-        return view('superadmin.super-path-inquiry', compact('inquiries'));
+        return view('superadmin.inquiries.pathology', compact('inquiries'));
     }
 
 
@@ -69,7 +69,7 @@ class SuperAllPatientInquiryController extends Controller
 
         $inquiries = PartnerPatientInquiry::orderby('id', 'desc')->where('clinic_type', 'Doctor')->paginate(8);
 
-        return view('superadmin.super-doc-inquiry', compact('inquiries'));
+        return view('superadmin.inquiries.doctor', compact('inquiries'));
     }
 
 

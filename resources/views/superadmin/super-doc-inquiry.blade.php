@@ -1,1 +1,0 @@
-@include('superadmin.inquiries.doctor')

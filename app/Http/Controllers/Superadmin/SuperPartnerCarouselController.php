@@ -11,7 +11,7 @@ class SuperPartnerCarouselController extends Controller
     public function index()
     {
         $carousels = PartnerCarousel::all();
-        return view('superadmin.super-partner-carousel', compact('carousels'));
+        return view('superadmin.banners.carousel', compact('carousels'));
     }
 
     public function store(Request $request)

@@ -34,7 +34,7 @@ class PartnerGalleryController extends Controller
 
 
         $images = $gallery ? $gallery->images : [];
-        return view('partnerpanel.partner-gallery', compact('opdBanner', 'pathologyBanner','doctorBanner', 'images', 'registrationTypes'));
+        return view('partnerpanel.profile.gallery', compact('opdBanner', 'pathologyBanner','doctorBanner', 'images', 'registrationTypes'));
     }
 
 

@@ -1,1 +1,0 @@
-@include('partnerpanel.doctors.index')

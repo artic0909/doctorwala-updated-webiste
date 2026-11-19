@@ -30,7 +30,7 @@ class SuperTicketController extends Controller
 
         $tickets->appends(['search' => $searchQuery]);
 
-        return view('superadmin.super-all-tickets', compact('tickets', 'searchQuery'));
+        return view('superadmin.tickets.index', compact('tickets', 'searchQuery'));
     }
 
 
@@ -90,6 +90,6 @@ class SuperTicketController extends Controller
             ->orderBy('updated_at', 'desc')
             ->paginate(8);
 
-        return view('superadmin.super-ticket-replies', compact('repliedTickets'));
+        return view('superadmin.tickets.replies', compact('repliedTickets'));
     }
 }

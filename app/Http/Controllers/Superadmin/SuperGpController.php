@@ -60,7 +60,7 @@ class SuperGpController extends Controller
         // All active EPs for dropdown selection in Add/Edit modals & filters
         $allEps = Ep::orderBy('name', 'asc')->get();
 
-        return view('superadmin.super-gp', compact(
+        return view('superadmin.gp.index', compact(
             'records',
             'totalCount',
             'activeCount',
@@ -195,7 +195,7 @@ class SuperGpController extends Controller
             ->whereDate('created_at', now()->toDateString())
             ->count();
 
-        return view('superadmin.super-gp-users', compact(
+        return view('superadmin.gp.users', compact(
             'gp',
             'users',
             'totalUsers',

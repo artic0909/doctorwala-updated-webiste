@@ -66,7 +66,7 @@ class PatientProfileAccessController extends Controller
             ->orderBy('doctor_name')
             ->get();
 
-        return view('partnerpanel.patient-profile-req', compact(
+        return view('partnerpanel.patients.request', compact(
             'opdBanner',
             'pathologyBanner',
             'doctorBanner',
@@ -206,7 +206,7 @@ class PatientProfileAccessController extends Controller
             ->orderBy('created_at', 'desc')
             ->get();
 
-        return view('partnerpanel.patient-all-profiles', compact('requests', 'opdBanner', 'pathologyBanner', 'doctorBanner', 'registrationTypes'));
+        return view('partnerpanel.patients.index', compact('requests', 'opdBanner', 'pathologyBanner', 'doctorBanner', 'registrationTypes'));
     }
 
     // ─── shared: decrypt ID & verify access ───────────────────────

@@ -82,7 +82,7 @@ class DashboardController extends Controller
         $totalPartners = DwPartnerModel::count();
         $totalUsers = DwUserModel::count();
 
-        return view('superadmin.super-dashboard', compact(
+        return view('superadmin.dashboard.index', compact(
             'dailyVisitors',
             'deviceBreakdown',
             'browserBreakdown',

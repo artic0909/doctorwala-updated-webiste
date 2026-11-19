@@ -130,7 +130,7 @@ class DwPartnerController extends Controller
         $clinicName = $partner->partner_clinic_name;
         $partnerName = $partner->partner_contact_person_name;
 
-        return view('partnerpanel.partner-dashboard', compact('opdBanner', 'pathologyBanner', 'doctorBanner', 'registrationTypes', 'partnerName', 'clinicName'));
+        return view('partnerpanel.dashboard.index', compact('opdBanner', 'pathologyBanner', 'doctorBanner', 'registrationTypes', 'partnerName', 'clinicName'));
     }
 
     public function partnerRegForm(Request $request)

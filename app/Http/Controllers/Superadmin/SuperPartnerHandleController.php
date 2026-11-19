@@ -20,7 +20,7 @@ class SuperPartnerHandleController extends Controller
     public function addPartnerView()
     {
 
-        return view('superadmin.super-add-partners');
+        return view('superadmin.partners.create');
     }
 
 
@@ -289,7 +289,7 @@ class SuperPartnerHandleController extends Controller
                 : (is_null($partner->registration_type) ? [] : $partner->registration_type); // Default empty array
         }
 
-        return view('superadmin.super-all-partner', compact('partners', 'cities'));
+        return view('superadmin.partners.index', compact('partners', 'cities'));
     }
 
 

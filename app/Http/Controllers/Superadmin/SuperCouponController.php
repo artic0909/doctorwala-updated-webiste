@@ -15,7 +15,7 @@ class SuperCouponController extends Controller
 {
     public function index()
     {
-        return view('superadmin.super-add-coupons');
+        return view('superadmin.coupons.create');
     }
 
 
@@ -24,7 +24,7 @@ class SuperCouponController extends Controller
 
         $coupons = SuperCouponModel::orderBy('id', 'desc')->get();
 
-        return view('superadmin.super-show-coupons', compact('coupons'));
+        return view('superadmin.coupons.index', compact('coupons'));
     }
 
 

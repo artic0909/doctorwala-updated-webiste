@@ -45,7 +45,7 @@ class SuperAllOPDHandleController extends Controller
             $opd->partner_clinic_name = $partner->partner_clinic_name ?? null;
         }
     
-        return view('superadmin.super-all-opd', compact('opds'));
+        return view('superadmin.opd.index', compact('opds'));
     }
 
 
@@ -83,7 +83,7 @@ class SuperAllOPDHandleController extends Controller
 
         $opd = PartnerOPDContactModel::find($id);
 
-        return view('superadmin.super-edit-opd-details', compact('opd'));
+        return view('superadmin.opd.edit', compact('opd'));
     }
 
 
@@ -154,7 +154,7 @@ class SuperAllOPDHandleController extends Controller
             $opdDoctor->visit_day_time = json_decode($opdDoctor->visit_day_time, true);
         }
 
-        return view('superadmin.super-addopd-doctor', compact('pid', 'opdBanner', 'opdDoctors'));
+        return view('superadmin.opd.add-doctor', compact('pid', 'opdBanner', 'opdDoctors'));
     }
 
 

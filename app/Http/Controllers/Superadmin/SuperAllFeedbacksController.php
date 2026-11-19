@@ -12,7 +12,7 @@ class SuperAllFeedbacksController extends Controller
     {
         $feedbacks = PartnerFeedback::orderBy('created_at', 'desc')->paginate(8);
 
-        return view('superadmin.super-all-feedbacks', compact('feedbacks'));
+        return view('superadmin.feedbacks.index', compact('feedbacks'));
     }
 
     public function delete($id)

@@ -32,7 +32,7 @@ class PartnerServiceListController extends Controller
         }
 
 
-        return view('partnerpanel.partner-service-lists', compact('opdBanner', 'pathologyBanner','doctorBanner', 'services', 'registrationTypes'));
+        return view('partnerpanel.profile.services', compact('opdBanner', 'pathologyBanner','doctorBanner', 'services', 'registrationTypes'));
     }
 
     // Add a new service

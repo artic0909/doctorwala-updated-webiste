@@ -1,1 +1,0 @@
-@include('partnerpanel.feedbacks.index')

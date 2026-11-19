@@ -12,7 +12,7 @@ class SuperHomeBannerController extends Controller
     public function index()
     {
         $banners = SuperHomeBannerModel::all();
-        return view('superadmin.super-home-banner', compact('banners'));
+        return view('superadmin.banners.home', compact('banners'));
     }
 
 

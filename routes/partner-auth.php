@@ -94,85 +94,85 @@ Route::middleware(['auth:partner', 'verified'])->group(function () {
 
 
         Route::get('/partnerpanel/partnerpanel/partner-profile', function () {
-            return view('partnerpanel.partner-profile');
+            return view('partnerpanel.profile.index');
         }
         )->name('partnerpanel.partner-profile');
 
         Route::get('/partnerpanel/partner-opd-contact', function () {
-            return view('partnerpanel.partner-opd-contact');
+            return view('partnerpanel.opd.contact');
         }
         )->name('partnerpanel.partner-opd-contact');
 
         Route::get('/partnerpanel/partner-pathology-contact', function () {
-            return view('partnerpanel.partner-pathology-contact');
+            return view('partnerpanel.pathology.contact');
         }
         )->name('partnerpanel.partner-pathology-contact');
 
         Route::get('/partnerpanel/partner-about-clinic', function () {
-            return view('partnerpanel.partner-about-clinic');
+            return view('partnerpanel.profile.about');
         }
         )->name('partnerpanel.partner-about-clinic');
 
         Route::get('/partnerpanel/partner-service-lists', function () {
-            return view('partnerpanel.partner-service-lists');
+            return view('partnerpanel.profile.services');
         }
         )->name('partnerpanel.partner-service-lists');
 
         Route::get('/partnerpanel/partner-gallery', function () {
-            return view('partnerpanel.partner-gallery');
+            return view('partnerpanel.profile.gallery');
         }
         )->name('partnerpanel.partner-gallery');
 
         Route::get('/partnerpanel/partner-opd', function () {
-            return view('partnerpanel.partner-opd');
+            return view('partnerpanel.opd.upload');
         }
         )->name('partnerpanel.partner-opd');
 
         Route::get('/partnerpanel/partner-opd-show', function () {
-            return view('partnerpanel.partner-opd-show');
+            return view('partnerpanel.opd.index');
         }
         )->name('partnerpanel.partner-opd-show');
 
         Route::get('/partnerpanel/partner-pathology', function () {
-            return view('partnerpanel.partner-pathology');
+            return view('partnerpanel.pathology.upload');
         }
         )->name('partnerpanel.partner-pathology');
 
         Route::get('/partnerpanel/partner-pathology-show', function () {
-            return view('partnerpanel.partner-pathology-show');
+            return view('partnerpanel.pathology.index');
         }
         )->name('partnerpanel.partner-pathology-show');
 
         Route::get('/partnerpanel/partner-doctors', function () {
-            return view('partnerpanel.partner-doctors');
+            return view('partnerpanel.doctors.index');
         }
         )->name('partnerpanel.partner-doctors');
 
         Route::get('/partnerpanel/partner-inquiry-from-patients', function () {
-            return view('partnerpanel.partner-inquiry-from-patients');
+            return view('partnerpanel.inquiries.index');
         }
         )->name('partnerpanel.partner-inquiry-from-patients');
 
         // Route::get('/partnerpanel/partner-get-subscription', function () {
-        //     return view('partnerpanel.partner-get-subscription');
+        //     return view('partnerpanel.subscription.index');
         // })->name('partnerpanel.partner-get-subscription');
     
         // Route::get('/partnerpanel/partner-show-invoice', function () {
-        //     return view('partnerpanel.partner-show-invoice');
+        //     return view('partnerpanel.subscription.invoices');
         // })->name('partnerpanel.partner-show-invoice');
     
         Route::get('/partnerpanel/partner-get-ticket', function () {
-            return view('partnerpanel.partner-get-ticket');
+            return view('partnerpanel.tickets.create');
         }
         )->name('partnerpanel.partner-get-ticket');
 
         Route::get('/partnerpanel/partner-show-ticket', function () {
-            return view('partnerpanel.partner-show-ticket');
+            return view('partnerpanel.tickets.index');
         }
         )->name('partnerpanel.partner-show-ticket');
 
         Route::get('/partnerpanel/partner-feedbacks', function () {
-            return view('partnerpanel.partner-feedbacks');
+            return view('partnerpanel.feedbacks.index');
         }
         )->name('partnerpanel.partner-feedbacks');
 

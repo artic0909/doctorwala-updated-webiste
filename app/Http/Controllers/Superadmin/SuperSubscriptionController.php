@@ -10,7 +10,7 @@ class SuperSubscriptionController extends Controller
 {
     public function index()
     {
-        return view('superadmin.super-add-subscriptions');
+        return view('superadmin.subscriptions.create');
     }
 
 
@@ -19,7 +19,7 @@ class SuperSubscriptionController extends Controller
 
         $subscriptions = SuperSubscriptionModel::orderBy('id', 'desc')->get();
 
-        return view('superadmin.super-show-subscription', compact('subscriptions'));
+        return view('superadmin.subscriptions.index', compact('subscriptions'));
     }
 
 

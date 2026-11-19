@@ -35,7 +35,7 @@ class PartnerPatientFeedbackController extends Controller
             ->orderBy('created_at', 'desc')
             ->get();
 
-        return view('partnerpanel.partner-feedbacks', compact('opdBanner', 'pathologyBanner', 'doctorBanner', 'aboutDetails', 'registrationTypes', 'patientFeedbacks'));
+        return view('partnerpanel.feedbacks.index', compact('opdBanner', 'pathologyBanner', 'doctorBanner', 'aboutDetails', 'registrationTypes', 'patientFeedbacks'));
     }
 
 }

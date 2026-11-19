@@ -39,7 +39,7 @@ class ProfileEditController extends Controller
         $pathologyBanner = PartnerPathologyBannerModel::where('currently_loggedin_partner_id', $partnerId)->first();
         $doctorBanner = PartnerDoctorBannerModel::where('currently_loggedin_partner_id', $partnerId)->first();
 
-        return view('partnerpanel.partner-profile', compact('opdBanner', 'pathologyBanner', 'doctorBanner', 'partner', 'registrationTypes'));
+        return view('partnerpanel.profile.index', compact('opdBanner', 'pathologyBanner', 'doctorBanner', 'partner', 'registrationTypes'));
     }
 
 

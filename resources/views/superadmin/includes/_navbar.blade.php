@@ -56,6 +56,10 @@
                         <i class="fa-solid fa-chart-pie text-primary mr-2"></i> Dashboard
                     </a>
 
+                    <a class="dropdown-item py-2" href="{{ route('superadmin.profile.edit') }}" style="font-size: 0.85rem; border-radius: 6px;">
+                        <i class="fa-solid fa-user-gear text-primary mr-2"></i> Account Settings
+                    </a>
+
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
                         <a class="dropdown-item py-2 text-danger" href="{{ route('logout') }}"

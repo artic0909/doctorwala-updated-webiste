@@ -32,6 +32,7 @@ use App\Http\Controllers\Superadmin\SuperRefferController;
 use App\Http\Controllers\Superadmin\SuperEpController;
 use App\Http\Controllers\Superadmin\SuperGpController;
 use App\Http\Controllers\Superadmin\SuperCallingController;
+use App\Http\Controllers\Superadmin\SuperProfileController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('guest:web')->group(function () {
@@ -89,126 +90,137 @@ Route::middleware('auth:web')->group(function () {
     // ========================================== Super Admin Restricted Routes Start ============================
     // ===========================================================================================================
     // Route::get('/superadmin/super-dashboard', function () {
-    //     return view('superadmin.super-dashboard');
+    //     return view('superadmin.dashboard.index');
     // })->middleware(['auth', 'verified'])->name('superadmin.super-dashboard');
 
     Route::get('/superadmin/super-dashboard', [DashboardController::class, 'index'])
     ->middleware(['auth', 'verified'])
     ->name('superadmin.super-dashboard');
 
+    // Super Admin Profile & Account Settings
+    Route::get('/superadmin/profile', [SuperProfileController::class, 'edit'])
+        ->middleware(['auth', 'verified'])
+        ->name('superadmin.profile.edit');
+    Route::put('/superadmin/profile/update', [SuperProfileController::class, 'update'])
+        ->middleware(['auth', 'verified'])
+        ->name('superadmin.profile.update');
+    Route::put('/superadmin/profile/password', [SuperProfileController::class, 'updatePassword'])
+        ->middleware(['auth', 'verified'])
+        ->name('superadmin.profile.password');
+
 
     Route::get('/superadmin/super-home-banner', function () {
-        return view('superadmin.super-home-banner');
+        return view('superadmin.banners.home');
     })->middleware(['auth', 'verified'])->name('superadmin.super-home-banner');
 
 
     Route::get('/superadmin/super-others-banner', function () {
-        return view('superadmin.super-others-banner');
+        return view('superadmin.banners.others');
     })->middleware(['auth', 'verified'])->name('superadmin.super-others-banner');
 
 
     Route::get('/superadmin/super-all-user', function () {
-        return view('superadmin.super-all-user');
+        return view('superadmin.users.index');
     })->middleware(['auth', 'verified'])->name('superadmin.super-all-user');
 
 
     Route::get('/superadmin/super-add-partners', function () {
-        return view('superadmin.super-add-partners');
+        return view('superadmin.partners.create');
     })->middleware(['auth', 'verified'])->name('superadmin.super-add-partners');
 
 
     Route::get('/superadmin/super-all-partner', function () {
-        return view('superadmin.super-all-partner');
+        return view('superadmin.partners.index');
     })->middleware(['auth', 'verified'])->name('superadmin.super-all-partner');
 
 
     Route::get('/superadmin/super-all-opd', function () {
-        return view('superadmin.super-all-opd');
+        return view('superadmin.opd.index');
     })->middleware(['auth', 'verified'])->name('superadmin.super-all-opd');
 
 
     Route::get('/superadmin/super-edit-opd-details', function () {
-        return view('superadmin.super-edit-opd-details');
+        return view('superadmin.opd.edit');
     })->middleware(['auth', 'verified'])->name('superadmin.super-edit-opd-details');
 
 
     Route::get('/superadmin/super-all-pathology', function () {
-        return view('superadmin.super-all-pathology');
+        return view('superadmin.pathology.index');
     })->middleware(['auth', 'verified'])->name('superadmin.super-all-pathology');
 
 
     Route::get('/superadmin/super-edit-pathology-details', function () {
-        return view('superadmin.super-edit-pathology-details');
+        return view('superadmin.pathology.edit');
     })->middleware(['auth', 'verified'])->name('superadmin.super-edit-pathology-details');
 
 
     Route::get('/superadmin/super-all-doctors', function () {
-        return view('superadmin.super-all-doctors');
+        return view('superadmin.doctors.index');
     })->middleware(['auth', 'verified'])->name('superadmin.super-all-doctors');
 
 
     Route::get('/superadmin/super-edit-doctors-details', function () {
-        return view('superadmin.super-edit-doctors-details');
+        return view('superadmin.doctors.edit');
     })->middleware(['auth', 'verified'])->name('superadmin.super-edit-doctors-details');
 
 
     Route::get('/superadmin/super-aboutus', function () {
-        return view('superadmin.super-aboutus');
+        return view('superadmin.aboutus.index');
     })->middleware(['auth', 'verified'])->name('superadmin.super-aboutus');
 
 
     Route::get('/superadmin/super-blogs', function () {
-        return view('superadmin.super-blogs');
+        return view('superadmin.blogs.index');
     })->middleware(['auth', 'verified'])->name('superadmin.super-blogs');
 
 
     Route::get('/superadmin/super-user-inquiry', function () {
-        return view('superadmin.super-user-inquiry');
+        return view('superadmin.inquiries.user');
     })->middleware(['auth', 'verified'])->name('superadmin.super-user-inquiry');
 
 
     Route::get('/superadmin/super-add-coupons', function () {
-        return view('superadmin.super-add-coupons');
+        return view('superadmin.coupons.create');
     })->middleware(['auth', 'verified'])->name('superadmin.super-add-coupons');
 
 
     Route::get('/superadmin/super-show-coupons', function () {
-        return view('superadmin.super-show-coupons');
+        return view('superadmin.coupons.index');
     })->middleware(['auth', 'verified'])->name('superadmin.super-show-coupons');
 
 
     Route::get('/superadmin/super-add-subscriptions', function () {
-        return view('superadmin.super-add-subscriptions');
+        return view('superadmin.subscriptions.create');
     })->middleware(['auth', 'verified'])->name('superadmin.super-add-subscriptions');
 
 
     Route::get('/superadmin/super-show-subscription', function () {
-        return view('superadmin.super-show-subscription');
+        return view('superadmin.subscriptions.index');
     })->middleware(['auth', 'verified'])->name('superadmin.super-show-subscription');
 
 
     Route::get('/superadmin/super-opd-inquiry', function () {
-        return view('superadmin.super-opd-inquiry');
+        return view('superadmin.inquiries.opd');
     })->middleware(['auth', 'verified'])->name('superadmin.super-opd-inquiry');
 
 
     Route::get('/superadmin/super-path-inquiry', function () {
-        return view('superadmin.super-path-inquiry');
+        return view('superadmin.inquiries.pathology');
     })->middleware(['auth', 'verified'])->name('superadmin.super-path-inquiry');
 
 
     Route::get('/superadmin/super-doc-inquiry', function () {
-        return view('superadmin.super-doc-inquiry');
+        return view('superadmin.inquiries.doctor');
     })->middleware(['auth', 'verified'])->name('superadmin.super-doc-inquiry');
 
 
     Route::get('/superadmin/super-all-tickets', function () {
-        return view('superadmin.super-all-tickets');
+        return view('superadmin.tickets.index');
     })->middleware(['auth', 'verified'])->name('superadmin.super-all-tickets');
 
 
     Route::get('/superadmin/super-ticket-replies', function () {
-        return view('superadmin.super-ticket-replies');
+        return view('superadmin.tickets.replies');
     })->middleware(['auth', 'verified'])->name('superadmin.super-ticket-replies');
     // ===========================================================================================================
     // ========================================== Super Admin Restricted Routes End ==============================

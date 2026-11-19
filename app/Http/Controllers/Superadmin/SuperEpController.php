@@ -48,7 +48,7 @@ class SuperEpController extends Controller
         $inactiveCount  = Ep::where('status', 'Inactive')->count();
         $totalGpsCount  = Gp::count();
 
-        return view('superadmin.super-ep', compact(
+        return view('superadmin.ep.index', compact(
             'records',
             'totalCount',
             'activeCount',
@@ -184,7 +184,7 @@ class SuperEpController extends Controller
             ->whereDate('created_at', now()->toDateString())
             ->count();
 
-        return view('superadmin.super-ep-partners', compact(
+        return view('superadmin.ep.partners', compact(
             'ep',
             'partners',
             'totalPartners',

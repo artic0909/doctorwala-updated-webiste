@@ -12,7 +12,7 @@ class SuperOtherBannerController extends Controller
     public function index()
     {
         $banners = SuperOtherBannerModel::all();
-        return view('superadmin.super-others-banner', compact('banners'));
+        return view('superadmin.banners.others', compact('banners'));
     }
 
 

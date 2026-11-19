@@ -33,7 +33,7 @@ class SuperAllUserController extends Controller
         }
 
         $users = $query->orderBy('id', 'desc')->paginate(10);
-        return view('superadmin.super-all-user', compact('users'));
+        return view('superadmin.users.index', compact('users'));
     }
 
     public function delete($id)

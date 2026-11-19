@@ -74,7 +74,7 @@ class PartnerPatientInquiryController extends Controller
             ->orderBy('created_at', 'desc')
             ->get();
 
-        return view('partnerpanel.partner-inquiry-from-patients', compact('opdBanner', 'pathologyBanner', 'doctorBanner', 'aboutDetails', 'registrationTypes', 'patientInquiries'));
+        return view('partnerpanel.inquiries.index', compact('opdBanner', 'pathologyBanner', 'doctorBanner', 'aboutDetails', 'registrationTypes', 'patientInquiries'));
     }
 
 

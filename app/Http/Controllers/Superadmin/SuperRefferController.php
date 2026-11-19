@@ -59,7 +59,7 @@ class SuperRefferController extends Controller
             ->pluck('ip_address')
             ->toArray();
 
-        return view('superadmin.super-all-reffer', compact(
+        return view('superadmin.referrals.index', compact(
             'referrals', 
             'totalReferrals', 
             'monthlyReferrals', 

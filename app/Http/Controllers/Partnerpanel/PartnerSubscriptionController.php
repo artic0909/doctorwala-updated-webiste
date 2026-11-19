@@ -34,7 +34,7 @@ class PartnerSubscriptionController extends Controller
         if (is_string($registrationTypes)) {
             $registrationTypes = json_decode($registrationTypes, true);
         }
-        return view('partnerpanel.partner-get-subscription', compact('subs', 'partner', 'opdBanner', 'pathologyBanner', 'doctorBanner', 'couponExistDetails', 'registrationTypes'));
+        return view('partnerpanel.subscription.index', compact('subs', 'partner', 'opdBanner', 'pathologyBanner', 'doctorBanner', 'couponExistDetails', 'registrationTypes'));
     }
 
     public function payment(Request $request)
@@ -130,6 +130,6 @@ class PartnerSubscriptionController extends Controller
         if (is_string($registrationTypes)) {
             $registrationTypes = json_decode($registrationTypes, true);
         }
-        return view('partnerpanel.partner-show-invoice', compact('subs', 'partner', 'opdBanner', 'pathologyBanner', 'doctorBanner', 'registrationTypes'));
+        return view('partnerpanel.subscription.invoices', compact('subs', 'partner', 'opdBanner', 'pathologyBanner', 'doctorBanner', 'registrationTypes'));
     }
 }

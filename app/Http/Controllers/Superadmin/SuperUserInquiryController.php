@@ -11,7 +11,7 @@ class SuperUserInquiryController extends Controller
 
         $inquiries = FrontContactModel::orderBy('id', 'desc')->paginate(8);
 
-        return view('superadmin.super-user-inquiry', compact('inquiries'));
+        return view('superadmin.inquiries.user', compact('inquiries'));
     }
 
     public function delete($id){

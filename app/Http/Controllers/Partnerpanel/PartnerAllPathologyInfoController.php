@@ -36,7 +36,7 @@ class PartnerAllPathologyInfoController extends Controller
         $registrationTypess = $partner->registration_type; // Automatically casted as an array if set in the model
         $contactDetails = PartnerAllPathologyTestModel::where('currently_loggedin_partner_id', $partnerId)->first();
 
-        return view('partnerpanel.partner-pathology', compact('contactDetails', 'registrationTypes', 'registrationTypess', 'opdBanner', 'pathologyBanner', 'doctorBanner', 'allpaths'));
+        return view('partnerpanel.pathology.upload', compact('contactDetails', 'registrationTypes', 'registrationTypess', 'opdBanner', 'pathologyBanner', 'doctorBanner', 'allpaths'));
     }
 
 
@@ -111,7 +111,7 @@ class PartnerAllPathologyInfoController extends Controller
         }
 
 
-        return view('partnerpanel.partner-pathology-show', compact('opdBanner', 'pathologyBanner','doctorBanner', 'storedData', 'registrationTypes', 'allpaths'));
+        return view('partnerpanel.pathology.index', compact('opdBanner', 'pathologyBanner','doctorBanner', 'storedData', 'registrationTypes', 'allpaths'));
     }
 
 

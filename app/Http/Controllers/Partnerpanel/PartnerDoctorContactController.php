@@ -40,7 +40,7 @@ class PartnerDoctorContactController extends Controller
         $contactCount = PartnerDoctorContactModel::where('currently_loggedin_partner_id', $partnerId)->count();
     
    
-        return view('partnerpanel.partner-doctors', [
+        return view('partnerpanel.doctors.index', [
             'opdBanner' => $opdBanner,
             'pathologyBanner' => $pathologyBanner,
             'doctorBanner' => $doctorBanner,

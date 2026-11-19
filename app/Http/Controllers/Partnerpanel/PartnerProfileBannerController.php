@@ -27,7 +27,7 @@ class PartnerProfileBannerController extends Controller
     //     $partner = Auth::guard('partner')->user();
     //     $registrationTypes = json_decode($partner->registration_type, true);
 
-    //     return view('partnerpanel.partner-dashboard', compact('opdBanner', 'pathologyBanner','doctorBanner', 'registrationTypes'));
+    //     return view('partnerpanel.dashboard.index', compact('opdBanner', 'pathologyBanner','doctorBanner', 'registrationTypes'));
     // }
 
 

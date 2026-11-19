@@ -30,7 +30,7 @@ class PartnerAboutDetailsController extends Controller
 
         $aboutDetails = PartnerAboutDetailsModel::where('currently_loggedin_partner_id', $partnerId)->first();
 
-        return view('partnerpanel.partner-about-clinic', compact('opdBanner', 'pathologyBanner','doctorBanner', 'aboutDetails', 'registrationTypes'));
+        return view('partnerpanel.profile.about', compact('opdBanner', 'pathologyBanner','doctorBanner', 'aboutDetails', 'registrationTypes'));
     }
 
     public function store(Request $request)

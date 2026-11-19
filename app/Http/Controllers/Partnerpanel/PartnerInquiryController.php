@@ -34,7 +34,7 @@ class PartnerInquiryController extends Controller
         ->orderBy('id', 'desc')
         ->get();
         
-        return view('partnerpanel.partner-show-ticket', compact('opdBanner', 'pathologyBanner','doctorBanner', 'inquiries', 'registrationTypes'));
+        return view('partnerpanel.tickets.index', compact('opdBanner', 'pathologyBanner','doctorBanner', 'inquiries', 'registrationTypes'));
     }
 
     // Show form to create a new inquiry
@@ -58,7 +58,7 @@ class PartnerInquiryController extends Controller
             return redirect()->route('partnerpanel.dashboard')->with('error', 'Partner not found!');
         }
 
-        return view('partnerpanel.partner-get-ticket', compact('opdBanner', 'pathologyBanner','doctorBanner', 'partner', 'registrationTypes'));
+        return view('partnerpanel.tickets.create', compact('opdBanner', 'pathologyBanner','doctorBanner', 'partner', 'registrationTypes'));
     }
 
     // Store a new inquiry

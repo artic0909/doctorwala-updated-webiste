@@ -36,7 +36,7 @@ class PartnerAllOPDInfoController extends Controller
         $registrationTypess = $partner->registration_type; // Automatically casted as an array if set in the model
         $contactDetails = PartnerAllOPDDoctorModel::where('currently_loggedin_partner_id', $partnerId)->first();
 
-        return view('partnerpanel.partner-opd', compact('opdBanner', 'pathologyBanner','doctorBanner', 'contactDetails', 'registrationTypes', 'registrationTypess', 'allOPDs'));
+        return view('partnerpanel.opd.upload', compact('opdBanner', 'pathologyBanner','doctorBanner', 'contactDetails', 'registrationTypes', 'registrationTypess', 'allOPDs'));
     }
 
 
@@ -114,7 +114,7 @@ class PartnerAllOPDInfoController extends Controller
         }
 
 
-        return view('partnerpanel.partner-opd-show', compact('opdBanner', 'pathologyBanner','doctorBanner', 'storedData', 'registrationTypes'));
+        return view('partnerpanel.opd.index', compact('opdBanner', 'pathologyBanner','doctorBanner', 'storedData', 'registrationTypes'));
     }
 
 

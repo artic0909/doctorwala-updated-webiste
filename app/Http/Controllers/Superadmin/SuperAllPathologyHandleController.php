@@ -44,7 +44,7 @@ class SuperAllPathologyHandleController extends Controller
             $path->partner_clinic_name = $partner->partner_clinic_name ?? null;
         }
     
-        return view('superadmin.super-all-pathology', compact('paths'));
+        return view('superadmin.pathology.index', compact('paths'));
     }
 
 
@@ -82,7 +82,7 @@ class SuperAllPathologyHandleController extends Controller
 
         $path = PartnerPathologyContactModel::find($id);
 
-        return view('superadmin.super-edit-pathology-details', compact('path'));
+        return view('superadmin.pathology.edit', compact('path'));
     }
 
 
@@ -152,7 +152,7 @@ class SuperAllPathologyHandleController extends Controller
             $pathTest->test_day_time = !empty($pathTest->test_day_time) ? json_decode($pathTest->test_day_time, true) : [];
         }
 
-        return view('superadmin.super-addpath-test', compact('pid', 'pathBanner', 'pathTests'));
+        return view('superadmin.pathology.add-test', compact('pid', 'pathBanner', 'pathTests'));
     }
 
 

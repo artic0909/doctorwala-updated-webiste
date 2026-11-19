@@ -1,1 +1,0 @@
-@include('superadmin.feedbacks.index')
