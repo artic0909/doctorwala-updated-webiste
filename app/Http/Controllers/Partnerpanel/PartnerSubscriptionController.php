@@ -22,19 +22,7 @@ class PartnerSubscriptionController extends Controller
 
     public function allSubscriptions()
     {
-        $partner = Auth::guard('partner')->user();
-        $subs = SuperSubscriptionModel::all();
-        $opdBanner = PartnerOPDBannerModel::where('currently_loggedin_partner_id', $partner)->first();
-        $pathologyBanner = PartnerPathologyBannerModel::where('currently_loggedin_partner_id', $partner)->first();
-        $doctorBanner = PartnerDoctorBannerModel::where('currently_loggedin_partner_id', $partner)->first();
-        $couponExistDetails = CouponHolderModel::where('currently_loggedin_partner_id', $partner->id)->first();
-
-        $registrationTypes = $partner->registration_type;
-
-        if (is_string($registrationTypes)) {
-            $registrationTypes = json_decode($registrationTypes, true);
-        }
-        return view('partnerpanel.subscription.index', compact('subs', 'partner', 'opdBanner', 'pathologyBanner', 'doctorBanner', 'couponExistDetails', 'registrationTypes'));
+        return redirect()->route('partnerpanel.partner-dashboard')->with('info', 'Subscriptions are not required.');
     }
 
     public function payment(Request $request)
@@ -59,7 +47,7 @@ class PartnerSubscriptionController extends Controller
         $successUrl = route('partnerpanel.payment.callback');
         $failureUrl = route('partnerpanel.payment.callback');
 
-        return view('partnerpanel.subscription.payu_payment', compact('txnid', 'amount', 'productInfo', 'firstname', 'email', 'successUrl', 'failureUrl', 'hash', 'payuUrl', 'merchantKey', 'merchantSalt', 'txnid'));
+        return redirect()->route('partnerpanel.partner-dashboard');
     }
 
     public function paymentCallback(Request $request)
@@ -153,6 +141,6 @@ class PartnerSubscriptionController extends Controller
 
         $invoices = $query->latest('id')->paginate(15)->withQueryString();
 
-        return view('partnerpanel.subscription.invoices', compact('subs', 'partner', 'opdBanner', 'pathologyBanner', 'doctorBanner', 'registrationTypes', 'invoices'));
+        return redirect()->route('partnerpanel.partner-dashboard');
     }
 }
