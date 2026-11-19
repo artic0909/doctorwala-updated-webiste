@@ -63,41 +63,48 @@
 </div>
 
 <!-- Filter Bar Card -->
-<div class="doc-card mb-4 p-3">
-    <form action="{{ route('superadmin.super-all-partner.get') }}" method="GET" class="row align-items-center g-2">
-        @if(request('search'))
-            <input type="hidden" name="search" value="{{ request('search') }}">
-        @endif
-
-        <div class="col-12 col-md-3 mb-2 mb-md-0">
-            <label class="small text-muted font-weight-bold mb-1"><i class="fa-solid fa-arrow-down-short-wide text-primary mr-1"></i> Sort Order</label>
-            <select name="sort" class="form-control" style="height: 42px; border-radius: 8px; font-size: 0.88rem;">
-                <option value="newest" {{ request('sort') == 'newest' ? 'selected' : '' }}>Newest First</option>
-                <option value="oldest" {{ request('sort') == 'oldest' ? 'selected' : '' }}>Oldest First</option>
-            </select>
+<div class="filter-card">
+    <form action="{{ route('superadmin.super-all-partner.get') }}" method="GET" class="row align-items-end g-2">
+        <div class="col-12 col-md-3 mb-2">
+            <label><i class="fa-solid fa-magnifying-glass text-primary mr-1"></i> Search Partner</label>
+            <input type="search" name="search" class="form-control" placeholder="Name, Clinic, Phone, PID..." value="{{ request('search') }}">
         </div>
 
-        <div class="col-12 col-md-4 mb-2 mb-md-0">
-            <label class="small text-muted font-weight-bold mb-1"><i class="fa-solid fa-city text-primary mr-1"></i> Filter by City</label>
+        <div class="col-12 col-md-2 mb-2">
+            <label><i class="fa-solid fa-calendar-day text-primary mr-1"></i> From Date</label>
+            <input type="date" name="from_date" class="form-control" value="{{ request('from_date') }}">
+        </div>
+
+        <div class="col-12 col-md-2 mb-2">
+            <label><i class="fa-solid fa-calendar-check text-primary mr-1"></i> To Date</label>
+            <input type="date" name="to_date" class="form-control" value="{{ request('to_date') }}">
+        </div>
+
+        <div class="col-12 col-md-2 mb-2">
+            <label><i class="fa-solid fa-city text-primary mr-1"></i> City</label>
             <select name="city" id="city-filter" class="form-control w-100">
-                <option value="">All Cities (Anywhere)</option>
+                <option value="">All Cities</option>
                 @foreach($cities as $city)
                     <option value="{{ $city }}" {{ request('city') == $city ? 'selected' : '' }}>{{ $city }}</option>
                 @endforeach
             </select>
         </div>
 
-        <div class="col-12 col-md-3 mb-2 mb-md-0">
-            <label class="small text-muted font-weight-bold mb-1"><i class="fa-solid fa-calendar-day text-primary mr-1"></i> Registration Date</label>
-            <input type="date" name="date" class="form-control" value="{{ request('date') }}" style="height: 42px; border-radius: 8px; font-size: 0.88rem;">
+        <div class="col-12 col-md-1 mb-2">
+            <label><i class="fa-solid fa-toggle-on text-primary mr-1"></i> Status</label>
+            <select name="status" class="form-control">
+                <option value="">All</option>
+                <option value="Active" {{ request('status') == 'Active' ? 'selected' : '' }}>Active</option>
+                <option value="Inactive" {{ request('status') == 'Inactive' ? 'selected' : '' }}>Inactive</option>
+            </select>
         </div>
 
-        <div class="col-12 col-md-2 d-flex align-items-end mt-2 mt-md-0 pt-md-4">
-            <button type="submit" class="btn btn-primary font-weight-bold w-100 mr-2" style="height: 42px; border-radius: 8px;" title="Apply Filters">
+        <div class="col-12 col-md-2 mb-2 d-flex">
+            <button type="submit" class="btn btn-primary font-weight-bold flex-fill mr-1" style="height: 42px; border-radius: 8px;">
                 <i class="fa fa-filter mr-1"></i> Filter
             </button>
-            @if(request('date') || request('sort') == 'oldest' || request('city') || request('search'))
-                <a href="{{ route('superadmin.super-all-partner.get') }}" class="btn btn-light border" style="height: 42px; border-radius: 8px; padding: 8px 14px;" title="Reset Filters">
+            @if(request('from_date') || request('to_date') || request('city') || request('status') || request('search'))
+                <a href="{{ route('superadmin.super-all-partner.get') }}" class="btn btn-light border d-flex align-items-center justify-content-center" style="height: 42px; width: 42px; border-radius: 8px;" title="Reset Filters">
                     <i class="fa-solid fa-rotate-left"></i>
                 </a>
             @endif
@@ -265,12 +272,12 @@
     </div>
 
     <!-- Pagination Footer -->
-    <div class="doc-card-footer d-flex justify-content-between align-items-center flex-wrap">
-        <div class="text-muted small mb-2 mb-md-0">
+    <div class="table-pagination-footer">
+        <div class="text-muted small mb-2 mb-md-0 font-weight-bold">
             Showing {{ $partners->firstItem() ?? 0 }} to {{ $partners->lastItem() ?? 0 }} of {{ $partners->total() }} partners
         </div>
         <div>
-            {{ $partners->appends(request()->query())->links('pagination::bootstrap-4') }}
+            {{ $partners->links('pagination::bootstrap-4') }}
         </div>
     </div>
 </div>

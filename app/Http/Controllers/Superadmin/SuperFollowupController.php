@@ -11,23 +11,41 @@ class SuperFollowupController extends Controller
 {
     public function index(Request $request)
     {
-        $partnerId = $request->input('dw_partner_id');
         $allPartners = DwPartnerModel::orderBy('partner_clinic_name', 'asc')->get();
         $selectedPartner = null;
 
-        if ($partnerId) {
-            $selectedPartner = DwPartnerModel::find($partnerId);
-            $followups = Followup::with('partner')
-                ->where('dw_partner_id', $partnerId)
-                ->orderBy('date', 'desc')
-                ->orderBy('id', 'desc')
-                ->get();
-        } else {
-            $followups = Followup::with('partner')
-                ->orderBy('date', 'desc')
-                ->orderBy('id', 'desc')
-                ->paginate(20);
+        $query = Followup::with('partner');
+
+        if ($request->filled('dw_partner_id')) {
+            $selectedPartner = DwPartnerModel::find($request->dw_partner_id);
+            $query->where('dw_partner_id', $request->dw_partner_id);
         }
+
+        if ($request->filled('type')) {
+            $query->where('type', $request->type);
+        }
+
+        if ($request->filled('from_date')) {
+            $query->whereDate('date', '>=', $request->from_date);
+        }
+
+        if ($request->filled('to_date')) {
+            $query->whereDate('date', '<=', $request->to_date);
+        }
+
+        if ($request->filled('search')) {
+            $search = trim($request->search);
+            $query->where(function($q) use ($search) {
+                $q->where('remarks', 'like', "%{$search}%")
+                  ->orWhereHas('partner', function($pq) use ($search) {
+                      $pq->where('partner_clinic_name', 'like', "%{$search}%")
+                         ->orWhere('partner_contact_person_name', 'like', "%{$search}%")
+                         ->orWhere('partner_mobile_number', 'like', "%{$search}%");
+                  });
+            });
+        }
+
+        $followups = $query->orderBy('date', 'desc')->orderBy('id', 'desc')->paginate(15)->withQueryString();
 
         return view('superadmin.followup.create', compact('selectedPartner', 'followups', 'allPartners'));
     }

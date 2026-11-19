@@ -27,28 +27,29 @@
 </div>
 
 <!-- Filter Bar Card -->
-<div class="doc-card mb-4 p-3">
-    <form action="{{ route('superadmin.super-all-user') }}" method="GET" class="row align-items-center g-2">
-        @if(request('search'))
-            <input type="hidden" name="search" value="{{ request('search') }}">
-        @endif
-
-        <div class="col-12 col-md-4 mb-2 mb-md-0">
-            <label class="small text-muted font-weight-bold mb-1"><i class="fa-solid fa-calendar-day text-primary mr-1"></i> Registered From</label>
-            <input type="date" name="start_date" class="form-control" value="{{ request('start_date') }}" style="height: 42px; border-radius: 8px; font-size: 0.88rem;">
+<div class="filter-card">
+    <form action="{{ route('superadmin.super-all-user') }}" method="GET" class="row align-items-end g-2">
+        <div class="col-12 col-md-5 mb-2">
+            <label><i class="fa-solid fa-magnifying-glass text-primary mr-1"></i> Search Patients</label>
+            <input type="search" name="search" class="form-control" placeholder="Search name, email, mobile, city..." value="{{ request('search') }}">
         </div>
 
-        <div class="col-12 col-md-4 mb-2 mb-md-0">
-            <label class="small text-muted font-weight-bold mb-1"><i class="fa-solid fa-calendar-check text-primary mr-1"></i> Registered To</label>
-            <input type="date" name="end_date" class="form-control" value="{{ request('end_date') }}" style="height: 42px; border-radius: 8px; font-size: 0.88rem;">
+        <div class="col-12 col-md-2 mb-2">
+            <label><i class="fa-solid fa-calendar-day text-primary mr-1"></i> From Date</label>
+            <input type="date" name="from_date" class="form-control" value="{{ request('from_date', request('start_date')) }}">
         </div>
 
-        <div class="col-12 col-md-4 d-flex align-items-end mt-2 mt-md-0 pt-md-4">
-            <button type="submit" class="btn btn-primary font-weight-bold w-100 mr-2" style="height: 42px; border-radius: 8px;" title="Apply Date Filter">
-                <i class="fa fa-filter mr-1"></i> Filter Dates
+        <div class="col-12 col-md-2 mb-2">
+            <label><i class="fa-solid fa-calendar-check text-primary mr-1"></i> To Date</label>
+            <input type="date" name="to_date" class="form-control" value="{{ request('to_date', request('end_date')) }}">
+        </div>
+
+        <div class="col-12 col-md-3 mb-2 d-flex">
+            <button type="submit" class="btn btn-primary font-weight-bold flex-fill mr-1" style="height: 42px; border-radius: 8px;">
+                <i class="fa fa-filter mr-1"></i> Filter
             </button>
-            @if(request('start_date') || request('end_date') || request('search'))
-                <a href="{{ route('superadmin.super-all-user') }}" class="btn btn-light border" style="height: 42px; border-radius: 8px; padding: 8px 14px;" title="Reset Filters">
+            @if(request('from_date') || request('to_date') || request('start_date') || request('end_date') || request('search'))
+                <a href="{{ route('superadmin.super-all-user') }}" class="btn btn-light border d-flex align-items-center justify-content-center" style="height: 42px; width: 42px; border-radius: 8px;" title="Reset Filters">
                     <i class="fa-solid fa-rotate-left"></i>
                 </a>
             @endif
@@ -165,12 +166,12 @@
     </div>
 
     <!-- Pagination Footer -->
-    <div class="doc-card-footer d-flex justify-content-between align-items-center flex-wrap">
-        <div class="text-muted small mb-2 mb-md-0">
+    <div class="table-pagination-footer">
+        <div class="text-muted small mb-2 mb-md-0 font-weight-bold">
             Showing {{ $users->firstItem() ?? 0 }} to {{ $users->lastItem() ?? 0 }} of {{ $users->total() }} users
         </div>
         <div>
-            {{ $users->appends(request()->query())->links('pagination::bootstrap-4') }}
+            {{ $users->links('pagination::bootstrap-4') }}
         </div>
     </div>
 </div>

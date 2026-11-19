@@ -167,11 +167,14 @@
             </table>
         </div>
     </div>
-    @if ($users->hasPages())
-    <div class="card-footer bg-white border-0 py-3 d-flex justify-content-between align-items-center">
-        <span class="text-muted small">Showing {{ $users->firstItem() }} to {{ $users->lastItem() }} of {{ $users->total() }} entries</span>
-        <div>{{ $users->links('pagination::bootstrap-4') }}</div>
+    <!-- Pagination Footer -->
+    <div class="table-pagination-footer">
+        <div class="text-muted small mb-2 mb-md-0 font-weight-bold">
+            Showing {{ $users->firstItem() ?? 0 }} to {{ $users->lastItem() ?? 0 }} of {{ $users->total() }} entries
+        </div>
+        <div>
+            {{ $users->links('pagination::bootstrap-4') }}
+        </div>
     </div>
-    @endif
 </div>
 @endsection

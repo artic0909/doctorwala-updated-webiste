@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Auth;
 
 class PartnerPatientInquiryController extends Controller
 {
-    public function create()
+    public function create(Request $request)
     {
         $partnerId = Auth::guard('partner')->id();
 
@@ -59,7 +59,7 @@ class PartnerPatientInquiryController extends Controller
             ->filter()
             ->toArray();
 
-        $patientInquiries = PartnerPatientInquiry::where(function ($q) use ($partnerIds, $contactIds, $allClinicNames, $doctorIds) {
+        $query = PartnerPatientInquiry::where(function ($q) use ($partnerIds, $contactIds, $allClinicNames, $doctorIds) {
                 $q->whereIn('currently_loggedin_partner_id', $partnerIds);
                 if (!empty($contactIds)) {
                     $q->orWhereIn('currently_loggedin_partner_id', $contactIds);
@@ -70,9 +70,31 @@ class PartnerPatientInquiryController extends Controller
                 if (!empty($doctorIds)) {
                     $q->orWhereIn('doctor_id', $doctorIds);
                 }
-            })
-            ->orderBy('created_at', 'desc')
-            ->get();
+            });
+
+        if ($request->filled('search')) {
+            $search = trim($request->search);
+            $query->where(function($q) use ($search) {
+                $q->where('user_name', 'like', "%{$search}%")
+                  ->orWhere('user_mobile', 'like', "%{$search}%")
+                  ->orWhere('user_email', 'like', "%{$search}%")
+                  ->orWhere('user_inquiry', 'like', "%{$search}%");
+            });
+        }
+
+        if ($request->filled('clinic_type')) {
+            $query->where('clinic_type', $request->clinic_type);
+        }
+
+        if ($request->filled('from_date')) {
+            $query->whereDate('created_at', '>=', $request->from_date);
+        }
+
+        if ($request->filled('to_date')) {
+            $query->whereDate('created_at', '<=', $request->to_date);
+        }
+
+        $patientInquiries = $query->orderBy('created_at', 'desc')->paginate(15)->withQueryString();
 
         return view('partnerpanel.inquiries.index', compact('opdBanner', 'pathologyBanner', 'doctorBanner', 'aboutDetails', 'registrationTypes', 'patientInquiries'));
     }

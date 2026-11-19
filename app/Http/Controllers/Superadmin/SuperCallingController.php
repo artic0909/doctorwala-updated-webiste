@@ -70,7 +70,7 @@ class SuperCallingController extends Controller
         $linksSent = Calling::where('app_link_sent', true)->count();
         $dndCount = Calling::where('is_dnd', true)->count();
 
-        $callings = $query->orderBy('id', 'desc')->paginate(15);
+        $callings = $query->orderBy('id', 'desc')->paginate(15)->withQueryString();
 
         return view('superadmin.callings.index', compact(
             'callings',

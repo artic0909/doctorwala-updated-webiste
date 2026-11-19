@@ -19,6 +19,34 @@
     </div>
 </div>
 
+<!-- Search & Date Filter Bar -->
+<div class="card border-0 shadow-sm mb-4 filter-card" style="border-radius: 12px;">
+    <div class="card-body p-3">
+        <form method="GET" action="{{ route('superadmin.super-ticket-replies') }}" class="row g-2 align-items-end">
+            <div class="col-md-5 col-sm-12 mb-2 mb-md-0">
+                <label class="small text-muted font-weight-bold mb-1"><i class="fa fa-search mr-1"></i> Search</label>
+                <input type="text" name="search" class="form-control" placeholder="Ticket ID, clinic, person, reply content..." value="{{ request('search') }}">
+            </div>
+            <div class="col-md-2 col-sm-6 mb-2 mb-md-0">
+                <label class="small text-muted font-weight-bold mb-1"><i class="fa fa-calendar-alt mr-1"></i> From Date</label>
+                <input type="date" name="from_date" class="form-control" value="{{ request('from_date') }}">
+            </div>
+            <div class="col-md-2 col-sm-6 mb-2 mb-md-0">
+                <label class="small text-muted font-weight-bold mb-1"><i class="fa fa-calendar-alt mr-1"></i> To Date</label>
+                <input type="date" name="to_date" class="form-control" value="{{ request('to_date') }}">
+            </div>
+            <div class="col-md-3 col-sm-12 d-flex">
+                <button type="submit" class="btn btn-primary font-weight-bold flex-grow-1 mr-2" style="height: 42px; border-radius: 8px;">
+                    <i class="fa fa-filter mr-1"></i> Filter
+                </button>
+                <a href="{{ route('superadmin.super-ticket-replies') }}" class="btn btn-light font-weight-bold" style="height: 42px; border-radius: 8px; border: 1px solid #cbd5e1;" title="Reset filters">
+                    <i class="fa fa-redo text-muted"></i>
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
 <div class="card border-0 shadow-sm" style="border-radius: 12px;">
     <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
         <h5 class="mb-0 font-weight-bold text-dark">
@@ -31,6 +59,7 @@
             <table class="table table-hover align-middle mb-0" style="font-size: 0.88rem;">
                 <thead style="background: #f8fafc; border-bottom: 2px solid #e2e8f0;">
                     <tr>
+                        <th class="py-3 px-3 text-secondary font-weight-bold" style="width: 50px;">SL.</th>
                         <th class="py-3 px-3 text-secondary font-weight-bold" style="width: 100px;">Ticket ID</th>
                         <th class="py-3 px-3 text-secondary font-weight-bold">Timestamps</th>
                         <th class="py-3 px-3 text-secondary font-weight-bold">Partner Clinic</th>
@@ -43,6 +72,9 @@
                 <tbody>
                     @forelse($repliedTickets as $ticket)
                     <tr>
+                        <td class="py-3 px-3 text-muted font-weight-bold">
+                            {{ ($repliedTickets->currentPage() - 1) * $repliedTickets->perPage() + $loop->iteration }}
+                        </td>
                         <td class="py-3 px-3">
                             <span class="badge badge-success px-2 py-1 font-weight-bold" style="background: #dcfce7; color: #15803d; border-radius: 6px; font-family: monospace;">
                                 {{ $ticket->ticket_id }}
@@ -84,12 +116,12 @@
             </table>
         </div>
     </div>
-    @if($repliedTickets->hasPages())
-    <div class="card-footer bg-white border-0 py-3 d-flex justify-content-between align-items-center">
-        <span class="text-muted small">Showing {{ $repliedTickets->firstItem() }} to {{ $repliedTickets->lastItem() }} of {{ $repliedTickets->total() }} entries</span>
+    <div class="table-pagination-footer">
+        <div class="text-muted small mb-2 mb-md-0 font-weight-bold">
+            Showing {{ $repliedTickets->firstItem() ?? 0 }} to {{ $repliedTickets->lastItem() ?? 0 }} of {{ $repliedTickets->total() }} entries
+        </div>
         <div>{{ $repliedTickets->links('pagination::bootstrap-4') }}</div>
     </div>
-    @endif
 </div>
 
 <!-- Delete Modals -->

@@ -80,11 +80,48 @@
 
     <!-- Right Side: Log History -->
     <div class="col-lg-8">
+        <!-- Followup Filter Bar -->
+        <div class="card border-0 shadow-sm mb-3 filter-card" style="border-radius: 12px;">
+            <div class="card-body p-3">
+                <form method="GET" action="{{ route('superadmin.followup.index') }}" class="row g-2 align-items-end">
+                    <div class="col-md-3 col-sm-6 mb-2 mb-md-0">
+                        <label class="small text-muted font-weight-bold mb-1"><i class="fa fa-search mr-1"></i> Search</label>
+                        <input type="text" name="search" class="form-control" placeholder="Clinic or note..." value="{{ request('search') }}">
+                    </div>
+                    <div class="col-md-2 col-sm-6 mb-2 mb-md-0">
+                        <label class="small text-muted font-weight-bold mb-1"><i class="fa fa-phone mr-1"></i> Type</label>
+                        <select name="type" class="form-control">
+                            <option value="">All</option>
+                            <option value="cll" {{ request('type') == 'cll' ? 'selected' : '' }}>Call</option>
+                            <option value="message" {{ request('type') == 'message' ? 'selected' : '' }}>Message</option>
+                            <option value="both" {{ request('type') == 'both' ? 'selected' : '' }}>Both</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2 col-sm-6 mb-2 mb-md-0">
+                        <label class="small text-muted font-weight-bold mb-1"><i class="fa fa-calendar-alt mr-1"></i> From</label>
+                        <input type="date" name="from_date" class="form-control" value="{{ request('from_date') }}">
+                    </div>
+                    <div class="col-md-2 col-sm-6 mb-2 mb-md-0">
+                        <label class="small text-muted font-weight-bold mb-1"><i class="fa fa-calendar-alt mr-1"></i> To</label>
+                        <input type="date" name="to_date" class="form-control" value="{{ request('to_date') }}">
+                    </div>
+                    <div class="col-md-3 col-sm-12 d-flex">
+                        <button type="submit" class="btn btn-primary font-weight-bold flex-grow-1 mr-2" style="height: 42px; border-radius: 8px;">
+                            <i class="fa fa-filter mr-1"></i> Filter
+                        </button>
+                        <a href="{{ route('superadmin.followup.index') }}" class="btn btn-light font-weight-bold" style="height: 42px; border-radius: 8px; border: 1px solid #cbd5e1;" title="Reset filters">
+                            <i class="fa fa-redo text-muted"></i>
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+
         <div class="card border-0 shadow-sm" style="border-radius: 14px;">
             <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
                 <h5 class="mb-0 font-weight-bold text-dark">
                     <i class="fa-solid fa-clock-rotate-left text-primary mr-2"></i>Communication History
-                    <span class="badge badge-secondary ml-2">{{ count($followups) }}</span>
+                    <span class="badge badge-secondary ml-2">{{ $followups->total() }}</span>
                 </h5>
             </div>
             <div class="card-body p-0">
@@ -104,7 +141,7 @@
                             @forelse($followups as $followup)
                             <tr>
                                 <td class="py-3 px-3 text-muted font-weight-bold">
-                                    {{ $loop->iteration }}
+                                    {{ ($followups->currentPage() - 1) * $followups->perPage() + $loop->iteration }}
                                 </td>
                                 <td class="py-3 px-3 font-weight-bold text-dark">
                                     <i class="fa-regular fa-calendar text-primary mr-1"></i>
@@ -145,6 +182,12 @@
                         </tbody>
                     </table>
                 </div>
+            </div>
+            <div class="table-pagination-footer">
+                <div class="text-muted small mb-2 mb-md-0 font-weight-bold">
+                    Showing {{ $followups->firstItem() ?? 0 }} to {{ $followups->lastItem() ?? 0 }} of {{ $followups->total() }} entries
+                </div>
+                <div>{{ $followups->links('pagination::bootstrap-4') }}</div>
             </div>
         </div>
     </div>

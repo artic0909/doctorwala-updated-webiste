@@ -19,11 +19,39 @@
     </div>
 </div>
 
+<!-- Search & Date Filter Bar -->
+<div class="card border-0 shadow-sm mb-4 filter-card" style="border-radius: 12px;">
+    <div class="card-body p-3">
+        <form method="GET" action="{{ url('/superadmin/super-home-banner') }}" class="row g-2 align-items-end">
+            <div class="col-md-5 col-sm-12 mb-2 mb-md-0">
+                <label class="small text-muted font-weight-bold mb-1"><i class="fa fa-search mr-1"></i> Search</label>
+                <input type="text" name="search" class="form-control" placeholder="Banner title or description..." value="{{ request('search') }}">
+            </div>
+            <div class="col-md-2 col-sm-6 mb-2 mb-md-0">
+                <label class="small text-muted font-weight-bold mb-1"><i class="fa fa-calendar-alt mr-1"></i> From Date</label>
+                <input type="date" name="from_date" class="form-control" value="{{ request('from_date') }}">
+            </div>
+            <div class="col-md-2 col-sm-6 mb-2 mb-md-0">
+                <label class="small text-muted font-weight-bold mb-1"><i class="fa fa-calendar-alt mr-1"></i> To Date</label>
+                <input type="date" name="to_date" class="form-control" value="{{ request('to_date') }}">
+            </div>
+            <div class="col-md-3 col-sm-12 d-flex">
+                <button type="submit" class="btn btn-primary font-weight-bold flex-grow-1 mr-2" style="height: 42px; border-radius: 8px;">
+                    <i class="fa fa-filter mr-1"></i> Filter
+                </button>
+                <a href="{{ url('/superadmin/super-home-banner') }}" class="btn btn-light font-weight-bold" style="height: 42px; border-radius: 8px; border: 1px solid #cbd5e1;" title="Reset filters">
+                    <i class="fa fa-redo text-muted"></i>
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
 <div class="card border-0 shadow-sm" style="border-radius: 12px;">
     <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
         <h5 class="mb-0 font-weight-bold text-dark">
             All Home Banners
-            <span class="badge badge-secondary ml-2">{{ count($banners) }}</span>
+            <span class="badge badge-secondary ml-2">{{ $banners->total() }}</span>
         </h5>
     </div>
     <div class="card-body p-0">
@@ -42,7 +70,7 @@
                     @forelse ($banners as $banner)
                     <tr>
                         <td class="py-3 px-3 text-muted font-weight-bold">
-                            {{ $loop->iteration }}
+                            {{ ($banners->currentPage() - 1) * $banners->perPage() + $loop->iteration }}
                         </td>
                         <td class="py-3 px-3">
                             <img src="{{ asset('storage/' . $banner->banner_image) }}" alt="Banner"
@@ -75,6 +103,12 @@
                 </tbody>
             </table>
         </div>
+    </div>
+    <div class="table-pagination-footer">
+        <div class="text-muted small mb-2 mb-md-0 font-weight-bold">
+            Showing {{ $banners->firstItem() ?? 0 }} to {{ $banners->lastItem() ?? 0 }} of {{ $banners->total() }} home banners
+        </div>
+        <div>{{ $banners->links('pagination::bootstrap-4') }}</div>
     </div>
 </div>
 

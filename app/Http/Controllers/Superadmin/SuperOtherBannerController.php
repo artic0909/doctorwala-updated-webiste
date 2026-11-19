@@ -9,9 +9,20 @@ use Illuminate\Http\Request;
 
 class SuperOtherBannerController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $banners = SuperOtherBannerModel::all();
+        $query = SuperOtherBannerModel::query();
+
+        if ($request->filled('from_date')) {
+            $query->whereDate('created_at', '>=', $request->from_date);
+        }
+
+        if ($request->filled('to_date')) {
+            $query->whereDate('created_at', '<=', $request->to_date);
+        }
+
+        $banners = $query->orderBy('id', 'desc')->paginate(15)->withQueryString();
+
         return view('superadmin.banners.others', compact('banners'));
     }
 

@@ -19,11 +19,10 @@ class SuperAllOPDHandleController extends Controller
 
     public function opdView(Request $request)
     {
-        $query = PartnerOPDContactModel::orderBy('created_at', 'desc');
+        $query = PartnerOPDContactModel::query();
     
-        if ($request->has('search') && !empty($request->search)) {
-            $search = $request->search;
-    
+        if ($request->filled('search')) {
+            $search = trim($request->search);
             $query->where(function ($q) use ($search) {
                 $q->where('clinic_name', 'like', "%{$search}%")
                   ->orWhere('clinic_contact_person_name', 'like', "%{$search}%")
@@ -31,11 +30,22 @@ class SuperAllOPDHandleController extends Controller
                   ->orWhere('clinic_mobile_number', 'like', "%{$search}%")
                   ->orWhere('clinic_state', 'like', "%{$search}%")
                   ->orWhere('clinic_city', 'like', "%{$search}%");
-                //   ->orWhere('registration_type', 'like', "%{$search}%");
             });
         }
+
+        if ($request->filled('from_date')) {
+            $query->whereDate('created_at', '>=', $request->from_date);
+        }
+
+        if ($request->filled('to_date')) {
+            $query->whereDate('created_at', '<=', $request->to_date);
+        }
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
     
-        $opds = $query->paginate(14);
+        $opds = $query->orderBy('created_at', 'desc')->paginate(15)->withQueryString();
     
         foreach ($opds as $opd) {
             $partner = DwPartnerModel::find($opd->currently_loggedin_partner_id);

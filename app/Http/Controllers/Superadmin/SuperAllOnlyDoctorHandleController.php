@@ -18,11 +18,10 @@ class SuperAllOnlyDoctorHandleController extends Controller
 
     public function docView(Request $request)
     {
-        $query = PartnerDoctorContactModel::orderBy('created_at', 'desc');
+        $query = PartnerDoctorContactModel::query();
     
-        if ($request->has('search') && !empty($request->search)) {
-            $search = $request->search;
-    
+        if ($request->filled('search')) {
+            $search = trim($request->search);
             $query->where(function ($q) use ($search) {
                 $q->where('partner_doctor_name', 'like', "%{$search}%")
                   ->orWhere('partner_doctor_specialist', 'like', "%{$search}%")
@@ -36,8 +35,20 @@ class SuperAllOnlyDoctorHandleController extends Controller
                   ->orWhere('partner_doctor_city', 'like', "%{$search}%");
             });
         }
+
+        if ($request->filled('from_date')) {
+            $query->whereDate('created_at', '>=', $request->from_date);
+        }
+
+        if ($request->filled('to_date')) {
+            $query->whereDate('created_at', '<=', $request->to_date);
+        }
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
     
-        $docs = $query->paginate(4);
+        $docs = $query->orderBy('created_at', 'desc')->paginate(15)->withQueryString();
     
         foreach ($docs as $doc) {
             $partner = DwPartnerModel::find($doc->currently_loggedin_partner_id);

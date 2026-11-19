@@ -19,10 +19,31 @@ class SuperCouponController extends Controller
     }
 
 
-    public function show()
+    public function show(Request $request)
     {
+        $query = SuperCouponModel::query();
 
-        $coupons = SuperCouponModel::orderBy('id', 'desc')->get();
+        if ($request->filled('search')) {
+            $search = trim($request->search);
+            $query->where(function($q) use ($search) {
+                $q->where('coupon_code', 'like', "%{$search}%")
+                  ->orWhere('coupon_amount', 'like', "%{$search}%");
+            });
+        }
+
+        if ($request->filled('from_date')) {
+            $query->whereDate('coupon_start_date', '>=', $request->from_date);
+        }
+
+        if ($request->filled('to_date')) {
+            $query->whereDate('coupon_end_date', '<=', $request->to_date);
+        }
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        $coupons = $query->orderBy('id', 'desc')->paginate(15)->withQueryString();
 
         return view('superadmin.coupons.index', compact('coupons'));
     }

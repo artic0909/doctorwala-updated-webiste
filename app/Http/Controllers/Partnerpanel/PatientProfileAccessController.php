@@ -188,7 +188,7 @@ class PatientProfileAccessController extends Controller
         return redirect()->route('partner.patient.profile.all.request')->with('success', 'Access request sent successfully. The patient will be notified.');
     }
 
-    public function allRequests()
+    public function allRequests(Request $request)
     {
         $partner = Auth::guard('partner')->user();
         $partnerId = Auth::guard('partner')->id();
@@ -201,12 +201,51 @@ class PatientProfileAccessController extends Controller
             $registrationTypes = json_decode($registrationTypes, true);
         }
 
-        $requests = AccessRequest::where('currently_loggedin_partner_id', $partner->partner_id)
-            ->with(['patient', 'doctor'])
-            ->orderBy('created_at', 'desc')
-            ->get();
+        $query = AccessRequest::where('currently_loggedin_partner_id', $partner->partner_id)
+            ->with(['patient', 'doctor']);
 
-        return view('partnerpanel.patients.index', compact('requests', 'opdBanner', 'pathologyBanner', 'doctorBanner', 'registrationTypes'));
+        if ($request->filled('search')) {
+            $search = trim($request->search);
+            $query->where(function($q) use ($search) {
+                $q->where('dw_medical_id', 'like', "%{$search}%")
+                  ->orWhereHas('patient', function($pq) use ($search) {
+                      $pq->where('user_name', 'like', "%{$search}%")
+                         ->orWhere('user_email', 'like', "%{$search}%")
+                         ->orWhere('user_mobile', 'like', "%{$search}%");
+                  });
+            });
+        }
+
+        if ($request->filled('status')) {
+            $query->where('req_status', $request->status);
+        }
+
+        if ($request->filled('from_date')) {
+            $query->whereDate('created_at', '>=', $request->from_date);
+        }
+
+        if ($request->filled('to_date')) {
+            $query->whereDate('created_at', '<=', $request->to_date);
+        }
+
+        $allRequestsCount = AccessRequest::where('currently_loggedin_partner_id', $partner->partner_id)->get();
+        $acceptedCount = $allRequestsCount->where('req_status', 'accepted')->count();
+        $rejectedCount = $allRequestsCount->where('req_status', 'rejected')->count();
+        $pendingCount = $allRequestsCount->where('req_status', 'pending')->count();
+
+        $requests = $query->orderBy('created_at', 'desc')->paginate(15)->withQueryString();
+
+        return view('partnerpanel.patients.index', compact(
+            'requests', 
+            'opdBanner', 
+            'pathologyBanner', 
+            'doctorBanner', 
+            'registrationTypes',
+            'acceptedCount',
+            'rejectedCount',
+            'pendingCount',
+            'allRequestsCount'
+        ));
     }
 
     // ─── shared: decrypt ID & verify access ───────────────────────

@@ -14,11 +14,48 @@
     </div>
 </div>
 
+<!-- Search & Date Filter Bar -->
+<div class="card border-0 shadow-sm mb-4 filter-card" style="border-radius: 12px;">
+    <div class="card-body p-3">
+        <form method="GET" action="{{ route('partner.patient.inquiry.index') }}" class="row g-2 align-items-end">
+            <div class="col-md-4 col-sm-12 mb-2 mb-md-0">
+                <label class="small text-muted font-weight-bold mb-1"><i class="fa fa-search mr-1"></i> Search</label>
+                <input type="text" name="search" class="form-control" placeholder="Patient name, mobile, email, message..." value="{{ request('search') }}">
+            </div>
+            <div class="col-md-2 col-sm-6 mb-2 mb-md-0">
+                <label class="small text-muted font-weight-bold mb-1"><i class="fa fa-hospital mr-1"></i> Type</label>
+                <select name="clinic_type" class="form-control">
+                    <option value="">All Types</option>
+                    <option value="OPD" {{ request('clinic_type') == 'OPD' ? 'selected' : '' }}>OPD</option>
+                    <option value="Pathology" {{ request('clinic_type') == 'Pathology' ? 'selected' : '' }}>Pathology</option>
+                    <option value="Doctor" {{ request('clinic_type') == 'Doctor' ? 'selected' : '' }}>Doctor</option>
+                </select>
+            </div>
+            <div class="col-md-2 col-sm-6 mb-2 mb-md-0">
+                <label class="small text-muted font-weight-bold mb-1"><i class="fa fa-calendar-alt mr-1"></i> From Date</label>
+                <input type="date" name="from_date" class="form-control" value="{{ request('from_date') }}">
+            </div>
+            <div class="col-md-2 col-sm-6 mb-2 mb-md-0">
+                <label class="small text-muted font-weight-bold mb-1"><i class="fa fa-calendar-alt mr-1"></i> To Date</label>
+                <input type="date" name="to_date" class="form-control" value="{{ request('to_date') }}">
+            </div>
+            <div class="col-md-2 col-sm-12 d-flex">
+                <button type="submit" class="btn btn-primary font-weight-bold flex-grow-1 mr-2" style="height: 42px; border-radius: 8px;">
+                    <i class="fa fa-filter mr-1"></i> Filter
+                </button>
+                <a href="{{ route('partner.patient.inquiry.index') }}" class="btn btn-light font-weight-bold" style="height: 42px; border-radius: 8px; border: 1px solid #cbd5e1;" title="Reset filters">
+                    <i class="fa fa-redo text-muted"></i>
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
 <div class="card border-0 shadow-sm" style="border-radius: 14px;">
     <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
         <h5 class="mb-0 font-weight-bold text-dark">
             <i class="fa-solid fa-comments text-primary mr-2"></i>Inquiries Inbox
-            <span class="badge badge-secondary ml-2">{{ count($patientInquiries) }}</span>
+            <span class="badge badge-secondary ml-2">{{ $patientInquiries->total() }}</span>
         </h5>
     </div>
     <div class="card-body p-0">
@@ -36,7 +73,7 @@
                 <tbody>
                     @forelse($patientInquiries as $pi)
                     <tr>
-                        <td class="py-3 px-3 text-muted font-weight-bold">{{ $loop->iteration }}</td>
+                        <td class="py-3 px-3 text-muted font-weight-bold">{{ ($patientInquiries->currentPage() - 1) * $patientInquiries->perPage() + $loop->iteration }}</td>
                         <td class="py-3 px-3">
                             <span class="badge badge-info px-2 py-1 font-weight-bold" style="background: #e0f2fe; color: #0369a1; border-radius: 6px;">
                                 {{ $pi->clinic_type }}
@@ -86,6 +123,12 @@
                 </tbody>
             </table>
         </div>
+    </div>
+    <div class="table-pagination-footer">
+        <div class="text-muted small mb-2 mb-md-0 font-weight-bold">
+            Showing {{ $patientInquiries->firstItem() ?? 0 }} to {{ $patientInquiries->lastItem() ?? 0 }} of {{ $patientInquiries->total() }} inquiries
+        </div>
+        <div>{{ $patientInquiries->links('pagination::bootstrap-4') }}</div>
     </div>
 </div>
 

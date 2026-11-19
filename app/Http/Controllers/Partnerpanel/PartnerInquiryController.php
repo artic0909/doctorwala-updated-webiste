@@ -16,7 +16,7 @@ class PartnerInquiryController extends Controller
     protected $guard = 'partner';
 
     // Display list of inquiries
-    public function index()
+    public function index(Request $request)
     {
         $partner = Auth::guard('partner')->user();
         $partnerId = Auth::guard('partner')->id();
@@ -29,10 +29,36 @@ class PartnerInquiryController extends Controller
             $registrationTypes = json_decode($registrationTypes, true);
         }
 
+        $query = PartnerInquiryModel::where('currently_loggedin_partner_id', $partnerId);
 
-        $inquiries = PartnerInquiryModel::where('currently_loggedin_partner_id', $partnerId)
-        ->orderBy('id', 'desc')
-        ->get();
+        if ($request->filled('search')) {
+            $search = trim($request->search);
+            $query->where(function($q) use ($search) {
+                $q->where('ticket_id', 'like', "%{$search}%")
+                  ->orWhere('partner_problem', 'like', "%{$search}%")
+                  ->orWhere('partner_problem_reply', 'like', "%{$search}%");
+            });
+        }
+
+        if ($request->filled('status')) {
+            if ($request->status === 'Replied') {
+                $query->whereNotNull('partner_problem_reply')->where('partner_problem_reply', '!=', '');
+            } elseif ($request->status === 'Pending') {
+                $query->where(function($q) {
+                    $q->whereNull('partner_problem_reply')->orWhere('partner_problem_reply', '');
+                });
+            }
+        }
+
+        if ($request->filled('from_date')) {
+            $query->whereDate('created_at', '>=', $request->from_date);
+        }
+
+        if ($request->filled('to_date')) {
+            $query->whereDate('created_at', '<=', $request->to_date);
+        }
+
+        $inquiries = $query->orderBy('id', 'desc')->paginate(15)->withQueryString();
         
         return view('partnerpanel.tickets.index', compact('opdBanner', 'pathologyBanner','doctorBanner', 'inquiries', 'registrationTypes'));
     }

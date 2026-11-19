@@ -28,30 +28,67 @@
     <div class="col-6 col-md-3 mb-2">
         <div class="doc-stat-card">
             <div class="doc-stat-label">Total Requests</div>
-            <div class="doc-stat-val text-primary">{{ $requests->count() }}</div>
+            <div class="doc-stat-val text-primary">{{ $allRequestsCount->count() ?? $requests->total() }}</div>
             <small class="text-muted">Access Attempts</small>
         </div>
     </div>
     <div class="col-6 col-md-3 mb-2">
         <div class="doc-stat-card">
             <div class="doc-stat-label">Pending Approval</div>
-            <div class="doc-stat-val text-warning">{{ $requests->where('req_status','pending')->count() }}</div>
+            <div class="doc-stat-val text-warning">{{ $pendingCount ?? 0 }}</div>
             <small class="text-muted">Awaiting Patient Consent</small>
         </div>
     </div>
     <div class="col-6 col-md-3 mb-2">
         <div class="doc-stat-card">
             <div class="doc-stat-label">Authorized Access</div>
-            <div class="doc-stat-val text-success">{{ $requests->where('req_status','accepted')->count() }}</div>
+            <div class="doc-stat-val text-success">{{ $acceptedCount ?? 0 }}</div>
             <small class="text-muted">Active Health Records</small>
         </div>
     </div>
     <div class="col-6 col-md-3 mb-2">
         <div class="doc-stat-card">
             <div class="doc-stat-label">Declined</div>
-            <div class="doc-stat-val text-danger">{{ $requests->where('req_status','rejected')->count() }}</div>
+            <div class="doc-stat-val text-danger">{{ $rejectedCount ?? 0 }}</div>
             <small class="text-muted">Consent Rejected</small>
         </div>
+    </div>
+</div>
+
+<!-- Search & Date Filter Bar -->
+<div class="card border-0 shadow-sm mb-4 filter-card" style="border-radius: 12px;">
+    <div class="card-body p-3">
+        <form method="GET" action="{{ route('partner.patient.profile.all.request') }}" class="row g-2 align-items-end">
+            <div class="col-md-3 col-sm-6 mb-2 mb-md-0">
+                <label class="small text-muted font-weight-bold mb-1"><i class="fa fa-search mr-1"></i> Search</label>
+                <input type="text" name="search" class="form-control" placeholder="Patient name, mobile, card ID..." value="{{ request('search') }}">
+            </div>
+            <div class="col-md-2 col-sm-6 mb-2 mb-md-0">
+                <label class="small text-muted font-weight-bold mb-1"><i class="fa fa-toggle-on mr-1"></i> Status</label>
+                <select name="status" class="form-control">
+                    <option value="">All Statuses</option>
+                    <option value="accepted" {{ request('status') == 'accepted' ? 'selected' : '' }}>Accepted</option>
+                    <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>Pending</option>
+                    <option value="rejected" {{ request('status') == 'rejected' ? 'selected' : '' }}>Rejected</option>
+                </select>
+            </div>
+            <div class="col-md-2 col-sm-6 mb-2 mb-md-0">
+                <label class="small text-muted font-weight-bold mb-1"><i class="fa fa-calendar-alt mr-1"></i> From Date</label>
+                <input type="date" name="from_date" class="form-control" value="{{ request('from_date') }}">
+            </div>
+            <div class="col-md-2 col-sm-6 mb-2 mb-md-0">
+                <label class="small text-muted font-weight-bold mb-1"><i class="fa fa-calendar-alt mr-1"></i> To Date</label>
+                <input type="date" name="to_date" class="form-control" value="{{ request('to_date') }}">
+            </div>
+            <div class="col-md-3 col-sm-12 d-flex">
+                <button type="submit" class="btn btn-primary font-weight-bold flex-grow-1 mr-2" style="height: 42px; border-radius: 8px;">
+                    <i class="fa fa-filter mr-1"></i> Filter
+                </button>
+                <a href="{{ route('partner.patient.profile.all.request') }}" class="btn btn-light font-weight-bold" style="height: 42px; border-radius: 8px; border: 1px solid #cbd5e1;" title="Reset filters">
+                    <i class="fa fa-redo text-muted"></i>
+                </a>
+            </div>
+        </form>
     </div>
 </div>
 
@@ -62,6 +99,7 @@
             <h5 class="doc-card-title mb-0">Authorized Patient Profile Requests</h5>
             <small class="text-muted">Records with accepted consent reveal unmasked phone, email and medical IDs</small>
         </div>
+        <span class="badge badge-secondary">{{ $requests->total() }}</span>
     </div>
 
     <div class="table-responsive">
@@ -114,7 +152,7 @@
                 @endphp
                 <tr>
                     <td class="font-weight-bold text-muted" style="font-size: 0.85rem;">
-                        {{ $loop->iteration }}
+                        {{ ($requests->currentPage() - 1) * $requests->perPage() + $loop->iteration }}
                     </td>
 
                     <td>
@@ -209,6 +247,16 @@
                 @endforelse
             </tbody>
         </table>
+    </div>
+
+    <!-- Pagination Footer -->
+    <div class="table-pagination-footer">
+        <div class="text-muted small mb-2 mb-md-0 font-weight-bold">
+            Showing {{ $requests->firstItem() ?? 0 }} to {{ $requests->lastItem() ?? 0 }} of {{ $requests->total() }} requests
+        </div>
+        <div>
+            {{ $requests->links('pagination::bootstrap-4') }}
+        </div>
     </div>
 </div>
 @endsection

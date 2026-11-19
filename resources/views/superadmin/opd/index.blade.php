@@ -26,6 +26,46 @@
     </div>
 </div>
 
+<!-- Filter Bar Card -->
+<div class="filter-card">
+    <form action="{{ route('superadmin.super-all-opd') }}" method="GET" class="row align-items-end g-2">
+        <div class="col-12 col-md-4 mb-2">
+            <label><i class="fa-solid fa-magnifying-glass text-primary mr-1"></i> Search OPD Clinics</label>
+            <input type="search" name="search" class="form-control" placeholder="Clinic name, contact, city, phone..." value="{{ request('search') }}">
+        </div>
+
+        <div class="col-12 col-md-2 mb-2">
+            <label><i class="fa-solid fa-calendar-day text-primary mr-1"></i> From Date</label>
+            <input type="date" name="from_date" class="form-control" value="{{ request('from_date') }}">
+        </div>
+
+        <div class="col-12 col-md-2 mb-2">
+            <label><i class="fa-solid fa-calendar-check text-primary mr-1"></i> To Date</label>
+            <input type="date" name="to_date" class="form-control" value="{{ request('to_date') }}">
+        </div>
+
+        <div class="col-12 col-md-2 mb-2">
+            <label><i class="fa-solid fa-toggle-on text-primary mr-1"></i> Status</label>
+            <select name="status" class="form-control">
+                <option value="">All Statuses</option>
+                <option value="Active" {{ request('status') == 'Active' ? 'selected' : '' }}>Active</option>
+                <option value="Inactive" {{ request('status') == 'Inactive' ? 'selected' : '' }}>Inactive</option>
+            </select>
+        </div>
+
+        <div class="col-12 col-md-2 mb-2 d-flex">
+            <button type="submit" class="btn btn-primary font-weight-bold flex-fill mr-1" style="height: 42px; border-radius: 8px;">
+                <i class="fa fa-filter mr-1"></i> Filter
+            </button>
+            @if(request('from_date') || request('to_date') || request('status') || request('search'))
+                <a href="{{ route('superadmin.super-all-opd') }}" class="btn btn-light border d-flex align-items-center justify-content-center" style="height: 42px; width: 42px; border-radius: 8px;" title="Reset Filters">
+                    <i class="fa-solid fa-rotate-left"></i>
+                </a>
+            @endif
+        </div>
+    </form>
+</div>
+
 <!-- OPD Table Card -->
 <div class="doc-card">
     <div class="doc-card-header d-flex justify-content-between align-items-center">
@@ -137,8 +177,8 @@
     </div>
 
     <!-- Pagination Footer -->
-    <div class="doc-card-footer d-flex justify-content-between align-items-center flex-wrap">
-        <div class="text-muted small mb-2 mb-md-0">
+    <div class="table-pagination-footer">
+        <div class="text-muted small mb-2 mb-md-0 font-weight-bold">
             Showing {{ $opds->firstItem() ?? 0 }} to {{ $opds->lastItem() ?? 0 }} of {{ $opds->total() }} clinics
         </div>
         <div>

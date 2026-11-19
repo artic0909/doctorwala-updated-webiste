@@ -19,11 +19,39 @@
     </div>
 </div>
 
+<!-- Search & Date Filter Bar -->
+<div class="card border-0 shadow-sm mb-4 filter-card" style="border-radius: 12px;">
+    <div class="card-body p-3">
+        <form method="GET" action="{{ url('/superadmin/super-blogs') }}" class="row g-2 align-items-end">
+            <div class="col-md-5 col-sm-12 mb-2 mb-md-0">
+                <label class="small text-muted font-weight-bold mb-1"><i class="fa fa-search mr-1"></i> Search</label>
+                <input type="text" name="search" class="form-control" placeholder="Blog title or content..." value="{{ request('search') }}">
+            </div>
+            <div class="col-md-2 col-sm-6 mb-2 mb-md-0">
+                <label class="small text-muted font-weight-bold mb-1"><i class="fa fa-calendar-alt mr-1"></i> From Date</label>
+                <input type="date" name="from_date" class="form-control" value="{{ request('from_date') }}">
+            </div>
+            <div class="col-md-2 col-sm-6 mb-2 mb-md-0">
+                <label class="small text-muted font-weight-bold mb-1"><i class="fa fa-calendar-alt mr-1"></i> To Date</label>
+                <input type="date" name="to_date" class="form-control" value="{{ request('to_date') }}">
+            </div>
+            <div class="col-md-3 col-sm-12 d-flex">
+                <button type="submit" class="btn btn-primary font-weight-bold flex-grow-1 mr-2" style="height: 42px; border-radius: 8px;">
+                    <i class="fa fa-filter mr-1"></i> Filter
+                </button>
+                <a href="{{ url('/superadmin/super-blogs') }}" class="btn btn-light font-weight-bold" style="height: 42px; border-radius: 8px; border: 1px solid #cbd5e1;" title="Reset filters">
+                    <i class="fa fa-redo text-muted"></i>
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
 <div class="card border-0 shadow-sm" style="border-radius: 14px;">
     <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
         <h5 class="mb-0 font-weight-bold text-dark">
             <i class="fa-solid fa-newspaper text-primary mr-2"></i>Published Blogs
-            <span class="badge badge-secondary ml-2">{{ count($blogs) }}</span>
+            <span class="badge badge-secondary ml-2">{{ $blogs->total() }}</span>
         </h5>
     </div>
     <div class="card-body p-0">
@@ -41,7 +69,9 @@
                 <tbody>
                     @forelse($blogs as $blog)
                     <tr>
-                        <td class="py-3 px-3 text-muted font-weight-bold">{{ $loop->iteration }}</td>
+                        <td class="py-3 px-3 text-muted font-weight-bold">
+                            {{ ($blogs->currentPage() - 1) * $blogs->perPage() + $loop->iteration }}
+                        </td>
                         <td class="py-3 px-3">
                             @if($blog->blg_image)
                                 <img src="{{ asset('storage/' . $blog->blg_image) }}" alt="Blog Image" style="width: 110px; height: 65px; object-fit: cover; border-radius: 8px; border: 1px solid #e2e8f0;">
@@ -83,6 +113,12 @@
                 </tbody>
             </table>
         </div>
+    </div>
+    <div class="table-pagination-footer">
+        <div class="text-muted small mb-2 mb-md-0 font-weight-bold">
+            Showing {{ $blogs->firstItem() ?? 0 }} to {{ $blogs->lastItem() ?? 0 }} of {{ $blogs->total() }} published blogs
+        </div>
+        <div>{{ $blogs->links('pagination::bootstrap-4') }}</div>
     </div>
 </div>
 

@@ -36,7 +36,7 @@ class SuperRefferController extends Controller
             $query->whereDate('created_at', '<=', $request->to_date);
         }
 
-        $referrals = $query->orderBy('id', 'desc')->paginate(10);
+        $referrals = $query->orderBy('id', 'desc')->paginate(15)->withQueryString();
         
         // Calculate KPIs
         $totalReferrals = Reffer::count();

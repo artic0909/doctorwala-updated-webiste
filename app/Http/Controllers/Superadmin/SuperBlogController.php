@@ -8,10 +8,27 @@ use Illuminate\Http\Request;
 
 class SuperBlogController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
+        $query = SuperBlogModel::query();
 
-        $blogs = SuperBlogModel::orderBy('id', 'desc')->get();
+        if ($request->filled('search')) {
+            $search = trim($request->search);
+            $query->where(function($q) use ($search) {
+                $q->where('blg_title', 'like', "%{$search}%")
+                  ->orWhere('blg_desc', 'like', "%{$search}%");
+            });
+        }
+
+        if ($request->filled('from_date')) {
+            $query->whereDate('created_at', '>=', $request->from_date);
+        }
+
+        if ($request->filled('to_date')) {
+            $query->whereDate('created_at', '<=', $request->to_date);
+        }
+
+        $blogs = $query->orderBy('id', 'desc')->paginate(15)->withQueryString();
 
         return view('superadmin.blogs.index', compact('blogs'));
     }

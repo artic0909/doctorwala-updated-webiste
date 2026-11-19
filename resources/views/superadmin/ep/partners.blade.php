@@ -186,11 +186,14 @@
             </table>
         </div>
     </div>
-    @if ($partners->hasPages())
-    <div class="card-footer bg-white border-0 py-3 d-flex justify-content-between align-items-center">
-        <span class="text-muted small">Showing {{ $partners->firstItem() }} to {{ $partners->lastItem() }} of {{ $partners->total() }} entries</span>
-        <div>{{ $partners->links('pagination::bootstrap-4') }}</div>
+    <!-- Pagination Footer -->
+    <div class="table-pagination-footer">
+        <div class="text-muted small mb-2 mb-md-0 font-weight-bold">
+            Showing {{ $partners->firstItem() ?? 0 }} to {{ $partners->lastItem() ?? 0 }} of {{ $partners->total() }} entries
+        </div>
+        <div>
+            {{ $partners->links('pagination::bootstrap-4') }}
+        </div>
     </div>
-    @endif
 </div>
 @endsection

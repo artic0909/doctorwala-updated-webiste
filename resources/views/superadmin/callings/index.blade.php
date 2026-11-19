@@ -215,7 +215,9 @@
                 <tbody>
                     @forelse($callings as $call)
                     <tr>
-                        <td><strong>{{ $call->id }}</strong></td>
+                        <td class="font-weight-bold text-muted" style="font-size: 0.85rem;">
+                            {{ ($callings->currentPage() - 1) * $callings->perPage() + $loop->iteration }}
+                        </td>
                         <td>
                             <div class="font-weight-bold text-dark">{{ $call->created_at ? $call->created_at->format('d M Y') : 'N/A' }}</div>
                             <div class="text-muted small">{{ $call->created_at ? $call->created_at->format('h:i A') : '' }}</div>
@@ -323,12 +325,12 @@
         </div>
 
         <!-- Pagination -->
-        <div class="d-flex justify-content-between align-items-center p-3 border-top flex-wrap">
-            <div class="text-muted small mb-2 mb-md-0">
+        <div class="table-pagination-footer">
+            <div class="text-muted small mb-2 mb-md-0 font-weight-bold">
                 Showing {{ $callings->firstItem() ?? 0 }} to {{ $callings->lastItem() ?? 0 }} of {{ $callings->total() }} entries
             </div>
             <div>
-                {{ $callings->appends(request()->query())->links() }}
+                {{ $callings->links('pagination::bootstrap-4') }}
             </div>
         </div>
     </div>

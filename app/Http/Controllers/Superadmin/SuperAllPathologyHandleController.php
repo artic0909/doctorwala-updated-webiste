@@ -19,11 +19,10 @@ class SuperAllPathologyHandleController extends Controller
 
     public function pathView(Request $request)
     {
-        $query = PartnerPathologyContactModel::orderBy('created_at', 'desc');
+        $query = PartnerPathologyContactModel::query();
     
-        if ($request->has('search') && !empty($request->search)) {
-            $search = $request->search;
-    
+        if ($request->filled('search')) {
+            $search = trim($request->search);
             $query->where(function ($q) use ($search) {
                 $q->where('clinic_name', 'like', "%{$search}%")
                   ->orWhere('clinic_contact_person_name', 'like', "%{$search}%")
@@ -33,8 +32,20 @@ class SuperAllPathologyHandleController extends Controller
                   ->orWhere('clinic_city', 'like', "%{$search}%");
             });
         }
+
+        if ($request->filled('from_date')) {
+            $query->whereDate('created_at', '>=', $request->from_date);
+        }
+
+        if ($request->filled('to_date')) {
+            $query->whereDate('created_at', '<=', $request->to_date);
+        }
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
     
-        $paths = $query->paginate(14);
+        $paths = $query->orderBy('created_at', 'desc')->paginate(15)->withQueryString();
     
         foreach ($paths as $path) {
             $partner = DwPartnerModel::find($path->currently_loggedin_partner_id);

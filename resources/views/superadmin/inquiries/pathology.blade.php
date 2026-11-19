@@ -14,6 +14,34 @@
     </div>
 </div>
 
+<!-- Search & Date Filter Bar -->
+<div class="card border-0 shadow-sm mb-4 filter-card" style="border-radius: 12px;">
+    <div class="card-body p-3">
+        <form method="GET" action="{{ route('superadmin.super-path-inquiry') }}" class="row g-2 align-items-end">
+            <div class="col-md-5 col-sm-12 mb-2 mb-md-0">
+                <label class="small text-muted font-weight-bold mb-1"><i class="fa fa-search mr-1"></i> Search</label>
+                <input type="text" name="search" class="form-control" placeholder="Patient name, mobile, email, message..." value="{{ request('search') }}">
+            </div>
+            <div class="col-md-2 col-sm-6 mb-2 mb-md-0">
+                <label class="small text-muted font-weight-bold mb-1"><i class="fa fa-calendar-alt mr-1"></i> From Date</label>
+                <input type="date" name="from_date" class="form-control" value="{{ request('from_date') }}">
+            </div>
+            <div class="col-md-2 col-sm-6 mb-2 mb-md-0">
+                <label class="small text-muted font-weight-bold mb-1"><i class="fa fa-calendar-alt mr-1"></i> To Date</label>
+                <input type="date" name="to_date" class="form-control" value="{{ request('to_date') }}">
+            </div>
+            <div class="col-md-3 col-sm-12 d-flex">
+                <button type="submit" class="btn btn-primary font-weight-bold flex-grow-1 mr-2" style="height: 42px; border-radius: 8px;">
+                    <i class="fa fa-filter mr-1"></i> Filter
+                </button>
+                <a href="{{ route('superadmin.super-path-inquiry') }}" class="btn btn-light font-weight-bold" style="height: 42px; border-radius: 8px; border: 1px solid #cbd5e1;" title="Reset filters">
+                    <i class="fa fa-redo text-muted"></i>
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
 <div class="card border-0 shadow-sm" style="border-radius: 12px;">
     <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
         <h5 class="mb-0 font-weight-bold text-dark">
@@ -39,7 +67,7 @@
                     @forelse($inquiries as $inquiry)
                     <tr>
                         <td class="py-3 px-3 text-muted font-weight-bold">
-                            {{ $inquiries->firstItem() + $loop->index }}
+                            {{ ($inquiries->currentPage() - 1) * $inquiries->perPage() + $loop->iteration }}
                         </td>
                         <td class="py-3 px-3">
                             <span class="badge badge-info px-2 py-1 font-weight-bold" style="background: #e0f2fe; color: #0369a1; border-radius: 6px;">
@@ -79,12 +107,12 @@
             </table>
         </div>
     </div>
-    @if($inquiries->hasPages())
-    <div class="card-footer bg-white border-0 py-3 d-flex justify-content-between align-items-center">
-        <span class="text-muted small">Showing {{ $inquiries->firstItem() }} to {{ $inquiries->lastItem() }} of {{ $inquiries->total() }} entries</span>
+    <div class="table-pagination-footer">
+        <div class="text-muted small mb-2 mb-md-0 font-weight-bold">
+            Showing {{ $inquiries->firstItem() ?? 0 }} to {{ $inquiries->lastItem() ?? 0 }} of {{ $inquiries->total() }} entries
+        </div>
         <div>{{ $inquiries->links('pagination::bootstrap-4') }}</div>
     </div>
-    @endif
 </div>
 
 <!-- Details & Delete Modals -->

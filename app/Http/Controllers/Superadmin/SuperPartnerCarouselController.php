@@ -8,9 +8,28 @@ use Illuminate\Http\Request;
 
 class SuperPartnerCarouselController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $carousels = PartnerCarousel::all();
+        $query = PartnerCarousel::query();
+
+        if ($request->filled('search')) {
+            $search = trim($request->search);
+            $query->where(function($q) use ($search) {
+                $q->where('title', 'like', "%{$search}%")
+                  ->orWhere('description', 'like', "%{$search}%");
+            });
+        }
+
+        if ($request->filled('from_date')) {
+            $query->whereDate('created_at', '>=', $request->from_date);
+        }
+
+        if ($request->filled('to_date')) {
+            $query->whereDate('created_at', '<=', $request->to_date);
+        }
+
+        $carousels = $query->orderBy('id', 'desc')->paginate(15)->withQueryString();
+
         return view('superadmin.banners.carousel', compact('carousels'));
     }
 

@@ -250,9 +250,8 @@ class SuperPartnerHandleController extends Controller
         $partners = DwPartnerModel::withCount('followups');
         $cities = DwPartnerModel::select('partner_city')->whereNotNull('partner_city')->where('partner_city', '!=', '')->distinct()->orderBy('partner_city')->pluck('partner_city');
 
-
-        if ($request->has('search') && $request->search != '') {
-            $search = $request->search;
+        if ($request->filled('search')) {
+            $search = trim($request->search);
             $partners->where(function ($query) use ($search) {
                 $query->where('partner_clinic_name', 'like', "%{$search}%")
                     ->orWhere('partner_contact_person_name', 'like', "%{$search}%")
@@ -265,14 +264,25 @@ class SuperPartnerHandleController extends Controller
             });
         }
 
-        if ($request->has('date') && $request->date != '') {
+        if ($request->filled('from_date')) {
+            $partners->whereDate('created_at', '>=', $request->from_date);
+        }
+
+        if ($request->filled('to_date')) {
+            $partners->whereDate('created_at', '<=', $request->to_date);
+        }
+
+        if ($request->filled('date')) {
             $partners->whereDate('created_at', $request->date);
         }
 
-        if ($request->has('city') && $request->city != '') {
+        if ($request->filled('city')) {
             $partners->where('partner_city', $request->city);
         }
 
+        if ($request->filled('status')) {
+            $partners->where('status', $request->status);
+        }
 
         $sort = $request->get('sort', 'newest');
         if ($sort == 'oldest') {
@@ -281,7 +291,7 @@ class SuperPartnerHandleController extends Controller
             $partners->orderBy('created_at', 'desc');
         }
 
-        $partners = $partners->paginate(30);
+        $partners = $partners->paginate(15)->withQueryString();
 
         foreach ($partners as $partner) {
             $partner->registration_type = is_string($partner->registration_type)

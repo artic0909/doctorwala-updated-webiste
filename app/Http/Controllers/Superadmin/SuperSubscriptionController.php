@@ -14,10 +14,31 @@ class SuperSubscriptionController extends Controller
     }
 
 
-    public function show()
+    public function show(Request $request)
     {
+        $query = SuperSubscriptionModel::query();
 
-        $subscriptions = SuperSubscriptionModel::orderBy('id', 'desc')->get();
+        if ($request->filled('search')) {
+            $search = trim($request->search);
+            $query->where(function($q) use ($search) {
+                $q->where('subs_title', 'like', "%{$search}%")
+                  ->orWhere('subs_amount', 'like', "%{$search}%");
+            });
+        }
+
+        if ($request->filled('from_date')) {
+            $query->whereDate('created_at', '>=', $request->from_date);
+        }
+
+        if ($request->filled('to_date')) {
+            $query->whereDate('created_at', '<=', $request->to_date);
+        }
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        $subscriptions = $query->orderBy('id', 'desc')->paginate(15)->withQueryString();
 
         return view('superadmin.subscriptions.index', compact('subscriptions'));
     }

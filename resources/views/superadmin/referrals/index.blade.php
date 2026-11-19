@@ -118,6 +118,7 @@
             <table class="table table-hover align-middle mb-0" style="font-size: 0.88rem;">
                 <thead style="background: #f8fafc; border-bottom: 2px solid #e2e8f0;">
                     <tr>
+                        <th class="py-3 px-3 text-secondary font-weight-bold" style="width: 50px;">#</th>
                         <th class="py-3 px-3 text-secondary font-weight-bold">Date Joined</th>
                         <th class="py-3 px-3 text-secondary font-weight-bold">Name & Contact</th>
                         <th class="py-3 px-3 text-secondary font-weight-bold">Referral Code</th>
@@ -132,6 +133,9 @@
                 <tbody>
                     @forelse ($referrals as $ref)
                     <tr @if(isset($duplicateIps) && in_array($ref->ip_address, $duplicateIps)) style="background-color: #fff1f2;" @endif>
+                        <td class="py-3 px-3 text-muted font-weight-bold" style="font-size: 0.85rem;">
+                            {{ ($referrals->currentPage() - 1) * $referrals->perPage() + $loop->iteration }}
+                        </td>
                         <td class="py-3 px-3 font-weight-bold text-dark">
                             {{ $ref->created_at ? $ref->created_at->format('d M, Y') : 'N/A' }}
                             <div class="text-muted small">{{ $ref->created_at ? $ref->created_at->format('h:i A') : '' }}</div>
@@ -194,12 +198,15 @@
             </table>
         </div>
     </div>
-    @if($referrals->hasPages())
-    <div class="card-footer bg-white border-0 py-3 d-flex justify-content-between align-items-center">
-        <span class="text-muted small">Showing {{ $referrals->firstItem() ?? 0 }} to {{ $referrals->lastItem() ?? 0 }} of {{ $referrals->total() }} records</span>
-        <div>{{ $referrals->links('pagination::bootstrap-4') }}</div>
+    <!-- Pagination Footer -->
+    <div class="table-pagination-footer">
+        <div class="text-muted small mb-2 mb-md-0 font-weight-bold">
+            Showing {{ $referrals->firstItem() ?? 0 }} to {{ $referrals->lastItem() ?? 0 }} of {{ $referrals->total() }} records
+        </div>
+        <div>
+            {{ $referrals->links('pagination::bootstrap-4') }}
+        </div>
     </div>
-    @endif
 </div>
 
 <!-- Delete Modals -->

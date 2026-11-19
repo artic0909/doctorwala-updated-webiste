@@ -12,25 +12,42 @@ class SuperTicketController extends Controller
 
     public function index(Request $request)
     {
+        $query = PartnerInquiryModel::query();
 
-        $searchQuery = $request->input('search');
+        if ($request->filled('search')) {
+            $search = trim($request->search);
+            $query->where(function($q) use ($search) {
+                $q->where('ticket_id', 'LIKE', "%{$search}%")
+                  ->orWhere('partner_clinic_name', 'LIKE', "%{$search}%")
+                  ->orWhere('partner_contact_person_name', 'LIKE', "%{$search}%")
+                  ->orWhere('partner_mobile_number', 'LIKE', "%{$search}%")
+                  ->orWhere('partner_email', 'LIKE', "%{$search}%")
+                  ->orWhere('partner_city', 'LIKE', "%{$search}%")
+                  ->orWhere('partner_state', 'LIKE', "%{$search}%");
+            });
+        }
 
+        if ($request->filled('from_date')) {
+            $query->whereDate('created_at', '>=', $request->from_date);
+        }
 
-        $tickets = PartnerInquiryModel::when($searchQuery, function ($query, $searchQuery) {
-            $query->where('ticket_id', 'LIKE', "%{$searchQuery}%")
-                ->orWhere('partner_clinic_name', 'LIKE', "%{$searchQuery}%")
-                ->orWhere('partner_contact_person_name', 'LIKE', "%{$searchQuery}%")
-                ->orWhere('partner_mobile_number', 'LIKE', "%{$searchQuery}%")
-                ->orWhere('partner_email', 'LIKE', "%{$searchQuery}%")
-                ->orWhere('partner_state', 'LIKE', "%{$searchQuery}%")
-                ->orWhere('partner_city', 'LIKE', "%{$searchQuery}%");
-        })
-            ->orderBy('id', 'desc')
-            ->paginate(6);
+        if ($request->filled('to_date')) {
+            $query->whereDate('created_at', '<=', $request->to_date);
+        }
 
-        $tickets->appends(['search' => $searchQuery]);
+        if ($request->filled('status')) {
+            if ($request->status === 'Pending') {
+                $query->where(function($q) {
+                    $q->whereNull('partner_problem_reply')->orWhere('partner_problem_reply', '');
+                });
+            } elseif ($request->status === 'Replied') {
+                $query->whereNotNull('partner_problem_reply')->where('partner_problem_reply', '!=', '');
+            }
+        }
 
-        return view('superadmin.tickets.index', compact('tickets', 'searchQuery'));
+        $tickets = $query->orderBy('id', 'desc')->paginate(15)->withQueryString();
+
+        return view('superadmin.tickets.index', compact('tickets'));
     }
 
 
@@ -84,11 +101,31 @@ class SuperTicketController extends Controller
     // For all replies ----------------------------------------------------------->
     public function showAllReplayed(Request $request)
     {
+        $query = PartnerInquiryModel::whereNotNull('partner_problem_reply')
+            ->where('partner_problem_reply', '!=', '');
 
-        $repliedTickets = PartnerInquiryModel::whereNotNull('partner_problem_reply')
-            ->where('partner_problem_reply', '!=', '')
-            ->orderBy('updated_at', 'desc')
-            ->paginate(8);
+        if ($request->filled('search')) {
+            $search = trim($request->search);
+            $query->where(function($q) use ($search) {
+                $q->where('ticket_id', 'LIKE', "%{$search}%")
+                  ->orWhere('partner_clinic_name', 'LIKE', "%{$search}%")
+                  ->orWhere('partner_contact_person_name', 'LIKE', "%{$search}%")
+                  ->orWhere('partner_mobile_number', 'LIKE', "%{$search}%")
+                  ->orWhere('partner_email', 'LIKE', "%{$search}%")
+                  ->orWhere('partner_city', 'LIKE', "%{$search}%")
+                  ->orWhere('partner_problem_reply', 'LIKE', "%{$search}%");
+            });
+        }
+
+        if ($request->filled('from_date')) {
+            $query->whereDate('updated_at', '>=', $request->from_date);
+        }
+
+        if ($request->filled('to_date')) {
+            $query->whereDate('updated_at', '<=', $request->to_date);
+        }
+
+        $repliedTickets = $query->orderBy('updated_at', 'desc')->paginate(15)->withQueryString();
 
         return view('superadmin.tickets.replies', compact('repliedTickets'));
     }

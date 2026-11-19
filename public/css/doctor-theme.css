@@ -664,13 +664,40 @@ body .sidebar .nav.sub-menu .nav-item .nav-link.active:hover {
     outline: none !important;
 }
 
-/* ----------------- Pagination ----------------- */
+/* ----------------- Filter Bar Component ----------------- */
+.filter-card {
+    background: #ffffff !important;
+    border: 1px solid var(--doc-border) !important;
+    border-radius: var(--doc-radius) !important;
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04) !important;
+    padding: 16px 20px !important;
+    margin-bottom: 20px !important;
+}
+
+.filter-card label {
+    font-size: 0.78rem !important;
+    font-weight: 700 !important;
+    color: #475569 !important;
+    margin-bottom: 5px !important;
+    display: block;
+}
+
+.filter-card .form-control,
+.filter-card .form-select {
+    height: 42px !important;
+    border-radius: 8px !important;
+    font-size: 0.88rem !important;
+    border: 1px solid #cbd5e1 !important;
+}
+
+/* ----------------- High Visibility Pagination ----------------- */
 .pagination {
-    margin-bottom: 0;
-    display: flex !important;
-    align-items: center;
-    list-style: none;
-    padding-left: 0;
+    margin: 0 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    list-style: none !important;
+    padding-left: 0 !important;
+    gap: 4px !important;
 }
 
 .pagination svg,
@@ -685,29 +712,64 @@ nav[role="navigation"] svg {
     display: inline-block !important;
 }
 
-.page-item .page-link {
-    border: 1px solid var(--doc-border) !important;
-    color: var(--doc-text-muted) !important;
-    border-radius: 6px !important;
+.pagination .page-item {
+    display: inline-block !important;
     margin: 0 2px !important;
-    font-weight: 600 !important;
-    font-size: 0.82rem !important;
-    padding: 6px 12px !important;
+}
+
+.pagination .page-item .page-link,
+.page-item .page-link {
+    border: 1px solid #cbd5e1 !important;
+    color: #0f172a !important;
+    background-color: #ffffff !important;
+    border-radius: 8px !important;
+    font-weight: 700 !important;
+    font-size: 0.85rem !important;
+    padding: 6px 14px !important;
     display: inline-flex !important;
-    align-items: center;
-    justify-content: center;
+    align-items: center !important;
+    justify-content: center !important;
+    min-width: 38px !important;
+    height: 38px !important;
+    text-decoration: none !important;
+    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04) !important;
+    transition: all 0.2s ease !important;
 }
 
+.pagination .page-item .page-link:hover,
+.page-item .page-link:hover {
+    background-color: #f0f9ff !important;
+    border-color: #0284c7 !important;
+    color: #0284c7 !important;
+}
+
+.pagination .page-item.active .page-link,
 .page-item.active .page-link {
-    background: var(--doc-primary) !important;
-    border-color: var(--doc-primary) !important;
+    background: #0284c7 !important;
+    border-color: #0284c7 !important;
     color: #ffffff !important;
+    box-shadow: 0 2px 6px rgba(2, 132, 199, 0.35) !important;
 }
 
+.pagination .page-item.disabled .page-link,
 .page-item.disabled .page-link {
     color: #94a3b8 !important;
     background-color: #f8fafc !important;
-    border-color: var(--doc-border) !important;
+    border-color: #e2e8f0 !important;
+    cursor: not-allowed !important;
+    opacity: 0.65 !important;
+}
+
+.table-pagination-footer {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    flex-wrap: wrap !important;
+    padding: 16px 20px !important;
+    background: #ffffff !important;
+    border-top: 1px solid #e2e8f0 !important;
+    border-bottom-left-radius: 12px !important;
+    border-bottom-right-radius: 12px !important;
 }
 
 /* ----------------- Clean Footer ----------------- */

@@ -267,6 +267,7 @@ Route::middleware('auth:web')->group(function () {
     Route::post('/superadmin/super-add-partners', [SuperPartnerHandleController::class, 'addPartners'])->name('superadmin.register.partners');
     Route::put('/superadmin/super-all-partner/update/{id}', [SuperPartnerHandleController::class, 'editPartnerDetails'])->name('superadmin.update.partner');
     Route::get('/superadmin/super-all-partner', [SuperPartnerHandleController::class, 'allPartnersShow'])->name('superadmin.super-all-partner.get');
+    Route::get('/superadmin/super-all-partners', [SuperPartnerHandleController::class, 'allPartnersShow'])->name('superadmin.super-all-partner');
     Route::put('/superadmin/super-all-partner/status/{id}', [SuperPartnerHandleController::class, 'statusEdit'])->name('superadmin.status.edit');
     Route::delete('/superadmin/super-all-partner/delete/{id}', [SuperPartnerHandleController::class, 'deletePartner'])->name('superadmin.status.delete');
 
@@ -297,7 +298,8 @@ Route::middleware('auth:web')->group(function () {
     // All Pathology---------------------------------------------------------------------------------------------------------------------------------------->
 
     // All Pathology View
-    Route::get('/superadmin/super-all-pathology', [SuperAllPathologyHandleController::class, 'pathView'])->name('superadmin.super-all-path');
+    Route::get('/superadmin/super-all-pathology', [SuperAllPathologyHandleController::class, 'pathView'])->name('superadmin.super-all-pathology');
+    Route::get('/superadmin/super-all-path', [SuperAllPathologyHandleController::class, 'pathView'])->name('superadmin.super-all-path');
     Route::put('/superadmin/super-all-pathology/status/{id}', [SuperAllPathologyHandleController::class, 'statusEdit'])->name('superadmin.status.path.edit');
     Route::delete('/superadmin/super-all-pathology/delete/{id}', [SuperAllPathologyHandleController::class, 'deletePathContactDetails'])->name('superadmin.path.contact.delete');
 
@@ -320,7 +322,8 @@ Route::middleware('auth:web')->group(function () {
     // All Doctors---------------------------------------------------------------------------------------------------------------------------------------->
 
     // All Doctors View
-    Route::get('/superadmin/super-all-doctors', [SuperAllOnlyDoctorHandleController::class, 'docView'])->name('superadmin.super-all-doctor');
+    Route::get('/superadmin/super-all-doctors', [SuperAllOnlyDoctorHandleController::class, 'docView'])->name('superadmin.super-all-doctors');
+    Route::get('/superadmin/super-all-doctor', [SuperAllOnlyDoctorHandleController::class, 'docView'])->name('superadmin.super-all-doctor');
     Route::put('/superadmin/super-all-doctors/status/{id}', [SuperAllOnlyDoctorHandleController::class, 'statusEdit'])->name('superadmin.status.doc.edit');
     Route::delete('/superadmin/super-all-doctors/delete/{id}', [SuperAllOnlyDoctorHandleController::class, 'deleteDocContactDetails'])->name('superadmin.opd.doc.delete');
 
@@ -387,23 +390,24 @@ Route::middleware('auth:web')->group(function () {
 
 
     // User's Inquiries Routes---------------------------------------------------------------------------------------------------------------------------------------->
-    Route::get('/superadmin/super-user-inquiry', [SuperUserInquiryController::class, 'index']);
+    Route::get('/superadmin/super-user-inquiry', [SuperUserInquiryController::class, 'index'])->name('superadmin.super-user-inquiry');
     Route::delete('/superadmin/super-user-inquiry/delete/{id}', [SuperUserInquiryController::class, 'delete'])->name('superadmin.super-user-inquiry.delete');
     
     
     // All Patient Inquiries Routes---------------------------------------------------------------------------------------------------------------------------------------->
-    Route::get('/superadmin/super-opd-inquiry', [SuperAllPatientInquiryController::class, 'indexOPD']);
+    Route::get('/superadmin/super-opd-inquiry', [SuperAllPatientInquiryController::class, 'indexOPD'])->name('superadmin.super-opd-inquiry');
     Route::delete('/superadmin/super-opd-inquiry/delete/{id}', [SuperAllPatientInquiryController::class, 'opdDelete'])->name('superadmin.super-opd-inquiry.delete');
     
-    Route::get('/superadmin/super-path-inquiry', [SuperAllPatientInquiryController::class, 'indexPath']);
+    Route::get('/superadmin/super-path-inquiry', [SuperAllPatientInquiryController::class, 'indexPath'])->name('superadmin.super-path-inquiry');
     Route::delete('/superadmin/super-path-inquiry/delete/{id}', [SuperAllPatientInquiryController::class, 'pathDelete'])->name('superadmin.super-path-inquiry.delete');
     
-    Route::get('/superadmin/super-doc-inquiry', [SuperAllPatientInquiryController::class, 'indexDoc']);
+    Route::get('/superadmin/super-doc-inquiry', [SuperAllPatientInquiryController::class, 'indexDoc'])->name('superadmin.super-doc-inquiry');
     Route::delete('/superadmin/super-doc-inquiry/delete/{id}', [SuperAllPatientInquiryController::class, 'docDelete'])->name('superadmin.super-doc-inquiry.delete');
     
     
     // All Patient Feedback Routes---------------------------------------------------------------------------------------------------------------------------------------->
-    Route::get('/superadmin/super-all-feedback', [SuperAllFeedbacksController::class, 'index']);
+    Route::get('/superadmin/super-all-feedback', [SuperAllFeedbacksController::class, 'index'])->name('superadmin.super-all-feedback');
+    Route::get('/superadmin/super-all-feedbacks', [SuperAllFeedbacksController::class, 'index'])->name('superadmin.super-all-feedbacks');
     Route::delete('/superadmin/super-all-feedback/delete/{id}', [SuperAllFeedbacksController::class, 'delete'])->name('superadmin.feedback.delete');
 
 

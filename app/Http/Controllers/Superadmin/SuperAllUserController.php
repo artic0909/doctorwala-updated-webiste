@@ -14,8 +14,8 @@ class SuperAllUserController extends Controller
     {
         $query = DwUserModel::query();
 
-        if ($request->has('search') && $request->search != '') {
-            $search = $request->search;
+        if ($request->filled('search')) {
+            $search = trim($request->search);
             $query->where(function($q) use ($search) {
                 $q->where('user_name', 'like', "%{$search}%")
                   ->orWhere('user_email', 'like', "%{$search}%")
@@ -24,15 +24,17 @@ class SuperAllUserController extends Controller
             });
         }
 
-        if ($request->filled('start_date')) {
-            $query->whereDate('created_at', '>=', $request->start_date);
+        $fromDate = $request->from_date ?? $request->start_date;
+        if (!empty($fromDate)) {
+            $query->whereDate('created_at', '>=', $fromDate);
         }
 
-        if ($request->filled('end_date')) {
-            $query->whereDate('created_at', '<=', $request->end_date);
+        $toDate = $request->to_date ?? $request->end_date;
+        if (!empty($toDate)) {
+            $query->whereDate('created_at', '<=', $toDate);
         }
 
-        $users = $query->orderBy('id', 'desc')->paginate(10);
+        $users = $query->orderBy('id', 'desc')->paginate(15)->withQueryString();
         return view('superadmin.users.index', compact('users'));
     }
 
