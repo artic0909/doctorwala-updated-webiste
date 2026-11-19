@@ -9,8 +9,6 @@ use Illuminate\Support\Facades\Validator;
 use App\Models\DwPartnerModel;
 use App\Models\PartnerOPDContactModel;
 use App\Models\PartnerPathologyContactModel;
-use App\Models\SuperCouponModel;
-use App\Models\CouponHolderModel;
 use App\Services\TwilioWhatsAppService;
 
 class SuperPartnerImporterController extends Controller
