@@ -183,14 +183,23 @@
 <!-- Edit Modals -->
 @foreach($storedData as $data)
 <div class="modal fade" id="myEditModal{{ $data->id }}" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-        <div class="modal-content border-0 shadow-lg" style="border-radius: 14px; overflow: hidden;">
-            <div class="modal-header bg-light border-0 py-3">
-                <h5 class="modal-title font-weight-bold text-dark" style="font-size: 1.05rem;">
-                    <i class="fa-solid fa-pen-to-square text-primary mr-2"></i>Edit Doctor Schedule
-                </h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
+    <div class="modal-dialog modal-dialog-centered" role="document" style="max-width: 560px;">
+        <div class="modal-content border-0 shadow-lg" style="border-radius: 16px; overflow: hidden;">
+            <!-- Modal Header -->
+            <div class="modal-header border-0 py-3 px-3 px-sm-4" style="background: linear-gradient(135deg, #f0fdf4 0%, #e0f2fe 100%); border-bottom: 1px solid #e2e8f0;">
+                <div class="d-flex align-items-center">
+                    <div class="rounded-circle d-flex align-items-center justify-content-center mr-3 shadow-xs" style="width: 42px; height: 42px; background: #ffffff; color: #0284c7; font-size: 1.15rem; border: 1px solid #bae6fd;">
+                        <i class="fa-solid fa-user-doctor"></i>
+                    </div>
+                    <div>
+                        <h5 class="modal-title font-weight-bold text-dark mb-0" style="font-size: 1.05rem;">Edit Doctor Profile</h5>
+                        <small class="text-muted font-weight-bold" style="font-size: 0.82rem;">
+                            {{ $data->doctor_designation }} {{ $data->doctor_name }} • <span class="text-primary">{{ $data->doctor_specialist }}</span>
+                        </small>
+                    </div>
+                </div>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="opacity: 0.7; transition: opacity 0.2s;">
+                    <span aria-hidden="true" style="font-size: 1.4rem;">&times;</span>
                 </button>
             </div>
 
@@ -198,84 +207,138 @@
                 @csrf
                 @method('PUT')
 
-                <div class="modal-body p-4">
-                    <div class="row g-3">
-                        <div class="col-md-4 form-group">
-                            <label class="font-weight-bold small text-dark"><i class="fa-solid fa-toggle-on text-primary mr-1"></i> Availability Status <span class="text-danger">*</span></label>
-                            <select class="form-control" name="status" style="height: 44px; border-radius: 8px;">
-                                <option value="Available" {{ $data->status == 'Available' ? 'selected' : '' }}>Available</option>
-                                <option value="Unavailable" {{ $data->status == 'Unavailable' ? 'selected' : '' }}>Unavailable</option>
-                            </select>
+                <div class="modal-body p-3 p-sm-4" style="background: #ffffff; max-height: calc(85vh - 120px); overflow-y: auto;">
+                    <!-- Section 1: Basic Information -->
+                    <div class="mb-3 p-3 rounded" style="background: #f8fafc; border: 1px solid #e2e8f0;">
+                        <div class="d-flex align-items-center mb-2 pb-2 border-bottom">
+                            <i class="fa-solid fa-id-card text-primary mr-2"></i>
+                            <h6 class="font-weight-bold text-dark mb-0" style="font-size: 0.9rem;">Doctor Details & Fees</h6>
                         </div>
 
-                        <div class="col-md-4 form-group">
-                            <label class="font-weight-bold small text-dark"><i class="fa-solid fa-graduation-cap text-primary mr-1"></i> Designation <span class="text-danger">*</span></label>
-                            <select class="form-control" name="doctor_designation" style="height: 44px; border-radius: 8px;">
-                                <option value="Dr" {{ $data->doctor_designation == 'Dr' ? 'selected' : '' }}>Dr</option>
-                                <option value="MD" {{ $data->doctor_designation == 'MD' ? 'selected' : '' }}>MD</option>
-                                <option value="Prof" {{ $data->doctor_designation == 'Prof' ? 'selected' : '' }}>Prof</option>
-                                <option value="BDS" {{ $data->doctor_designation == 'BDS' ? 'selected' : '' }}>BDS</option>
-                            </select>
-                        </div>
-
-                        <div class="col-md-4 form-group">
-                            <label class="font-weight-bold small text-dark"><i class="fa-solid fa-user-doctor text-primary mr-1"></i> Doctor Name <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" name="doctor_name" value="{{ $data->doctor_name }}" required style="height: 44px; border-radius: 8px;">
-                        </div>
-
-                        <div class="col-md-6 form-group">
-                            <label class="font-weight-bold small text-dark"><i class="fa-solid fa-stethoscope text-primary mr-1"></i> Specialization <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" name="doctor_specialist" value="{{ $data->doctor_specialist }}" required style="height: 44px; border-radius: 8px;">
-                        </div>
-
-                        <div class="col-md-6 form-group">
-                            <label class="font-weight-bold small text-dark"><i class="fa-solid fa-indian-rupee-sign text-primary mr-1"></i> Fee (₹) <span class="text-danger">*</span></label>
-                            <input type="number" class="form-control" name="doctor_fees" value="{{ $data->doctor_fees }}" required style="height: 44px; border-radius: 8px;">
-                        </div>
-
-                        <div class="col-12 form-group">
-                            <label class="font-weight-bold small text-dark"><i class="fa-solid fa-circle-info text-primary mr-1"></i> Additional Qualifications & Notes</label>
-                            <textarea name="doctor_more" class="form-control" rows="2" style="border-radius: 8px;">{{ $data->doctor_more }}</textarea>
-                        </div>
-                    </div>
-
-                    <h6 class="font-weight-bold text-dark mt-3 mb-2">
-                        <i class="fa-regular fa-calendar-days text-primary mr-1"></i> Visiting Schedules
-                    </h6>
-
-                    @foreach($data->visit_day_time as $index => $visit)
-                    <div class="p-3 mb-2 rounded border bg-light">
-                        <div class="row g-2 align-items-center">
-                            <div class="col-md-4">
-                                <label class="small font-weight-bold text-dark mb-1">Visiting Day</label>
-                                <select class="form-control" name="doctor_visit_day[]" style="height: 40px; border-radius: 6px;">
-                                    <option value="{{ $visit['day'] }}" selected>{{ $visit['day'] }}</option>
-                                    <option value="All Day">All Day</option>
-                                    <option value="Monday">Monday</option>
-                                    <option value="Tuesday">Tuesday</option>
-                                    <option value="Wednesday">Wednesday</option>
-                                    <option value="Thursday">Thursday</option>
-                                    <option value="Friday">Friday</option>
-                                    <option value="Saturday">Saturday</option>
-                                    <option value="Sunday">Sunday</option>
+                        <div class="row g-2">
+                            <div class="col-sm-6 form-group mb-2">
+                                <label class="font-weight-bold small text-muted text-uppercase mb-1" style="font-size: 0.72rem; letter-spacing: 0.5px;">
+                                    <i class="fa-solid fa-toggle-on text-primary mr-1"></i> Status <span class="text-danger">*</span>
+                                </label>
+                                <select class="form-control font-weight-bold" name="status" style="height: 40px; border-radius: 8px; border: 1px solid #cbd5e1; font-size: 0.88rem;">
+                                    <option value="Available" {{ $data->status == 'Available' ? 'selected' : '' }}>🟢 Available</option>
+                                    <option value="Unavailable" {{ $data->status == 'Unavailable' ? 'selected' : '' }}>🔴 Unavailable</option>
                                 </select>
                             </div>
-                            <div class="col-md-4">
-                                <label class="small font-weight-bold text-dark mb-1">From Time</label>
-                                <input type="time" class="form-control" name="doctor_visit_start_time[]" value="{{ $visit['start_time'] }}" style="height: 40px; border-radius: 6px;">
+
+                            <div class="col-sm-6 form-group mb-2">
+                                <label class="font-weight-bold small text-muted text-uppercase mb-1" style="font-size: 0.72rem; letter-spacing: 0.5px;">
+                                    <i class="fa-solid fa-graduation-cap text-primary mr-1"></i> Title / Prefix <span class="text-danger">*</span>
+                                </label>
+                                <select class="form-control font-weight-bold" name="doctor_designation" style="height: 40px; border-radius: 8px; border: 1px solid #cbd5e1; font-size: 0.88rem;">
+                                    <option value="Dr" {{ $data->doctor_designation == 'Dr' ? 'selected' : '' }}>Dr.</option>
+                                    <option value="MD" {{ $data->doctor_designation == 'MD' ? 'selected' : '' }}>MD</option>
+                                    <option value="Prof" {{ $data->doctor_designation == 'Prof' ? 'selected' : '' }}>Prof.</option>
+                                    <option value="BDS" {{ $data->doctor_designation == 'BDS' ? 'selected' : '' }}>BDS</option>
+                                    <option value="MBBS" {{ $data->doctor_designation == 'MBBS' ? 'selected' : '' }}>MBBS</option>
+                                    <option value="MS" {{ $data->doctor_designation == 'MS' ? 'selected' : '' }}>MS</option>
+                                </select>
                             </div>
-                            <div class="col-md-4">
-                                <label class="small font-weight-bold text-dark mb-1">To Time</label>
-                                <input type="time" class="form-control" name="doctor_visit_end_time[]" value="{{ $visit['end_time'] }}" style="height: 40px; border-radius: 6px;">
+
+                            <div class="col-12 form-group mb-2">
+                                <label class="font-weight-bold small text-muted text-uppercase mb-1" style="font-size: 0.72rem; letter-spacing: 0.5px;">
+                                    <i class="fa-solid fa-user-doctor text-primary mr-1"></i> Doctor Full Name <span class="text-danger">*</span>
+                                </label>
+                                <input type="text" class="form-control font-weight-bold" name="doctor_name" value="{{ $data->doctor_name }}" required placeholder="e.g. John Doe" style="height: 40px; border-radius: 8px; border: 1px solid #cbd5e1; font-size: 0.9rem;">
+                            </div>
+
+                            <div class="col-sm-7 form-group mb-2">
+                                <label class="font-weight-bold small text-muted text-uppercase mb-1" style="font-size: 0.72rem; letter-spacing: 0.5px;">
+                                    <i class="fa-solid fa-stethoscope text-primary mr-1"></i> Specialization <span class="text-danger">*</span>
+                                </label>
+                                <input type="text" class="form-control font-weight-bold" name="doctor_specialist" value="{{ $data->doctor_specialist }}" required placeholder="e.g. Cardiologist" style="height: 40px; border-radius: 8px; border: 1px solid #cbd5e1; font-size: 0.88rem;">
+                            </div>
+
+                            <div class="col-sm-5 form-group mb-2">
+                                <label class="font-weight-bold small text-muted text-uppercase mb-1" style="font-size: 0.72rem; letter-spacing: 0.5px;">
+                                    <i class="fa-solid fa-indian-rupee-sign text-success mr-1"></i> Fee (₹) <span class="text-danger">*</span>
+                                </label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text bg-white border-right-0" style="border-radius: 8px 0 0 8px; border-color: #cbd5e1; font-weight: bold; color: #16a34a; font-size: 0.88rem;">₹</span>
+                                    </div>
+                                    <input type="number" step="1" class="form-control border-left-0 font-weight-bold" name="doctor_fees" value="{{ $data->doctor_fees }}" required style="height: 40px; border-radius: 0 8px 8px 0; border-color: #cbd5e1; font-size: 0.9rem;">
+                                </div>
+                            </div>
+
+                            <div class="col-12 form-group mb-0">
+                                <label class="font-weight-bold small text-muted text-uppercase mb-1" style="font-size: 0.72rem; letter-spacing: 0.5px;">
+                                    <i class="fa-solid fa-circle-info text-primary mr-1"></i> Qualifications & Notes
+                                </label>
+                                <textarea name="doctor_more" class="form-control" rows="2" placeholder="e.g. MBBS, MD (Medicine), 10+ yrs exp." style="border-radius: 8px; border: 1px solid #cbd5e1; font-size: 0.85rem;">{{ $data->doctor_more }}</textarea>
                             </div>
                         </div>
                     </div>
-                    @endforeach
+
+                    <!-- Section 2: Visiting Schedules -->
+                    <div class="p-3 rounded" style="background: #ffffff; border: 1px solid #e2e8f0;">
+                        <div class="d-flex align-items-center justify-content-between mb-2 pb-2 border-bottom">
+                            <div class="d-flex align-items-center">
+                                <i class="fa-regular fa-calendar-days text-primary mr-2"></i>
+                                <h6 class="font-weight-bold text-dark mb-0" style="font-size: 0.9rem;">Visiting Schedules</h6>
+                            </div>
+                            <button type="button" class="btn btn-xs btn-outline-primary font-weight-bold" onclick="addDoctorScheduleSlot('{{ $data->id }}')" style="border-radius: 6px; padding: 3px 8px; font-size: 0.78rem;">
+                                <i class="fa-solid fa-plus mr-1"></i> Add Slot
+                            </button>
+                        </div>
+
+                        <div id="doctorScheduleContainer{{ $data->id }}">
+                            @php
+                                $slots = is_array($data->visit_day_time) && count($data->visit_day_time) > 0 
+                                    ? $data->visit_day_time 
+                                    : [['day' => 'Monday', 'start_time' => '10:00', 'end_time' => '13:00']];
+                            @endphp
+
+                            @foreach($slots as $index => $visit)
+                            <div class="schedule-slot-card p-2 mb-2 rounded border" style="background: #f8fafc; border-color: #e2e8f0 !important;">
+                                <div class="d-flex justify-content-between align-items-center mb-1">
+                                    <span class="small font-weight-bold text-muted" style="font-size: 0.75rem;">
+                                        <i class="fa-regular fa-clock text-primary mr-1"></i> Slot #{{ $loop->iteration }}
+                                    </span>
+                                    <button type="button" class="btn btn-sm text-danger p-0 border-0" onclick="removeScheduleSlot(this)" title="Remove Slot" style="font-size: 0.75rem; background: transparent;">
+                                        <i class="fa-solid fa-trash-can mr-1"></i> Remove
+                                    </button>
+                                </div>
+                                <div class="row g-2 align-items-center">
+                                    <div class="col-12 col-sm-5 mb-1 mb-sm-0">
+                                        @php $currentDay = $visit['day'] ?? 'Monday'; @endphp
+                                        <select class="form-control font-weight-bold" name="doctor_visit_day[]" style="height: 38px; border-radius: 6px; border: 1px solid #cbd5e1; font-size: 0.82rem;">
+                                            <option value="All Day" {{ $currentDay == 'All Day' ? 'selected' : '' }}>🗓️ All Day</option>
+                                            <option value="Monday" {{ $currentDay == 'Monday' ? 'selected' : '' }}>Monday</option>
+                                            <option value="Tuesday" {{ $currentDay == 'Tuesday' ? 'selected' : '' }}>Tuesday</option>
+                                            <option value="Wednesday" {{ $currentDay == 'Wednesday' ? 'selected' : '' }}>Wednesday</option>
+                                            <option value="Thursday" {{ $currentDay == 'Thursday' ? 'selected' : '' }}>Thursday</option>
+                                            <option value="Friday" {{ $currentDay == 'Friday' ? 'selected' : '' }}>Friday</option>
+                                            <option value="Saturday" {{ $currentDay == 'Saturday' ? 'selected' : '' }}>Saturday</option>
+                                            <option value="Sunday" {{ $currentDay == 'Sunday' ? 'selected' : '' }}>Sunday</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-6 col-sm-3">
+                                        <input type="time" class="form-control font-weight-bold text-center px-1" name="doctor_visit_start_time[]" value="{{ $visit['start_time'] ?? '10:00' }}" style="height: 38px; border-radius: 6px; border: 1px solid #cbd5e1; font-size: 0.82rem;">
+                                    </div>
+                                    <div class="col-6 col-sm-4">
+                                        <input type="time" class="form-control font-weight-bold text-center px-1" name="doctor_visit_end_time[]" value="{{ $visit['end_time'] ?? '13:00' }}" style="height: 38px; border-radius: 6px; border: 1px solid #cbd5e1; font-size: 0.82rem;">
+                                    </div>
+                                </div>
+                            </div>
+                            @endforeach
+                        </div>
+                    </div>
                 </div>
 
-                <div class="modal-footer bg-light border-0 py-3">
-                    <button type="button" class="btn btn-secondary font-weight-bold px-3" data-dismiss="modal" style="border-radius: 8px;">Cancel</button>
-                    <button type="submit" class="btn btn-primary font-weight-bold px-4" style="border-radius: 8px;">Save Changes</button>
+                <!-- Modal Footer -->
+                <div class="modal-footer border-0 py-3 px-3 px-sm-4 d-flex justify-content-between align-items-center" style="background: #f8fafc; border-top: 1px solid #e2e8f0;">
+                    <button type="button" class="btn btn-light border font-weight-bold px-3 py-2" data-dismiss="modal" style="border-radius: 8px; font-size: 0.88rem;">
+                        Cancel
+                    </button>
+                    <button type="submit" class="btn btn-primary font-weight-bold px-3 py-2 shadow-sm" style="border-radius: 8px; font-size: 0.88rem;">
+                        <i class="fa-solid fa-floppy-disk mr-1"></i> Save Changes
+                    </button>
                 </div>
             </form>
         </div>
@@ -308,5 +371,65 @@
     </div>
 </div>
 @endforeach
+
+@push('scripts')
+<script>
+    function addDoctorScheduleSlot(doctorId) {
+        var container = document.getElementById('doctorScheduleContainer' + doctorId);
+        if (!container) return;
+
+        var slotCard = document.createElement('div');
+        slotCard.className = 'schedule-slot-card p-3 mb-2 rounded border';
+        slotCard.style = 'background: #f8fafc; border-color: #e2e8f0 !important;';
+        slotCard.innerHTML = `
+            <div class="row g-2 align-items-center">
+                <div class="col-md-4 mb-2 mb-md-0">
+                    <label class="small font-weight-bold text-muted mb-1 d-block">
+                        <i class="fa-regular fa-calendar text-primary mr-1"></i> Visiting Day
+                    </label>
+                    <select class="form-control font-weight-bold" name="doctor_visit_day[]" style="height: 42px; border-radius: 6px; border: 1px solid #cbd5e1;">
+                        <option value="All Day">🗓️ All Day (Everyday)</option>
+                        <option value="Monday" selected>Monday</option>
+                        <option value="Tuesday">Tuesday</option>
+                        <option value="Wednesday">Wednesday</option>
+                        <option value="Thursday">Thursday</option>
+                        <option value="Friday">Friday</option>
+                        <option value="Saturday">Saturday</option>
+                        <option value="Sunday">Sunday</option>
+                    </select>
+                </div>
+                <div class="col-5 col-md-3 mb-2 mb-md-0">
+                    <label class="small font-weight-bold text-muted mb-1 d-block">
+                        <i class="fa-regular fa-clock text-primary mr-1"></i> From Time
+                    </label>
+                    <input type="time" class="form-control font-weight-bold" name="doctor_visit_start_time[]" value="10:00" style="height: 42px; border-radius: 6px; border: 1px solid #cbd5e1;">
+                </div>
+                <div class="col-5 col-md-3 mb-2 mb-md-0">
+                    <label class="small font-weight-bold text-muted mb-1 d-block">
+                        <i class="fa-regular fa-clock text-primary mr-1"></i> To Time
+                    </label>
+                    <input type="time" class="form-control font-weight-bold" name="doctor_visit_end_time[]" value="13:00" style="height: 42px; border-radius: 6px; border: 1px solid #cbd5e1;">
+                </div>
+                <div class="col-2 col-md-2 text-right pt-md-3">
+                    <button type="button" class="btn btn-sm btn-outline-danger" onclick="removeScheduleSlot(this)" title="Remove Slot" style="border-radius: 6px; height: 38px; width: 38px; padding: 0;">
+                        <i class="fa-solid fa-trash-can"></i>
+                    </button>
+                </div>
+            </div>
+        `;
+        container.appendChild(slotCard);
+    }
+
+    function removeScheduleSlot(btn) {
+        var card = btn.closest('.schedule-slot-card');
+        var container = card.parentElement;
+        if (container.querySelectorAll('.schedule-slot-card').length > 1) {
+            card.remove();
+        } else {
+            alert('At least one visiting schedule slot is required.');
+        }
+    }
+</script>
+@endpush
 
 @endsection

@@ -164,7 +164,7 @@ class PartnerAllOPDInfoController extends Controller
             'doctor_designation' => 'string|max:255',
             'doctor_specialist' => 'string|max:255',
             'doctor_fees' => 'numeric',
-            'doctor_more' => 'string',
+            'doctor_more' => 'nullable|string',
             'doctor_visit_day' => 'nullable|array',
             'doctor_visit_day.*' => 'nullable|string|max:255',
             'doctor_visit_start_time' => 'nullable|array',
