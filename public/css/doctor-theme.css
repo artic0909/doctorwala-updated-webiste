@@ -1,0 +1,957 @@
+/* ==========================================================================
+   Doctorwala Modern Medical White Theme ("Doctor Vibe")
+   Tailored for Super Admin & Partner Panel
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+
+:root {
+    --doc-primary: #0284c7;        /* Medical Sky/Cyan Blue */
+    --doc-primary-hover: #0369a1;
+    --doc-primary-light: #e0f2fe;
+    --doc-teal: #0d9488;           /* Stethoscope Teal */
+    --doc-teal-light: #ccfbf1;
+    --doc-success: #10b981;        /* Mint Green */
+    --doc-success-light: #dcfce7;
+    --doc-warning: #f59e0b;
+    --doc-warning-light: #fef3c7;
+    --doc-danger: #ef4444;
+    --doc-danger-light: #fee2e2;
+    --doc-purple: #8b5cf6;
+    --doc-purple-light: #f3e8ff;
+    
+    --doc-bg: #f8fafc;             /* Clinical Soft White Background */
+    --doc-card-bg: #ffffff;
+    --doc-border: #e2e8f0;
+    --doc-border-light: #f1f5f9;
+    
+    --doc-text-main: #0f172a;      /* Deep Slate 900 */
+    --doc-text-muted: #64748b;     /* Slate 500 */
+    --doc-text-light: #94a3b8;
+    
+    --doc-radius: 12px;
+    --doc-radius-sm: 8px;
+    --doc-radius-lg: 16px;
+    --doc-shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.04), 0 1px 2px rgba(15, 23, 42, 0.02);
+    --doc-shadow: 0 4px 6px -1px rgba(15, 23, 42, 0.05), 0 2px 4px -2px rgba(15, 23, 42, 0.03);
+    --doc-shadow-md: 0 10px 15px -3px rgba(15, 23, 42, 0.06), 0 4px 6px -4px rgba(15, 23, 42, 0.03);
+}
+
+body {
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+    background-color: var(--doc-bg) !important;
+    color: var(--doc-text-main) !important;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* ----------------- Clean Navbar ----------------- */
+.navbar {
+    background: #ffffff !important;
+    border-bottom: 1px solid var(--doc-border) !important;
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04) !important;
+    height: 60px !important;
+}
+
+.navbar .navbar-brand-wrapper {
+    background: #ffffff !important;
+    border-right: 1px solid var(--doc-border) !important;
+    width: 235px !important;
+    height: 60px !important;
+    padding: 0 15px !important;
+}
+
+.navbar .navbar-menu-wrapper {
+    background: #ffffff !important;
+    width: calc(100% - 235px) !important;
+    height: 60px !important;
+    padding: 0 20px !important;
+    box-shadow: none !important;
+}
+
+.navbar .navbar-brand img {
+    height: 36px !important;
+    max-width: 170px !important;
+    object-fit: contain;
+}
+
+.page-body-wrapper {
+    padding-top: 60px !important;
+    min-height: calc(100vh - 60px) !important;
+    background: var(--doc-bg) !important;
+}
+
+.main-panel {
+    width: calc(100% - 235px) !important;
+    min-height: calc(100vh - 60px) !important;
+    background: var(--doc-bg) !important;
+}
+
+.content-wrapper {
+    background: var(--doc-bg) !important;
+    padding: 24px !important;
+}
+
+.navbar-badge-pill {
+    background: var(--doc-primary-light);
+    color: var(--doc-primary);
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 20px;
+    letter-spacing: 0.3px;
+    text-transform: uppercase;
+    display: inline-flex;
+    align-items: center;
+}
+
+.navbar-badge-pill i {
+    font-size: 0.65rem;
+    margin-right: 4px;
+}
+
+/* ==========================================================================
+   Clean Medical White Sidebar (High Contrast & Zero Bullets)
+   ========================================================================== */
+.sidebar,
+.sidebar-light .sidebar {
+    background: #ffffff !important;
+    border-right: 1px solid var(--doc-border) !important;
+    box-shadow: none !important;
+    width: 235px !important;
+    padding-top: 10px;
+}
+
+.sidebar .nav {
+    padding: 0 10px !important;
+    margin: 0 !important;
+}
+
+.sidebar-category-header {
+    font-size: 0.68rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: #94a3b8;
+    padding: 16px 12px 6px 12px;
+    margin-top: 6px;
+}
+
+/* 1. Default Inactive Top-Level Menu Items */
+.sidebar .nav .nav-item {
+    margin-bottom: 3px !important;
+    background: transparent !important;
+    border-radius: 8px !important;
+}
+
+.sidebar .nav:not(.sub-menu) > .nav-item {
+    background: transparent !important;
+}
+
+.sidebar .nav .nav-item .nav-link,
+.sidebar .nav:not(.sub-menu) > .nav-item > .nav-link {
+    color: #334155 !important; /* Deep Slate 700: clear, readable */
+    font-size: 0.88rem !important;
+    font-weight: 600 !important;
+    border-radius: 8px !important;
+    padding: 10px 14px !important;
+    transition: all 0.18s ease-in-out !important;
+    display: flex !important;
+    align-items: center !important;
+    background: transparent !important;
+    border: 1px solid transparent !important;
+    height: auto !important;
+}
+
+.sidebar .nav .nav-item .nav-link .menu-title,
+.sidebar .nav:not(.sub-menu) > .nav-item > .nav-link .menu-title,
+body .sidebar .nav .nav-item .nav-link .menu-title {
+    color: #334155 !important;
+    font-weight: 600 !important;
+    font-size: 0.88rem !important;
+    line-height: 1.2 !important;
+    transition: color 0.18s ease !important;
+}
+
+.sidebar .nav .nav-item .nav-link i.nav-icon,
+.sidebar .nav .nav-item .nav-link > i:first-child,
+.sidebar .nav:not(.sub-menu) > .nav-item > .nav-link > i,
+body .sidebar .nav .nav-item .nav-link i {
+    font-size: 1rem !important;
+    width: 22px !important;
+    color: #64748b !important;
+    transition: color 0.18s ease !important;
+    margin-right: 10px !important;
+    text-align: center !important;
+}
+
+.sidebar .nav .nav-item .nav-link i.menu-arrow,
+.sidebar .nav .nav-item .nav-link .menu-arrow,
+body .sidebar .nav .nav-item .nav-link .menu-arrow {
+    color: #94a3b8 !important;
+    transition: all 0.2s ease !important;
+    margin-left: auto !important;
+}
+
+/* 2. Hover State on Top-Level Items */
+.sidebar .nav .nav-item:hover > .nav-link,
+.sidebar .nav:not(.sub-menu) > .nav-item:hover > .nav-link,
+body .sidebar .nav .nav-item:hover > .nav-link {
+    background: #f1f5f9 !important; /* Soft Slate 100 */
+    border-color: #e2e8f0 !important;
+}
+
+.sidebar .nav .nav-item:hover > .nav-link .menu-title,
+.sidebar .nav:not(.sub-menu) > .nav-item:hover > .nav-link .menu-title,
+body .sidebar .nav .nav-item:hover > .nav-link .menu-title {
+    color: #0284c7 !important; /* Medical Sky Blue */
+    font-weight: 700 !important;
+}
+
+.sidebar .nav .nav-item:hover > .nav-link i.nav-icon,
+.sidebar .nav .nav-item:hover > .nav-link > i:first-child,
+.sidebar .nav:not(.sub-menu) > .nav-item:hover > .nav-link i,
+body .sidebar .nav .nav-item:hover > .nav-link i {
+    color: #0284c7 !important;
+}
+
+.sidebar .nav .nav-item:hover > .nav-link i.menu-arrow,
+.sidebar .nav .nav-item:hover > .nav-link .menu-arrow,
+body .sidebar .nav .nav-item:hover > .nav-link .menu-arrow {
+    color: #0284c7 !important;
+}
+
+/* 3. Active State on Single Nav Items (e.g., Dashboard, AI Callings) */
+.sidebar .nav:not(.sub-menu) > .nav-item.active,
+.sidebar .nav .nav-item.active {
+    background: transparent !important;
+}
+
+.sidebar .nav .nav-item.active > .nav-link,
+.sidebar .nav:not(.sub-menu) > .nav-item.active > .nav-link,
+body .sidebar .nav .nav-item.active > .nav-link {
+    background: #e0f2fe !important; /* Medical Light Blue */
+    border: 1px solid #bae6fd !important;
+    border-left: 4px solid #0284c7 !important;
+    box-shadow: 0 1px 3px rgba(2, 132, 199, 0.1) !important;
+}
+
+.sidebar .nav .nav-item.active > .nav-link .menu-title,
+.sidebar .nav:not(.sub-menu) > .nav-item.active > .nav-link .menu-title,
+body .sidebar .nav .nav-item.active > .nav-link .menu-title {
+    color: #0369a1 !important; /* High contrast Deep Ocean Blue */
+    font-weight: 800 !important;
+}
+
+.sidebar .nav .nav-item.active > .nav-link i.nav-icon,
+.sidebar .nav .nav-item.active > .nav-link > i:first-child,
+.sidebar .nav:not(.sub-menu) > .nav-item.active > .nav-link i,
+body .sidebar .nav .nav-item.active > .nav-link i {
+    color: #0284c7 !important;
+}
+
+.sidebar .nav .nav-item.active > .nav-link i.menu-arrow,
+.sidebar .nav .nav-item.active > .nav-link .menu-arrow,
+body .sidebar .nav .nav-item.active > .nav-link .menu-arrow {
+    color: #0284c7 !important;
+}
+
+.sidebar .nav .nav-item.active:hover > .nav-link,
+body .sidebar .nav .nav-item.active:hover > .nav-link {
+    background: #bae6fd !important;
+}
+
+/* 4. Collapsible Trigger Active & Expanded States */
+.sidebar .nav:not(.sub-menu) > .nav-item > .nav-link[aria-expanded="true"],
+.sidebar .nav:not(.sub-menu) > .nav-item.active > .nav-link[aria-expanded="true"],
+.sidebar .nav .nav-item > .nav-link[aria-expanded="true"],
+.sidebar .nav .nav-item.active > .nav-link[aria-expanded="true"],
+body .sidebar .nav .nav-item > .nav-link[aria-expanded="true"] {
+    background: #e0f2fe !important;
+    border: 1px solid #bae6fd !important;
+    border-left: 4px solid #0284c7 !important;
+    border-bottom: none !important;
+    border-radius: 8px 8px 0 0 !important;
+}
+
+.sidebar .nav:not(.sub-menu) > .nav-item > .nav-link[aria-expanded="true"] .menu-title,
+.sidebar .nav:not(.sub-menu) > .nav-item.active > .nav-link[aria-expanded="true"] .menu-title,
+.sidebar .nav .nav-item > .nav-link[aria-expanded="true"] .menu-title,
+.sidebar .nav .nav-item.active > .nav-link[aria-expanded="true"] .menu-title,
+body .sidebar .nav .nav-item > .nav-link[aria-expanded="true"] .menu-title {
+    color: #0369a1 !important;
+    font-weight: 800 !important;
+}
+
+.sidebar .nav:not(.sub-menu) > .nav-item > .nav-link[aria-expanded="true"] i,
+.sidebar .nav:not(.sub-menu) > .nav-item > .nav-link[aria-expanded="true"] i.nav-icon,
+.sidebar .nav:not(.sub-menu) > .nav-item.active > .nav-link[aria-expanded="true"] i,
+.sidebar .nav .nav-item > .nav-link[aria-expanded="true"] i,
+body .sidebar .nav .nav-item > .nav-link[aria-expanded="true"] i {
+    color: #0284c7 !important;
+}
+
+.sidebar .nav:not(.sub-menu) > .nav-item > .nav-link[aria-expanded="true"] .menu-arrow,
+.sidebar .nav:not(.sub-menu) > .nav-item.active > .nav-link[aria-expanded="true"] .menu-arrow,
+.sidebar .nav .nav-item > .nav-link[aria-expanded="true"] .menu-arrow,
+body .sidebar .nav .nav-item > .nav-link[aria-expanded="true"] .menu-arrow {
+    color: #0284c7 !important;
+    transform: rotate(90deg) !important;
+}
+
+/* Collapsible parent when collapsed but active */
+.sidebar .nav:not(.sub-menu) > .nav-item.active > .nav-link[aria-expanded="false"],
+.sidebar .nav .nav-item.active > .nav-link[aria-expanded="false"],
+body .sidebar .nav .nav-item.active > .nav-link[aria-expanded="false"] {
+    background: #e0f2fe !important;
+    border: 1px solid #bae6fd !important;
+    border-left: 4px solid #0284c7 !important;
+    border-radius: 8px !important;
+}
+
+.sidebar .nav:not(.sub-menu) > .nav-item.active > .nav-link[aria-expanded="false"] .menu-title,
+.sidebar .nav .nav-item.active > .nav-link[aria-expanded="false"] .menu-title,
+body .sidebar .nav .nav-item.active > .nav-link[aria-expanded="false"] .menu-title {
+    color: #0369a1 !important;
+    font-weight: 800 !important;
+}
+
+.sidebar .nav:not(.sub-menu) > .nav-item.active > .nav-link[aria-expanded="false"] i,
+.sidebar .nav .nav-item.active > .nav-link[aria-expanded="false"] i,
+.sidebar .nav:not(.sub-menu) > .nav-item.active > .nav-link[aria-expanded="false"] .menu-arrow,
+.sidebar .nav .nav-item.active > .nav-link[aria-expanded="false"] .menu-arrow,
+body .sidebar .nav .nav-item.active > .nav-link[aria-expanded="false"] i,
+body .sidebar .nav .nav-item.active > .nav-link[aria-expanded="false"] .menu-arrow {
+    color: #0284c7 !important;
+}
+
+/* 5. Submenu Container & Complete Removal of Bullets ("ar bulltes dite hobena") */
+.sidebar .nav.sub-menu,
+body .sidebar .nav.sub-menu {
+    background: #ffffff !important; /* Crisp White container */
+    border: 1px solid #bae6fd !important;
+    border-top: none !important;
+    border-radius: 0 0 8px 8px !important;
+    padding: 8px !important;
+    margin: 0 0 8px 0 !important;
+    list-style: none !important;
+}
+
+/* Completely strip all bullet pseudo-elements across all skins */
+.sidebar .nav.sub-menu .nav-item::before,
+.sidebar .nav.sub-menu .nav-item:before,
+.sidebar .nav.sub-menu .nav-item .nav-link::before,
+.sidebar .nav.sub-menu .nav-item .nav-link:before,
+.sidebar .nav.sub-menu li::before,
+.sidebar .nav.sub-menu li:before,
+.sidebar .nav.sub-menu li a::before,
+.sidebar .nav.sub-menu li a:before,
+.sidebar-light .sidebar .nav.sub-menu .nav-item::before,
+.sidebar-light .sidebar .nav.sub-menu .nav-item:before,
+.sidebar-dark .sidebar .nav.sub-menu .nav-item::before,
+.sidebar-dark .sidebar .nav.sub-menu .nav-item:before,
+body .sidebar .nav.sub-menu .nav-item::before,
+body .sidebar .nav.sub-menu .nav-item:before,
+body .sidebar .nav.sub-menu .nav-item .nav-link::before,
+body .sidebar .nav.sub-menu .nav-item .nav-link:before {
+    display: none !important;
+    content: none !important;
+    content: "" !important;
+    width: 0 !important;
+    height: 0 !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+    position: static !important;
+    background: transparent !important;
+}
+
+.sidebar .nav.sub-menu .nav-item,
+body .sidebar .nav.sub-menu .nav-item {
+    margin: 2px 0 !important;
+    padding: 0 !important;
+    background: transparent !important;
+    list-style: none !important;
+}
+
+/* Submenu Links Default */
+.sidebar .nav.sub-menu .nav-item .nav-link,
+body .sidebar .nav.sub-menu .nav-item .nav-link {
+    color: #475569 !important; /* Slate 600 */
+    font-size: 0.85rem !important;
+    font-weight: 500 !important;
+    padding: 8px 14px !important;
+    border-radius: 6px !important;
+    display: block !important;
+    background: transparent !important;
+    border: none !important;
+    line-height: 1.3 !important;
+    transition: all 0.15s ease-in-out !important;
+}
+
+/* Submenu Links Hover */
+.sidebar .nav.sub-menu .nav-item .nav-link:hover,
+body .sidebar .nav.sub-menu .nav-item .nav-link:hover {
+    background: #f0f9ff !important;
+    color: #0284c7 !important;
+    font-weight: 700 !important;
+    padding-left: 18px !important;
+}
+
+/* Submenu Links Active (Current Page) */
+.sidebar .nav.sub-menu .nav-item .nav-link.active,
+.sidebar .nav.sub-menu .nav-item.active > .nav-link,
+body .sidebar .nav.sub-menu .nav-item .nav-link.active,
+body .sidebar .nav.sub-menu .nav-item.active > .nav-link {
+    background: #0284c7 !important; /* Crisp Solid Medical Sky Blue */
+    color: #ffffff !important;      /* Pure Crisp White text */
+    font-weight: 700 !important;
+    padding-left: 14px !important;
+    box-shadow: 0 2px 6px rgba(2, 132, 199, 0.28) !important;
+}
+
+.sidebar .nav.sub-menu .nav-item .nav-link.active:hover,
+body .sidebar .nav.sub-menu .nav-item .nav-link.active:hover {
+    background: #0369a1 !important;
+    color: #ffffff !important;
+}
+
+/* ----------------- Modern Cards ----------------- */
+.card {
+    background: var(--doc-card-bg) !important;
+    border: 1px solid var(--doc-border) !important;
+    border-radius: var(--doc-radius) !important;
+    box-shadow: var(--doc-shadow-sm) !important;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.card:hover {
+    box-shadow: var(--doc-shadow) !important;
+}
+
+.card .card-title {
+    color: var(--doc-text-main) !important;
+    font-size: 1.05rem !important;
+    font-weight: 700 !important;
+    letter-spacing: -0.2px;
+}
+
+.card-header {
+    background: #ffffff !important;
+    border-bottom: 1px solid var(--doc-border) !important;
+    border-top-left-radius: var(--doc-radius) !important;
+    border-top-right-radius: var(--doc-radius) !important;
+    padding: 14px 20px !important;
+}
+
+/* ----------------- Medical Stat / KPI Cards ----------------- */
+.doc-stat-card {
+    background: #ffffff;
+    border: 1px solid var(--doc-border);
+    border-radius: var(--doc-radius);
+    padding: 20px;
+    box-shadow: var(--doc-shadow-sm);
+    position: relative;
+    overflow: hidden;
+    transition: all 0.2s ease;
+}
+
+.doc-stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--doc-shadow-md);
+    border-color: #cbd5e1;
+}
+
+.doc-stat-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+}
+
+.icon-blue { background: #e0f2fe; color: #0284c7; }
+.icon-teal { background: #ccfbf1; color: #0d9488; }
+.icon-purple { background: #f3e8ff; color: #8b5cf6; }
+.icon-green { background: #dcfce7; color: #10b981; }
+.icon-amber { background: #fef3c7; color: #f59e0b; }
+.icon-red { background: #fee2e2; color: #ef4444; }
+
+.doc-stat-val {
+    font-size: 1.85rem;
+    font-weight: 800;
+    color: var(--doc-text-main);
+    line-height: 1.2;
+    margin: 8px 0 2px 0;
+}
+
+.doc-stat-label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--doc-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* ----------------- Crisp Tables ----------------- */
+.table-responsive {
+    border-radius: var(--doc-radius-sm);
+}
+
+.table {
+    color: var(--doc-text-main) !important;
+    margin-bottom: 0;
+}
+
+.table thead th {
+    background-color: #f8fafc !important;
+    color: #475569 !important;
+    font-size: 0.74rem !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.6px !important;
+    border-bottom: 1px solid var(--doc-border) !important;
+    border-top: none !important;
+    padding: 12px 14px !important;
+    vertical-align: middle;
+}
+
+.table tbody td {
+    padding: 14px !important;
+    vertical-align: middle !important;
+    border-top: 1px solid #f1f5f9 !important;
+    border-bottom: none !important;
+    font-size: 0.88rem;
+}
+
+.table tbody tr:hover {
+    background-color: #f8fafc !important;
+}
+
+/* ----------------- Medical Pill Badges ----------------- */
+.doc-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 10px;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    line-height: 1.2;
+}
+
+.doc-badge-opd { background: #e0f2fe; color: #0369a1; border: 1px solid #bae6fd; }
+.doc-badge-path { background: #f3e8ff; color: #7e22ce; border: 1px solid #e9d5ff; }
+.doc-badge-doc { background: #ccfbf1; color: #0f766e; border: 1px solid #99f6e4; }
+.doc-badge-both { background: #e0e7ff; color: #4338ca; border: 1px solid #c7d2fe; }
+.doc-badge-success { background: #dcfce7; color: #15803d; border: 1px solid #bbf7d0; }
+.doc-badge-warning { background: #fef3c7; color: #b45309; border: 1px solid #fde68a; }
+.doc-badge-danger { background: #fee2e2; color: #b91c1c; border: 1px solid #fecaca; }
+.doc-badge-neutral { background: #f1f5f9; color: #475569; border: 1px solid #e2e8f0; }
+
+/* ----------------- Clean Action Buttons ----------------- */
+.btn {
+    border-radius: var(--doc-radius-sm) !important;
+    font-weight: 600 !important;
+    font-size: 0.85rem !important;
+    padding: 8px 16px !important;
+    transition: all 0.15s ease-in-out !important;
+}
+
+.btn-primary {
+    background: var(--doc-primary) !important;
+    border-color: var(--doc-primary) !important;
+    color: #ffffff !important;
+    box-shadow: 0 1px 2px rgba(2, 132, 199, 0.2);
+}
+
+.btn-primary:hover {
+    background: var(--doc-primary-hover) !important;
+    border-color: var(--doc-primary-hover) !important;
+}
+
+.btn-outline-primary {
+    border-color: #bae6fd !important;
+    color: var(--doc-primary) !important;
+    background: #ffffff !important;
+}
+
+.btn-outline-primary:hover {
+    background: var(--doc-primary-light) !important;
+    color: var(--doc-primary-hover) !important;
+    border-color: var(--doc-primary) !important;
+}
+
+.btn-icon-square {
+    width: 34px;
+    height: 34px;
+    padding: 0 !important;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px !important;
+}
+
+/* ----------------- Form Controls ----------------- */
+.form-control, .form-select {
+    border: 1px solid var(--doc-border) !important;
+    border-radius: var(--doc-radius-sm) !important;
+    background-color: #ffffff !important;
+    color: var(--doc-text-main) !important;
+    font-size: 0.88rem !important;
+    padding: 9px 12px !important;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: var(--doc-primary) !important;
+    box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15) !important;
+    outline: none !important;
+}
+
+/* ----------------- Pagination ----------------- */
+.pagination {
+    margin-bottom: 0;
+    display: flex !important;
+    align-items: center;
+    list-style: none;
+    padding-left: 0;
+}
+
+.pagination svg,
+.page-item svg,
+svg.w-5,
+svg.h-5,
+nav[role="navigation"] svg {
+    width: 14px !important;
+    height: 14px !important;
+    max-width: 14px !important;
+    max-height: 14px !important;
+    display: inline-block !important;
+}
+
+.page-item .page-link {
+    border: 1px solid var(--doc-border) !important;
+    color: var(--doc-text-muted) !important;
+    border-radius: 6px !important;
+    margin: 0 2px !important;
+    font-weight: 600 !important;
+    font-size: 0.82rem !important;
+    padding: 6px 12px !important;
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+}
+
+.page-item.active .page-link {
+    background: var(--doc-primary) !important;
+    border-color: var(--doc-primary) !important;
+    color: #ffffff !important;
+}
+
+.page-item.disabled .page-link {
+    color: #94a3b8 !important;
+    background-color: #f8fafc !important;
+    border-color: var(--doc-border) !important;
+}
+
+/* ----------------- Clean Footer ----------------- */
+.footer {
+    background: #ffffff !important;
+    border-top: 1px solid var(--doc-border) !important;
+    color: var(--doc-text-muted) !important;
+    font-size: 0.82rem !important;
+    padding: 20px !important;
+}
+
+
+/* ==========================================================================
+   Analytics, Charts & Quick Dashboard Action Cards
+   ========================================================================== */
+.card_action_btn {
+    border-radius: var(--doc-radius) !important;
+    background: #ffffff !important;
+    border: 1px solid var(--doc-border) !important;
+    box-shadow: var(--doc-shadow-sm) !important;
+    transition: all 0.2s ease !important;
+    cursor: pointer;
+    text-decoration: none !important;
+}
+
+.card_action_btn:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--doc-shadow-md) !important;
+    border-color: var(--doc-primary) !important;
+}
+
+.card_action_btn .action-icon-box {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+}
+
+.card_action_btn p {
+    font-size: 0.92rem !important;
+    font-weight: 700 !important;
+    color: var(--doc-text-main) !important;
+    margin: 0;
+}
+
+/* ── Visitor Analytics & Stat Cards ── */
+.va-stat-card {
+    border-radius: var(--doc-radius);
+    padding: 20px;
+    position: relative;
+    overflow: hidden;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    box-shadow: var(--doc-shadow);
+}
+
+.va-stat-blue {
+    background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+}
+
+.va-stat-green {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+}
+
+.va-stat-purple {
+    background: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%);
+}
+
+.va-stat-orange {
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+}
+
+.va-stat-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.35rem;
+    flex-shrink: 0;
+    backdrop-filter: blur(4px);
+}
+
+.va-stat-body {
+    flex: 1;
+    position: relative;
+    z-index: 1;
+}
+
+.va-stat-body h3 {
+    font-size: 1.8rem;
+    font-weight: 800;
+    margin: 0 0 2px;
+    line-height: 1;
+}
+
+.va-stat-body p {
+    font-size: 0.78rem;
+    margin: 0;
+    opacity: 0.9;
+    font-weight: 600;
+}
+
+.va-trend {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    background: rgba(255, 255, 255, 0.22);
+    padding: 2px 8px;
+    border-radius: 10px;
+    margin-top: 5px;
+}
+
+.va-stat-wave {
+    position: absolute;
+    right: -20px;
+    bottom: -20px;
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.va-card {
+    background: #fff;
+    border-radius: var(--doc-radius);
+    padding: 20px 22px 18px;
+    box-shadow: var(--doc-shadow-sm);
+    border: 1px solid var(--doc-border);
+    height: 100%;
+}
+
+.va-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.va-card-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.va-card-title > i {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    background: var(--doc-primary-light);
+    color: var(--doc-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    flex-shrink: 0;
+}
+
+.va-card-title h5 {
+    font-size: 0.95rem;
+    font-weight: 800;
+    color: var(--doc-text-main);
+    margin: 0 0 2px;
+}
+
+.va-card-title p {
+    font-size: 0.72rem;
+    color: var(--doc-text-muted);
+    margin: 0;
+}
+
+.va-badge {
+    font-size: 0.68rem;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    padding: 4px 12px;
+    border-radius: 20px;
+    text-transform: uppercase;
+}
+
+.va-badge-blue { background: #e0f2fe; color: #0284c7; }
+.va-badge-green { background: #dcfce7; color: #10b981; }
+.va-badge-purple { background: #f3e8ff; color: #8b5cf6; }
+
+.va-chart-wrap {
+    position: relative;
+    width: 100%;
+}
+
+.va-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 12px;
+    justify-content: center;
+}
+
+.va-legend-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--doc-text-muted);
+}
+
+.va-legend-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+}
+
+.va-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+}
+
+.va-table thead th {
+    padding: 10px 14px;
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    color: var(--doc-text-muted);
+    border-bottom: 1px solid var(--doc-border);
+    background: #f8fafc;
+}
+
+.va-table tbody td {
+    padding: 11px 14px;
+    border-bottom: 1px solid #f1f5f9;
+    color: var(--doc-text-main);
+    vertical-align: middle;
+}
+
+.va-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.va-table tbody tr:hover td {
+    background: #f8fafc;
+}
+
+.va-rank {
+    width: 26px;
+    height: 26px;
+    border-radius: 8px;
+    background: var(--doc-primary-light);
+    color: var(--doc-primary);
+    font-size: 0.75rem;
+    font-weight: 800;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.va-page-url {
+    color: var(--doc-primary);
+    text-decoration: none;
+    font-size: 0.82rem;
+    font-weight: 600;
+    transition: color 0.2s;
+}
+
+.va-page-url:hover {
+    color: var(--doc-primary-hover);
+    text-decoration: underline;
+}
+
+.va-progress-wrap {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 140px;
+}
+
+.va-progress-bar {
+    height: 6px;
+    border-radius: 6px;
+    background: linear-gradient(90deg, #0284c7, #10b981);
+    flex-shrink: 0;
+    min-width: 4px;
+    transition: width 0.4s ease;
+}
+
+.va-progress-wrap span {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--doc-primary);
+    white-space: nowrap;
+}

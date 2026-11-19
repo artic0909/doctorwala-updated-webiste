@@ -36590,14 +36590,14 @@ div.tagsinput span.tag a {
 }
 
 .sidebar .nav .nav-item.active > .nav-link {
-  background: #06a3da;
+  background: #e0f2fe;
   position: relative;
 }
 
 .sidebar .nav .nav-item.active > .nav-link i,
 .sidebar .nav .nav-item.active > .nav-link .menu-title,
 .sidebar .nav .nav-item.active > .nav-link .menu-arrow {
-  color: #fff;
+  color: #0369a1;
 }
 
 .sidebar .nav .nav-item.active > .nav-link i.menu-arrow::before {
@@ -36607,7 +36607,7 @@ div.tagsinput span.tag a {
 .sidebar .nav .nav-item:hover > .nav-link i,
 .sidebar .nav .nav-item:hover > .nav-link .menu-title,
 .sidebar .nav .nav-item:hover > .nav-link .menu-arrow {
-  color: #fff;
+  color: #0284c7;
 }
 
 .sidebar .nav:not(.sub-menu) {
@@ -36622,8 +36622,8 @@ div.tagsinput span.tag a {
 
 .sidebar .nav:not(.sub-menu) > .nav-item:hover > .nav-link,
 .sidebar .nav:not(.sub-menu) > .nav-item:hover[aria-expanded="true"] {
-  background: #06a3da;
-  color: #fff;
+  background: #f1f5f9;
+  color: #0284c7;
 }
 
 .sidebar .nav:not(.sub-menu) > .nav-item > .nav-link {
@@ -36632,20 +36632,20 @@ div.tagsinput span.tag a {
 
 .sidebar .nav:not(.sub-menu) > .nav-item > .nav-link[aria-expanded="true"] {
   border-radius: 8px 8px 0 0;
-  background: #06a3da;
-  color: #fff;
+  background: #e0f2fe;
+  color: #0369a1;
 }
 
 .sidebar .nav:not(.sub-menu) > .nav-item.active {
-  background: #06a3da;
+  background: transparent;
 }
 
 .sidebar .nav.sub-menu {
   margin-bottom: 0;
   margin-top: 0;
   list-style: none;
-  padding: 0.25rem 0 0 3.07rem;
-  background: #06a3da;
+  padding: 6px 8px 8px 8px;
+  background: #f8fafc;
   padding-bottom: 12px;
 }
 
@@ -36654,13 +36654,14 @@ div.tagsinput span.tag a {
 }
 
 .sidebar .nav.sub-menu .nav-item::before {
-  content: "";
-  width: 5px;
-  height: 5px;
+  display: none !important;
+  content: none !important;
+  width: 0 !important;
+  height: 0 !important;
   position: absolute;
   margin-top: 16px;
   border-radius: 50%;
-  background: #b2b2b2;
+  background: transparent !important;
 }
 
 .sidebar .nav.sub-menu .nav-item .nav-link {

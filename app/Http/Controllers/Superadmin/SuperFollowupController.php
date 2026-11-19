@@ -12,22 +12,24 @@ class SuperFollowupController extends Controller
     public function index(Request $request)
     {
         $partnerId = $request->input('dw_partner_id');
+        $allPartners = DwPartnerModel::orderBy('partner_clinic_name', 'asc')->get();
+        $selectedPartner = null;
 
-        if (!$partnerId) {
-            return redirect()->route('superadmin.super-all-partner.get')->with('error', 'Please select a partner to view their follow-up history.');
+        if ($partnerId) {
+            $selectedPartner = DwPartnerModel::find($partnerId);
+            $followups = Followup::with('partner')
+                ->where('dw_partner_id', $partnerId)
+                ->orderBy('date', 'desc')
+                ->orderBy('id', 'desc')
+                ->get();
+        } else {
+            $followups = Followup::with('partner')
+                ->orderBy('date', 'desc')
+                ->orderBy('id', 'desc')
+                ->paginate(20);
         }
 
-        // Get specific partner details
-        $selectedPartner = DwPartnerModel::findOrFail($partnerId);
-
-        // Get followup records associated specifically with this partner
-        $followups = Followup::with('partner')
-            ->where('dw_partner_id', $partnerId)
-            ->orderBy('date', 'desc')
-            ->orderBy('id', 'desc')
-            ->get();
-
-        return view('superadmin.followup.create', compact('selectedPartner', 'followups'));
+        return view('superadmin.followup.create', compact('selectedPartner', 'followups', 'allPartners'));
     }
 
     /**
