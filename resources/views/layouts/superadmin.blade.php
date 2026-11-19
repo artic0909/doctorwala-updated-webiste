@@ -37,7 +37,7 @@
     @stack('styles')
 </head>
 
-<body>
+<body class="sidebar-fixed">
     <div class="container-scroller">
         <!-- Top Navbar -->
         @include('superadmin.includes._navbar')

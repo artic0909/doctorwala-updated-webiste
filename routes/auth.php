@@ -249,6 +249,10 @@ Route::middleware('auth:web')->group(function () {
     Route::post('/superadmin/super-partner-carousel', [SuperPartnerCarouselController::class, 'store'])->name('superadmin.partnercarousel.store');
     Route::put('/superadmin/super-partner-carousel/update/{id}', [SuperPartnerCarouselController::class, 'update'])->name('superadmin.partnercarousel.update');
     Route::delete('/superadmin/super-partner-carousel/delete/{id}', [SuperPartnerCarouselController::class, 'delete'])->name('superadmin.partnercarousel.delete');
+    // Partner Carousel Route Aliases (supporting superadmin.partner.carousel.*)
+    Route::post('/superadmin/super-partner-carousel/store', [SuperPartnerCarouselController::class, 'store'])->name('superadmin.partner.carousel.store');
+    Route::put('/superadmin/super-partner-carousel/update-alt/{id}', [SuperPartnerCarouselController::class, 'update'])->name('superadmin.partner.carousel.update');
+    Route::delete('/superadmin/super-partner-carousel/delete-alt/{id}', [SuperPartnerCarouselController::class, 'delete'])->name('superadmin.partner.carousel.delete');
 
     // All Users---------------------------------------------------------------------------------------------------------------------------------------->
     Route::get('/superadmin/super-all-user', [SuperAllUserController::class, 'index'])->name('superadmin.super-all-user');
@@ -349,9 +353,9 @@ Route::middleware('auth:web')->group(function () {
 
 
     // Coupons Routes---------------------------------------------------------------------------------------------------------------------------------------->
-    Route::get('/superadmin/super-add-coupons', [SuperCouponController::class, 'index']);
+    Route::get('/superadmin/super-add-coupons', [SuperCouponController::class, 'index'])->name('superadmin.super-coupon.index');
     Route::post('/superadmin/super-add-coupons', [SuperCouponController::class, 'store'])->name('superadmin.super-coupon.store');
-    Route::get('/superadmin/super-show-coupons', [SuperCouponController::class, 'show']);
+    Route::get('/superadmin/super-show-coupons', [SuperCouponController::class, 'show'])->name('superadmin.super-coupon.show');
     Route::put('/superadmin/super-show-coupons/update/{id}', [SuperCouponController::class, 'update'])->name('superadmin.super-coupon.update');
     Route::put('/superadmin/super-show-coupons/status/{id}', [SuperCouponController::class, 'updateStatus'])->name('superadmin.super-coupon.update.status');
     Route::delete('/superadmin/super-show-coupons/delete/{id}', [SuperCouponController::class, 'delete'])->name('superadmin.super-coupon.delete');
@@ -359,9 +363,9 @@ Route::middleware('auth:web')->group(function () {
 
 
     // Subscription Routes---------------------------------------------------------------------------------------------------------------------------------------->
-    Route::get('/superadmin/super-add-subscriptions', [SuperSubscriptionController::class, 'index']);
+    Route::get('/superadmin/super-add-subscriptions', [SuperSubscriptionController::class, 'index'])->name('superadmin.super-subs.index');
     Route::post('/superadmin/super-add-subscriptions', [SuperSubscriptionController::class, 'store'])->name('superadmin.super-subs.store');
-    Route::get('/superadmin/super-show-subscription', [SuperSubscriptionController::class, 'show']);
+    Route::get('/superadmin/super-show-subscription', [SuperSubscriptionController::class, 'show'])->name('superadmin.super-subs.show');
     Route::put('/superadmin/super-show-subscription/update/{id}', [SuperSubscriptionController::class, 'update'])->name('superadmin.super-subs.update');
     Route::put('/superadmin/super-show-subscription/status/{id}', [SuperSubscriptionController::class, 'updateStatus'])->name('superadmin.super-subs.update.status');
     Route::delete('/superadmin/super-show-subscription/delete/{id}', [SuperSubscriptionController::class, 'delete'])->name('superadmin.super-subs.delete');

@@ -12,7 +12,7 @@
             <p class="text-muted mb-0">Record and review communication logs, call outcomes, and follow-up notes for partner clinics.</p>
         </div>
         <div class="mt-2 mt-md-0">
-            <a href="{{ route('superadmin.super-all-partner') }}" class="btn btn-outline-primary font-weight-bold shadow-sm" style="border-radius: 8px;">
+            <a href="{{ route('superadmin.super-all-partner.get') }}" class="btn btn-outline-primary font-weight-bold shadow-sm" style="border-radius: 8px;">
                 <i class="fa-solid fa-users mr-1"></i> View All Partners
             </a>
         </div>

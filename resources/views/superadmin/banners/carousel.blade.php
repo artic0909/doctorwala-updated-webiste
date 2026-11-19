@@ -90,7 +90,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form action="{{route('superadmin.partner.carousel.store')}}" method="POST" enctype="multipart/form-data">
+            <form action="{{route('superadmin.partnercarousel.store')}}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="modal-body p-4">
                     <div class="form-group mb-3">
@@ -128,7 +128,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form action="{{route('superadmin.partner.carousel.update', $carousel->id)}}" method="POST" enctype="multipart/form-data">
+            <form action="{{route('superadmin.partnercarousel.update', $carousel->id)}}" method="POST" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
                 <div class="modal-body p-4">
@@ -161,7 +161,7 @@
 <div class="modal fade" id="myDeleteModal{{$carousel->id}}" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content border-0 shadow" style="border-radius: 14px;">
-            <form action="{{route('superadmin.partner.carousel.delete', $carousel->id)}}" method="POST">
+            <form action="{{route('superadmin.partnercarousel.delete', $carousel->id)}}" method="POST">
                 @csrf
                 @method('DELETE')
                 <div class="modal-body text-center p-4">

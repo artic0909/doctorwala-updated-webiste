@@ -45,11 +45,17 @@ body {
 }
 
 /* ----------------- Clean Navbar ----------------- */
-.navbar {
+.navbar,
+.navbar.fixed-top {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
     background: #ffffff !important;
     border-bottom: 1px solid var(--doc-border) !important;
     box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04) !important;
     height: 60px !important;
+    z-index: 1030 !important;
 }
 
 .navbar .navbar-brand-wrapper {
@@ -58,6 +64,7 @@ body {
     width: 235px !important;
     height: 60px !important;
     padding: 0 15px !important;
+    transition: width 0.25s ease !important;
 }
 
 .navbar .navbar-menu-wrapper {
@@ -66,6 +73,7 @@ body {
     height: 60px !important;
     padding: 0 20px !important;
     box-shadow: none !important;
+    transition: width 0.25s ease !important;
 }
 
 .navbar .navbar-brand img {
@@ -80,37 +88,8 @@ body {
     background: var(--doc-bg) !important;
 }
 
-.main-panel {
-    width: calc(100% - 235px) !important;
-    min-height: calc(100vh - 60px) !important;
-    background: var(--doc-bg) !important;
-}
-
-.content-wrapper {
-    background: var(--doc-bg) !important;
-    padding: 24px !important;
-}
-
-.navbar-badge-pill {
-    background: var(--doc-primary-light);
-    color: var(--doc-primary);
-    font-size: 0.72rem;
-    font-weight: 700;
-    padding: 4px 10px;
-    border-radius: 20px;
-    letter-spacing: 0.3px;
-    text-transform: uppercase;
-    display: inline-flex;
-    align-items: center;
-}
-
-.navbar-badge-pill i {
-    font-size: 0.65rem;
-    margin-right: 4px;
-}
-
 /* ==========================================================================
-   Clean Medical White Sidebar (High Contrast & Zero Bullets)
+   Clean Medical White Sidebar (Fixed & Independent Scrolling)
    ========================================================================== */
 .sidebar,
 .sidebar-light .sidebar {
@@ -119,6 +98,83 @@ body {
     box-shadow: none !important;
     width: 235px !important;
     padding-top: 10px;
+}
+
+@media (min-width: 992px) {
+    /* Pin sidebar firmly to viewport left - stays fixed when main content scrolls */
+    .sidebar,
+    .sidebar-light .sidebar,
+    .sidebar-fixed .sidebar {
+        position: fixed !important;
+        top: 60px !important;
+        left: 0 !important;
+        bottom: 0 !important;
+        width: 235px !important;
+        height: calc(100vh - 60px) !important;
+        max-height: calc(100vh - 60px) !important;
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+        z-index: 1020 !important;
+        padding-bottom: 40px !important;
+        scrollbar-width: thin !important;
+        scrollbar-color: #cbd5e1 transparent !important;
+    }
+
+    .sidebar::-webkit-scrollbar {
+        width: 5px !important;
+    }
+    .sidebar::-webkit-scrollbar-thumb {
+        background: #cbd5e1 !important;
+        border-radius: 4px !important;
+    }
+    .sidebar::-webkit-scrollbar-track {
+        background: transparent !important;
+    }
+
+    /* Main panel margin matches sidebar width so only content scrolls */
+    .main-panel,
+    .sidebar-fixed .main-panel {
+        margin-left: 235px !important;
+        width: calc(100% - 235px) !important;
+        min-height: calc(100vh - 60px) !important;
+        background: var(--doc-bg) !important;
+        transition: width 0.25s ease, margin 0.25s ease !important;
+    }
+
+    /* Minimized icon-only sidebar */
+    body.sidebar-icon-only .navbar .navbar-brand-wrapper {
+        width: 70px !important;
+    }
+    body.sidebar-icon-only .navbar .navbar-menu-wrapper {
+        width: calc(100% - 70px) !important;
+    }
+    body.sidebar-icon-only .sidebar,
+    body.sidebar-fixed.sidebar-icon-only .sidebar {
+        width: 70px !important;
+    }
+    body.sidebar-icon-only .main-panel,
+    body.sidebar-fixed.sidebar-icon-only .main-panel {
+        margin-left: 70px !important;
+        width: calc(100% - 70px) !important;
+    }
+}
+
+@media (max-width: 991.98px) {
+    .navbar .navbar-brand-wrapper {
+        width: 55px !important;
+    }
+    .navbar .navbar-menu-wrapper {
+        width: calc(100% - 55px) !important;
+    }
+    .main-panel {
+        width: 100% !important;
+        margin-left: 0 !important;
+    }
+}
+
+.content-wrapper {
+    background: var(--doc-bg) !important;
+    padding: 24px !important;
 }
 
 .sidebar .nav {
