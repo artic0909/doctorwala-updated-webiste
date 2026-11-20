@@ -9,7 +9,6 @@
     $isOpdActive = request()->is('partnerpanel/partner-opd*');
     $isPathActive = request()->is('partnerpanel/partner-pathology*');
     $isPatientsActive = request()->is('partnerpanel/partner-patient-profile-request*') || request()->is('partnerpanel/patient-profile-all-request*') || request()->is('partnerpanel/patient-user-profile-view*');
-    $isSubActive = request()->is('partnerpanel/partner-get-subscription*') || request()->is('partnerpanel/partner-show-invoice*');
     $isTicketsActive = request()->is('partnerpanel/partner-get-ticket*') || request()->is('partnerpanel/partner-show-ticket*');
 @endphp
 

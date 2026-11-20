@@ -282,38 +282,39 @@ body .sidebar .nav .nav-item:hover > .nav-link .menu-arrow {
     background: transparent !important;
 }
 
-.sidebar .nav .nav-item.active > .nav-link,
-.sidebar .nav:not(.sub-menu) > .nav-item.active > .nav-link,
-body .sidebar .nav .nav-item.active > .nav-link {
-    background: #e0f2fe !important; /* Medical Light Blue */
+.sidebar .nav .nav-item.active > .nav-link:not([data-toggle="collapse"]),
+.sidebar .nav:not(.sub-menu) > .nav-item.active > .nav-link:not([data-toggle="collapse"]),
+body .sidebar .nav .nav-item.active > .nav-link:not([data-toggle="collapse"]) {
+    background: #f0f9ff !important; /* Soft clean medical Sky 50 */
     border: 1px solid #bae6fd !important;
     border-left: 4px solid #0284c7 !important;
-    box-shadow: 0 1px 3px rgba(2, 132, 199, 0.1) !important;
+    box-shadow: 0 1px 3px rgba(2, 132, 199, 0.08) !important;
+    border-radius: 8px !important;
 }
 
-.sidebar .nav .nav-item.active > .nav-link .menu-title,
-.sidebar .nav:not(.sub-menu) > .nav-item.active > .nav-link .menu-title,
-body .sidebar .nav .nav-item.active > .nav-link .menu-title {
-    color: #0369a1 !important; /* High contrast Deep Ocean Blue */
-    font-weight: 800 !important;
+.sidebar .nav .nav-item.active > .nav-link:not([data-toggle="collapse"]) .menu-title,
+.sidebar .nav:not(.sub-menu) > .nav-item.active > .nav-link:not([data-toggle="collapse"]) .menu-title,
+body .sidebar .nav .nav-item.active > .nav-link:not([data-toggle="collapse"]) .menu-title {
+    color: #0369a1 !important; /* Deep Ocean Blue */
+    font-weight: 700 !important;
 }
 
-.sidebar .nav .nav-item.active > .nav-link i.nav-icon,
-.sidebar .nav .nav-item.active > .nav-link > i:first-child,
-.sidebar .nav:not(.sub-menu) > .nav-item.active > .nav-link i,
-body .sidebar .nav .nav-item.active > .nav-link i {
+.sidebar .nav .nav-item.active > .nav-link:not([data-toggle="collapse"]) i.nav-icon,
+.sidebar .nav .nav-item.active > .nav-link:not([data-toggle="collapse"]) > i:first-child,
+.sidebar .nav:not(.sub-menu) > .nav-item.active > .nav-link:not([data-toggle="collapse"]) i,
+body .sidebar .nav .nav-item.active > .nav-link:not([data-toggle="collapse"]) i {
     color: #0284c7 !important;
 }
 
-.sidebar .nav .nav-item.active > .nav-link i.menu-arrow,
-.sidebar .nav .nav-item.active > .nav-link .menu-arrow,
-body .sidebar .nav .nav-item.active > .nav-link .menu-arrow {
+.sidebar .nav .nav-item.active > .nav-link:not([data-toggle="collapse"]) i.menu-arrow,
+.sidebar .nav .nav-item.active > .nav-link:not([data-toggle="collapse"]) .menu-arrow,
+body .sidebar .nav .nav-item.active > .nav-link:not([data-toggle="collapse"]) .menu-arrow {
     color: #0284c7 !important;
 }
 
-.sidebar .nav .nav-item.active:hover > .nav-link,
-body .sidebar .nav .nav-item.active:hover > .nav-link {
-    background: #bae6fd !important;
+.sidebar .nav .nav-item.active:hover > .nav-link:not([data-toggle="collapse"]),
+body .sidebar .nav .nav-item.active:hover > .nav-link:not([data-toggle="collapse"]) {
+    background: #e0f2fe !important;
 }
 
 /* 4. Collapsible Trigger Active & Expanded States */
@@ -322,9 +323,9 @@ body .sidebar .nav .nav-item.active:hover > .nav-link {
 .sidebar .nav .nav-item > .nav-link[aria-expanded="true"],
 .sidebar .nav .nav-item.active > .nav-link[aria-expanded="true"],
 body .sidebar .nav .nav-item > .nav-link[aria-expanded="true"] {
-    background: #e0f2fe !important;
-    border: 1px solid #bae6fd !important;
-    border-left: 4px solid #0284c7 !important;
+    background: #f8fafc !important; /* Clean soft slate header for open section */
+    border: 1px solid #e2e8f0 !important;
+    border-left: 3px solid #0284c7 !important;
     border-bottom: none !important;
     border-radius: 8px 8px 0 0 !important;
 }
@@ -334,8 +335,8 @@ body .sidebar .nav .nav-item > .nav-link[aria-expanded="true"] {
 .sidebar .nav .nav-item > .nav-link[aria-expanded="true"] .menu-title,
 .sidebar .nav .nav-item.active > .nav-link[aria-expanded="true"] .menu-title,
 body .sidebar .nav .nav-item > .nav-link[aria-expanded="true"] .menu-title {
-    color: #0369a1 !important;
-    font-weight: 800 !important;
+    color: #0f172a !important;
+    font-weight: 700 !important;
 }
 
 .sidebar .nav:not(.sub-menu) > .nav-item > .nav-link[aria-expanded="true"] i,
@@ -354,21 +355,21 @@ body .sidebar .nav .nav-item > .nav-link[aria-expanded="true"] .menu-arrow {
     transform: rotate(90deg) !important;
 }
 
-/* Collapsible parent when collapsed but active */
+/* Collapsible parent when collapsed but active (e.g. child was active) */
 .sidebar .nav:not(.sub-menu) > .nav-item.active > .nav-link[aria-expanded="false"],
 .sidebar .nav .nav-item.active > .nav-link[aria-expanded="false"],
 body .sidebar .nav .nav-item.active > .nav-link[aria-expanded="false"] {
-    background: #e0f2fe !important;
-    border: 1px solid #bae6fd !important;
-    border-left: 4px solid #0284c7 !important;
+    background: #f8fafc !important;
+    border: 1px solid #e2e8f0 !important;
+    border-left: 3px solid #0284c7 !important;
     border-radius: 8px !important;
 }
 
 .sidebar .nav:not(.sub-menu) > .nav-item.active > .nav-link[aria-expanded="false"] .menu-title,
 .sidebar .nav .nav-item.active > .nav-link[aria-expanded="false"] .menu-title,
 body .sidebar .nav .nav-item.active > .nav-link[aria-expanded="false"] .menu-title {
-    color: #0369a1 !important;
-    font-weight: 800 !important;
+    color: #0284c7 !important;
+    font-weight: 700 !important;
 }
 
 .sidebar .nav:not(.sub-menu) > .nav-item.active > .nav-link[aria-expanded="false"] i,

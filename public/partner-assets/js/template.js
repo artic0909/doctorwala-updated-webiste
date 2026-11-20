@@ -12,7 +12,8 @@
 
     function addActiveClass(element) {
       var href = element.attr('href');
-      if (!href || href === '#' || href.indexOf('javascript:') === 0) {
+      // Ignore anchors with no href, hash-only fragments (#, #ui-...), javascript:, or collapse toggles
+      if (!href || href === '#' || href.charAt(0) === '#' || href.indexOf('javascript:') === 0 || element.is('[data-toggle="collapse"]')) {
         return;
       }
 
@@ -26,6 +27,7 @@
         element.parents('.nav-item').last().addClass('active');
         if (element.parents('.sub-menu').length) {
           element.closest('.collapse').addClass('show');
+          element.closest('.collapse').prev('.nav-link').attr('aria-expanded', 'true');
         }
       } else {
         if (element.parents('.sub-menu').length) {
