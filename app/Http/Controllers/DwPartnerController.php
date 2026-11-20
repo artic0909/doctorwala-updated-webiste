@@ -262,6 +262,29 @@ class DwPartnerController extends Controller
             'ep_code' => 'nullable|string',
         ]);
 
+        // Normalize registration_type (maps 'physiotherapist' -> 'Doctor', 'clinic' -> 'OPD', 'lab' -> 'Pathology', 'both' -> ['OPD', 'Pathology'])
+        if (is_array($request->registration_type)) {
+            $mappedTypes = [];
+            foreach ($request->registration_type as $type) {
+                $t = strtolower(trim($type));
+                if ($t === 'doctor' || $t === 'physiotherapist' || $t === 'specialist') {
+                    $mappedTypes[] = 'Doctor';
+                } elseif ($t === 'opd' || $t === 'clinic') {
+                    $mappedTypes[] = 'OPD';
+                } elseif ($t === 'pathology' || $t === 'path' || $t === 'lab') {
+                    $mappedTypes[] = 'Pathology';
+                } elseif ($t === 'both') {
+                    $mappedTypes[] = 'OPD';
+                    $mappedTypes[] = 'Pathology';
+                } else {
+                    $mappedTypes[] = $type;
+                }
+            }
+            $cleanTypes = array_values(array_unique($mappedTypes));
+            $request->merge(['registration_type' => $cleanTypes]);
+            $validated['registration_type'] = $cleanTypes;
+        }
+
         // Check EP Code if entered
         $ep = null;
         if ($request->filled('ep_code')) {

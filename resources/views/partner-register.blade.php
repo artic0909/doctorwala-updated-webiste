@@ -22,6 +22,132 @@
     <link href="../css/cards-css.css" rel="stylesheet">
     <link href="../css/partner-btn.css" rel="stylesheet">
     <link href="../responsive/partner_responsive.css" rel="stylesheet">
+
+    <style>
+        /* Multi-step indicator - Normal & Boxy */
+        .step-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 8px 16px;
+            border-radius: 0 !important;
+            background: rgba(255, 255, 255, 0.2);
+            color: #ffffff;
+            font-size: 0.88rem;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+        .step-badge.active {
+            background: #ffffff;
+            color: #0d6efd;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+        }
+        .step-badge .step-num {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 22px;
+            height: 22px;
+            border-radius: 0 !important;
+            background: rgba(255, 255, 255, 0.3);
+            color: inherit;
+            font-size: 0.75rem;
+            font-weight: 700;
+            margin-right: 8px;
+        }
+        .step-badge.active .step-num {
+            background: #0d6efd;
+            color: #ffffff;
+        }
+        .step-divider {
+            width: 28px;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.4);
+            border-radius: 0 !important;
+        }
+
+        /* Clean Step 1 Cards - Normal & Boxy (No Subtext) */
+        .partner-clean-card {
+            background: #ffffff;
+            border: 2px solid transparent;
+            border-radius: 0 !important;
+            padding: 14px 18px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            text-align: left;
+            user-select: none;
+        }
+        .partner-clean-card:hover {
+            background: #f8fafc;
+            border-color: #93c5fd;
+            transform: translateY(-1px);
+        }
+        .partner-clean-card.active-type {
+            background: #ffffff !important;
+            border-color: #0284c7 !important;
+            box-shadow: 0 2px 8px rgba(2, 132, 199, 0.25) !important;
+        }
+        .partner-clean-card .cat-icon-circle {
+            width: 36px;
+            height: 36px;
+            min-width: 36px;
+            border-radius: 0 !important;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.05rem;
+            margin-right: 14px;
+            transition: all 0.2s ease;
+        }
+        .partner-clean-card.active-type .cat-icon-circle {
+            background: #0284c7 !important;
+            color: #ffffff !important;
+        }
+        .partner-clean-card .cat-title {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: #1e293b;
+            margin: 0;
+            letter-spacing: -0.2px;
+            transition: color 0.2s ease;
+        }
+        .partner-clean-card.active-type .cat-title {
+            color: #0284c7;
+        }
+        .partner-clean-card .cat-radio-check {
+            width: 20px;
+            height: 20px;
+            min-width: 20px;
+            border-radius: 0 !important;
+            border: 2px solid #cbd5e1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.72rem;
+            color: transparent;
+            transition: all 0.2s ease;
+            margin-left: 10px;
+        }
+        .partner-clean-card.active-type .cat-radio-check {
+            background: #0284c7;
+            border-color: #0284c7;
+            color: #ffffff;
+        }
+
+        /* Keep all form controls, buttons, selects, badges completely boxy */
+        .appointment-form .form-control,
+        .appointment-form .form-select,
+        .appointment-form textarea,
+        .appointment-form .input-group-text,
+        .appointment-form .btn,
+        .appointment-form .badge {
+            border-radius: 0 !important;
+        }
+    </style>
 </head>
 
 <!-- Partner Register Start -->
@@ -59,218 +185,255 @@
                     <h1 class="text-white mb-4">Partner Registration</h1>
                     <form id="partnerRegisterForm" action="{{route('partnerRegForm')}}" method="POST" enctype="multipart/form-data" autocomplete="off">
                         @csrf
-                        <div class="row g-3">
 
-                            <div class="col-12">
-                                <p class="text-white fw-bold" style="text-align: left;">Registration Type <span
-                                        class="text-dark">*</span></p>
-
-                                <div class="form-check form-check-inline"
-                                    style="display: flex;  justify-content: space-between; align-items: center;">
-
-                                    <p>
-                                        <label for="opd" class="form-check-label text-white"
-                                            style="font-size: 1.3rem; font-weight: 700;">OPD&nbsp;</label>
-                                        <input type="checkbox" name="registration_type[]" id="opd" value="OPD"
-                                            style="transform: scale(1.5); cursor: pointer;"
-                                            {{ is_array(old('registration_type')) && in_array('OPD', old('registration_type')) ? 'checked' : '' }}>&nbsp;
-                                    </p>
-
-                                    <p>
-                                        <label for="pathology" class="form-check-label text-white"
-                                            style="font-size: 1.3rem; font-weight: 700;">Path&nbsp;</label>
-                                        <input type="checkbox" name="registration_type[]" id="pathology" value="Pathology"
-                                            style="transform: scale(1.5); cursor: pointer;"
-                                            {{ is_array(old('registration_type')) && in_array('Pathology', old('registration_type')) ? 'checked' : '' }}>&nbsp;
-                                    </p>
-
-                                    <p>
-                                        <label for="doctor" class="form-check-label text-white"
-                                            style="font-size: 1.3rem; font-weight: 700;">Doctor&nbsp;</label>
-                                        <input type="checkbox" name="registration_type[]" id="doctor" value="Doctor"
-                                            style="transform: scale(1.5); cursor: pointer;"
-                                            {{ is_array(old('registration_type')) && in_array('Doctor', old('registration_type')) ? 'checked' : '' }}>&nbsp;
-                                    </p>
-
-                                </div>
+                        <!-- Multi-step Indicator -->
+                        <div class="d-flex align-items-center justify-content-center mb-4">
+                            <div class="step-badge step-1-badge active" id="stepBadge1">
+                                <span class="step-num">1</span> Registration Type
                             </div>
-                            <div class="col-12 col-sm-6">
-                                <input type="text" class="form-control bg-light border-0"
-                                    placeholder="Clinic Name *" style="height: 55px;" name="partner_clinic_name"
-                                    id="partner_clinic_name" required value="{{old('partner_clinic_name')}}">
+                            <div class="step-divider mx-2"></div>
+                            <div class="step-badge step-2-badge" id="stepBadge2">
+                                <span class="step-num">2</span> Facility Details
+                            </div>
+                        </div>
+
+                        @php
+                            $oldReg = old('registration_type', []);
+                            $selectedCat = old('partner_category_select', 'doctor');
+                            if (is_array($oldReg) && count($oldReg) > 0) {
+                                if (in_array('OPD', $oldReg) && in_array('Pathology', $oldReg)) {
+                                    $selectedCat = 'both';
+                                } elseif (in_array('OPD', $oldReg)) {
+                                    $selectedCat = 'opd';
+                                } elseif (in_array('Pathology', $oldReg)) {
+                                    $selectedCat = 'lab';
+                                } elseif (in_array('Doctor', $oldReg)) {
+                                    $selectedCat = old('partner_category_select', 'doctor');
+                                }
+                            }
+                        @endphp
+
+                        <!-- ================= STEP 1: Registration Type (Clean Design, No Subtext) ================= -->
+                        <div id="step1_container">
+                            <div class="text-start mb-3">
+                                <label class="text-white fw-bold mb-1" style="font-size: 1.15rem;">
+                                    <i class="fa-solid fa-sitemap me-2"></i> Select Registration Type <span class="text-dark">*</span>
+                                </label>
                             </div>
 
-
-
-                            <div class="col-12 col-sm-6">
-                                <input type="text" class="form-control bg-light border-0"
-                                    placeholder="Contact Person *" style="height: 55px;" name="partner_contact_person_name"
-                                    id="partner_contact_person_name" required value="{{old('partner_contact_person_name')}}">
-                            </div>
-
-
-
-                            <div class="col-12 col-sm-6">
-                                <input type="number" class="form-control bg-light border-0"
-                                    placeholder="Mobile Number *" style="height: 55px;" name="partner_mobile_number"
-                                    id="partner_mobile_number" required value="{{old('partner_mobile_number')}}">
-                            </div>
-
-
-
-
-                            <div class="col-12 col-sm-6">
-                                <input type="email" class="form-control bg-light border-0" placeholder="Email ID *"
-                                    style="height: 55px;" name="partner_email" id="partner_email" required value="{{old('partner_email')}}">
-                            </div>
-
-
-                            <div class="col-12 col-sm-6">
-                                <select class="form-select bg-light border-0" style="height: 55px;" name="partner_state"
-                                    id="partner_state" required>
-                                    <option value="">Select State</option>
-                                    <option value="Andaman and Nicobar Islands" {{ old('partner_state') == 'Andaman and Nicobar Islands' ? 'selected' : '' }}>Andaman and Nicobar Islands</option>
-                                    <option value="Andhra Pradesh" {{ old('partner_state') == 'Andhra Pradesh' ? 'selected' : '' }}>Andhra Pradesh</option>
-                                    <option value="Arunachal Pradesh" {{ old('partner_state') == 'Arunachal Pradesh' ? 'selected' : '' }}>Arunachal Pradesh</option>
-                                    <option value="Assam" {{ old('partner_state') == 'Assam' ? 'selected' : '' }}>Assam</option>
-                                    <option value="Bihar" {{ old('partner_state') == 'Bihar' ? 'selected' : '' }}>Bihar</option>
-                                    <option value="Chandigarh" {{ old('partner_state') == 'Chandigarh' ? 'selected' : '' }}>Chandigarh</option>
-                                    <option value="Chhattisgarh" {{ old('partner_state') == 'Chhattisgarh' ? 'selected' : '' }}>Chhattisgarh</option>
-                                    <option value="Dadra and Nagar Haveli and Daman and Diu" {{ old('partner_state') == 'Dadra and Nagar Haveli and Daman and Diu' ? 'selected' : '' }}>Dadra and Nagar Haveli and Daman and Diu</option>
-                                    <option value="Delhi" {{ old('partner_state') == 'Delhi' ? 'selected' : '' }}>Delhi</option>
-                                    <option value="Goa" {{ old('partner_state') == 'Goa' ? 'selected' : '' }}>Goa</option>
-                                    <option value="Gujarat" {{ old('partner_state') == 'Gujarat' ? 'selected' : '' }}>Gujarat</option>
-                                    <option value="Haryana" {{ old('partner_state') == 'Haryana' ? 'selected' : '' }}>Haryana</option>
-                                    <option value="Himachal Pradesh" {{ old('partner_state') == 'Himachal Pradesh' ? 'selected' : '' }}>Himachal Pradesh</option>
-                                    <option value="Jammu and Kashmir" {{ old('partner_state') == 'Jammu and Kashmir' ? 'selected' : '' }}>Jammu and Kashmir</option>
-                                    <option value="Jharkhand" {{ old('partner_state') == 'Jharkhand' ? 'selected' : '' }}>Jharkhand</option>
-                                    <option value="Karnataka" {{ old('partner_state') == 'Karnataka' ? 'selected' : '' }}>Karnataka</option>
-                                    <option value="Kerala" {{ old('partner_state') == 'Kerala' ? 'selected' : '' }}>Kerala</option>
-                                    <option value="Ladakh" {{ old('partner_state') == 'Ladakh' ? 'selected' : '' }}>Ladakh</option>
-                                    <option value="Lakshadweep" {{ old('partner_state') == 'Lakshadweep' ? 'selected' : '' }}>Lakshadweep</option>
-                                    <option value="Madhya Pradesh" {{ old('partner_state') == 'Madhya Pradesh' ? 'selected' : '' }}>Madhya Pradesh</option>
-                                    <option value="Maharashtra" {{ old('partner_state') == 'Maharashtra' ? 'selected' : '' }}>Maharashtra</option>
-                                    <option value="Manipur" {{ old('partner_state') == 'Manipur' ? 'selected' : '' }}>Manipur</option>
-                                    <option value="Meghalaya" {{ old('partner_state') == 'Meghalaya' ? 'selected' : '' }}>Meghalaya</option>
-                                    <option value="Mizoram" {{ old('partner_state') == 'Mizoram' ? 'selected' : '' }}>Mizoram</option>
-                                    <option value="Nagaland" {{ old('partner_state') == 'Nagaland' ? 'selected' : '' }}>Nagaland</option>
-                                    <option value="Odisha" {{ old('partner_state') == 'Odisha' ? 'selected' : '' }}>Odisha</option>
-                                    <option value="Puducherry" {{ old('partner_state') == 'Puducherry' ? 'selected' : '' }}>Puducherry</option>
-                                    <option value="Punjab" {{ old('partner_state') == 'Punjab' ? 'selected' : '' }}>Punjab</option>
-                                    <option value="Rajasthan" {{ old('partner_state') == 'Rajasthan' ? 'selected' : '' }}>Rajasthan</option>
-                                    <option value="Sikkim" {{ old('partner_state') == 'Sikkim' ? 'selected' : '' }}>Sikkim</option>
-                                    <option value="Tamil Nadu" {{ old('partner_state') == 'Tamil Nadu' ? 'selected' : '' }}>Tamil Nadu</option>
-                                    <option value="Telangana" {{ old('partner_state') == 'Telangana' ? 'selected' : '' }}>Telangana</option>
-                                    <option value="Tripura" {{ old('partner_state') == 'Tripura' ? 'selected' : '' }}>Tripura</option>
-                                    <option value="Uttar Pradesh" {{ old('partner_state') == 'Uttar Pradesh' ? 'selected' : '' }}>Uttar Pradesh</option>
-                                    <option value="Uttarakhand" {{ old('partner_state') == 'Uttarakhand' ? 'selected' : '' }}>Uttarakhand</option>
-                                    <option value="West Bengal" {{ old('partner_state') == 'West Bengal' ? 'selected' : '' }}>West Bengal</option>
-                                </select>
-                            </div>
-
-
-                            <div class="col-12 col-sm-6">
-                                <input type="text" class="form-control bg-light border-0" placeholder="City *" style="height: 55px;" name="partner_city" id="partner_city" required value="{{ old('partner_city') }}">
-                            </div>
-
-
-                            <div class="col-12 col-sm-6">
-                                <input type="number" class="form-control bg-light border-0" placeholder="Pin Code *"
-                                    style="height: 55px;" name="partner_pincode" id="partner_pincode" required value="{{ old('partner_pincode') }}">
-                            </div>
-
-
-                            <div class="col-12 col-sm-6">
-                                <input type="text" class="form-control bg-light border-0" placeholder="Landmark *"
-                                    style="height: 55px;" name="partner_landmark" id="partner_landmark" required value="{{ old('partner_landmark') }}">
-                            </div>
-
-                            <div class="col-12">
-                                <input type="text" class="form-control bg-light border-0" placeholder="EP Code (Optional)"
-                                    style="height: 55px;" name="ep_code" id="ep_code"
-                                    value="{{ old('ep_code') }}" autocomplete="off">
-                            </div>
-
-                            <div class="col-12" id="google_map_link_container">
-                                <input type="text" class="form-control bg-light border-0" placeholder="Google Map Link (Optional)"
-                                    style="height: 55px;" name="clinic_google_map_link" id="clinic_google_map_link" value="{{ old('clinic_google_map_link') }}">
-                            </div>
-
-                            <div class="col-12">
-                                <textarea name="partner_address" class="form-control bg-light border-0" rows="5"
-                                    id="partner_address" placeholder="Full Address *" required>{{ old('partner_address') }}</textarea>
-                            </div>
-
-
-
-
-
-
-
-                            <div class="col-12">
-                                <div class="input-group">
-                                    <input type="password" class="form-control bg-light border-0"
-                                        placeholder="Password *" style="height: 55px;" name="partner_password"
-                                        id="partner_password" required value="{{ old('partner_password') ?: '12345678' }}"
-                                        autocomplete="new-password">
-                                    <span class="input-group-text bg-light border-0" id="togglePassword" style="cursor: pointer;">
-                                        <i class="fa-solid fa-eye" id="eyeIcon"></i>
-                                    </span>
-                                </div>
-                            </div>
-
-
-
-
-
-
-
-
-
-
-
-                            <!-- 
-                                <div class="col-12">
-                                    <p class="text-white fw-bold" style="text-align: left;">Registration Type <span
-                                            class="text-dark">*</span></p>
-
-                                    <div class="form-check form-check-inline"
-                                        style="display: flex;  justify-content: space-between; align-items: center;">
-
-                                        <p>
-                                            <label for="opd" class="form-check-label text-white"
-                                                style="font-size: 1.3rem; font-weight: 700;">OPD&nbsp;</label>
-                                            <input type="checkbox" name="registration_type[]" id="opd" value="OPD" style="transform: scale(1.5); cursor: pointer;">&nbsp;
-                                        </p>
-
-                                        <p>
-                                            <label for="pathology" class="form-check-label text-white"
-                                                style="font-size: 1.3rem; font-weight: 700;">Path&nbsp;</label>
-                                            <input type="checkbox" name="registration_type[]" id="pathology" value="Pathology" style="transform: scale(1.5); cursor: pointer;">&nbsp;
-                                        </p>
-
-                                        <p>
-                                            <label for="doctor" class="form-check-label text-white"
-                                                style="font-size: 1.3rem; font-weight: 700;">Doctor&nbsp;</label>
-                                            <input type="checkbox" name="registration_type[]" id="doctor" value="Doctor" style="transform: scale(1.5); cursor: pointer;">&nbsp;
-                                        </p>
-
+                            <!-- 1. Specialist Doctor -->
+                            <div class="partner-clean-card {{ $selectedCat == 'doctor' ? 'active-type' : '' }}" data-value="doctor">
+                                <div class="d-flex align-items-center">
+                                    <input type="radio" name="partner_category_select" id="cat_doctor" value="doctor" class="d-none" {{ $selectedCat == 'doctor' ? 'checked' : '' }}>
+                                    <div class="cat-icon-circle" style="background: #e0f2fe; color: #0284c7;">
+                                        <i class="fa-solid fa-user-doctor"></i>
                                     </div>
-                                </div> -->
-
-
-
-                            <div class="col-12">
-                                <button class="btn btn-dark w-100 py-3" type="submit">REGISTER</button>
+                                    <span class="cat-title">Specialist Doctor</span>
+                                </div>
+                                <div class="cat-radio-check">
+                                    <i class="fa-solid fa-check"></i>
+                                </div>
                             </div>
 
+                            <!-- 2. Physiotherapist & Allied Care -->
+                            <div class="partner-clean-card {{ $selectedCat == 'physiotherapist' ? 'active-type' : '' }}" data-value="physiotherapist">
+                                <div class="d-flex align-items-center">
+                                    <input type="radio" name="partner_category_select" id="cat_physio" value="physiotherapist" class="d-none" {{ $selectedCat == 'physiotherapist' ? 'checked' : '' }}>
+                                    <div class="cat-icon-circle" style="background: #eff6ff; color: #2563eb;">
+                                        <i class="fa-solid fa-hand-holding-medical"></i>
+                                    </div>
+                                    <span class="cat-title">Physiotherapist & Allied Care</span>
+                                </div>
+                                <div class="cat-radio-check">
+                                    <i class="fa-solid fa-check"></i>
+                                </div>
+                            </div>
 
-                            <p>
-                                <a href="#" class="text-white fw-bold" style="text-decoration: none;">Already have
-                                    an account ?</a>
-                                <span><a href="/partner-login" class="text-white "
-                                        style="text-decoration: underline;">Login</a></span>
+                            <!-- 3. OPD Chamber -->
+                            <div class="partner-clean-card {{ $selectedCat == 'opd' ? 'active-type' : '' }}" data-value="opd">
+                                <div class="d-flex align-items-center">
+                                    <input type="radio" name="partner_category_select" id="cat_opd" value="opd" class="d-none" {{ $selectedCat == 'opd' ? 'checked' : '' }}>
+                                    <div class="cat-icon-circle" style="background: #f0fdf4; color: #16a34a;">
+                                        <i class="fa-solid fa-stethoscope"></i>
+                                    </div>
+                                    <span class="cat-title">OPD Chamber</span>
+                                </div>
+                                <div class="cat-radio-check">
+                                    <i class="fa-solid fa-check"></i>
+                                </div>
+                            </div>
+
+                            <!-- 4. Lab Tests Provider -->
+                            <div class="partner-clean-card {{ $selectedCat == 'lab' ? 'active-type' : '' }}" data-value="lab">
+                                <div class="d-flex align-items-center">
+                                    <input type="radio" name="partner_category_select" id="cat_lab" value="lab" class="d-none" {{ $selectedCat == 'lab' ? 'checked' : '' }}>
+                                    <div class="cat-icon-circle" style="background: #faf5ff; color: #7c3aed;">
+                                        <i class="fa-solid fa-flask-vial"></i>
+                                    </div>
+                                    <span class="cat-title">Lab Tests Provider</span>
+                                </div>
+                                <div class="cat-radio-check">
+                                    <i class="fa-solid fa-check"></i>
+                                </div>
+                            </div>
+
+                            <!-- 5. Both OPD & Lab Tests Provider -->
+                            <div class="partner-clean-card {{ $selectedCat == 'both' ? 'active-type' : '' }}" data-value="both">
+                                <div class="d-flex align-items-center">
+                                    <input type="radio" name="partner_category_select" id="cat_both" value="both" class="d-none" {{ $selectedCat == 'both' ? 'checked' : '' }}>
+                                    <div class="cat-icon-circle" style="background: #e0f2fe; color: #0284c7;">
+                                        <i class="fa-solid fa-hospital"></i>
+                                    </div>
+                                    <span class="cat-title">Both OPD & Lab Tests Provider</span>
+                                </div>
+                                <div class="cat-radio-check">
+                                    <i class="fa-solid fa-check"></i>
+                                </div>
+                            </div>
+
+                            <button type="button" class="btn btn-dark w-100 py-3 fw-bold shadow mt-3" id="btnNextStep" style="font-size: 1rem; letter-spacing: 0.5px;">
+                                CONTINUE <i class="fa-solid fa-arrow-right ms-2"></i>
+                            </button>
+
+                            <p class="mt-3 mb-0">
+                                <a href="#" class="text-white fw-bold" style="text-decoration: none;">Already have an account ?</a>
+                                <span><a href="/partner-login" class="text-white ms-1" style="text-decoration: underline;">Login</a></span>
                             </p>
+                        </div>
+
+                        <!-- ================= STEP 2: All Form Fields ================= -->
+                        <div id="step2_container" style="display: none;">
+                            <!-- Top bar: Back Button & Selected Type Badge -->
+                            <div class="d-flex align-items-center justify-content-between mb-3 pb-2 border-bottom border-white border-opacity-25">
+                                <button type="button" class="btn btn-sm btn-outline-light px-3 py-2 fw-bold" id="btnBackStep" style="border-width: 1.5px;">
+                                    <i class="fa-solid fa-arrow-left me-1"></i> Back
+                                </button>
+                                <span class="badge bg-white text-primary px-3 py-2 fw-bold shadow-sm" id="selected_cat_badge" style="font-size: 0.88rem; cursor: pointer;" title="Click to change category">
+                                    <i class="fa-solid fa-user-doctor me-1"></i> Specialist Doctor
+                                </span>
+                            </div>
+
+                            <div class="row g-3">
+                                <!-- Hidden dynamic checkboxes container ensuring registration_type[] array is posted to backend -->
+                                <div id="hidden_reg_types_container"></div>
+
+                                <div class="col-12 col-sm-6">
+                                    <input type="text" class="form-control bg-light border-0"
+                                        placeholder="Doctor Chamber / Practicing Name *" style="height: 55px;" name="partner_clinic_name"
+                                        id="partner_clinic_name" required value="{{old('partner_clinic_name')}}">
+                                </div>
+
+                                <div class="col-12 col-sm-6">
+                                    <input type="text" class="form-control bg-light border-0"
+                                        placeholder="Doctor Full Name *" style="height: 55px;" name="partner_contact_person_name"
+                                        id="partner_contact_person_name" required value="{{old('partner_contact_person_name')}}">
+                                </div>
+
+                                <div class="col-12 col-sm-6">
+                                    <input type="number" class="form-control bg-light border-0"
+                                        placeholder="Mobile Number *" style="height: 55px;" name="partner_mobile_number"
+                                        id="partner_mobile_number" required value="{{old('partner_mobile_number')}}">
+                                </div>
+
+                                <div class="col-12 col-sm-6">
+                                    <input type="email" class="form-control bg-light border-0" placeholder="Email ID *"
+                                        style="height: 55px;" name="partner_email" id="partner_email" required value="{{old('partner_email')}}">
+                                </div>
+
+                                <div class="col-12 col-sm-6">
+                                    <select class="form-select bg-light border-0" style="height: 55px;" name="partner_state"
+                                        id="partner_state" required>
+                                        <option value="">Select State</option>
+                                        <option value="Andaman and Nicobar Islands" {{ old('partner_state') == 'Andaman and Nicobar Islands' ? 'selected' : '' }}>Andaman and Nicobar Islands</option>
+                                        <option value="Andhra Pradesh" {{ old('partner_state') == 'Andhra Pradesh' ? 'selected' : '' }}>Andhra Pradesh</option>
+                                        <option value="Arunachal Pradesh" {{ old('partner_state') == 'Arunachal Pradesh' ? 'selected' : '' }}>Arunachal Pradesh</option>
+                                        <option value="Assam" {{ old('partner_state') == 'Assam' ? 'selected' : '' }}>Assam</option>
+                                        <option value="Bihar" {{ old('partner_state') == 'Bihar' ? 'selected' : '' }}>Bihar</option>
+                                        <option value="Chandigarh" {{ old('partner_state') == 'Chandigarh' ? 'selected' : '' }}>Chandigarh</option>
+                                        <option value="Chhattisgarh" {{ old('partner_state') == 'Chhattisgarh' ? 'selected' : '' }}>Chhattisgarh</option>
+                                        <option value="Dadra and Nagar Haveli and Daman and Diu" {{ old('partner_state') == 'Dadra and Nagar Haveli and Daman and Diu' ? 'selected' : '' }}>Dadra and Nagar Haveli and Daman and Diu</option>
+                                        <option value="Delhi" {{ old('partner_state') == 'Delhi' ? 'selected' : '' }}>Delhi</option>
+                                        <option value="Goa" {{ old('partner_state') == 'Goa' ? 'selected' : '' }}>Goa</option>
+                                        <option value="Gujarat" {{ old('partner_state') == 'Gujarat' ? 'selected' : '' }}>Gujarat</option>
+                                        <option value="Haryana" {{ old('partner_state') == 'Haryana' ? 'selected' : '' }}>Haryana</option>
+                                        <option value="Himachal Pradesh" {{ old('partner_state') == 'Himachal Pradesh' ? 'selected' : '' }}>Himachal Pradesh</option>
+                                        <option value="Jammu and Kashmir" {{ old('partner_state') == 'Jammu and Kashmir' ? 'selected' : '' }}>Jammu and Kashmir</option>
+                                        <option value="Jharkhand" {{ old('partner_state') == 'Jharkhand' ? 'selected' : '' }}>Jharkhand</option>
+                                        <option value="Karnataka" {{ old('partner_state') == 'Karnataka' ? 'selected' : '' }}>Karnataka</option>
+                                        <option value="Kerala" {{ old('partner_state') == 'Kerala' ? 'selected' : '' }}>Kerala</option>
+                                        <option value="Ladakh" {{ old('partner_state') == 'Ladakh' ? 'selected' : '' }}>Ladakh</option>
+                                        <option value="Lakshadweep" {{ old('partner_state') == 'Lakshadweep' ? 'selected' : '' }}>Lakshadweep</option>
+                                        <option value="Madhya Pradesh" {{ old('partner_state') == 'Madhya Pradesh' ? 'selected' : '' }}>Madhya Pradesh</option>
+                                        <option value="Maharashtra" {{ old('partner_state') == 'Maharashtra' ? 'selected' : '' }}>Maharashtra</option>
+                                        <option value="Manipur" {{ old('partner_state') == 'Manipur' ? 'selected' : '' }}>Manipur</option>
+                                        <option value="Meghalaya" {{ old('partner_state') == 'Meghalaya' ? 'selected' : '' }}>Meghalaya</option>
+                                        <option value="Mizoram" {{ old('partner_state') == 'Mizoram' ? 'selected' : '' }}>Mizoram</option>
+                                        <option value="Nagaland" {{ old('partner_state') == 'Nagaland' ? 'selected' : '' }}>Nagaland</option>
+                                        <option value="Odisha" {{ old('partner_state') == 'Odisha' ? 'selected' : '' }}>Odisha</option>
+                                        <option value="Puducherry" {{ old('partner_state') == 'Puducherry' ? 'selected' : '' }}>Puducherry</option>
+                                        <option value="Punjab" {{ old('partner_state') == 'Punjab' ? 'selected' : '' }}>Punjab</option>
+                                        <option value="Rajasthan" {{ old('partner_state') == 'Rajasthan' ? 'selected' : '' }}>Rajasthan</option>
+                                        <option value="Sikkim" {{ old('partner_state') == 'Sikkim' ? 'selected' : '' }}>Sikkim</option>
+                                        <option value="Tamil Nadu" {{ old('partner_state') == 'Tamil Nadu' ? 'selected' : '' }}>Tamil Nadu</option>
+                                        <option value="Telangana" {{ old('partner_state') == 'Telangana' ? 'selected' : '' }}>Telangana</option>
+                                        <option value="Tripura" {{ old('partner_state') == 'Tripura' ? 'selected' : '' }}>Tripura</option>
+                                        <option value="Uttar Pradesh" {{ old('partner_state') == 'Uttar Pradesh' ? 'selected' : '' }}>Uttar Pradesh</option>
+                                        <option value="Uttarakhand" {{ old('partner_state') == 'Uttarakhand' ? 'selected' : '' }}>Uttarakhand</option>
+                                        <option value="West Bengal" {{ old('partner_state') == 'West Bengal' ? 'selected' : '' }}>West Bengal</option>
+                                    </select>
+                                </div>
+
+                                <div class="col-12 col-sm-6">
+                                    <input type="text" class="form-control bg-light border-0" placeholder="City *" style="height: 55px;" name="partner_city" id="partner_city" required value="{{ old('partner_city') }}">
+                                </div>
+
+                                <div class="col-12 col-sm-6">
+                                    <input type="number" class="form-control bg-light border-0" placeholder="Pin Code *"
+                                        style="height: 55px;" name="partner_pincode" id="partner_pincode" required value="{{ old('partner_pincode') }}">
+                                </div>
+
+                                <div class="col-12 col-sm-6">
+                                    <input type="text" class="form-control bg-light border-0" placeholder="Landmark *"
+                                        style="height: 55px;" name="partner_landmark" id="partner_landmark" required value="{{ old('partner_landmark') }}">
+                                </div>
+
+                                <div class="col-12">
+                                    <input type="text" class="form-control bg-light border-0" placeholder="EP Code (Optional)"
+                                        style="height: 55px;" name="ep_code" id="ep_code"
+                                        value="{{ old('ep_code') }}" autocomplete="off">
+                                </div>
+
+                                <div class="col-12" id="google_map_link_container">
+                                    <input type="text" class="form-control bg-light border-0" placeholder="Google Map Link (Optional)"
+                                        style="height: 55px;" name="clinic_google_map_link" id="clinic_google_map_link" value="{{ old('clinic_google_map_link') }}">
+                                </div>
+
+                                <div class="col-12">
+                                    <textarea name="partner_address" class="form-control bg-light border-0" rows="4"
+                                        id="partner_address" placeholder="Full Address *" required>{{ old('partner_address') }}</textarea>
+                                </div>
+
+                                <div class="col-12">
+                                    <div class="input-group">
+                                        <input type="password" class="form-control bg-light border-0"
+                                            placeholder="Password *" style="height: 55px;" name="partner_password"
+                                            id="partner_password" required value="{{ old('partner_password') ?: '12345678' }}"
+                                            autocomplete="new-password">
+                                        <span class="input-group-text bg-light border-0" id="togglePassword" style="cursor: pointer;">
+                                            <i class="fa-solid fa-eye" id="eyeIcon"></i>
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div class="col-12">
+                                    <button class="btn btn-dark w-100 py-3 fw-bold shadow" type="submit" style="font-size: 1rem; letter-spacing: 0.5px;">REGISTER</button>
+                                </div>
+
+                                <p class="mt-2 mb-0">
+                                    <a href="#" class="text-white fw-bold" style="text-decoration: none;">Already have an account ?</a>
+                                    <span><a href="/partner-login" class="text-white ms-1" style="text-decoration: underline;">Login</a></span>
+                                </p>
+                            </div>
                         </div>
                     </form>
                 </div>
@@ -326,30 +489,118 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
 $(document).ready(function() {
-    function toggleGoogleMapLink() {
-        if ($('#doctor').is(':checked')) {
-            $('#google_map_link_container').hide();
-            $('#clinic_google_map_link').val(''); // clear the value when hiding
-        } else {
-            $('#google_map_link_container').show();
+    var catMeta = {
+        'doctor': {
+            title: 'Specialist Doctor',
+            icon: 'fa-user-doctor',
+            clinicPlaceholder: 'Doctor Chamber / Practicing Name *',
+            contactPlaceholder: 'Doctor Full Name *',
+            showMap: false
+        },
+        'physiotherapist': {
+            title: 'Physiotherapist & Allied Care',
+            icon: 'fa-hand-holding-medical',
+            clinicPlaceholder: 'Practicing / Clinic Name *',
+            contactPlaceholder: 'Physiotherapist Full Name *',
+            showMap: false
+        },
+        'opd': {
+            title: 'OPD Chamber',
+            icon: 'fa-stethoscope',
+            clinicPlaceholder: 'Clinic / Polyclinic Name *',
+            contactPlaceholder: 'Contact Person / Manager Name *',
+            showMap: true
+        },
+        'lab': {
+            title: 'Lab Tests Provider',
+            icon: 'fa-flask-vial',
+            clinicPlaceholder: 'Lab / Diagnostic Center Name *',
+            contactPlaceholder: 'Lab Director / Contact Person *',
+            showMap: true
+        },
+        'both': {
+            title: 'Both OPD & Lab Tests Provider',
+            icon: 'fa-hospital',
+            clinicPlaceholder: 'Clinic & Diagnostic Center Name *',
+            contactPlaceholder: 'Authorized Contact Person *',
+            showMap: true
         }
+    };
+
+    function applyCategoryMapping(category) {
+        var info = catMeta[category] || catMeta['doctor'];
+        var container = $('#hidden_reg_types_container');
+        container.empty();
+
+        $('.partner-clean-card').removeClass('active-type');
+        var activeCard = $('.partner-clean-card[data-value="' + category + '"]');
+        activeCard.addClass('active-type');
+        activeCard.find('input[name="partner_category_select"]').prop('checked', true);
+
+        // Update Step 2 category badge
+        $('#selected_cat_badge').html('<i class="fa-solid ' + info.icon + ' me-1"></i> ' + info.title);
+
+        if (category === 'doctor' || category === 'physiotherapist') {
+            container.append('<input type="checkbox" name="registration_type[]" value="Doctor" checked style="display:none;">');
+        } else if (category === 'opd') {
+            container.append('<input type="checkbox" name="registration_type[]" value="OPD" checked style="display:none;">');
+        } else if (category === 'lab') {
+            container.append('<input type="checkbox" name="registration_type[]" value="Pathology" checked style="display:none;">');
+        } else if (category === 'both') {
+            container.append('<input type="checkbox" name="registration_type[]" value="OPD" checked style="display:none;">');
+            container.append('<input type="checkbox" name="registration_type[]" value="Pathology" checked style="display:none;">');
+        }
+
+        if (info.showMap) {
+            $('#google_map_link_container').show();
+        } else {
+            $('#google_map_link_container').hide();
+            $('#clinic_google_map_link').val('');
+        }
+        $('#partner_clinic_name').attr('placeholder', info.clinicPlaceholder);
+        $('#partner_contact_person_name').attr('placeholder', info.contactPlaceholder);
     }
 
-    // Registration Type Logic
-    $('#opd, #pathology').on('change', function() {
-        if ($(this).is(':checked')) {
-            $('#doctor').prop('checked', false);
-        }
-        toggleGoogleMapLink();
-    });
-    $('#doctor').on('change', function() {
-        if ($(this).is(':checked')) {
-            $('#opd, #pathology').prop('checked', false);
-        }
-        toggleGoogleMapLink();
+    // Selecting category card in Step 1
+    $(document).on('click', '.partner-clean-card', function() {
+        var cat = $(this).data('value');
+        applyCategoryMapping(cat);
     });
 
-    toggleGoogleMapLink();
+    // Step 1 to Step 2
+    $('#btnNextStep').on('click', function() {
+        var selectedCat = $('input[name="partner_category_select"]:checked').val() || 'doctor';
+        applyCategoryMapping(selectedCat);
+
+        $('#step1_container').hide();
+        $('#step2_container').fadeIn(250);
+        $('#stepBadge1').removeClass('active');
+        $('#stepBadge2').addClass('active');
+
+        // Scroll to form if needed
+        var formOffset = $("#partnerRegisterForm").offset();
+        if (formOffset) {
+            $('html, body').animate({ scrollTop: formOffset.top - 100 }, 250);
+        }
+    });
+
+    // Step 2 back to Step 1
+    $('#btnBackStep, #selected_cat_badge').on('click', function() {
+        $('#step2_container').hide();
+        $('#step1_container').fadeIn(250);
+        $('#stepBadge2').removeClass('active');
+        $('#stepBadge1').addClass('active');
+    });
+
+    var initialCat = $('input[name="partner_category_select"]:checked').val() || 'doctor';
+    applyCategoryMapping(initialCat);
+
+    @if ($errors->any() || old('partner_clinic_name'))
+        $('#step1_container').hide();
+        $('#step2_container').show();
+        $('#stepBadge1').removeClass('active');
+        $('#stepBadge2').addClass('active');
+    @endif
 
     // jQuery Validation
     $("#partnerRegisterForm").validate({
@@ -363,20 +614,12 @@ $(document).ready(function() {
             partner_pincode: { required: true, digits: true, minlength: 6, maxlength: 6 },
             partner_landmark: { required: true },
             partner_address: { required: true },
-            partner_password: { required: true, minlength: 6 },
-            'registration_type[]': { required: true }
-        },
-        messages: {
-            'registration_type[]': { required: "Please select at least one Registration Type" }
+            partner_password: { required: true, minlength: 6 }
         },
         errorElement: 'span',
         errorPlacement: function(error, element) {
             error.addClass('text-danger fw-bold text-start d-block mt-1');
-            if(element.attr("name") == "registration_type[]") {
-                error.insertAfter(element.closest('.form-check-inline'));
-            } else {
-                element.closest('.col-12').append(error);
-            }
+            element.closest('.col-12, .col-sm-6').append(error);
         },
         highlight: function(element) { $(element).addClass('is-invalid'); },
         unhighlight: function(element) { $(element).removeClass('is-invalid'); },

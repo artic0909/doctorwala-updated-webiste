@@ -44,6 +44,29 @@ class SuperPartnerHandleController extends Controller
             'registration_type.*' => 'string',
         ]);
 
+        // Normalize registration_type (supports physiotherapist -> Doctor, etc.)
+        if (is_array($request->registration_type)) {
+            $mappedTypes = [];
+            foreach ($request->registration_type as $type) {
+                $t = strtolower(trim($type));
+                if ($t === 'doctor' || $t === 'physiotherapist' || $t === 'specialist') {
+                    $mappedTypes[] = 'Doctor';
+                } elseif ($t === 'opd' || $t === 'clinic') {
+                    $mappedTypes[] = 'OPD';
+                } elseif ($t === 'pathology' || $t === 'path' || $t === 'lab') {
+                    $mappedTypes[] = 'Pathology';
+                } elseif ($t === 'both') {
+                    $mappedTypes[] = 'OPD';
+                    $mappedTypes[] = 'Pathology';
+                } else {
+                    $mappedTypes[] = $type;
+                }
+            }
+            $cleanTypes = array_values(array_unique($mappedTypes));
+            $request->merge(['registration_type' => $cleanTypes]);
+            $validated['registration_type'] = $cleanTypes;
+        }
+
         // Generate partner ID
         // $partnerCount = DwPartnerModel::count();
         // $partnerId = 'DWPTR' . ($partnerCount + 1);
@@ -158,6 +181,29 @@ class SuperPartnerHandleController extends Controller
             'registration_type' => 'required|array',
             'registration_type.*' => 'string',
         ]);
+
+        // Normalize registration_type (supports physiotherapist -> Doctor, etc.)
+        if (is_array($request->registration_type)) {
+            $mappedTypes = [];
+            foreach ($request->registration_type as $type) {
+                $t = strtolower(trim($type));
+                if ($t === 'doctor' || $t === 'physiotherapist' || $t === 'specialist') {
+                    $mappedTypes[] = 'Doctor';
+                } elseif ($t === 'opd' || $t === 'clinic') {
+                    $mappedTypes[] = 'OPD';
+                } elseif ($t === 'pathology' || $t === 'path' || $t === 'lab') {
+                    $mappedTypes[] = 'Pathology';
+                } elseif ($t === 'both') {
+                    $mappedTypes[] = 'OPD';
+                    $mappedTypes[] = 'Pathology';
+                } else {
+                    $mappedTypes[] = $type;
+                }
+            }
+            $cleanTypes = array_values(array_unique($mappedTypes));
+            $request->merge(['registration_type' => $cleanTypes]);
+            $validated['registration_type'] = $cleanTypes;
+        }
 
         // Get the new registration types
         $newRegistrationTypes = $validated['registration_type'];

@@ -35,11 +35,34 @@
                     <h5 class="font-weight-bold mb-2" style="color: var(--doc-text-main);">
                         <i class="fa-solid fa-sitemap text-primary mr-2"></i>1. Registration Type <span class="text-danger">*</span>
                     </h5>
-                    <p class="text-muted small mb-3">Select one or more facility types (OPD & Pathology can be combined; Doctor is standalone)</p>
+                    <p class="text-muted small mb-3">Select the facility category (Doctor & Physiotherapy are standalone; OPD & Lab Tests can be combined)</p>
 
                     <div class="row g-3">
+                        <!-- 1. Specialist Doctor -->
                         <div class="col-md-4 mb-2">
-                            <label class="d-flex align-items-center p-3 rounded border cursor-pointer w-100 mb-0 shadow-xs" style="background: #f8fafc; border-color: #e2e8f0; cursor: pointer;">
+                            <label class="d-flex align-items-center p-3 rounded border cursor-pointer w-100 mb-0 shadow-xs h-100" style="background: #f8fafc; border-color: #e2e8f0; cursor: pointer;">
+                                <input type="checkbox" name="registration_type[]" id="type_doctor" value="Doctor" class="mr-3" style="width: 18px; height: 18px; cursor: pointer;">
+                                <div>
+                                    <div class="font-weight-bold text-dark"><i class="fa-solid fa-user-doctor text-primary mr-1"></i> Specialist Doctor</div>
+                                    <small class="text-muted">Individual Doctor Practitioner</small>
+                                </div>
+                            </label>
+                        </div>
+
+                        <!-- 2. Physiotherapist & Allied Care -->
+                        <div class="col-md-4 mb-2">
+                            <label class="d-flex align-items-center p-3 rounded border cursor-pointer w-100 mb-0 shadow-xs h-100" style="background: #f8fafc; border-color: #e2e8f0; cursor: pointer;">
+                                <input type="checkbox" name="registration_type[]" id="type_physio" value="Doctor" class="mr-3" style="width: 18px; height: 18px; cursor: pointer;">
+                                <div>
+                                    <div class="font-weight-bold text-dark"><i class="fa-solid fa-hand-holding-medical text-primary mr-1"></i> Physiotherapist & Allied Care</div>
+                                    <small class="text-muted">Therapy & Allied Healthcare Clinic</small>
+                                </div>
+                            </label>
+                        </div>
+
+                        <!-- 3. OPD Chamber -->
+                        <div class="col-md-4 mb-2">
+                            <label class="d-flex align-items-center p-3 rounded border cursor-pointer w-100 mb-0 shadow-xs h-100" style="background: #f8fafc; border-color: #e2e8f0; cursor: pointer;">
                                 <input type="checkbox" name="registration_type[]" id="type_opd" value="OPD" class="mr-3" style="width: 18px; height: 18px; cursor: pointer;">
                                 <div>
                                     <div class="font-weight-bold text-dark"><i class="fa-solid fa-stethoscope text-info mr-1"></i> OPD Chamber</div>
@@ -47,21 +70,25 @@
                                 </div>
                             </label>
                         </div>
-                        <div class="col-md-4 mb-2">
-                            <label class="d-flex align-items-center p-3 rounded border cursor-pointer w-100 mb-0 shadow-xs" style="background: #f8fafc; border-color: #e2e8f0; cursor: pointer;">
+
+                        <!-- 4. Lab Tests Provider -->
+                        <div class="col-md-6 mb-2">
+                            <label class="d-flex align-items-center p-3 rounded border cursor-pointer w-100 mb-0 shadow-xs h-100" style="background: #f8fafc; border-color: #e2e8f0; cursor: pointer;">
                                 <input type="checkbox" name="registration_type[]" id="type_pathology" value="Pathology" class="mr-3" style="width: 18px; height: 18px; cursor: pointer;">
                                 <div>
-                                    <div class="font-weight-bold text-dark"><i class="fa-solid fa-vial-virus text-warning mr-1"></i> Pathology Lab</div>
+                                    <div class="font-weight-bold text-dark"><i class="fa-solid fa-flask-vial text-warning mr-1"></i> Lab Tests Provider</div>
                                     <small class="text-muted">Diagnostic & Test Collection Center</small>
                                 </div>
                             </label>
                         </div>
-                        <div class="col-md-4 mb-2">
-                            <label class="d-flex align-items-center p-3 rounded border cursor-pointer w-100 mb-0 shadow-xs" style="background: #f8fafc; border-color: #e2e8f0; cursor: pointer;">
-                                <input type="checkbox" name="registration_type[]" id="type_doctor" value="Doctor" class="mr-3" style="width: 18px; height: 18px; cursor: pointer;">
+
+                        <!-- 5. Both OPD & Lab Tests Provider -->
+                        <div class="col-md-6 mb-2">
+                            <label class="d-flex align-items-center p-3 rounded border cursor-pointer w-100 mb-0 shadow-xs h-100" style="background: #f8fafc; border-color: #e2e8f0; cursor: pointer;">
+                                <input type="checkbox" name="registration_type[]" id="type_both" value="both" class="mr-3" style="width: 18px; height: 18px; cursor: pointer;">
                                 <div>
-                                    <div class="font-weight-bold text-dark"><i class="fa-solid fa-user-doctor text-primary mr-1"></i> Individual Doctor</div>
-                                    <small class="text-muted">Independent Doctor Practitioner</small>
+                                    <div class="font-weight-bold text-dark"><i class="fa-solid fa-hospital text-success mr-1"></i> Both OPD & Lab Tests Provider</div>
+                                    <small class="text-muted">Combined Chambers & Diagnostics</small>
                                 </div>
                             </label>
                         </div>
@@ -181,25 +208,68 @@
         const opdCheckbox = document.getElementById("type_opd");
         const pathologyCheckbox = document.getElementById("type_pathology");
         const doctorCheckbox = document.getElementById("type_doctor");
+        const physioCheckbox = document.getElementById("type_physio");
+        const bothCheckbox = document.getElementById("type_both");
 
-        // Mutual exclusivity between Doctor and OPD/Pathology
-        opdCheckbox.addEventListener("change", function() {
-            if (this.checked) doctorCheckbox.checked = false;
-        });
-        pathologyCheckbox.addEventListener("change", function() {
-            if (this.checked) doctorCheckbox.checked = false;
-        });
+        // Doctor / Physio are standalone
         doctorCheckbox.addEventListener("change", function() {
             if (this.checked) {
+                physioCheckbox.checked = false;
+                opdCheckbox.checked = false;
+                pathologyCheckbox.checked = false;
+                bothCheckbox.checked = false;
+            }
+        });
+
+        physioCheckbox.addEventListener("change", function() {
+            if (this.checked) {
+                doctorCheckbox.checked = false;
+                opdCheckbox.checked = false;
+                pathologyCheckbox.checked = false;
+                bothCheckbox.checked = false;
+            }
+        });
+
+        bothCheckbox.addEventListener("change", function() {
+            if (this.checked) {
+                doctorCheckbox.checked = false;
+                physioCheckbox.checked = false;
+                opdCheckbox.checked = true;
+                pathologyCheckbox.checked = true;
+            } else {
                 opdCheckbox.checked = false;
                 pathologyCheckbox.checked = false;
             }
         });
 
+        opdCheckbox.addEventListener("change", function() {
+            if (this.checked) {
+                doctorCheckbox.checked = false;
+                physioCheckbox.checked = false;
+            }
+            if (opdCheckbox.checked && pathologyCheckbox.checked) {
+                bothCheckbox.checked = true;
+            } else {
+                bothCheckbox.checked = false;
+            }
+        });
+
+        pathologyCheckbox.addEventListener("change", function() {
+            if (this.checked) {
+                doctorCheckbox.checked = false;
+                physioCheckbox.checked = false;
+            }
+            if (opdCheckbox.checked && pathologyCheckbox.checked) {
+                bothCheckbox.checked = true;
+            } else {
+                bothCheckbox.checked = false;
+            }
+        });
+
         // Form submission verification
         form.addEventListener("submit", function(e) {
-            if (!opdCheckbox.checked && !pathologyCheckbox.checked && !doctorCheckbox.checked) {
-                alert("Please select at least one Registration Type (OPD, Pathology, or Doctor).");
+            if (!opdCheckbox.checked && !pathologyCheckbox.checked && !doctorCheckbox.checked && !physioCheckbox.checked && !bothCheckbox.checked) {
+                alert("Please select at least one Registration Type.");
                 e.preventDefault();
                 return;
             }
