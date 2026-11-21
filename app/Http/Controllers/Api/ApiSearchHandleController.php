@@ -15,7 +15,7 @@ class ApiSearchHandleController extends Controller
     public function search(Request $request)
     {
         $query    = trim($request->get('query', ''));
-        $category = $request->get('category', 'all'); // all | opd | pathology | doctor
+        $category = $request->get('category', 'all'); // all | opd | pathology | doctor | others
 
         if ($query === '') {
             return response()->json([
@@ -154,11 +154,21 @@ class ApiSearchHandleController extends Controller
             }
 
             // ── Doctor Search ──────────────────────────────────────────────
-            if (in_array($category, ['all', 'doctor'])) {
+            if (in_array($category, ['all', 'doctor', 'others'])) {
 
                 $docsQuery = PartnerDoctorContactModel::where('status', 'active');
                 if ($user_city !== '') {
                     $docsQuery->where('partner_doctor_city', $user_city);
+                }
+
+                if ($category === 'doctor') {
+                    $docsQuery->where(function ($q) {
+                        $q->where('clinic_registration_type', 'Doctor')
+                            ->orWhereNull('clinic_registration_type')
+                            ->orWhere('clinic_registration_type', '');
+                    });
+                } elseif ($category === 'others') {
+                    $docsQuery->where('clinic_registration_type', 'Others');
                 }
 
                 $docs = $docsQuery->where(function ($q) use ($query) {
@@ -175,8 +185,12 @@ class ApiSearchHandleController extends Controller
                     ->with('banner')
                     ->get([
                         'id',
+                        'clinic_registration_type',
                         'partner_doctor_name',
                         'partner_doctor_specialist',
+                        'partner_doctor_designation',
+                        'partner_doctor_fees',
+                        'partner_doctor_email',
                         'partner_doctor_address',
                         'partner_doctor_city',
                         'partner_doctor_state',
