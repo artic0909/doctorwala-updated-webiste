@@ -35,6 +35,10 @@
     .partner-row-followup {
         background-color: #f0fdf4 !important;
     }
+    .doc-table th, .doc-table td {
+        vertical-align: middle !important;
+        padding: 12px 14px;
+    }
 </style>
 @endpush
 
@@ -128,11 +132,13 @@
         <table class="table doc-table table-hover mb-0">
             <thead>
                 <tr>
-                    <th style="width: 50px;">SL</th>
+                    <th style="width: 45px;">SL</th>
                     <th>Partner Code</th>
-                    <th>Mobile Number</th>
+                    <th>Facility / Clinic Name</th>
+                    <th>Contact & Location</th>
                     <th>Registration Type</th>
-                    <th>Actions</th>
+                    <th>Registered At</th>
+                    <th style="min-width: 210px;">Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -156,10 +162,31 @@
                     </td>
 
                     <td>
-                        <a href="tel:{{ $partner->partner_mobile_number }}" class="text-dark font-weight-bold" style="font-size: 0.9rem; text-decoration: none;">
-                            <i class="fa-solid fa-phone text-muted mr-1" style="font-size: 0.8rem;"></i>
-                            {{ $partner->partner_mobile_number }}
-                        </a>
+                        <div class="font-weight-bold text-dark text-capitalize" style="font-size: 0.92rem;">
+                            <i class="fa-solid fa-hospital text-primary mr-1" style="font-size: 0.82rem;"></i>
+                            {{ $partner->partner_clinic_name ?? 'N/A' }}
+                        </div>
+                        @if($partner->partner_contact_person_name)
+                            <div class="text-muted small mt-1">
+                                <i class="fa-solid fa-user text-secondary mr-1" style="font-size: 0.75rem;"></i>
+                                {{ $partner->partner_contact_person_name }}
+                            </div>
+                        @endif
+                    </td>
+
+                    <td>
+                        @if($partner->partner_mobile_number)
+                            <a href="tel:{{ $partner->partner_mobile_number }}" class="text-dark font-weight-bold d-block" style="font-size: 0.88rem; text-decoration: none;">
+                                <i class="fa-solid fa-phone text-success mr-1" style="font-size: 0.78rem;"></i>
+                                {{ $partner->partner_mobile_number }}
+                            </a>
+                        @endif
+                        @if($partner->partner_city || $partner->partner_state)
+                            <div class="text-muted small mt-1" style="font-size: 0.78rem;">
+                                <i class="fa-solid fa-location-dot text-danger mr-1" style="font-size: 0.75rem;"></i>
+                                {{ $partner->partner_city }}{{ $partner->partner_city && $partner->partner_state ? ', ' : '' }}{{ $partner->partner_state }}
+                            </div>
+                        @endif
                     </td>
 
                     <td>
@@ -179,6 +206,19 @@
                             @endforeach
                         @else
                             <span class="badge badge-light border" style="font-size: 0.75rem;">N/A</span>
+                        @endif
+                    </td>
+
+                    <td>
+                        <div class="font-weight-bold text-dark" style="font-size: 0.86rem; white-space: nowrap;">
+                            <i class="fa-regular fa-calendar-days text-primary mr-1" style="font-size: 0.8rem;"></i>
+                            {{ $partner->created_at ? $partner->created_at->format('d M, Y') : 'N/A' }}
+                        </div>
+                        @if($partner->created_at)
+                            <div class="text-muted small" style="font-size: 0.78rem; white-space: nowrap;">
+                                <i class="fa-regular fa-clock mr-1" style="font-size: 0.75rem;"></i>
+                                {{ $partner->created_at->format('h:i A') }}
+                            </div>
                         @endif
                     </td>
 
@@ -229,7 +269,7 @@
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="5" class="text-center py-5">
+                    <td colspan="7" class="text-center py-5">
                         <div class="text-muted">
                             <i class="fa-solid fa-hospital-slash fa-3x mb-3 text-secondary" style="opacity: 0.4;"></i>
                             <h5>No Partners Found</h5>
