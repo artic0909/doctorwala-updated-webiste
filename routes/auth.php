@@ -109,111 +109,6 @@ Route::middleware('auth:web')->group(function () {
         ->middleware(['auth', 'verified'])
         ->name('superadmin.profile.password');
 
-
-    Route::get('/superadmin/super-home-banner', function () {
-        return view('superadmin.banners.home');
-    })->middleware(['auth', 'verified'])->name('superadmin.super-home-banner');
-
-
-    Route::get('/superadmin/super-others-banner', function () {
-        return view('superadmin.banners.others');
-    })->middleware(['auth', 'verified'])->name('superadmin.super-others-banner');
-
-
-    Route::get('/superadmin/super-all-user', function () {
-        return view('superadmin.users.index');
-    })->middleware(['auth', 'verified'])->name('superadmin.super-all-user');
-
-
-    Route::get('/superadmin/super-add-partners', function () {
-        return view('superadmin.partners.create');
-    })->middleware(['auth', 'verified'])->name('superadmin.super-add-partners');
-
-
-    Route::get('/superadmin/super-all-partner', function () {
-        return view('superadmin.partners.index');
-    })->middleware(['auth', 'verified'])->name('superadmin.super-all-partner');
-
-
-    Route::get('/superadmin/super-all-opd', function () {
-        return view('superadmin.opd.index');
-    })->middleware(['auth', 'verified'])->name('superadmin.super-all-opd');
-
-
-    Route::get('/superadmin/super-edit-opd-details', function () {
-        return view('superadmin.opd.edit');
-    })->middleware(['auth', 'verified'])->name('superadmin.super-edit-opd-details');
-
-
-    Route::get('/superadmin/super-all-pathology', function () {
-        return view('superadmin.pathology.index');
-    })->middleware(['auth', 'verified'])->name('superadmin.super-all-pathology');
-
-
-    Route::get('/superadmin/super-edit-pathology-details', function () {
-        return view('superadmin.pathology.edit');
-    })->middleware(['auth', 'verified'])->name('superadmin.super-edit-pathology-details');
-
-
-    Route::get('/superadmin/super-all-doctors', function () {
-        return view('superadmin.doctors.index');
-    })->middleware(['auth', 'verified'])->name('superadmin.super-all-doctors');
-
-
-    Route::get('/superadmin/super-edit-doctors-details', function () {
-        return view('superadmin.doctors.edit');
-    })->middleware(['auth', 'verified'])->name('superadmin.super-edit-doctors-details');
-
-
-    Route::get('/superadmin/super-aboutus', function () {
-        return view('superadmin.aboutus.index');
-    })->middleware(['auth', 'verified'])->name('superadmin.super-aboutus');
-
-
-    Route::get('/superadmin/super-blogs', function () {
-        return view('superadmin.blogs.index');
-    })->middleware(['auth', 'verified'])->name('superadmin.super-blogs');
-
-
-    Route::get('/superadmin/super-user-inquiry', function () {
-        return view('superadmin.inquiries.user');
-    })->middleware(['auth', 'verified'])->name('superadmin.super-user-inquiry');
-
-
-    // Coupons & Subscriptions removed as per requirements
-
-
-    Route::get('/superadmin/super-opd-inquiry', function () {
-        return view('superadmin.inquiries.opd');
-    })->middleware(['auth', 'verified'])->name('superadmin.super-opd-inquiry');
-
-
-    Route::get('/superadmin/super-path-inquiry', function () {
-        return view('superadmin.inquiries.pathology');
-    })->middleware(['auth', 'verified'])->name('superadmin.super-path-inquiry');
-
-
-    Route::get('/superadmin/super-doc-inquiry', function () {
-        return view('superadmin.inquiries.doctor');
-    })->middleware(['auth', 'verified'])->name('superadmin.super-doc-inquiry');
-
-
-    Route::get('/superadmin/super-all-tickets', function () {
-        return view('superadmin.tickets.index');
-    })->middleware(['auth', 'verified'])->name('superadmin.super-all-tickets');
-
-
-    Route::get('/superadmin/super-ticket-replies', function () {
-        return view('superadmin.tickets.replies');
-    })->middleware(['auth', 'verified'])->name('superadmin.super-ticket-replies');
-    // ===========================================================================================================
-    // ========================================== Super Admin Restricted Routes End ==============================
-    // ===========================================================================================================
-
-
-
-
-
     // All API Routes Start
 
     // Home Banner---------------------------------------------------------------------------------------------------------------------------------------->
@@ -320,7 +215,6 @@ Route::middleware('auth:web')->group(function () {
     // Doctor Banner
     Route::get('/superadmin/super-adddoc-banner/{pid}', [SuperAllOnlyDoctorHandleController::class, 'addDoctorPageView']);
     Route::post('/superadmin/super-adddoc-banner/add/', [SuperAllOnlyDoctorHandleController::class, 'adddocBanner'])->name('superadmin.super-adddoc.banner');
-    Route::get('/superadmin/doc/export', [SuperAllOnlyDoctorHandleController::class, 'exportAsExel'])->name('superadmin.export.doc');
 
     // Physiotherapy & Allied Care (Others)---------------------------------------------------------------------------------------------------------->
 
@@ -336,7 +230,6 @@ Route::middleware('auth:web')->group(function () {
     // Others Banner
     Route::get('/superadmin/super-addothers-banner/{pid}', [SuperAllOthersHandleController::class, 'addOthersBannerPageView'])->name('superadmin.super-addothers-banner');
     Route::post('/superadmin/super-addothers-banner/add/', [SuperAllOthersHandleController::class, 'addOthersBanner'])->name('superadmin.super-addothers.banner');
-    Route::get('/superadmin/others/export', [SuperAllOthersHandleController::class, 'exportAsExcel'])->name('superadmin.export.others');
 
 
 
@@ -398,6 +291,7 @@ Route::middleware('auth:web')->group(function () {
     Route::get('/superadmin/export-opd', [SuperAllOPDHandleController::class, 'exportAsExel'])->name('superadmin.export.opd');
     Route::get('/superadmin/export-path', [SuperAllPathologyHandleController::class, 'exportAsExel'])->name('superadmin.export.path');
     Route::get('/superadmin/export-doc', [SuperAllOnlyDoctorHandleController::class, 'exportAsExel'])->name('superadmin.export.doc');
+    Route::get('/superadmin/export-others', [SuperAllOthersHandleController::class, 'exportAsExcel'])->name('superadmin.export.others');
     Route::get('/superadmin/export-partner', [SuperPartnerHandleController::class, 'exportAsExel'])->name('superadmin.export.partner');
     Route::get('/superadmin/export-user', [SuperAllUserController::class, 'exportAsExel'])->name('superadmin.export.user');
     Route::get('/superadmin/export-reffer', [SuperRefferController::class, 'exportAsExel'])->name('superadmin.export.reffer');
