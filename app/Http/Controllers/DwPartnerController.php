@@ -262,13 +262,15 @@ class DwPartnerController extends Controller
             'ep_code' => 'nullable|string',
         ]);
 
-        // Normalize registration_type (maps 'physiotherapist' -> 'Doctor', 'clinic' -> 'OPD', 'lab' -> 'Pathology', 'both' -> ['OPD', 'Pathology'])
+        // Normalize registration_type (maps 'physiotherapist'/'others' -> 'Others', 'doctor' -> 'Doctor', 'clinic' -> 'OPD', 'lab' -> 'Pathology', 'both' -> ['OPD', 'Pathology'])
         if (is_array($request->registration_type)) {
             $mappedTypes = [];
             foreach ($request->registration_type as $type) {
                 $t = strtolower(trim($type));
-                if ($t === 'doctor' || $t === 'physiotherapist' || $t === 'specialist') {
+                if ($t === 'doctor' || $t === 'specialist') {
                     $mappedTypes[] = 'Doctor';
+                } elseif ($t === 'physiotherapist' || $t === 'physiotherapy' || $t === 'allied' || $t === 'others') {
+                    $mappedTypes[] = 'Others';
                 } elseif ($t === 'opd' || $t === 'clinic') {
                     $mappedTypes[] = 'OPD';
                 } elseif ($t === 'pathology' || $t === 'path' || $t === 'lab') {
@@ -361,13 +363,14 @@ class DwPartnerController extends Controller
                 ]);
             }
 
-            if (in_array('Doctor', $regTypes)) {
+            if (in_array('Doctor', $regTypes) || in_array('Others', $regTypes)) {
+                $isOthers = in_array('Others', $regTypes);
                 \App\Models\PartnerDoctorContactModel::create([
                     'currently_loggedin_partner_id' => $dwuser->id,
-                    'clinic_registration_type' => 'Doctor',
+                    'clinic_registration_type' => $isOthers ? 'Others' : 'Doctor',
                     'partner_doctor_name' => $dwuser->partner_contact_person_name,
-                    'partner_doctor_specialist' => 'General Physician',
-                    'partner_doctor_designation' => 'Doctor',
+                    'partner_doctor_specialist' => $isOthers ? 'Physiotherapist' : 'General Physician',
+                    'partner_doctor_designation' => $isOthers ? 'Physiotherapist' : 'Doctor',
                     'partner_doctor_fees' => '500',
                     'partner_doctor_mobile' => $dwuser->partner_mobile_number,
                     'partner_doctor_email' => $dwuser->partner_email,

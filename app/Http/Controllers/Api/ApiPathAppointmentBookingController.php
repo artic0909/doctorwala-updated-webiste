@@ -42,6 +42,7 @@ class ApiPathAppointmentBookingController extends Controller
         }
 
         $validatedData = $validator->validated();
+        $validatedData['visit_mode'] = 'offline';
 
         if (empty($validatedData['clinic_name']) || $validatedData['clinic_name'] === 'N/A') {
             $pathology = \App\Models\PartnerPathologyContactModel::where('currently_loggedin_partner_id', $validatedData['currently_loggedin_partner_id'])->first();

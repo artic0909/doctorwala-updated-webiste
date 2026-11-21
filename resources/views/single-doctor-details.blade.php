@@ -556,24 +556,23 @@
                         </div>
                     </div>
 
+                    @if(strtolower($doc->clinic_registration_type ?? '') === 'others' || str_contains(strtolower($doc->partner_doctor_specialist ?? ''), 'physio'))
                     <div class="fgrp">
                         <label class="flbl">Visit Mode *</label>
-
                         <select name="visit_mode" class="fc" required>
-                            <option value="">Select Visit Mode</option>
-
-                            <option value="offline"
-                                {{ old('visit_mode', auth()->check() ? ($user->visit_mode ?? 'offline') : 'offline') == 'offline' ? 'selected' : '' }}>
-                                Offline
-                            </option>
-
-                            <option value="online"
-                                {{ old('visit_mode', auth()->check() ? ($user->visit_mode ?? 'offline') : 'offline') == 'online' ? 'selected' : '' }}>
-                                Online
-                            </option>
-
+                            <option value="offline" {{ old('visit_mode', 'offline') == 'offline' ? 'selected' : '' }}>Physical Visit (Offline)</option>
+                            <option value="online" {{ old('visit_mode') == 'online' ? 'selected' : '' }}>Video Calling (Online)</option>
                         </select>
                     </div>
+                    @else
+                    {{-- Doctor registration type is directly online (video calling) --}}
+                    <input type="hidden" name="visit_mode" value="online">
+                    <div class="fgrp">
+                        <div class="p-2 rounded bg-light border text-muted small">
+                            <i class="fa-solid fa-video text-primary mr-1"></i> Consultation Mode: <strong>Online Video Call</strong>
+                        </div>
+                    </div>
+                    @endif
                     <div class="fgrp">
                         <label class="flbl">Describe your concern *</label>
                         <textarea class="fc" name="user_inquiry" rows="3" placeholder="Describe your concern..." required></textarea>

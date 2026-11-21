@@ -52,7 +52,7 @@
                         <!-- 2. Physiotherapist & Allied Care -->
                         <div class="col-md-4 mb-2">
                             <label class="d-flex align-items-center p-3 rounded border cursor-pointer w-100 mb-0 shadow-xs h-100" style="background: #f8fafc; border-color: #e2e8f0; cursor: pointer;">
-                                <input type="checkbox" name="registration_type[]" id="type_physio" value="Doctor" class="mr-3" style="width: 18px; height: 18px; cursor: pointer;">
+                                <input type="checkbox" name="registration_type[]" id="type_physio" value="Others" class="mr-3" style="width: 18px; height: 18px; cursor: pointer;">
                                 <div>
                                     <div class="font-weight-bold text-dark"><i class="fa-solid fa-hand-holding-medical text-primary mr-1"></i> Physiotherapist & Allied Care</div>
                                     <small class="text-muted">Therapy & Allied Healthcare Clinic</small>

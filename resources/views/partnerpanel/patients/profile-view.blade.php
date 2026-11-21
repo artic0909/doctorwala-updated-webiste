@@ -1004,7 +1004,7 @@
                         </small>
                         @endif
 
-                        @elseif ($latestSingleBooking->clinic_type === 'Doctor')
+                        @elseif (in_array($latestSingleBooking->clinic_type, ['Doctor', 'Others']))
                         <div class="up-next-appt__title">Dr. {{ $latestSingleBooking->doctorContact->partner_doctor_name ?? $latestSingleBooking->clinic_name }}</div>
                         <div class="up-next-appt__title" style="color:yellow">{{ $latestSingleBooking->doctorContact->partner_doctor_specialist ?? 'Doctor' }}</div>
                         @if(!empty($latestSingleBooking->doctorContact))
@@ -1046,7 +1046,7 @@
                             <circle cx="12" cy="10" r="3" />
                         </svg> MAP
                     </a>
-                    @elseif ($latestSingleBooking->clinic_type === 'Doctor' && !empty($latestSingleBooking->doctorContact?->partner_doctor_google_map_link))
+                    @elseif (in_array($latestSingleBooking->clinic_type, ['Doctor', 'Others']) && !empty($latestSingleBooking->doctorContact?->partner_doctor_google_map_link))
                     <a href="{{ $latestSingleBooking->doctorContact->partner_doctor_google_map_link }}" target="_blank" class="up-next-appt__action" style="color:#1B9AAA;">
                         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:inline;vertical-align:middle">
                             <path d="M21 10c0 6-9 12-9 12S3 16 3 10a9 9 0 1 1 18 0z" />
@@ -1229,7 +1229,7 @@
                                                             <div class="up-appt-subname" style="color:#5E807F">{{ $booking->pathologyContact->clinic_name }}</div>
                                                         </div>
                                                     </div>
-                                                    @elseif ($booking->clinic_type === 'Doctor' && $booking->doctorContact)
+                                                    @elseif (in_array($booking->clinic_type, ['Doctor', 'Others']) && $booking->doctorContact)
                                                     <div class="up-appt-doc">
                                                         <div class="up-appt-av">{{ strtoupper(substr($booking->doctorContact->partner_doctor_name,0,1)) }}{{ strtoupper(substr(strstr($booking->doctorContact->partner_doctor_name,' '),1,1)) }}</div>
                                                         <div>
@@ -1254,7 +1254,7 @@
                                                     <a href="{{ $booking->opdContact->clinic_google_map_link }}" target="_blank" class="up-action-done">Map Link</a>
                                                     @elseif ($booking->clinic_type === 'Pathology' && $booking->test)
                                                     <a href="{{ $booking->pathologyContact->clinic_google_map_link }}" target="_blank" class="up-action-done">Map Link</a>
-                                                    @elseif ($booking->clinic_type === 'Doctor' && $booking->doctorContact)
+                                                    @elseif (in_array($booking->clinic_type, ['Doctor', 'Others']) && $booking->doctorContact)
                                                     <a href="{{ $booking->doctorContact->partner_doctor_google_map_link }}" target="_blank" class="up-action-done">Map Link</a>
                                                     @endif
                                                 </td>

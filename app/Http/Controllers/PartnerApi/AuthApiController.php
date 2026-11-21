@@ -74,11 +74,31 @@ class AuthApiController extends Controller
             $partner->partner_landmark = $request->partner_landmark;
             $partner->partner_address = $request->partner_address;
             $partner->partner_password = bcrypt($request->partner_password);
-            $partner->registration_type = json_encode($request->registration_type);
+            $rawTypes = (array) $request->registration_type;
+            $cleanTypes = [];
+            foreach ($rawTypes as $t) {
+                $lt = strtolower(trim($t));
+                if ($lt === 'doctor' || $lt === 'specialist') {
+                    $cleanTypes[] = 'Doctor';
+                } elseif ($lt === 'physiotherapist' || $lt === 'physiotherapy' || $lt === 'allied' || $lt === 'others') {
+                    $cleanTypes[] = 'Others';
+                } elseif ($lt === 'opd' || $lt === 'clinic') {
+                    $cleanTypes[] = 'OPD';
+                } elseif ($lt === 'pathology' || $lt === 'path' || $lt === 'lab') {
+                    $cleanTypes[] = 'Pathology';
+                } elseif ($lt === 'both') {
+                    $cleanTypes[] = 'OPD';
+                    $cleanTypes[] = 'Pathology';
+                } else {
+                    $cleanTypes[] = $t;
+                }
+            }
+            $cleanTypes = array_values(array_unique($cleanTypes));
+            $partner->registration_type = json_encode($cleanTypes);
             $partner->status = 'Active';
             $partner->save();
 
-            $regTypes = (array) $request->registration_type;
+            $regTypes = $cleanTypes;
             if (in_array('OPD', $regTypes)) {
                 \App\Models\PartnerOPDContactModel::create([
                     'currently_loggedin_partner_id' => $partner->id,
@@ -111,13 +131,14 @@ class AuthApiController extends Controller
                     'status' => 'Active',
                 ]);
             }
-            if (in_array('Doctor', $regTypes)) {
+            if (in_array('Doctor', $regTypes) || in_array('Others', $regTypes)) {
+                $isOthers = in_array('Others', $regTypes);
                 \App\Models\PartnerDoctorContactModel::create([
                     'currently_loggedin_partner_id' => $partner->id,
-                    'clinic_registration_type' => 'Doctor',
+                    'clinic_registration_type' => $isOthers ? 'Others' : 'Doctor',
                     'partner_doctor_name' => $partner->partner_contact_person_name,
-                    'partner_doctor_specialist' => 'General Physician',
-                    'partner_doctor_designation' => 'Doctor',
+                    'partner_doctor_specialist' => $isOthers ? 'Physiotherapist' : 'General Physician',
+                    'partner_doctor_designation' => $isOthers ? 'Physiotherapist' : 'Doctor',
                     'partner_doctor_fees' => '500',
                     'partner_doctor_mobile' => $partner->partner_mobile_number,
                     'partner_doctor_email' => $partner->partner_email,

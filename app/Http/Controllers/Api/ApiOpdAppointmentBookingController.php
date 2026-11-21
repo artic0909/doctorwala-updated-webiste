@@ -42,7 +42,9 @@ class ApiOpdAppointmentBookingController extends Controller
         }
 
         try {
-            $inquiry = PartnerPatientInquiry::create($validator->validated());
+            $data = $validator->validated();
+            $data['visit_mode'] = 'offline';
+            $inquiry = PartnerPatientInquiry::create($data);
 
             return response()->json([
                 'status'  => true,

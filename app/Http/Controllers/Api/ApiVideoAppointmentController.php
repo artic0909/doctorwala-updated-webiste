@@ -63,8 +63,10 @@ class ApiVideoAppointmentController extends Controller
             ], 403);
         }
 
-        // 2. Validate Video Eligibility
-        $isVideo = $appointment->is_video || in_array(strtolower($appointment->visit_mode ?? ''), ['online', 'video']);
+        // 2. Validate Video Eligibility (Strictly for Doctor & Others/Physiotherapist only, not for OPD or Pathology)
+        $clinicType = strtolower($appointment->clinic_type ?? '');
+        $isDoctorOrOthers = in_array($clinicType, ['doctor', 'others']);
+        $isVideo = $isDoctorOrOthers && ($appointment->is_video || in_array(strtolower($appointment->visit_mode ?? ''), ['online', 'video']));
         if (!$isVideo) {
             return response()->json([
                 'status'  => false,

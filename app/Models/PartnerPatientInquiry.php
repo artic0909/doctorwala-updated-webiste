@@ -45,9 +45,22 @@ class PartnerPatientInquiry extends Model
                 $inquiry->enquiry_serial = $max ? ($max + 1) : 1;
             }
 
-            // Automatically set is_video if visit_mode is online/video
-            if (in_array(strtolower($inquiry->visit_mode ?? ''), ['online', 'video'])) {
-                $inquiry->is_video = true;
+            // For OPD and Pathology, visiting mode is strictly offline and video call is never allowed
+            $clinicType = strtolower($inquiry->clinic_type ?? '');
+            $isDoctorOrOthers = in_array($clinicType, ['doctor', 'others']);
+
+            if (!$isDoctorOrOthers) {
+                $inquiry->visit_mode = 'offline';
+                $inquiry->is_video = false;
+            } else {
+                if ($clinicType === 'doctor' && empty($inquiry->visit_mode)) {
+                    $inquiry->visit_mode = 'online';
+                }
+                if (in_array(strtolower($inquiry->visit_mode ?? ''), ['online', 'video'])) {
+                    $inquiry->is_video = true;
+                } else {
+                    $inquiry->is_video = false;
+                }
             }
         });
     }

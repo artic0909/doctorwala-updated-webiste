@@ -211,8 +211,10 @@ class AppointmentsManagementApiController extends Controller
         $oldStatus = $appointment->status ?? 'Upcoming';
         $appointment->status = $formattedStatus;
 
-        // If appointment is confirmed and is a video consultation, ensure video channel and scheduled status
-        $isVideo = $appointment->is_video || in_array(strtolower($appointment->visit_mode ?? ''), ['online', 'video']);
+        // If appointment is confirmed and is a video consultation (strictly for Doctor or Others, NOT for OPD or Pathology)
+        $clinicType = strtolower($appointment->clinic_type ?? '');
+        $isDoctorOrOthers = in_array($clinicType, ['doctor', 'others']);
+        $isVideo = $isDoctorOrOthers && ($appointment->is_video || in_array(strtolower($appointment->visit_mode ?? ''), ['online', 'video']));
         if ($isVideo) {
             $appointment->is_video = true;
             if ($formattedStatus === 'Confirmed' && empty($appointment->video_channel)) {
@@ -223,6 +225,8 @@ class AppointmentsManagementApiController extends Controller
             } elseif ($formattedStatus === 'Completed') {
                 $appointment->video_status = 'completed';
             }
+        } else {
+            $appointment->is_video = false;
         }
 
         $appointment->save();

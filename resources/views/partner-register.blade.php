@@ -540,8 +540,10 @@ $(document).ready(function() {
         // Update Step 2 category badge
         $('#selected_cat_badge').html('<i class="fa-solid ' + info.icon + ' me-1"></i> ' + info.title);
 
-        if (category === 'doctor' || category === 'physiotherapist') {
+        if (category === 'doctor') {
             container.append('<input type="checkbox" name="registration_type[]" value="Doctor" checked style="display:none;">');
+        } else if (category === 'physiotherapist') {
+            container.append('<input type="checkbox" name="registration_type[]" value="Others" checked style="display:none;">');
         } else if (category === 'opd') {
             container.append('<input type="checkbox" name="registration_type[]" value="OPD" checked style="display:none;">');
         } else if (category === 'lab') {

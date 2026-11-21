@@ -490,24 +490,7 @@
                             @guest<input class="fc" name="booking_time" type="time" required>@endguest
                         </div>
                     </div>
-                    <div class="fgrp">
-                        <label class="flbl">Visit Mode *</label>
-
-                        <select name="visit_mode" class="fc" required>
-                            <option value="">Select Visit Mode</option>
-
-                            <option value="offline"
-                                {{ old('visit_mode', auth()->check() ? ($user->visit_mode ?? 'offline') : 'offline') == 'offline' ? 'selected' : '' }}>
-                                Offline
-                            </option>
-
-                            <option value="online"
-                                {{ old('visit_mode', auth()->check() ? ($user->visit_mode ?? 'offline') : 'offline') == 'online' ? 'selected' : '' }}>
-                                Online
-                            </option>
-
-                        </select>
-                    </div>
+                    <input type="hidden" name="visit_mode" value="offline">
 
                     <div class="fgrp"><label class="flbl">Describe your concern *</label>
                         <textarea class="fc" name="user_inquiry" rows="3" placeholder="Describe your concern..." required></textarea>

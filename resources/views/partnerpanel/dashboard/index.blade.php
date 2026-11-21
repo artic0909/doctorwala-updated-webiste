@@ -226,7 +226,7 @@
 <!-- ==================== KPI STATS OVERVIEW ROW ==================== -->
 <div class="row g-3 mb-4">
     <!-- Stat 1: OPD Doctors -->
-    @if(in_array('OPD', $registrationTypes ?? []) || in_array('Doctor', $registrationTypes ?? []))
+    @if(in_array('OPD', $registrationTypes ?? []) || in_array('Doctor', $registrationTypes ?? []) || in_array('Others', $registrationTypes ?? []))
     <div class="col-12 col-sm-6 col-lg-3 mb-3">
         <a href="/partnerpanel/partner-opd-show" class="kpi-card">
             <div class="d-flex justify-content-between align-items-start">
@@ -456,7 +456,7 @@
             </div>
             @endif
 
-            @if(in_array('Doctor', $registrationTypes ?? []))
+            @if(in_array('Doctor', $registrationTypes ?? []) || in_array('Others', $registrationTypes ?? []))
             <!-- Doctor Details -->
             <div class="col-sm-6 mb-3">
                 <a href="/partnerpanel/partner-doctors" class="hub-card">
@@ -756,7 +756,7 @@
             </div>
             @endif
 
-            @if(in_array('Doctor', $registrationTypes ?? []))
+            @if(in_array('Doctor', $registrationTypes ?? []) || in_array('Others', $registrationTypes ?? []))
             <div class="col-md-6 col-lg-4 mb-3">
                 <div class="banner-upload-box">
                     @if($doctorBanner && isset($doctorBanner->doctorbanner))

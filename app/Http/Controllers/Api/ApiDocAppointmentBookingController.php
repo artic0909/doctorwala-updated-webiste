@@ -41,7 +41,15 @@ class ApiDocAppointmentBookingController extends Controller
         }
 
         try {
-            $inquiry = PartnerPatientInquiry::create($validator->validated());
+            $data = $validator->validated();
+            $clinicType = strtolower($data['clinic_type'] ?? '');
+            if ($clinicType === 'doctor') {
+                $data['visit_mode'] = 'online';
+            } elseif ($clinicType === 'others') {
+                $data['visit_mode'] = in_array(strtolower($data['visit_mode'] ?? ''), ['online', 'offline']) ? strtolower($data['visit_mode']) : 'offline';
+            }
+
+            $inquiry = PartnerPatientInquiry::create($data);
 
             return response()->json([
                 'status'  => true,

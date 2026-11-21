@@ -31,6 +31,8 @@
                 @foreach($registrationTypes as $type)
                     @if($type == 'Doctor')
                     <span class="doc-badge doc-badge-doc mr-1"><i class="fa-solid fa-stethoscope mr-1"></i> Doctor</span>
+                    @elseif($type == 'Others')
+                    <span class="doc-badge doc-badge-doc mr-1" style="background: #eff6ff; color: #2563eb;"><i class="fa-solid fa-hand-holding-medical mr-1"></i> Allied Care</span>
                     @elseif($type == 'OPD')
                     <span class="doc-badge doc-badge-opd mr-1"><i class="fa-solid fa-clinic-medical mr-1"></i> OPD</span>
                     @elseif($type == 'Pathology')

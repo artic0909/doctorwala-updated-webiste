@@ -53,7 +53,7 @@
         <!-- Section: Services (OPD / Pathology / Doctor) -->
         <li class="sidebar-category-header">Medical Services</li>
 
-        @if(in_array('Doctor', $regTypes))
+        @if(in_array('Doctor', $regTypes) || in_array('Others', $regTypes))
         <li class="nav-item {{ request()->is('partnerpanel/partner-doctors*') ? 'active' : '' }}">
             <a class="nav-link" href="/partnerpanel/partner-doctors">
                 <i class="fa-solid fa-stethoscope nav-icon"></i>

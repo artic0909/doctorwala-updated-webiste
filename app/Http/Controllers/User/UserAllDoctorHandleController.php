@@ -119,6 +119,12 @@ class UserAllDoctorHandleController extends Controller
         ]);
 
         try {
+            $clinicType = strtolower($validated['clinic_type'] ?? '');
+            if ($clinicType === 'doctor') {
+                $validated['visit_mode'] = 'online';
+            } elseif ($clinicType === 'others') {
+                $validated['visit_mode'] = in_array(strtolower($validated['visit_mode'] ?? ''), ['online', 'offline']) ? strtolower($validated['visit_mode']) : 'offline';
+            }
 
             PartnerPatientInquiry::create($validated);
 

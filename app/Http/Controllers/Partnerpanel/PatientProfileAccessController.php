@@ -40,8 +40,8 @@ class PatientProfileAccessController extends Controller
             $registrationTypes = json_decode($registrationTypes, true);
         }
 
-        // Sync and get doctor if registration type has 'Doctor'
-        if (is_array($registrationTypes) && in_array('Doctor', $registrationTypes)) {
+        // Sync and get doctor if registration type has 'Doctor' or 'Others'
+        if (is_array($registrationTypes) && (in_array('Doctor', $registrationTypes) || in_array('Others', $registrationTypes))) {
             $contact = \App\Models\PartnerDoctorContactModel::where('currently_loggedin_partner_id', $partnerId)->first();
             if ($contact) {
                 \App\Models\PartnerAllOPDDoctorModel::updateOrCreate(
@@ -124,7 +124,7 @@ class PatientProfileAccessController extends Controller
         }
 
         // Sync and auto-select doctor if registration type has 'Doctor'
-        if (is_array($registrationTypes) && in_array('Doctor', $registrationTypes)) {
+        if (is_array($registrationTypes) && (in_array('Doctor', $registrationTypes) || in_array('Others', $registrationTypes))) {
             $contact = \App\Models\PartnerDoctorContactModel::where('currently_loggedin_partner_id', $partnerId)->first();
             if ($contact) {
                 $syncedDoc = \App\Models\PartnerAllOPDDoctorModel::updateOrCreate(
@@ -568,7 +568,7 @@ class PatientProfileAccessController extends Controller
         if (is_string($registrationTypes)) {
             $registrationTypes = json_decode($registrationTypes, true);
         }
-        if (is_array($registrationTypes) && in_array('Doctor', $registrationTypes)) {
+        if (is_array($registrationTypes) && (in_array('Doctor', $registrationTypes) || in_array('Others', $registrationTypes))) {
             $contact = \App\Models\PartnerDoctorContactModel::where('currently_loggedin_partner_id', $partner->id)->first();
             if ($contact) {
                 \App\Models\PartnerAllOPDDoctorModel::updateOrCreate(

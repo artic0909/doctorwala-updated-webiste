@@ -221,7 +221,7 @@
                                 <i class="fa-solid fa-user-doctor text-primary mr-1"></i> Consulting Doctor <span class="text-danger">*</span>
                             </label>
                             <select id="pprDoctorSelect" name="doctor_id" style="width:100%" required>
-                                @if(in_array('Doctor', $registrationTypes) && count($doctors) === 1)
+                                @if((in_array('Doctor', $registrationTypes) || in_array('Others', $registrationTypes)) && count($doctors) === 1)
                                     @foreach($doctors as $doc)
                                     <option value="{{ $doc->id }}" selected>
                                         {{ $doc->doctor_name }}{{ $doc->doctor_designation ? ' · '.$doc->doctor_designation : '' }}{{ $doc->doctor_specialist ? ' ('.$doc->doctor_specialist.')' : '' }}

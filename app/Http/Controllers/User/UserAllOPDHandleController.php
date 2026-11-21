@@ -104,6 +104,8 @@ class UserAllOPDHandleController extends Controller
         ]);
 
         try {
+            // OPD visiting mode is strictly offline
+            $validated['visit_mode'] = 'offline';
 
             PartnerPatientInquiry::create($validated);
 

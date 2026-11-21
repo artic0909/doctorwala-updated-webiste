@@ -44,13 +44,15 @@ class SuperPartnerHandleController extends Controller
             'registration_type.*' => 'string',
         ]);
 
-        // Normalize registration_type (supports physiotherapist -> Doctor, etc.)
+        // Normalize registration_type (supports physiotherapist -> Others, etc.)
         if (is_array($request->registration_type)) {
             $mappedTypes = [];
             foreach ($request->registration_type as $type) {
                 $t = strtolower(trim($type));
-                if ($t === 'doctor' || $t === 'physiotherapist' || $t === 'specialist') {
+                if ($t === 'doctor' || $t === 'specialist') {
                     $mappedTypes[] = 'Doctor';
+                } elseif ($t === 'physiotherapist' || $t === 'physiotherapy' || $t === 'allied' || $t === 'others') {
+                    $mappedTypes[] = 'Others';
                 } elseif ($t === 'opd' || $t === 'clinic') {
                     $mappedTypes[] = 'OPD';
                 } elseif ($t === 'pathology' || $t === 'path' || $t === 'lab') {
@@ -122,14 +124,15 @@ class SuperPartnerHandleController extends Controller
             ]);
         }
 
-        // Check if Doctor is selected as a registration type
-        if (in_array('Doctor', $request->registration_type)) {
+        // Check if Doctor or Others is selected as a registration type
+        if (in_array('Doctor', $request->registration_type) || in_array('Others', $request->registration_type)) {
+            $isOthers = in_array('Others', $request->registration_type);
             PartnerDoctorContactModel::create([
                 'currently_loggedin_partner_id' => $dwuser->id,
-                'clinic_registration_type' => 'Doctor',
+                'clinic_registration_type' => $isOthers ? 'Others' : 'Doctor',
                 'partner_doctor_name' => $dwuser->partner_contact_person_name,
-                'partner_doctor_specialist' => 'General Physician',
-                'partner_doctor_designation' => 'Doctor',
+                'partner_doctor_specialist' => $isOthers ? 'Physiotherapist' : 'General Physician',
+                'partner_doctor_designation' => $isOthers ? 'Physiotherapist' : 'Doctor',
                 'partner_doctor_fees' => '500',
                 'partner_doctor_mobile' => $dwuser->partner_mobile_number,
                 'partner_doctor_email' => $dwuser->partner_email,
@@ -182,13 +185,15 @@ class SuperPartnerHandleController extends Controller
             'registration_type.*' => 'string',
         ]);
 
-        // Normalize registration_type (supports physiotherapist -> Doctor, etc.)
+        // Normalize registration_type (supports physiotherapist -> Others, etc.)
         if (is_array($request->registration_type)) {
             $mappedTypes = [];
             foreach ($request->registration_type as $type) {
                 $t = strtolower(trim($type));
-                if ($t === 'doctor' || $t === 'physiotherapist' || $t === 'specialist') {
+                if ($t === 'doctor' || $t === 'specialist') {
                     $mappedTypes[] = 'Doctor';
+                } elseif ($t === 'physiotherapist' || $t === 'physiotherapy' || $t === 'allied' || $t === 'others') {
+                    $mappedTypes[] = 'Others';
                 } elseif ($t === 'opd' || $t === 'clinic') {
                     $mappedTypes[] = 'OPD';
                 } elseif ($t === 'pathology' || $t === 'path' || $t === 'lab') {
@@ -224,9 +229,12 @@ class SuperPartnerHandleController extends Controller
             PartnerAllPathologyTestModel::where('currently_loggedin_partner_id', $partner->id)->delete();
         }
 
-        if (in_array('Doctor', $removedTypes)) {
-            PartnerDoctorContactModel::where('currently_loggedin_partner_id', $partner->id)->delete();
-            PartnerDoctorBannerModel::where('currently_loggedin_partner_id', $partner->id)->delete();
+        if (in_array('Doctor', $removedTypes) || in_array('Others', $removedTypes)) {
+            // Only delete if neither Doctor nor Others is present in new types
+            if (!in_array('Doctor', $newRegistrationTypes) && !in_array('Others', $newRegistrationTypes)) {
+                PartnerDoctorContactModel::where('currently_loggedin_partner_id', $partner->id)->delete();
+                PartnerDoctorBannerModel::where('currently_loggedin_partner_id', $partner->id)->delete();
+            }
         }
 
         // Handle addition of new registration types
@@ -278,15 +286,16 @@ class SuperPartnerHandleController extends Controller
                 }
             }
 
-            if ($type == 'Doctor') {
+            if ($type == 'Doctor' || $type == 'Others') {
                 $existingDoc = PartnerDoctorContactModel::where('currently_loggedin_partner_id', $partner->id)->first();
                 if (!$existingDoc) {
+                    $isOthers = ($type == 'Others');
                     PartnerDoctorContactModel::create([
                         'currently_loggedin_partner_id' => $partner->id,
-                        'clinic_registration_type' => 'Doctor',
+                        'clinic_registration_type' => $isOthers ? 'Others' : 'Doctor',
                         'partner_doctor_name' => $validated['partner_contact_person_name'],
-                        'partner_doctor_specialist' => 'null',
-                        'partner_doctor_designation' => 'null',
+                        'partner_doctor_specialist' => $isOthers ? 'Physiotherapist' : 'General Physician',
+                        'partner_doctor_designation' => $isOthers ? 'Physiotherapist' : 'Doctor',
                         'partner_doctor_fees' => '1000',
                         'partner_doctor_mobile' => $validated['partner_mobile_number'],
                         'partner_doctor_email' => $validated['partner_email'],
