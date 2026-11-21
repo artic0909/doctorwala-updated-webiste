@@ -171,6 +171,8 @@
                                     <span class="badge badge-warning px-2 py-1 mb-1" style="font-size: 0.75rem; color: #fff;">Pathology</span>
                                 @elseif($type === 'Doctor')
                                     <span class="badge badge-primary px-2 py-1 mb-1" style="font-size: 0.75rem;">Doctor</span>
+                                @elseif($type === 'Others')
+                                    <span class="badge badge-success px-2 py-1 mb-1" style="font-size: 0.75rem; background: #0d9488; border-color: #0d9488;">Physiotherapy & Allied</span>
                                 @else
                                     <span class="badge badge-secondary px-2 py-1 mb-1" style="font-size: 0.75rem;">{{ $type }}</span>
                                 @endif
@@ -360,6 +362,10 @@
                             <div class="custom-control custom-checkbox">
                                 <input type="checkbox" class="custom-control-input" name="registration_type[]" id="doctor_{{$partner->id}}" value="Doctor" {{ in_array('Doctor', $rTypes) ? 'checked' : '' }}>
                                 <label class="custom-control-label font-weight-bold text-dark small" for="doctor_{{$partner->id}}">Doctor</label>
+                            </div>
+                            <div class="custom-control custom-checkbox">
+                                <input type="checkbox" class="custom-control-input" name="registration_type[]" id="others_{{$partner->id}}" value="Others" {{ in_array('Others', $rTypes) ? 'checked' : '' }}>
+                                <label class="custom-control-label font-weight-bold text-dark small" for="others_{{$partner->id}}">Physiotherapist & Allied Care</label>
                             </div>
                         </div>
                     </div>

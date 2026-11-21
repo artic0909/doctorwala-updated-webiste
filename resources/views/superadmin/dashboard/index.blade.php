@@ -242,6 +242,17 @@
                 </a>
             </div>
 
+            <!-- Physiotherapy & Allied Care -->
+            <div class="col-lg-3 col-md-4 col-sm-6 mb-3">
+                <a href="/superadmin/super-all-others" class="card card_action_btn p-3 h-100 d-flex flex-row align-items-center">
+                    <div class="action-icon-box mr-3" style="background: #e6fffa; color: #0d9488;"><i class="fa-solid fa-hand-holding-medical"></i></div>
+                    <div>
+                        <p>Physiotherapy & Allied</p>
+                        <small class="text-muted">Therapy Directory</small>
+                    </div>
+                </a>
+            </div>
+
             <!-- All Users / Patients -->
             <div class="col-lg-3 col-md-4 col-sm-6 mb-3">
                 <a href="/superadmin/super-all-user" class="card card_action_btn p-3 h-100 d-flex flex-row align-items-center">

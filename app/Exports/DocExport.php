@@ -15,7 +15,11 @@ class DocExport implements FromCollection, WithHeadings, WithStyles
     */
     public function collection()
     {
-        return PartnerDoctorContactModel::select('clinic_registration_type', 'partner_doctor_name', 'partner_doctor_specialist', 'partner_doctor_designation', 'partner_doctor_fees', 'partner_doctor_mobile', 'partner_doctor_email', 'partner_doctor_landmark', 'partner_doctor_pincode', 'partner_doctor_state', 'partner_doctor_city','partner_doctor_google_map_link', 'partner_doctor_address','visit_day_time', 'status')->get();
+        return PartnerDoctorContactModel::where(function ($q) {
+            $q->where('clinic_registration_type', 'Doctor')
+              ->orWhereNull('clinic_registration_type')
+              ->orWhere('clinic_registration_type', '!=', 'Others');
+        })->select('clinic_registration_type', 'partner_doctor_name', 'partner_doctor_specialist', 'partner_doctor_designation', 'partner_doctor_fees', 'partner_doctor_mobile', 'partner_doctor_email', 'partner_doctor_landmark', 'partner_doctor_pincode', 'partner_doctor_state', 'partner_doctor_city','partner_doctor_google_map_link', 'partner_doctor_address','visit_day_time', 'status')->get();
     }
     public function headings(): array
     {

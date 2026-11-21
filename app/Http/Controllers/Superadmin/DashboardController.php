@@ -76,7 +76,12 @@ class DashboardController extends Controller
         // ── Entity Counts ──────────────────────────────────────────
         $opdContactCount = PartnerOPDContactModel::count();
         $pathologyContactCount = PartnerPathologyContactModel::count();
-        $doctorContactCount = PartnerDoctorContactModel::count();
+        $doctorContactCount = PartnerDoctorContactModel::where(function ($q) {
+            $q->where('clinic_registration_type', 'Doctor')
+              ->orWhereNull('clinic_registration_type')
+              ->orWhere('clinic_registration_type', '!=', 'Others');
+        })->count();
+        $othersContactCount = PartnerDoctorContactModel::where('clinic_registration_type', 'Others')->count();
         $allOpdDoctorsCount = PartnerAllOPDDoctorModel::count();
         $allPathologyTestsCount = PartnerAllPathologyTestModel::count();
         $totalPartners = DwPartnerModel::count();
@@ -96,6 +101,7 @@ class DashboardController extends Controller
             'opdContactCount',
             'pathologyContactCount',
             'doctorContactCount',
+            'othersContactCount',
             'allOpdDoctorsCount',
             'allPathologyTestsCount',
             'totalPartners',

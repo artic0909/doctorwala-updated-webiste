@@ -18,7 +18,11 @@ class SuperAllOnlyDoctorHandleController extends Controller
 
     public function docView(Request $request)
     {
-        $query = PartnerDoctorContactModel::query();
+        $query = PartnerDoctorContactModel::where(function ($q) {
+            $q->where('clinic_registration_type', 'Doctor')
+              ->orWhereNull('clinic_registration_type')
+              ->orWhere('clinic_registration_type', '!=', 'Others');
+        });
     
         if ($request->filled('search')) {
             $search = trim($request->search);

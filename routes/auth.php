@@ -13,6 +13,7 @@ use App\Http\Controllers\Superadmin\DashboardController;
 use App\Http\Controllers\Superadmin\SuperAboutusController;
 use App\Http\Controllers\Superadmin\SuperAllFeedbacksController;
 use App\Http\Controllers\Superadmin\SuperAllOnlyDoctorHandleController;
+use App\Http\Controllers\Superadmin\SuperAllOthersHandleController;
 use App\Http\Controllers\Superadmin\SuperAllOPDHandleController;
 use App\Http\Controllers\Superadmin\SuperBulkMessageController;
 use App\Http\Controllers\Superadmin\SuperAllPathologyHandleController;
@@ -319,6 +320,23 @@ Route::middleware('auth:web')->group(function () {
     // Doctor Banner
     Route::get('/superadmin/super-adddoc-banner/{pid}', [SuperAllOnlyDoctorHandleController::class, 'addDoctorPageView']);
     Route::post('/superadmin/super-adddoc-banner/add/', [SuperAllOnlyDoctorHandleController::class, 'adddocBanner'])->name('superadmin.super-adddoc.banner');
+    Route::get('/superadmin/doc/export', [SuperAllOnlyDoctorHandleController::class, 'exportAsExel'])->name('superadmin.export.doc');
+
+    // Physiotherapy & Allied Care (Others)---------------------------------------------------------------------------------------------------------->
+
+    // All Others View
+    Route::get('/superadmin/super-all-others', [SuperAllOthersHandleController::class, 'othersView'])->name('superadmin.super-all-others');
+    Route::put('/superadmin/super-all-others/status/{id}', [SuperAllOthersHandleController::class, 'statusEdit'])->name('superadmin.status.others.edit');
+    Route::delete('/superadmin/super-all-others/delete/{id}', [SuperAllOthersHandleController::class, 'deleteOthersContactDetails'])->name('superadmin.others.contact.delete');
+
+    // Others Contact Details / Profile
+    Route::get('/superadmin/super-edit-others-details/{id}', [SuperAllOthersHandleController::class, 'othersEditPageView'])->name('superadmin.super-edit-others-details');
+    Route::put('/superadmin/super-edit-others-details/update/{id}', [SuperAllOthersHandleController::class, 'updateOthersContactDetails'])->name('superadmin.super-update-others-details');
+
+    // Others Banner
+    Route::get('/superadmin/super-addothers-banner/{pid}', [SuperAllOthersHandleController::class, 'addOthersBannerPageView'])->name('superadmin.super-addothers-banner');
+    Route::post('/superadmin/super-addothers-banner/add/', [SuperAllOthersHandleController::class, 'addOthersBanner'])->name('superadmin.super-addothers.banner');
+    Route::get('/superadmin/others/export', [SuperAllOthersHandleController::class, 'exportAsExcel'])->name('superadmin.export.others');
 
 
 

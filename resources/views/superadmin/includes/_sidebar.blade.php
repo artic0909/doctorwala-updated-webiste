@@ -49,15 +49,18 @@
             $isHealthcareActive = request()->is('superadmin/super-all-partner*') || 
                                   request()->is('superadmin/super-add-partners*') || 
                                   request()->is('superadmin/importer*') ||
+                                  request()->is('superadmin/super-all-doctors*') || 
+                                  request()->is('superadmin/super-edit-doctors-details*') || 
+                                  request()->is('superadmin/super-adddoc-banner*') ||
+                                  request()->is('superadmin/super-all-others*') || 
+                                  request()->is('superadmin/super-edit-others-details*') || 
+                                  request()->is('superadmin/super-addothers-banner*') ||
                                   request()->is('superadmin/super-all-opd*') || 
                                   request()->is('superadmin/super-edit-opd-details*') || 
                                   request()->is('superadmin/super-addopd-doctor*') ||
                                   request()->is('superadmin/super-all-pathology*') || 
                                   request()->is('superadmin/super-edit-pathology-details*') || 
-                                  request()->is('superadmin/super-addpath-test*') ||
-                                  request()->is('superadmin/super-all-doctors*') || 
-                                  request()->is('superadmin/super-edit-doctors-details*') || 
-                                  request()->is('superadmin/super-adddoc-banner*');
+                                  request()->is('superadmin/super-addpath-test*');
         @endphp
         <li class="nav-item {{ $isHealthcareActive ? 'active' : '' }}">
             <a class="nav-link" data-toggle="collapse" href="#ui-healthcare" aria-expanded="{{ $isHealthcareActive ? 'true' : 'false' }}" aria-controls="ui-healthcare">
@@ -74,13 +77,16 @@
                         <a class="nav-link {{ request()->is('superadmin/super-add-partners*') ? 'active' : '' }}" href="/superadmin/super-add-partners">Add New Partner</a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link {{ request()->is('superadmin/super-all-doctors*') || request()->is('superadmin/super-edit-doctors-details*') || request()->is('superadmin/super-adddoc-banner*') ? 'active' : '' }}" href="/superadmin/super-all-doctors">All Doctors</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {{ request()->is('superadmin/super-all-others*') || request()->is('superadmin/super-edit-others-details*') || request()->is('superadmin/super-addothers-banner*') ? 'active' : '' }}" href="/superadmin/super-all-others">Physiotherapy & Allied</a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link {{ request()->is('superadmin/super-all-opd*') || request()->is('superadmin/super-edit-opd-details*') || request()->is('superadmin/super-addopd-doctor*') ? 'active' : '' }}" href="/superadmin/super-all-opd">OPD Clinics</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link {{ request()->is('superadmin/super-all-pathology*') || request()->is('superadmin/super-edit-pathology-details*') || request()->is('superadmin/super-addpath-test*') ? 'active' : '' }}" href="/superadmin/super-all-pathology">Pathology Labs</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link {{ request()->is('superadmin/super-all-doctors*') || request()->is('superadmin/super-edit-doctors-details*') || request()->is('superadmin/super-adddoc-banner*') ? 'active' : '' }}" href="/superadmin/super-all-doctors">All Doctors</a>
                     </li>
                 </ul>
             </div>
