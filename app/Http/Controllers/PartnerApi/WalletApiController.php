@@ -144,7 +144,11 @@ class WalletApiController extends Controller
             $query->where('status', $request->status);
         }
 
-        $perPage = (int) $request->get('per_page', 15);
+        if ($request->filled('settlement_status') && in_array($request->settlement_status, ['pending', 'settled', 'rejected'])) {
+            $query->where('settlement_status', $request->settlement_status);
+        }
+
+        $perPage = (int) $request->get('per_page', 10);
         $transactions = $query->orderBy('id', 'desc')->paginate($perPage);
 
         return response()->json([

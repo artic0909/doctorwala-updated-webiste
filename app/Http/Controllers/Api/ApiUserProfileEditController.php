@@ -115,13 +115,24 @@ class ApiUserProfileEditController extends Controller
                 ->where('id', $user->id)
                 ->update($data);
 
-            // Return updated image URL if changed
+            // Return updated image URL and full user data
             $updatedUser = DB::table('dw_user_models')->where('id', $user->id)->first();
+            $imageUrl = $updatedUser->image ? asset('storage/' . $updatedUser->image) : null;
 
             return response()->json([
                 'status'  => true,
                 'message' => 'Profile updated successfully!',
-                'image'   => $updatedUser->image ? asset('storage/' . $updatedUser->image) : null,
+                'image'   => $imageUrl,
+                'user'    => [
+                    'id'                => $updatedUser->id,
+                    'name'              => $updatedUser->user_name,
+                    'email'             => $updatedUser->user_email,
+                    'mobile'            => $updatedUser->user_mobile,
+                    'city'              => $updatedUser->user_city,
+                    'image'             => $imageUrl,
+                    'member_id'         => $updatedUser->memberid,
+                    'medical_card_no'   => $updatedUser->medical_card_no,
+                ],
             ], 200);
 
         } catch (\Illuminate\Database\QueryException $e) {
