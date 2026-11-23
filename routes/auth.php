@@ -33,6 +33,7 @@ use App\Http\Controllers\Superadmin\SuperRefferController;
 use App\Http\Controllers\Superadmin\SuperEpController;
 use App\Http\Controllers\Superadmin\SuperGpController;
 use App\Http\Controllers\Superadmin\SuperCallingController;
+use App\Http\Controllers\Superadmin\SuperSettlementController;
 use App\Http\Controllers\Superadmin\SuperProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -324,6 +325,11 @@ Route::middleware('auth:web')->group(function () {
     Route::get('/superadmin/super-callings', [SuperCallingController::class, 'index'])->name('superadmin.super-callings');
     Route::delete('/superadmin/super-callings/delete/{id}', [SuperCallingController::class, 'delete'])->name('superadmin.super-callings.delete');
     Route::get('/superadmin/export-callings', [SuperCallingController::class, 'exportAsExcel'])->name('superadmin.export.callings');
+
+    // Partner Wallet Settlements & Payouts
+    Route::get('/superadmin/settlements', [SuperSettlementController::class, 'index'])->name('superadmin.settlements.index');
+    Route::post('/superadmin/settlements/{id}/settle', [SuperSettlementController::class, 'settle'])->name('superadmin.settlements.settle');
+    Route::post('/superadmin/settlements/bulk-settle', [SuperSettlementController::class, 'bulkSettle'])->name('superadmin.settlements.bulk-settle');
 
     Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
         ->name('logout');

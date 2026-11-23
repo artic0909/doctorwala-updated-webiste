@@ -83,6 +83,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/path-appointment', [ApiPathAppointmentBookingController::class, 'patientInquiry']);
     Route::post('/doc-appointment', [ApiDocAppointmentBookingController::class, 'patientInquiry']);
 
+    // Razorpay Appointment Payments (Doctor & Others)
+    Route::post('/payment/create-order', [\App\Http\Controllers\Payment\AppointmentPaymentController::class, 'createOrder']);
+    Route::post('/payment/verify', [\App\Http\Controllers\Payment\AppointmentPaymentController::class, 'verifyPayment']);
+
 
     // Appointments
     Route::get('/appointments',                         [ApiAppointmentsController::class, 'getAppointments']);

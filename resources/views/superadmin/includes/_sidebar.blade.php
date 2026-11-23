@@ -123,6 +123,15 @@
             </div>
         </li>
 
+        <!-- Section: Finance & Payouts -->
+        <li class="sidebar-category-header">Finance & Settlements</li>
+        <li class="nav-item {{ request()->is('superadmin/settlements*') ? 'active' : '' }}">
+            <a class="nav-link" href="{{ route('superadmin.settlements.index') }}">
+                <i class="fa-solid fa-money-bill-transfer nav-icon"></i>
+                <span class="menu-title">Partner Settlements</span>
+            </a>
+        </li>
+
         <!-- Section: Growth & Monetization -->
         <li class="sidebar-category-header">Growth & Marketing</li>
 

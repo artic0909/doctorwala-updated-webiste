@@ -35,8 +35,16 @@ class Wallet extends Model
     /**
      * Credit the wallet balance safely
      */
-    public function credit(float $amount, string $source, ?string $referenceId = null, ?string $description = null): WalletTransaction
-    {
+    public function credit(
+        float $amount,
+        string $source,
+        ?string $referenceId = null,
+        ?string $description = null,
+        string $settlementStatus = 'pending',
+        ?int $inquiryId = null,
+        ?string $razorpayPaymentId = null,
+        ?string $razorpayOrderId = null
+    ): WalletTransaction {
         $opening = $this->balance;
         $closing = $opening + $amount;
         $this->balance = $closing;
@@ -52,6 +60,10 @@ class Wallet extends Model
             'reference_id' => $referenceId,
             'description' => $description,
             'status' => 'completed',
+            'settlement_status' => $settlementStatus,
+            'inquiry_id' => $inquiryId,
+            'razorpay_payment_id' => $razorpayPaymentId,
+            'razorpay_order_id' => $razorpayOrderId,
         ]);
     }
 

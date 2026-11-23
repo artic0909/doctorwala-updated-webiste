@@ -64,6 +64,17 @@ class PartnerWalletController extends Controller
             ->where('status', 'pending')
             ->sum('amount');
 
+        // Settlement breakdown for earnings
+        $pendingSettlement = WalletTransaction::where('wallet_id', $wallet->id)
+            ->where('transaction_type', 'credit')
+            ->where('settlement_status', 'pending')
+            ->sum('amount');
+
+        $totalSettled = WalletTransaction::where('wallet_id', $wallet->id)
+            ->where('transaction_type', 'credit')
+            ->where('settlement_status', 'settled')
+            ->sum('amount');
+
         // Transactions query with filters
         $txQuery = WalletTransaction::where('wallet_id', $wallet->id);
 
@@ -99,6 +110,8 @@ class PartnerWalletController extends Controller
             'totalEarned',
             'totalWithdrawn',
             'pendingPayout',
+            'pendingSettlement',
+            'totalSettled',
             'transactions',
             'primaryBank',
             'totalBankAccounts'

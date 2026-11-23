@@ -506,10 +506,10 @@
             <button class="mclose" onclick="closeM('inquiryModal{{ $doc->id }}')">&times;</button>
         </div>
         <div class="mbody">
-            <form action="{{ route('dw.doctor.inquiry.store') }}" method="POST" enctype="multipart/form-data">
+            <form id="doctorBookingForm{{ $doc->id }}" action="{{ route('dw.doctor.inquiry.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <input type="hidden" name="currently_loggedin_partner_id" value="{{ $doc->currently_loggedin_partner_id }}">
-                <input type="hidden" name="clinic_type" value="Doctor">
+                <input type="hidden" name="clinic_type" value="{{ strtolower($doc->clinic_registration_type ?? '') === 'others' ? 'Others' : 'Doctor' }}">
                 <input type="hidden" name="dw_user_id" value="{{ $user->id ?? '' }}">
                 <div class="fg">
                     <div class="fgrp">
@@ -518,9 +518,9 @@
                     </div>
                     <div class="fr">
                         <div class="fgrp">
-                            <label class="flbl">Your Name</label>
+                            <label class="flbl">Your Name *</label>
                             @auth
-                            <input class="fc" name="user_name" value="{{ $user->user_name }}" readonly>
+                            <input class="fc" name="user_name" value="{{ $user->user_name }}" readonly required>
                             @endauth
                             @guest
                             <input class="fc" name="user_name" placeholder="Your name" required>
@@ -529,7 +529,7 @@
                         <div class="fgrp">
                             <label class="flbl">Mobile *</label>
                             @auth
-                            <input class="fc" name="user_mobile" type="tel" value="{{ $user->user_mobile }}">
+                            <input class="fc" name="user_mobile" type="tel" value="{{ $user->user_mobile }}" required>
                             @endauth
                             @guest
                             <input class="fc" name="user_mobile" type="tel" placeholder="Mobile number" required>
@@ -539,19 +539,19 @@
                     <div class="fgrp">
                         <label class="flbl">Email</label>
                         @auth
-                        <input class="fc" name="user_email" type="email" value="{{ $user->user_email }}" readonly>
+                        <input class="fc" name="user_email" type="email" value="{{ $user->user_email }}">
                         @endauth
                         @guest
-                        <input class="fc" name="user_email" type="email" placeholder="Email address" required>
+                        <input class="fc" name="user_email" type="email" placeholder="Email address (for booking receipt)">
                         @endguest
                     </div>
-                                        <div class="fr">
+                    <div class="fr">
                         <div class="fgrp"><label class="flbl">Appointment Booking Date *</label>
-                            @auth<input class="fc" type="date" name="booking_date" value="{{ $user->booking_date ?? '' }}">@endauth
+                            @auth<input class="fc" type="date" name="booking_date" value="{{ $user->booking_date ?? '' }}" required>@endauth
                             @guest<input class="fc" name="booking_date" type="date" required>@endguest
                         </div>
                         <div class="fgrp"><label class="flbl">Appointment Booking Time *</label>
-                            @auth<input class="fc" name="booking_time" type="time" value="{{ $user->booking_time ?? '' }}">@endauth
+                            @auth<input class="fc" name="booking_time" type="time" value="{{ $user->booking_time ?? '' }}" required>@endauth
                             @guest<input class="fc" name="booking_time" type="time" required>@endguest
                         </div>
                     </div>
@@ -575,9 +575,20 @@
                     @endif
                     <div class="fgrp">
                         <label class="flbl">Describe your concern *</label>
-                        <textarea class="fc" name="user_inquiry" rows="3" placeholder="Describe your concern..." required></textarea>
+                        <textarea class="fc" name="user_inquiry" rows="3" placeholder="Describe your health issue or reason for visit..." required></textarea>
                     </div>
-                    <button type="submit" class="btn-sub btn-sub-rose">Book Appointment</button>
+
+                    <div class="p-3 mb-2 rounded" style="background: #f0fdf4; border: 1px solid #bbf7d0;">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="small font-weight-bold text-dark"><i class="fa-solid fa-shield-halved text-success mr-1"></i> Consultation Fee:</span>
+                            <span class="font-weight-bold text-success" style="font-size: 1.15rem;">₹{{ number_format((float) ($doc->partner_doctor_fees ?: 500), 2) }}</span>
+                        </div>
+                        <small class="text-muted d-block mt-1" style="font-size: 0.76rem;">Secure online payment powered by Razorpay</small>
+                    </div>
+
+                    <button type="submit" id="docPaySubmitBtn{{ $doc->id }}" class="btn-sub btn-sub-rose" style="display: flex; align-items: center; justify-content: center; gap: 8px;">
+                        <i class="fa-solid fa-lock"></i> Pay ₹{{ number_format((float) ($doc->partner_doctor_fees ?: 500), 2) }} & Confirm Booking
+                    </button>
                 </div>
             </form>
         </div>
@@ -819,5 +830,135 @@
     @if(session('errorFeed'))
     document.addEventListener('DOMContentLoaded', () => openM('feedSendUnsuccessModal'));
     @endif
+</script>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const bookingForm = document.getElementById('doctorBookingForm{{ $doc->id }}');
+    if (!bookingForm) return;
+
+    bookingForm.addEventListener('submit', function (e) {
+        e.preventDefault();
+
+        const submitBtn = document.getElementById('docPaySubmitBtn{{ $doc->id }}');
+        const origText = submitBtn.innerHTML;
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-1"></i> Securing order...';
+
+        const formData = new FormData(bookingForm);
+        const bookingPayload = {
+            currently_loggedin_partner_id: formData.get('currently_loggedin_partner_id'),
+            clinic_type: formData.get('clinic_type') || 'Doctor',
+            clinic_name: formData.get('clinic_name') || '{{ $doc->partner_doctor_name }}',
+            doctor_id: '{{ $doc->id }}',
+            dw_user_id: formData.get('dw_user_id') || '',
+            user_name: (formData.get('user_name') || '').trim(),
+            user_mobile: (formData.get('user_mobile') || '').trim(),
+            user_email: (formData.get('user_email') || '').trim(),
+            booking_date: formData.get('booking_date'),
+            booking_time: formData.get('booking_time'),
+            visit_mode: formData.get('visit_mode') || 'online',
+            user_inquiry: (formData.get('user_inquiry') || '').trim(),
+            amount: '{{ $doc->partner_doctor_fees ?: 500 }}'
+        };
+
+        if (!bookingPayload.user_name || !bookingPayload.user_mobile || !bookingPayload.booking_date || !bookingPayload.booking_time) {
+            alert('Please fill in all required appointment fields.');
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = origText;
+            return;
+        }
+
+        // Step 1: Initialize payment order with backend
+        fetch("{{ route('payment.create.order') }}", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify(bookingPayload)
+        })
+        .then(function (res) { return res.json(); })
+        .then(function (orderData) {
+            if (!orderData.status) {
+                throw new Error(orderData.message || 'Unable to initialize payment.');
+            }
+
+            // Step 2: Open Razorpay checkout sheet
+            const options = {
+                key: orderData.key,
+                amount: orderData.amount,
+                currency: orderData.currency || 'INR',
+                name: 'Doctorwala Health',
+                description: 'Consultation with {{ $doc->partner_doctor_name }}',
+                order_id: orderData.order_id,
+                prefill: {
+                    name: bookingPayload.user_name,
+                    contact: bookingPayload.user_mobile,
+                    email: bookingPayload.user_email
+                },
+                theme: {
+                    color: '#0284c7'
+                },
+                handler: function (rzpResponse) {
+                    submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-1"></i> Verifying & Confirming...';
+
+                    // Step 3: Verify HMAC signature and save appointment
+                    fetch("{{ route('payment.verify') }}", {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                            'Accept': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            ...bookingPayload,
+                            razorpay_order_id: rzpResponse.razorpay_order_id,
+                            razorpay_payment_id: rzpResponse.razorpay_payment_id,
+                            razorpay_signature: rzpResponse.razorpay_signature
+                        })
+                    })
+                    .then(function (res) { return res.json(); })
+                    .then(function (verifyData) {
+                        if (verifyData.status) {
+                            closeM('inquiryModal{{ $doc->id }}');
+                            openM('inqurySendSuccessModal');
+                            bookingForm.reset();
+                        } else {
+                            alert(verifyData.message || 'Payment received but verification failed. Please contact support.');
+                        }
+                    })
+                    .catch(function (err) {
+                        alert('Error confirming payment: ' + err.message);
+                    })
+                    .finally(function () {
+                        submitBtn.disabled = false;
+                        submitBtn.innerHTML = origText;
+                    });
+                },
+                modal: {
+                    ondismiss: function () {
+                        submitBtn.disabled = false;
+                        submitBtn.innerHTML = origText;
+                    }
+                }
+            };
+
+            const rzpInstance = new Razorpay(options);
+            rzpInstance.on('payment.failed', function (resp) {
+                alert('Payment Failed: ' + (resp.error.description || 'Payment was declined or cancelled.'));
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = origText;
+            });
+            rzpInstance.open();
+        })
+        .catch(function (err) {
+            alert(err.message || 'Payment initiation failed. Please try again.');
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = origText;
+        });
+    });
+});
 </script>
 @endsection

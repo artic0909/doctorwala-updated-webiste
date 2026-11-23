@@ -164,6 +164,7 @@
                     <th class="py-3 text-right">Amount</th>
                     <th class="py-3 text-right">Balance</th>
                     <th class="py-3 text-center">Status</th>
+                    <th class="py-3 text-center">Settlement</th>
                     <th class="py-3 text-right px-4">Date & Time</th>
                 </tr>
             </thead>
@@ -212,6 +213,23 @@
                             <span class="badge badge-secondary px-2 py-1" style="border-radius: 6px; font-size: 0.72rem;">{{ ucfirst($tx->status) }}</span>
                         @endif
                     </td>
+                    <td class="py-3 text-center">
+                        @if($tx->transaction_type === 'credit')
+                            @if($tx->settlement_status === 'settled')
+                                <span class="badge badge-success px-2 py-1" style="border-radius: 6px; font-size: 0.72rem;">
+                                    <i class="fa-solid fa-circle-check mr-1"></i> Settled
+                                </span>
+                            @elseif($tx->settlement_status === 'rejected')
+                                <span class="badge badge-danger px-2 py-1" style="border-radius: 6px; font-size: 0.72rem;">Rejected</span>
+                            @else
+                                <span class="badge badge-warning text-dark px-2 py-1" style="border-radius: 6px; font-size: 0.72rem; background: #fef3c7; color: #b45309 !important;">
+                                    <i class="fa-solid fa-clock mr-1"></i> Pending
+                                </span>
+                            @endif
+                        @else
+                            <span class="text-muted small">-</span>
+                        @endif
+                    </td>
                     <td class="py-3 text-right px-4">
                         <div class="text-dark font-weight-medium" style="font-size: 0.84rem;">{{ $tx->created_at->format('d M, Y') }}</div>
                         <small class="text-muted">{{ $tx->created_at->format('h:i A') }}</small>
@@ -219,7 +237,7 @@
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="7" class="text-center py-5 text-muted">
+                    <td colspan="8" class="text-center py-5 text-muted">
                         <div class="rounded-circle mx-auto d-flex align-items-center justify-content-center mb-3" style="width: 54px; height: 54px; background: #f1f5f9; color: #64748b;">
                             <i class="fa-solid fa-receipt fa-xl"></i>
                         </div>

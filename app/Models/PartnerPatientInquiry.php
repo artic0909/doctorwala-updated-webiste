@@ -28,6 +28,11 @@ class PartnerPatientInquiry extends Model
         'user_inquiry',
         'status',
         'enquiry_serial',
+        'payment_status',
+        'payment_amount',
+        'razorpay_order_id',
+        'razorpay_payment_id',
+        'razorpay_signature',
     ];
 
     protected $casts = [

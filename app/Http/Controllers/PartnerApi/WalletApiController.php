@@ -64,6 +64,16 @@ class WalletApiController extends Controller
             ->where('status', 'pending')
             ->sum('amount');
 
+        $pendingSettlement = (float) WalletTransaction::where('wallet_id', $wallet->id)
+            ->where('transaction_type', 'credit')
+            ->where('settlement_status', 'pending')
+            ->sum('amount');
+
+        $totalSettled = (float) WalletTransaction::where('wallet_id', $wallet->id)
+            ->where('transaction_type', 'credit')
+            ->where('settlement_status', 'settled')
+            ->sum('amount');
+
         $primaryBank = BankDetail::where('dw_partner_id', $partner->id)
             ->where('is_primary', true)
             ->first();
@@ -89,6 +99,8 @@ class WalletApiController extends Controller
                 'total_earned' => $totalEarned,
                 'total_withdrawn' => $totalWithdrawn,
                 'pending_payout' => $pendingPayout,
+                'pending_settlement' => $pendingSettlement,
+                'total_settled' => $totalSettled,
                 'bank_accounts_count' => $bankAccountsCount,
             ],
             'primary_bank' => $primaryBank ? [

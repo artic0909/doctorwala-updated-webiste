@@ -30,6 +30,10 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+// Payment Routes
+Route::post('/payment/create-order', [\App\Http\Controllers\Payment\AppointmentPaymentController::class, 'createOrder'])->name('payment.create.order');
+Route::post('/payment/verify', [\App\Http\Controllers\Payment\AppointmentPaymentController::class, 'verifyPayment'])->name('payment.verify');
+
 require __DIR__ . '/auth.php';
 require __DIR__ . '/partner-auth.php';
 require __DIR__ . '/user-auth.php';
