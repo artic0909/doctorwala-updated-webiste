@@ -42,42 +42,14 @@
 
 
 
-    <!-- SEO Meta Tags for all OPD -->
-    @foreach($opds as $opd)
-    <meta name="description" content="{{$opd->clinic_city}}, {{$opd->clinic_landmark}} - Doctorwala">
-    <meta name="keywords" content="{{$opd->clinic_name}}, {{$opd->clinic_city}}, {{$opd->clinic_pincode}}, {{$opd->clinic_landmark}}, doctorwala, doctorwala.info, doctorwala.in, doctorwala.com, doctorwala">
-    <meta property="og:title" content="{{$opd->clinic_name}} - Doctorwala">
-    <meta property="og:description" content="{{$opd->clinic_city}}, {{$opd->clinic_landmark}} - Doctorwala">
-    <meta property="og:url" content="{{url('/opd/'.$opd->slug)}}">
-    <meta name="twitter:title" content="{{$opd->clinic_name}} - Doctorwala">
-    <meta name="twitter:description" content="{{$opd->clinic_city}},{{$opd->clinic_pincode}} - Doctorwala">
-    @endforeach
-
-
-
-    <!-- SEO Meta Tags for all Pathology -->
-    @foreach($paths as $path)
-    <meta name="description" content="{{$path->clinic_city}}, {{$path->clinic_landmark}} - Doctorwala">
-    <meta name="keywords" content="{{$path->clinic_name}}, {{$path->clinic_city}}, {{$path->clinic_pincode}}, {{$path->clinic_landmark}}, doctorwala, doctorwala.info, doctorwala.in, doctorwala.com, doctorwala">
-    <meta property="og:title" content="{{$path->clinic_name}} - Doctorwala">
-    <meta property="og:description" content="{{$path->clinic_city}}, {{$path->clinic_landmark}} - Doctorwala">
-    <meta property="og:url" content="{{url('/path/'.$path->slug)}}">
-    <meta name="twitter:title" content="{{$path->clinic_name}} - Doctorwala">
-    <meta name="twitter:description" content="{{$path->clinic_city}},{{$path->clinic_pincode}} - Doctorwala">
-    @endforeach
-
-
-
-    <!-- SEO Meta Tags for all Doctor -->
-    @foreach($docs as $doc)
-    <meta name="description" content="{{$doc->partner_doctor_city}},{{$doc->partner_doctor_pincode}}, {{$doc->partner_doctor_landmark}} - Doctorwala">
-    <meta name="keywords" content="{{$doc->partner_doctor_name}}, {{$doc->partner_doctor_city}},{{$doc->partner_doctor_pincode}}, {{$doc->partner_doctor_landmark}}, doctorwala, doctorwala.info, doctorwala.in, doctorwala.com, doctorwala">
-    <meta property="og:title" content="{{$doc->partner_doctor_name}} - Doctorwala">
-    <meta property="og:description" content="{{$doc->partner_doctor_city}},{{$doc->partner_doctor_pincode}}, {{$doc->partner_doctor_landmark}} - Doctorwala">
-    <meta property="og:url" content="{{url('/doctor/'.$doc->slug)}}">
-    <meta name="twitter:title" content="{{$doc->partner_doctor_name}} - Doctorwala">
-    <meta name="twitter:description" content="{{$doc->partner_doctor_city}},{{$doc->partner_doctor_pincode}} - Doctorwala">
-    @endforeach
+    <!-- Primary SEO Meta Tags -->
+    <meta name="description" content="Doctorwala - Book online and offline appointments with verified Doctors, OPD Clinics, and Pathology Diagnostics across West Bengal.">
+    <meta name="keywords" content="Doctorwala, doctor booking, OPD clinic, pathology test booking, online doctor consultation, healthcare, doctorwala.info">
+    <meta property="og:title" content="Doctorwala - Your Complete Healthcare Partner">
+    <meta property="og:description" content="Book online and offline appointments with verified Doctors, OPD Clinics, and Pathology Diagnostics across West Bengal.">
+    <meta property="og:url" content="{{ url('/') }}">
+    <meta name="twitter:title" content="Doctorwala - Your Complete Healthcare Partner">
+    <meta name="twitter:description" content="Book online and offline appointments with verified Doctors, OPD Clinics, and Pathology Diagnostics across West Bengal.">
 
 
 
