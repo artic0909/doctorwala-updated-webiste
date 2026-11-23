@@ -48,17 +48,20 @@
 <div class="row mb-4">
     <!-- Current Balance -->
     <div class="col-xl-3 col-md-6 mb-3">
-        <div class="card border-0 shadow-sm h-100" style="border-radius: 12px; background: #ffffff !important;">
+        <div class="card border-0 shadow-sm h-100" style="border-radius: 12px; background: #ffffff;">
             <div class="card-body p-4 d-flex flex-column justify-content-between">
                 <div class="d-flex align-items-center justify-content-between mb-2">
-                    <span class="text-muted text-uppercase font-weight-bold" style="font-size: 0.75rem; letter-spacing: 0.8px;">Available Balance</span>
-                    <div class="rounded-circle d-flex align-items-center justify-content-center" style="width: 36px; height: 36px; background: #e0f2fe; color: #0284c7;">
-                        <i class="fa-solid fa-wallet"></i>
+                    <span class="text-uppercase font-weight-bold" style="font-size: 0.75rem; letter-spacing: 0.8px; color: #64748b;">Available Balance</span>
+                    <div class="d-flex align-items-center">
+                        <span class="badge badge-light border text-primary font-weight-bold mr-2 px-2 py-1" style="border-radius: 6px; font-size: 0.72rem; color: #0284c7;">{{ $wallet->currency ?? 'INR' }}</span>
+                        <div class="rounded-circle d-flex align-items-center justify-content-center" style="width: 36px; height: 36px; background: #e0f2fe; color: #0284c7;">
+                            <i class="fa-solid fa-wallet"></i>
+                        </div>
                     </div>
                 </div>
                 <div>
-                    <h3 class="font-weight-bold mb-1" style="font-size: 1.7rem; color: #0284c7;">₹{{ number_format($wallet->balance, 2) }}</h3>
-                    <small class="text-muted font-weight-medium"><i class="fa-solid fa-clock mr-1"></i> Updated {{ $wallet->updated_at->diffForHumans() }}</small>
+                    <h3 class="font-weight-bold mb-1" style="font-size: 1.7rem; color: #0284c7 !important;">₹{{ number_format($wallet->balance, 2) }}</h3>
+                    <small class="font-weight-medium" style="color: #64748b;"><i class="fa-solid fa-clock mr-1"></i> Updated {{ $wallet->updated_at ? $wallet->updated_at->diffForHumans() : 'Just now' }}</small>
                 </div>
             </div>
         </div>
