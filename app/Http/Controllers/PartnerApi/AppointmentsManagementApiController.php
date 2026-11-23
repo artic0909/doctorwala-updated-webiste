@@ -120,6 +120,46 @@ class AppointmentsManagementApiController extends Controller
             ->orderBy('id', 'desc')
             ->get();
 
+        // Dynamically resolve service and doctor names for each appointment
+        $appointments->transform(function ($item) {
+            $type = strtolower($item->clinic_type ?? '');
+
+            if ($type === 'doctor' || $type === 'others') {
+                $docName = $item->doctorContact->partner_doctor_name ?? null;
+                if (!$docName && $item->doctor_id) {
+                    $dc = \App\Models\PartnerDoctorContactModel::find($item->doctor_id);
+                    $docName = $dc->partner_doctor_name ?? null;
+                }
+                if (!$docName && !empty($item->clinic_name)) {
+                    $docName = $item->clinic_name;
+                }
+                if (!$docName) {
+                    $docName = $type === 'others' ? 'Allied Care Specialist' : 'Doctor Consultation';
+                }
+
+                $item->resolved_service_name = $docName;
+                $item->resolved_doctor_name = $docName;
+
+                // Replace relation 'doctor' so that it doesn't leak unrelated OPD doctor
+                $item->setRelation('doctor', (object)[
+                    'id' => $item->doctor_id,
+                    'doctor_name' => $docName,
+                    'doctor_specialist' => $item->doctorContact->partner_doctor_specialist ?? ($type === 'others' ? 'Allied Care' : 'General Physician'),
+                    'doctor_designation' => $item->doctorContact->partner_doctor_designation ?? 'Dr',
+                ]);
+            } elseif ($type === 'opd') {
+                $docName = $item->doctor->doctor_name ?? $item->clinic_name ?? 'OPD Specialist';
+                $item->resolved_service_name = $docName;
+                $item->resolved_doctor_name = $docName;
+            } elseif ($type === 'pathology') {
+                $testName = $item->test->test_name ?? $item->clinic_name ?? 'Diagnostic Test';
+                $item->resolved_service_name = $testName;
+                $item->resolved_doctor_name = null;
+            }
+
+            return $item;
+        });
+
         return response()->json([
             'success' => true,
             'appointments' => $appointments

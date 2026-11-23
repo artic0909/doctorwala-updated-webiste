@@ -242,6 +242,18 @@ class ApiAppointmentsController extends Controller
             $data['doctor_contact']['banner']['doctorbanner'] = asset('storage/' . $booking->doctorContact->banner->doctorbanner);
         }
 
+        // For Doctor / Others, ensure doctor object reflects the actual practitioner
+        $clinicType = strtolower($booking->clinic_type ?? '');
+        if ($clinicType === 'doctor' || $clinicType === 'others') {
+            $docName = $booking->resolved_doctor_name ?? $booking->clinic_name;
+            $data['doctor'] = [
+                'id' => $booking->doctor_id,
+                'doctor_name' => $docName,
+                'doctor_specialist' => $booking->doctorContact->partner_doctor_specialist ?? ($clinicType === 'others' ? 'Allied Care' : 'General Physician'),
+                'doctor_designation' => $booking->doctorContact->partner_doctor_designation ?? 'Dr',
+            ];
+        }
+
         return $data;
     }
 }

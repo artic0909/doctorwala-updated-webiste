@@ -193,9 +193,10 @@ class TwilioWhatsAppService
 
         $typeString = 'Appointment';
         if ($inquiry->clinic_type === 'Pathology') {
-            $typeString = $inquiry->test ? $inquiry->test->test_name : 'Lab Test';
+            $typeString = $inquiry->resolved_service_name ?? ($inquiry->test ? $inquiry->test->test_name : 'Lab Test');
         } else {
-            $typeString = $inquiry->doctor ? ('Appointment with Dr. ' . $inquiry->doctor->doctor_name) : 'Doctor Appointment';
+            $docName = $inquiry->resolved_service_name ?? ($inquiry->doctor ? $inquiry->doctor->doctor_name : $inquiry->clinic_name);
+            $typeString = $docName ? ('Appointment with ' . $docName) : 'Doctor Appointment';
         }
 
         return $this->sendTemplateMessage($mobile, $sid, [
@@ -221,9 +222,10 @@ class TwilioWhatsAppService
 
         $typeString = 'Appointment';
         if ($inquiry->clinic_type === 'Pathology') {
-            $typeString = $inquiry->test ? $inquiry->test->test_name : 'Lab Test';
+            $typeString = $inquiry->resolved_service_name ?? ($inquiry->test ? $inquiry->test->test_name : 'Lab Test');
         } else {
-            $typeString = $inquiry->doctor ? ('Appointment with Dr. ' . $inquiry->doctor->doctor_name) : 'Doctor Appointment';
+            $docName = $inquiry->resolved_service_name ?? ($inquiry->doctor ? $inquiry->doctor->doctor_name : $inquiry->clinic_name);
+            $typeString = $docName ? ('Appointment with ' . $docName) : 'Doctor Appointment';
         }
 
         return $this->sendTemplateMessage($mobile, $sid, [

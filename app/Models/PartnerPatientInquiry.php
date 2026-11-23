@@ -39,6 +39,54 @@ class PartnerPatientInquiry extends Model
         'is_video' => 'boolean',
     ];
 
+    protected $appends = [
+        'resolved_service_name',
+        'resolved_doctor_name',
+    ];
+
+    public function getResolvedServiceNameAttribute()
+    {
+        $clinicType = strtolower($this->clinic_type ?? '');
+
+        if ($clinicType === 'pathology') {
+            return $this->test->test_name ?? $this->clinic_name ?? 'Diagnostic Test';
+        }
+
+        if ($clinicType === 'opd') {
+            if ($this->doctor && !empty($this->doctor->doctor_name)) {
+                return $this->doctor->doctor_name;
+            }
+            return $this->clinic_name ?? 'OPD Specialist';
+        }
+
+        // For Doctor / Others
+        if ($this->doctorContact && !empty($this->doctorContact->partner_doctor_name)) {
+            return $this->doctorContact->partner_doctor_name;
+        }
+
+        if (!empty($this->doctor_id)) {
+            $docContact = PartnerDoctorContactModel::find($this->doctor_id);
+            if ($docContact && !empty($docContact->partner_doctor_name)) {
+                return $docContact->partner_doctor_name;
+            }
+        }
+
+        if (!empty($this->clinic_name)) {
+            return $this->clinic_name;
+        }
+
+        return 'Specialist Consultation';
+    }
+
+    public function getResolvedDoctorNameAttribute()
+    {
+        $clinicType = strtolower($this->clinic_type ?? '');
+        if ($clinicType === 'pathology') {
+            return null;
+        }
+        return $this->getResolvedServiceNameAttribute();
+    }
+
     protected static function booted()
     {
         static::creating(function ($inquiry) {
