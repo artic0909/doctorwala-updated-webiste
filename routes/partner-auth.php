@@ -19,6 +19,7 @@ use App\Http\Controllers\Partnerpanel\PartnerSubscriptionController;
 use App\Http\Controllers\Partnerpanel\PatientProfileAccessController;
 use App\Http\Controllers\Partnerpanel\PrescriptionController;
 use App\Http\Controllers\Partnerpanel\ProfileEditController;
+use App\Http\Controllers\Partnerpanel\PartnerWalletController;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Route;
 
@@ -325,6 +326,14 @@ Route::middleware(['auth:partner', 'verified'])->group(function () {
         // AJAX lookup
         Route::post('/partnerpanel/patient/lookup', [PatientProfileAccessController::class , 'patientLookup'])->name('partner.patient.lookup');
         Route::post('/partnerpanel/patient-profile-request/send', [PatientProfileAccessController::class , 'sendRequest'])->name('partner.patient.request.send');
+
+        // Wallet & Bank Details Routes (Doctor & Others)
+        Route::get('/partnerpanel/wallet', [PartnerWalletController::class, 'walletView'])->name('partner.wallet.index');
+        Route::get('/partnerpanel/bank-details', [PartnerWalletController::class, 'bankDetailsView'])->name('partner.bank.details.index');
+        Route::post('/partnerpanel/bank-details/store', [PartnerWalletController::class, 'storeBankDetails'])->name('partner.bank.details.store');
+        Route::post('/partnerpanel/bank-details/{id}/update', [PartnerWalletController::class, 'updateBankDetails'])->name('partner.bank.details.update');
+        Route::delete('/partnerpanel/bank-details/{id}/delete', [PartnerWalletController::class, 'deleteBankDetails'])->name('partner.bank.details.delete');
+        Route::post('/partnerpanel/bank-details/{id}/set-primary', [PartnerWalletController::class, 'setPrimaryBankDetails'])->name('partner.bank.details.primary');
 
 
 

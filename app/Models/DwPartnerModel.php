@@ -128,4 +128,19 @@ class DwPartnerModel extends Authenticatable
     {
         return $this->hasMany(Followup::class, 'dw_partner_id', 'id');
     }
+
+    public function wallet()
+    {
+        return $this->hasOne(Wallet::class, 'dw_partner_id', 'id');
+    }
+
+    public function bankDetails()
+    {
+        return $this->hasMany(BankDetail::class, 'dw_partner_id', 'id');
+    }
+
+    public function primaryBankDetail()
+    {
+        return $this->hasOne(BankDetail::class, 'dw_partner_id', 'id')->where('is_primary', true);
+    }
 }

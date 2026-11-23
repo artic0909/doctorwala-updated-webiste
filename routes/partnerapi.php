@@ -7,6 +7,7 @@ use App\Http\Controllers\PartnerApi\DoctoraddApiController;
 use App\Http\Controllers\PartnerApi\TestaddApiController;
 use App\Http\Controllers\PartnerApi\AppointmentsManagementApiController;
 use App\Http\Controllers\PartnerApi\MedicalCardAccessController;
+use App\Http\Controllers\PartnerApi\WalletApiController;
 
 // Public routes for partner API
 Route::post('/login', [AuthApiController::class, 'login']);
@@ -64,4 +65,13 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/medical-card-access/report/{encryptedId}', [MedicalCardAccessController::class, 'viewPatientReportDetails']);
     Route::post('/medical-card-access/prescription/create', [MedicalCardAccessController::class, 'storePrescription']);
     Route::post('/medical-card-access/handwritten/create', [MedicalCardAccessController::class, 'storeHandwrittenPrescription']);
+
+    // Wallet & Bank Details Routes (Doctor & Others)
+    Route::get('/wallet', [WalletApiController::class, 'getWallet']);
+    Route::get('/wallet/transactions', [WalletApiController::class, 'getTransactions']);
+    Route::get('/bank-details', [WalletApiController::class, 'getBankDetails']);
+    Route::post('/bank-details', [WalletApiController::class, 'storeBankDetail']);
+    Route::post('/bank-details/{id}', [WalletApiController::class, 'updateBankDetail']);
+    Route::delete('/bank-details/{id}', [WalletApiController::class, 'deleteBankDetail']);
+    Route::post('/bank-details/{id}/set-primary', [WalletApiController::class, 'setPrimaryBankDetail']);
 });

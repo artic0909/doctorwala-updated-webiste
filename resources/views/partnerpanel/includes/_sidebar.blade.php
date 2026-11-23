@@ -60,6 +60,23 @@
                 <span class="menu-title">Doctor Profile</span>
             </a>
         </li>
+
+        <!-- Section: Finance & Wallet -->
+        <li class="sidebar-category-header">Finance & Wallet</li>
+
+        <li class="nav-item {{ request()->is('partnerpanel/wallet*') ? 'active' : '' }}">
+            <a class="nav-link" href="{{ route('partner.wallet.index') }}">
+                <i class="fa-solid fa-wallet nav-icon"></i>
+                <span class="menu-title">Wallet & Earnings</span>
+            </a>
+        </li>
+
+        <li class="nav-item {{ request()->is('partnerpanel/bank-details*') ? 'active' : '' }}">
+            <a class="nav-link" href="{{ route('partner.bank.details.index') }}">
+                <i class="fa-solid fa-building-columns nav-icon"></i>
+                <span class="menu-title">Bank Details</span>
+            </a>
+        </li>
         @endif
 
         @if(in_array('OPD', $regTypes))

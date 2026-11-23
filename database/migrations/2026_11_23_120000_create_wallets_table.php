@@ -1,0 +1,36 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('wallets', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedBigInteger('dw_partner_id')->index();
+            $table->decimal('balance', 12, 2)->default(0.00);
+            $table->string('currency', 10)->default('INR');
+            $table->string('status', 30)->default('active'); // active, inactive, frozen, pending
+            $table->timestamps();
+
+            $table->foreign('dw_partner_id')
+                ->references('id')
+                ->on('dw_partner_models')
+                ->onDelete('cascade');
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('wallets');
+    }
+};
