@@ -371,7 +371,7 @@ class DwPartnerController extends Controller
                     'partner_doctor_name' => $dwuser->partner_contact_person_name,
                     'partner_doctor_specialist' => $isOthers ? 'Physiotherapist' : 'General Physician',
                     'partner_doctor_designation' => $isOthers ? 'Physiotherapist' : 'Doctor',
-                    'partner_doctor_fees' => '500',
+                    'partner_doctor_fees' => '000',
                     'partner_doctor_mobile' => $dwuser->partner_mobile_number,
                     'partner_doctor_email' => $dwuser->partner_email,
                     'partner_doctor_landmark' => $dwuser->partner_landmark,

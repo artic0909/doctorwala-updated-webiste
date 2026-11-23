@@ -67,7 +67,11 @@
 
                     <div class="col-md-4 form-group">
                         <label class="font-weight-bold small text-dark"><i class="fa-solid fa-indian-rupee-sign text-primary mr-1"></i> Consultation Fee (₹) <span class="text-danger">*</span></label>
-                        <input type="number" class="form-control" name="partner_doctor_fees" value="{{ old('partner_doctor_fees', $contactDetails->partner_doctor_fees ?? '500') }}" placeholder="Fee in INR" required style="height: 44px; border-radius: 8px;">
+                        @php
+                            $currentFee = $contactDetails->partner_doctor_fees ?? '';
+                            $displayFee = ($currentFee === '' || $currentFee === '500') ? '000' : $currentFee;
+                        @endphp
+                        <input type="text" class="form-control" name="partner_doctor_fees" value="{{ old('partner_doctor_fees', $displayFee) }}" placeholder="Fee in INR (e.g. 000)" required style="height: 44px; border-radius: 8px;">
                     </div>
 
                     <div class="col-md-4 form-group">

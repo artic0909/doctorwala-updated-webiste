@@ -139,7 +139,7 @@ class AuthApiController extends Controller
                     'partner_doctor_name' => $partner->partner_contact_person_name,
                     'partner_doctor_specialist' => $isOthers ? 'Physiotherapist' : 'General Physician',
                     'partner_doctor_designation' => $isOthers ? 'Physiotherapist' : 'Doctor',
-                    'partner_doctor_fees' => '500',
+                    'partner_doctor_fees' => '000',
                     'partner_doctor_mobile' => $partner->partner_mobile_number,
                     'partner_doctor_email' => $partner->partner_email,
                     'partner_doctor_landmark' => $partner->partner_landmark,
