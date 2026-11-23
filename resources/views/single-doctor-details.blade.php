@@ -545,14 +545,15 @@
                         <input class="fc" name="user_email" type="email" placeholder="Email address (for booking receipt)">
                         @endguest
                     </div>
+                    <div id="doctorScheduleNotice{{ $doc->id }}" class="mb-3 p-2 rounded small" style="background: #eff6ff; border: 1px solid #bfdbfe; color: #1e40af; display: none;"></div>
                     <div class="fr">
                         <div class="fgrp"><label class="flbl">Appointment Booking Date *</label>
-                            @auth<input class="fc" type="date" name="booking_date" value="{{ $user->booking_date ?? '' }}" required>@endauth
-                            @guest<input class="fc" name="booking_date" type="date" required>@endguest
+                            @auth<input class="fc" type="date" name="booking_date" id="docBookingDate{{ $doc->id }}" value="{{ $user->booking_date ?? '' }}" required>@endauth
+                            @guest<input class="fc" name="booking_date" id="docBookingDate{{ $doc->id }}" type="date" required>@endguest
                         </div>
                         <div class="fgrp"><label class="flbl">Appointment Booking Time *</label>
-                            @auth<input class="fc" name="booking_time" type="time" value="{{ $user->booking_time ?? '' }}" required>@endauth
-                            @guest<input class="fc" name="booking_time" type="time" required>@endguest
+                            @auth<input class="fc" name="booking_time" id="docBookingTime{{ $doc->id }}" type="time" value="{{ $user->booking_time ?? '' }}" required>@endauth
+                            @guest<input class="fc" name="booking_time" id="docBookingTime{{ $doc->id }}" type="time" required>@endguest
                         </div>
                     </div>
 
@@ -833,12 +834,235 @@
 </script>
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <script>
+function parseScheduleData(rawSchedule) {
+    if (!rawSchedule) return { days: {}, isAllDays: false, summary: '' };
+    let parsed = rawSchedule;
+    if (typeof rawSchedule === 'string') {
+        let s = rawSchedule.trim();
+        while ((s.startsWith('"') && s.endsWith('"')) || (s.startsWith("'") && s.endsWith("'"))) {
+            s = s.substring(1, s.length - 1).trim();
+        }
+        s = s.replace(/\\"/g, '"').replace(/\\'/g, "'");
+        try {
+            parsed = JSON.parse(s);
+        } catch (e) {
+            return { days: {}, isAllDays: false, summary: '' };
+        }
+    }
+    if (!Array.isArray(parsed)) return { days: {}, isAllDays: false, summary: '' };
+
+    const daysMap = {};
+    let isAllDays = false;
+    const summaryParts = [];
+
+    const dayNameToNum = {
+        'sunday': 0, 'sun': 0,
+        'monday': 1, 'mon': 1,
+        'tuesday': 2, 'tue': 2,
+        'wednesday': 3, 'wed': 3,
+        'thursday': 4, 'thu': 4,
+        'friday': 5, 'fri': 5,
+        'saturday': 6, 'sat': 6
+    };
+    const numToDayName = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
+    parsed.forEach(item => {
+        if (!item) return;
+        const rawDay = (item.day || item.test_day || '').toString().trim().toLowerCase();
+        const start = item.start_time ? item.start_time.trim() : null;
+        const end = item.end_time ? item.end_time.trim() : null;
+
+        const format12h = (t) => {
+            if (!t) return '';
+            const p = t.split(':');
+            let h = parseInt(p[0], 10);
+            let m = p[1] || '00';
+            const ampm = h >= 12 ? 'PM' : 'AM';
+            h = h % 12 || 12;
+            return (h < 10 ? '0' + h : h) + ':' + m + ' ' + ampm;
+        };
+
+        let timeStr = '';
+        if (start && end) timeStr = ` (${format12h(start)} - ${format12h(end)})`;
+        else if (start) timeStr = ` (From ${format12h(start)})`;
+
+        if (rawDay.includes('all day')) {
+            isAllDays = true;
+            for (let i = 0; i < 7; i++) {
+                if (!daysMap[i]) daysMap[i] = [];
+                daysMap[i].push({ start, end });
+            }
+            summaryParts.push(`All Days${timeStr}`);
+            return;
+        }
+
+        for (let key in dayNameToNum) {
+            if (rawDay.includes(key)) {
+                const dayNum = dayNameToNum[key];
+                if (!daysMap[dayNum]) daysMap[dayNum] = [];
+                daysMap[dayNum].push({ start, end });
+                summaryParts.push(`${numToDayName[dayNum].substring(0, 3)}${timeStr}`);
+                break;
+            }
+        }
+    });
+
+    return {
+        days: daysMap,
+        isAllDays: isAllDays,
+        summary: summaryParts.join(', ')
+    };
+}
+
+function attachScheduleValidation(dateInput, timeInput, scheduleNoticeEl, rawSchedule, doctorOrTestName) {
+    if (!dateInput || !timeInput) return null;
+    const sched = parseScheduleData(rawSchedule);
+    const numToDayName = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    const allowedDayNames = Object.keys(sched.days).map(d => numToDayName[d]);
+
+    if (scheduleNoticeEl) {
+        if (sched.summary) {
+            scheduleNoticeEl.innerHTML = `<i class="fa-solid fa-calendar-check text-primary mr-1"></i> Available Schedule: <strong>${sched.summary}</strong>`;
+            scheduleNoticeEl.style.display = 'block';
+        } else {
+            scheduleNoticeEl.style.display = 'none';
+        }
+    }
+
+    const todayStr = new Date().toISOString().split('T')[0];
+    dateInput.min = todayStr;
+
+    function validateSelectedTime(dateObj, timeStr, showAlert) {
+        if (!timeStr) return true;
+        const dayNum = dateObj.getDay();
+        const slots = sched.days[dayNum];
+        if (!slots || slots.length === 0) return true;
+
+        const timeParts = timeStr.split(':');
+        const pickedMin = parseInt(timeParts[0], 10) * 60 + parseInt(timeParts[1] || '0', 10);
+
+        for (let s of slots) {
+            if (!s.start && !s.end) return true;
+            let startMin = s.start ? (parseInt(s.start.split(':')[0], 10) * 60 + parseInt(s.start.split(':')[1] || '0', 10)) : 0;
+            let endMin = s.end ? (parseInt(s.end.split(':')[0], 10) * 60 + parseInt(s.end.split(':')[1] || '0', 10)) : 1439;
+
+            if (pickedMin >= startMin && pickedMin <= endMin) {
+                return true;
+            }
+        }
+
+        if (showAlert) {
+            const format12h = (t) => {
+                if (!t) return '';
+                const p = t.split(':');
+                let h = parseInt(p[0], 10);
+                let m = p[1] || '00';
+                const ampm = h >= 12 ? 'PM' : 'AM';
+                h = h % 12 || 12;
+                return (h < 10 ? '0' + h : h) + ':' + m + ' ' + ampm;
+            };
+            const slotDescs = slots.map(s => s.start && s.end ? `${format12h(s.start)} - ${format12h(s.end)}` : (s.start ? `From ${format12h(s.start)}` : 'All Day')).join(', ');
+            alert(`Selected time (${timeStr}) is outside the available hours for ${numToDayName[dayNum]}.\nAvailable hours: ${slotDescs}`);
+        }
+        return false;
+    }
+
+    dateInput.onchange = function () {
+        if (!this.value) return;
+        const parts = this.value.split('-');
+        const dateObj = new Date(parseInt(parts[0], 10), parseInt(parts[1], 10) - 1, parseInt(parts[2], 10));
+        const dayNum = dateObj.getDay();
+
+        if (Object.keys(sched.days).length > 0 && !sched.isAllDays && !sched.days[dayNum]) {
+            alert(`Appointment is not available on ${numToDayName[dayNum]}s.\nAllowed days: ${allowedDayNames.join(', ')}`);
+            this.value = '';
+            timeInput.value = '';
+            return;
+        }
+
+        const slots = sched.days[dayNum];
+        if (slots && slots.length === 1 && slots[0].start && slots[0].end) {
+            timeInput.min = slots[0].start;
+            timeInput.max = slots[0].end;
+        } else {
+            timeInput.removeAttribute('min');
+            timeInput.removeAttribute('max');
+        }
+
+        if (timeInput.value) {
+            if (!validateSelectedTime(dateObj, timeInput.value, false)) {
+                if (slots && slots[0] && slots[0].start) {
+                    timeInput.value = slots[0].start;
+                } else {
+                    timeInput.value = '';
+                }
+            }
+        } else if (slots && slots[0] && slots[0].start) {
+            timeInput.value = slots[0].start;
+        }
+    };
+
+    timeInput.onchange = function () {
+        if (!dateInput.value) {
+            alert('Please select an appointment date first.');
+            this.value = '';
+            return;
+        }
+        const parts = dateInput.value.split('-');
+        const dateObj = new Date(parseInt(parts[0], 10), parseInt(parts[1], 10) - 1, parseInt(parts[2], 10));
+        if (!validateSelectedTime(dateObj, this.value, true)) {
+            const dayNum = dateObj.getDay();
+            const slots = sched.days[dayNum];
+            if (slots && slots[0] && slots[0].start) {
+                this.value = slots[0].start;
+            } else {
+                this.value = '';
+            }
+        }
+    };
+
+    return { sched, validateSelectedTime };
+}
+
 document.addEventListener('DOMContentLoaded', function () {
     const bookingForm = document.getElementById('doctorBookingForm{{ $doc->id }}');
     if (!bookingForm) return;
 
+    const dateInput = document.getElementById('docBookingDate{{ $doc->id }}');
+    const timeInput = document.getElementById('docBookingTime{{ $doc->id }}');
+    const noticeEl = document.getElementById('doctorScheduleNotice{{ $doc->id }}');
+
+    const validator = attachScheduleValidation(
+        dateInput,
+        timeInput,
+        noticeEl,
+        @json($doc->visit_day_time),
+        "{{ $doc->partner_doctor_name }}"
+    );
+
     bookingForm.addEventListener('submit', function (e) {
         e.preventDefault();
+
+        // Validate schedule restrictions before submitting
+        if (validator && dateInput && dateInput.value) {
+            const parts = dateInput.value.split('-');
+            const dateObj = new Date(parseInt(parts[0], 10), parseInt(parts[1], 10) - 1, parseInt(parts[2], 10));
+            const dayNum = dateObj.getDay();
+            const numToDayName = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
+            if (Object.keys(validator.sched.days).length > 0 && !validator.sched.isAllDays && !validator.sched.days[dayNum]) {
+                alert(`Appointment is not available on ${numToDayName[dayNum]}s. Please select an available day.`);
+                dateInput.focus();
+                return;
+            }
+
+            if (timeInput && timeInput.value) {
+                if (!validator.validateSelectedTime(dateObj, timeInput.value, true)) {
+                    timeInput.focus();
+                    return;
+                }
+            }
+        }
 
         const submitBtn = document.getElementById('docPaySubmitBtn{{ $doc->id }}');
         const origText = submitBtn.innerHTML;
