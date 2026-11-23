@@ -48,15 +48,17 @@
 <div class="row mb-4">
     <!-- Current Balance -->
     <div class="col-xl-3 col-md-6 mb-3">
-        <div class="card border-0 shadow-sm h-100" style="border-radius: 12px; background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%); color: #fff;">
+        <div class="card border-0 shadow-sm h-100" style="border-radius: 12px; background: #ffffff !important;">
             <div class="card-body p-4 d-flex flex-column justify-content-between">
                 <div class="d-flex align-items-center justify-content-between mb-2">
-                    <span class="text-white-50 text-uppercase font-weight-bold" style="font-size: 0.75rem; letter-spacing: 0.8px;">Available Balance</span>
-                    <span class="badge badge-light text-primary font-weight-bold px-2 py-1" style="border-radius: 6px; font-size: 0.72rem;">{{ $wallet->currency }}</span>
+                    <span class="text-muted text-uppercase font-weight-bold" style="font-size: 0.75rem; letter-spacing: 0.8px;">Available Balance</span>
+                    <div class="rounded-circle d-flex align-items-center justify-content-center" style="width: 36px; height: 36px; background: #e0f2fe; color: #0284c7;">
+                        <i class="fa-solid fa-wallet"></i>
+                    </div>
                 </div>
                 <div>
-                    <h2 class="font-weight-bolder mb-1" style="font-size: 2.2rem; letter-spacing: -0.5px;">₹{{ number_format($wallet->balance, 2) }}</h2>
-                    <small class="text-white-50"><i class="fa-solid fa-clock mr-1"></i> Last updated {{ $wallet->updated_at->diffForHumans() }}</small>
+                    <h3 class="font-weight-bold mb-1" style="font-size: 1.7rem; color: #0284c7;">₹{{ number_format($wallet->balance, 2) }}</h3>
+                    <small class="text-muted font-weight-medium"><i class="fa-solid fa-clock mr-1"></i> Updated {{ $wallet->updated_at->diffForHumans() }}</small>
                 </div>
             </div>
         </div>
@@ -69,7 +71,7 @@
                 <div class="d-flex align-items-center justify-content-between mb-2">
                     <span class="text-muted text-uppercase font-weight-bold" style="font-size: 0.75rem; letter-spacing: 0.8px;">Total Earned</span>
                     <div class="rounded-circle d-flex align-items-center justify-content-center" style="width: 36px; height: 36px; background: #ecfdf5; color: #10b981;">
-                        <i class="fa-solid fa-arrow-down-left"></i>
+                        <i class="fa-solid fa-arrow-trend-up"></i>
                     </div>
                 </div>
                 <div>
@@ -87,7 +89,7 @@
                 <div class="d-flex align-items-center justify-content-between mb-2">
                     <span class="text-muted text-uppercase font-weight-bold" style="font-size: 0.75rem; letter-spacing: 0.8px;">Total Settled</span>
                     <div class="rounded-circle d-flex align-items-center justify-content-center" style="width: 36px; height: 36px; background: #eff6ff; color: #2563eb;">
-                        <i class="fa-solid fa-arrow-up-right"></i>
+                        <i class="fa-solid fa-building-columns"></i>
                     </div>
                 </div>
                 <div>
@@ -180,11 +182,11 @@
                         <div class="d-flex align-items-center">
                             @if($tx->transaction_type === 'credit')
                                 <span class="badge badge-pill badge-light mr-2" style="background: #ecfdf5; color: #10b981; padding: 6px 10px;">
-                                    <i class="fa-solid fa-arrow-down-left mr-1"></i> Credit
+                                    <i class="fa-solid fa-arrow-down mr-1"></i> Credit
                                 </span>
                             @else
                                 <span class="badge badge-pill badge-light mr-2" style="background: #eff6ff; color: #2563eb; padding: 6px 10px;">
-                                    <i class="fa-solid fa-arrow-up-right mr-1"></i> Debit
+                                    <i class="fa-solid fa-arrow-up mr-1"></i> Debit
                                 </span>
                             @endif
                             <span class="text-capitalize font-weight-medium text-dark" style="font-size: 0.88rem;">{{ str_replace('_', ' ', $tx->source) }}</span>
@@ -218,9 +220,11 @@
                 @empty
                 <tr>
                     <td colspan="7" class="text-center py-5 text-muted">
-                        <i class="fa-solid fa-receipt fa-3x mb-3 text-black-50 d-block"></i>
-                        <p class="font-weight-bold mb-1">No Transactions Found</p>
-                        <small>When consultations and video appointments are completed, earnings will show up here automatically.</small>
+                        <div class="rounded-circle mx-auto d-flex align-items-center justify-content-center mb-3" style="width: 54px; height: 54px; background: #f1f5f9; color: #64748b;">
+                            <i class="fa-solid fa-receipt fa-xl"></i>
+                        </div>
+                        <h6 class="font-weight-bold text-dark mb-1">No Transactions Found</h6>
+                        <small class="text-muted">When consultations and video appointments are completed, earnings will show up here automatically.</small>
                     </td>
                 </tr>
                 @endforelse
