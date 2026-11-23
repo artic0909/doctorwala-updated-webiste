@@ -163,7 +163,7 @@
                         <div class="row">
                             <div class="col-md-6 form-group">
                                 <label class="font-weight-bold text-dark" style="font-size: 0.85rem;">IFSC Code <span class="text-danger">*</span></label>
-                                <input type="text" name="ifsc_code" class="form-control font-monospace text-uppercase" value="{{ old('ifsc_code', $bank->ifsc_code) }}" required maxlength="11" placeholder="e.g., SBIN0001234">
+                                <input type="text" name="ifsc_code" class="form-control font-monospace text-uppercase" value="{{ old('ifsc_code', $bank->ifsc_code) }}" required placeholder="e.g., SBIN0001234">
                             </div>
                             <div class="col-md-6 form-group">
                                 <label class="font-weight-bold text-dark" style="font-size: 0.85rem;">Branch Name</label>
@@ -256,7 +256,7 @@
                     <div class="row">
                         <div class="col-md-6 form-group">
                             <label class="font-weight-bold text-dark" style="font-size: 0.85rem;">IFSC Code <span class="text-danger">*</span></label>
-                            <input type="text" name="ifsc_code" class="form-control font-monospace text-uppercase" value="{{ old('ifsc_code') }}" required maxlength="11" placeholder="e.g., SBIN0001234">
+                            <input type="text" name="ifsc_code" class="form-control font-monospace text-uppercase" value="{{ old('ifsc_code') }}" required placeholder="e.g., SBIN0001234">
                         </div>
                         <div class="col-md-6 form-group">
                             <label class="font-weight-bold text-dark" style="font-size: 0.85rem;">Branch Name</label>

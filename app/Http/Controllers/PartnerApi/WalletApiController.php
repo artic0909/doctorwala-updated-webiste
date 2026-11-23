@@ -204,13 +204,11 @@ class WalletApiController extends Controller
         $validator = Validator::make($request->all(), [
             'bank_name' => 'required|string|max:150',
             'account_no' => 'required|string|max:50',
-            'ifsc_code' => 'required|string|max:20|regex:/^[A-Za-z]{4}0[A-Za-z0-9]{6}$/',
+            'ifsc_code' => 'required|string|max:50',
             'branch_name' => 'nullable|string|max:150',
             'account_holder_name' => 'nullable|string|max:150',
             'upi_id' => 'nullable|string|max:100',
             'is_primary' => 'nullable|boolean',
-        ], [
-            'ifsc_code.regex' => 'Please provide a valid 11-character IFSC code (e.g., SBIN0001234).',
         ]);
 
         if ($validator->fails()) {
@@ -281,13 +279,11 @@ class WalletApiController extends Controller
         $validator = Validator::make($request->all(), [
             'bank_name' => 'required|string|max:150',
             'account_no' => 'required|string|max:50',
-            'ifsc_code' => 'required|string|max:20|regex:/^[A-Za-z]{4}0[A-Za-z0-9]{6}$/',
+            'ifsc_code' => 'required|string|max:50',
             'branch_name' => 'nullable|string|max:150',
             'account_holder_name' => 'nullable|string|max:150',
             'upi_id' => 'nullable|string|max:100',
             'is_primary' => 'nullable|boolean',
-        ], [
-            'ifsc_code.regex' => 'Please provide a valid 11-character IFSC code (e.g., SBIN0001234).',
         ]);
 
         if ($validator->fails()) {
