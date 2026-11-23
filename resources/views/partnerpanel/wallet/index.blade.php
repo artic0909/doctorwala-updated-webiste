@@ -60,8 +60,8 @@
                     </div>
                 </div>
                 <div>
-                    <h3 class="font-weight-bold mb-1" style="font-size: 1.7rem; color: #0284c7 !important;">₹{{ number_format($wallet->balance, 2) }}</h3>
-                    <small class="font-weight-medium" style="color: #64748b;"><i class="fa-solid fa-clock mr-1"></i> Updated {{ $wallet->updated_at ? $wallet->updated_at->diffForHumans() : 'Just now' }}</small>
+                    <h3 class="font-weight-bold mb-1" style="font-size: 1.7rem; color: #0284c7 !important;">₹{{ number_format($availableBalance ?? $pendingSettlement ?? $wallet->balance, 2) }}</h3>
+                    <small class="font-weight-medium" style="color: #64748b;"><i class="fa-solid fa-clock mr-1"></i> Awaiting settlement</small>
                 </div>
             </div>
         </div>
@@ -96,7 +96,7 @@
                     </div>
                 </div>
                 <div>
-                    <h3 class="font-weight-bold mb-1 text-dark" style="font-size: 1.7rem;">₹{{ number_format($totalWithdrawn, 2) }}</h3>
+                    <h3 class="font-weight-bold mb-1 text-dark" style="font-size: 1.7rem;">₹{{ number_format($effectiveSettled ?? $totalSettled, 2) }}</h3>
                     <small class="text-muted"><i class="fa-solid fa-building-columns mr-1"></i> Transferred to bank</small>
                 </div>
             </div>

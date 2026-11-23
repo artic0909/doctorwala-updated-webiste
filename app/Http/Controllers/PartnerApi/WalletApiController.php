@@ -74,6 +74,9 @@ class WalletApiController extends Controller
             ->where('settlement_status', 'settled')
             ->sum('amount');
 
+        $effectiveSettled = $totalSettled > 0 ? $totalSettled : $totalWithdrawn;
+        $availableBalance = max(0.00, (float) $pendingSettlement);
+
         $primaryBank = BankDetail::where('dw_partner_id', $partner->id)
             ->where('is_primary', true)
             ->first();
@@ -89,18 +92,18 @@ class WalletApiController extends Controller
             'success' => true,
             'wallet' => [
                 'id' => $wallet->id,
-                'balance' => (float) $wallet->balance,
+                'balance' => $availableBalance,
                 'currency' => $wallet->currency,
                 'status' => $wallet->status,
                 'updated_at' => $wallet->updated_at ? $wallet->updated_at->toIso8601String() : null,
             ],
             'summary' => [
-                'balance' => (float) $wallet->balance,
+                'balance' => $availableBalance,
                 'total_earned' => $totalEarned,
-                'total_withdrawn' => $totalWithdrawn,
-                'pending_payout' => $pendingPayout,
+                'total_withdrawn' => $effectiveSettled,
+                'pending_payout' => $pendingSettlement,
                 'pending_settlement' => $pendingSettlement,
-                'total_settled' => $totalSettled,
+                'total_settled' => $effectiveSettled,
                 'bank_accounts_count' => $bankAccountsCount,
             ],
             'primary_bank' => $primaryBank ? [

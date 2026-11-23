@@ -75,6 +75,9 @@ class PartnerWalletController extends Controller
             ->where('settlement_status', 'settled')
             ->sum('amount');
 
+        $effectiveSettled = $totalSettled > 0 ? $totalSettled : $totalWithdrawn;
+        $availableBalance = max(0.00, (float) $pendingSettlement);
+
         // Transactions query with filters
         $txQuery = WalletTransaction::where('wallet_id', $wallet->id);
 
@@ -107,11 +110,13 @@ class PartnerWalletController extends Controller
         return view('partnerpanel.wallet.index', compact(
             'partner',
             'wallet',
+            'availableBalance',
             'totalEarned',
             'totalWithdrawn',
             'pendingPayout',
             'pendingSettlement',
             'totalSettled',
+            'effectiveSettled',
             'transactions',
             'primaryBank',
             'totalBankAccounts'

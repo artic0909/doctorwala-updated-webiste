@@ -11,6 +11,10 @@ use App\Models\PartnerOPDBannerModel;
 use App\Models\PartnerOPDContactModel;
 use App\Models\PartnerPathologyBannerModel;
 use App\Models\PartnerPathologyContactModel;
+use App\Models\PartnerPatientInquiry;
+use App\Models\BankDetail;
+use App\Models\Wallet;
+use App\Models\WalletTransaction;
 use App\Exports\Partners;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Http\Request;
@@ -446,7 +450,7 @@ class SuperPartnerHandleController extends Controller
 
     public function partnerView($id)
     {
-        $partner = DwPartnerModel::with(['ep', 'followups'])->findOrFail($id);
+        $partner = DwPartnerModel::with(['ep', 'followups', 'wallet', 'primaryBankDetail', 'bankDetails'])->findOrFail($id);
 
         $partner->registration_type = is_string($partner->registration_type)
             ? json_decode($partner->registration_type, true)
@@ -455,9 +459,77 @@ class SuperPartnerHandleController extends Controller
         $opd = PartnerOPDContactModel::with('banner', 'doctors')->where('currently_loggedin_partner_id', $partner->id)->first();
         $pathology = PartnerPathologyContactModel::with('banner', 'tests')->where('currently_loggedin_partner_id', $partner->id)->first();
         $doctor = PartnerDoctorContactModel::with('banner')->where('currently_loggedin_partner_id', $partner->id)->first();
-        $inquiriesCount = \App\Models\PartnerPatientInquiry::where('currently_loggedin_partner_id', $partner->id)->count();
 
-        return view('superadmin.partners.view', compact('partner', 'opd', 'pathology', 'doctor', 'inquiriesCount'));
+        // 1. All Doctors
+        $doctorsList = PartnerAllOPDDoctorModel::where('currently_loggedin_partner_id', $partner->id)->get();
+
+        // 2. All Tests
+        $testsList = PartnerAllPathologyTestModel::where('currently_loggedin_partner_id', $partner->id)->get();
+
+        // 3. All Inquiries / Appointments
+        $appointments = PartnerPatientInquiry::where('currently_loggedin_partner_id', $partner->id)
+            ->with(['doctor', 'test'])
+            ->orderBy('id', 'desc')
+            ->get();
+        $inquiriesCount = $appointments->count();
+
+        // 4. Financials / Wallet & Payouts Breakdown
+        $wallet = $partner->wallet ?? Wallet::where('dw_partner_id', $partner->id)->first();
+        $walletTransactions = collect([]);
+        $totalEarned = 0.00;
+        $totalSettled = 0.00;
+        $pendingSettlement = 0.00;
+        $totalWithdrawn = 0.00;
+
+        if ($wallet) {
+            $walletTransactions = WalletTransaction::where('wallet_id', $wallet->id)
+                ->orWhere('dw_partner_id', $partner->id)
+                ->with(['inquiry', 'settledByAdmin'])
+                ->orderBy('id', 'desc')
+                ->get();
+
+            $totalEarned = (float) $walletTransactions->where('transaction_type', 'credit')
+                ->where('status', 'completed')
+                ->sum('amount');
+
+            $totalSettled = (float) $walletTransactions->where('transaction_type', 'credit')
+                ->where('settlement_status', 'settled')
+                ->sum('amount');
+
+            $pendingSettlement = (float) $walletTransactions->where('transaction_type', 'credit')
+                ->where('settlement_status', 'pending')
+                ->sum('amount');
+
+            $totalWithdrawn = (float) $walletTransactions->where('transaction_type', 'debit')
+                ->where('status', 'completed')
+                ->sum('amount');
+        }
+
+        $effectiveSettled = $totalSettled > 0 ? $totalSettled : $totalWithdrawn;
+        $availableBalance = max(0.00, (float) $pendingSettlement);
+
+        $primaryBank = $partner->primaryBankDetail ?? BankDetail::where('dw_partner_id', $partner->id)->where('is_primary', true)->first();
+        $allBankDetails = BankDetail::where('dw_partner_id', $partner->id)->orderBy('is_primary', 'desc')->get();
+
+        return view('superadmin.partners.view', compact(
+            'partner',
+            'opd',
+            'pathology',
+            'doctor',
+            'inquiriesCount',
+            'doctorsList',
+            'testsList',
+            'appointments',
+            'wallet',
+            'walletTransactions',
+            'totalEarned',
+            'totalSettled',
+            'effectiveSettled',
+            'pendingSettlement',
+            'availableBalance',
+            'primaryBank',
+            'allBankDetails'
+        ));
     }
 
     public function loginAsPartner($id)
