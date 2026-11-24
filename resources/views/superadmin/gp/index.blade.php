@@ -283,7 +283,7 @@
                         <select class="form-control form-control-sm" name="ep_id" style="height: 38px; border-radius: 8px;" required>
                             <option value="">-- Choose EP --</option>
                             @foreach ($allEps as $ep)
-                                <option value="{{ $ep->id }}" {{ (old('ep_id', $selectedEpId) == $ep->id) ? 'selected' : '' }}>
+                                <option value="{{ $ep->id }}" {{ (old('ep_id', $selectedEpId ?? request('ep_id')) == $ep->id) ? 'selected' : '' }}>
                                     {{ $ep->name }} ({{ $ep->code }})
                                 </option>
                             @endforeach

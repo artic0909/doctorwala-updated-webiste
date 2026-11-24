@@ -59,6 +59,7 @@ class SuperGpController extends Controller
 
         // All active EPs for dropdown selection in Add/Edit modals & filters
         $allEps = Ep::orderBy('name', 'asc')->get();
+        $selectedEpId = $request->get('ep_id');
 
         return view('superadmin.gp.index', compact(
             'records',
@@ -66,7 +67,8 @@ class SuperGpController extends Controller
             'activeCount',
             'inactiveCount',
             'totalEpsWithGp',
-            'allEps'
+            'allEps',
+            'selectedEpId'
         ));
     }
 
