@@ -16,6 +16,7 @@ class ApiAllDoctorController extends Controller
             $query = trim($request->get('query', ''));
             $user_city = trim($request->get('user_city', ''));
             $page = (int) $request->get('page', 1);
+            $registration_type = strtolower(trim($request->get('registration_type', $request->get('filterRegistrationType', ''))));
 
             $dbQuery = PartnerDoctorContactModel::with('banner')
                 ->where('status', 'active');
@@ -24,8 +25,51 @@ class ApiAllDoctorController extends Controller
                 $dbQuery->where('partner_doctor_city', $user_city);
             }
 
+            // Registration type / category filtering (e.g. 'others' for physiotherapist & allied care)
+            if ($registration_type === 'others') {
+                $dbQuery->where(function ($q) {
+                    $q->where('clinic_registration_type', 'Others')
+                        ->orWhere('clinic_registration_type', 'like', '%other%')
+                        ->orWhere('partner_doctor_specialist', 'like', '%physio%')
+                        ->orWhere('partner_doctor_designation', 'like', '%physio%')
+                        ->orWhere('partner_doctor_specialist', 'like', '%therapy%')
+                        ->orWhere('partner_doctor_name', 'like', '%physio%');
+                });
+            } elseif ($registration_type === 'doctor') {
+                $dbQuery->where(function ($q) {
+                    $q->where('clinic_registration_type', 'Doctor')
+                        ->orWhereNull('clinic_registration_type')
+                        ->orWhere('clinic_registration_type', '');
+                })->where('partner_doctor_specialist', 'not like', '%physio%')
+                  ->where('partner_doctor_name', 'not like', '%physio%');
+            }
+
             if ($query !== '') {
-                // Search mode — full table, no pagination
+                // If query is specifically "other" or "others" and registration_type wasn't passed, treat as others filter
+                if (in_array(strtolower($query), ['other', 'others']) && empty($registration_type)) {
+                    $dbQuery->where(function ($q) {
+                        $q->where('clinic_registration_type', 'Others')
+                            ->orWhere('clinic_registration_type', 'like', '%other%')
+                            ->orWhere('partner_doctor_specialist', 'like', '%physio%')
+                            ->orWhere('partner_doctor_designation', 'like', '%physio%')
+                            ->orWhere('partner_doctor_specialist', 'like', '%therapy%')
+                            ->orWhere('partner_doctor_name', 'like', '%physio%');
+                    });
+                    
+                    $paginated = $dbQuery->paginate(10);
+                    $finalData = $paginated->getCollection()->map(fn($d) => $this->formatDoctor($d));
+
+                    return response()->json([
+                        'status'        => true,
+                        'is_search'     => false,
+                        'total'         => $paginated->total(),
+                        'current_page'  => $paginated->currentPage(),
+                        'last_page'     => $paginated->lastPage(),
+                        'data'          => $finalData,
+                    ]);
+                }
+
+                // Search mode — paginated 10 per page
                 $dbQuery->where(function ($q) use ($query) {
                     $q->where('partner_doctor_name',         'like', "%{$query}%")
                         ->orWhere('partner_doctor_specialist',  'like', "%{$query}%")
@@ -38,18 +82,20 @@ class ApiAllDoctorController extends Controller
                         ->orWhere('partner_doctor_landmark',    'like', "%{$query}%");
                 });
 
-                $doctors = $dbQuery->get();
-                $finalData = $doctors->map(fn($d) => $this->formatDoctor($d));
+                $paginated = $dbQuery->paginate(10);
+                $finalData = $paginated->getCollection()->map(fn($d) => $this->formatDoctor($d));
 
                 return response()->json([
                     'status'        => true,
                     'is_search'     => true,
-                    'total'         => $finalData->count(),
+                    'total'         => $paginated->total(),
+                    'current_page'  => $paginated->currentPage(),
+                    'last_page'     => $paginated->lastPage(),
                     'data'          => $finalData,
                 ]);
             } else {
-                // Normal mode with 10-minute caching to eliminate RAND() database bottleneck
-                $cacheKey = "api_all_doc_v2_{$user_city}_page_{$page}";
+                // Normal mode with 10-minute caching
+                $cacheKey = "api_all_doc_v5_{$registration_type}_{$user_city}_page_{$page}";
 
                 return Cache::remember($cacheKey, now()->addMinutes(10), function () use ($dbQuery) {
                     $paginated = $dbQuery->inRandomOrder()->paginate(10);
