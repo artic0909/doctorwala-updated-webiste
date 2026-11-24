@@ -119,9 +119,20 @@
 
         <form method="GET" action="{{ route('superadmin.settlements.index') }}" class="row g-2 align-items-end">
             <input type="hidden" name="status" value="{{ $status }}">
-            <div class="col-md-5 col-sm-12 mb-2 mb-md-0">
+            <div class="col-md-4 col-sm-12 mb-2 mb-md-0">
                 <label class="small text-muted font-weight-bold mb-1"><i class="fa fa-search mr-1"></i> Search</label>
                 <input type="text" name="search" class="form-control" placeholder="Partner ID, Clinic name, Patient, Razorpay ID..." value="{{ request('search') }}" style="border-radius: 8px;">
+            </div>
+            <div class="col-md-2 col-sm-6 mb-2 mb-md-0">
+                <label class="small text-muted font-weight-bold mb-1"><i class="fa-solid fa-stethoscope mr-1"></i> Appt. Status</label>
+                <select name="appointment_status" class="form-control" style="border-radius: 8px;">
+                    <option value="all" {{ ($appointmentStatus ?? 'all') === 'all' ? 'selected' : '' }}>All Appointments</option>
+                    <option value="Confirmed" {{ ($appointmentStatus ?? '') === 'Confirmed' ? 'selected' : '' }}>Confirmed</option>
+                    <option value="Upcoming" {{ ($appointmentStatus ?? '') === 'Upcoming' ? 'selected' : '' }}>Upcoming</option>
+                    <option value="Completed" {{ ($appointmentStatus ?? '') === 'Completed' ? 'selected' : '' }}>Completed</option>
+                    <option value="Pending" {{ ($appointmentStatus ?? '') === 'Pending' ? 'selected' : '' }}>Pending</option>
+                    <option value="Cancelled" {{ ($appointmentStatus ?? '') === 'Cancelled' ? 'selected' : '' }}>Cancelled</option>
+                </select>
             </div>
             <div class="col-md-2 col-sm-6 mb-2 mb-md-0">
                 <label class="small text-muted font-weight-bold mb-1"><i class="fa fa-calendar-alt mr-1"></i> From</label>
@@ -131,7 +142,7 @@
                 <label class="small text-muted font-weight-bold mb-1"><i class="fa fa-calendar-alt mr-1"></i> To</label>
                 <input type="date" name="to_date" class="form-control" value="{{ request('to_date') }}" style="border-radius: 8px;">
             </div>
-            <div class="col-md-3 col-sm-12 d-flex">
+            <div class="col-md-2 col-sm-12 d-flex">
                 <button type="submit" class="btn btn-primary font-weight-bold flex-grow-1 mr-2" style="height: 40px; border-radius: 8px;">
                     <i class="fa fa-filter mr-1"></i> Filter
                 </button>
@@ -227,8 +238,30 @@
 
                     <td class="py-3">
                         @if($inquiry)
-                            <div class="font-weight-bold text-dark" style="font-size: 0.88rem;">
-                                <i class="fa-solid fa-user text-secondary mr-1"></i> {{ $inquiry->user_name }}
+                            <div class="d-flex align-items-center justify-content-between mb-1" style="gap: 8px;">
+                                <span class="font-weight-bold text-dark" style="font-size: 0.88rem;">
+                                    <i class="fa-solid fa-user text-secondary mr-1"></i> {{ $inquiry->user_name }}
+                                </span>
+                                @php
+                                    $aptStatus = strtolower($inquiry->status ?? 'pending');
+                                    $aptBadgeStyle = match($aptStatus) {
+                                        'completed' => 'background: #dcfce7; color: #15803d; border: 1px solid #bbf7d0;',
+                                        'confirmed' => 'background: #e0f2fe; color: #0369a1; border: 1px solid #bae6fd;',
+                                        'upcoming'  => 'background: #fef3c7; color: #b45309; border: 1px solid #fde68a;',
+                                        'pending'   => 'background: #fef3c7; color: #b45309; border: 1px solid #fde68a;',
+                                        'cancelled' => 'background: #fee2e2; color: #b91c1c; border: 1px solid #fecaca;',
+                                        default     => 'background: #f1f5f9; color: #475569; border: 1px solid #e2e8f0;'
+                                    };
+                                    $aptIcon = match($aptStatus) {
+                                        'completed' => 'fa-circle-check',
+                                        'confirmed' => 'fa-circle-check',
+                                        'cancelled' => 'fa-circle-xmark',
+                                        default     => 'fa-clock'
+                                    };
+                                @endphp
+                                <span class="badge px-2 py-1 font-weight-bold" style="{{ $aptBadgeStyle }} font-size: 0.72rem; border-radius: 6px; text-transform: uppercase; letter-spacing: 0.4px;">
+                                    <i class="fa-solid {{ $aptIcon }} mr-1"></i>{{ $inquiry->status ?? 'Pending' }}
+                                </span>
                             </div>
                             <small class="text-muted d-block">
                                 <i class="fa-solid fa-mobile-screen mr-1"></i> {{ $inquiry->user_mobile }}

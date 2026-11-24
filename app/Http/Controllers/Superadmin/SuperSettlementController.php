@@ -19,10 +19,18 @@ class SuperSettlementController extends Controller
         $query = WalletTransaction::with(['partner.primaryBankDetail', 'partner.bankDetails', 'inquiry', 'settledByAdmin'])
             ->where('transaction_type', 'credit');
 
-        // Status Filter
+        // Status Filter (Settlement status: pending / settled)
         $status = $request->get('status', 'all');
         if (in_array($status, ['pending', 'settled', 'rejected'])) {
             $query->where('settlement_status', $status);
+        }
+
+        // Appointment Status Filter (Upcoming, Confirmed, Completed, Cancelled, Pending)
+        $appointmentStatus = $request->get('appointment_status', 'all');
+        if ($appointmentStatus && $appointmentStatus !== 'all') {
+            $query->whereHas('inquiry', function ($iq) use ($appointmentStatus) {
+                $iq->where('status', $appointmentStatus);
+            });
         }
 
         // Search Filter (Partner Name, Partner ID, Mobile, Razorpay ID, Patient Name)
@@ -79,7 +87,8 @@ class SuperSettlementController extends Controller
             'totalPending',
             'pendingCount',
             'settledCount',
-            'status'
+            'status',
+            'appointmentStatus'
         ));
     }
 
