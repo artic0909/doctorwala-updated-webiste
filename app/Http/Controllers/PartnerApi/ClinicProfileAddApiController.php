@@ -381,14 +381,34 @@ class ClinicProfileAddApiController extends Controller
             $partnerStatus = $partner->status;
 
             $visitDayTime = [];
-            if ($request->has('partner_doctor_visit_day')) {
+
+            // 1. Raw JSON schedule payload
+            if ($request->filled('schedule_data_json')) {
+                $decoded = json_decode($request->schedule_data_json, true);
+                if (is_array($decoded)) {
+                    $visitDayTime = PartnerDoctorContactModel::normalizeSchedule($decoded);
+                }
+            } elseif ($request->has('visit_day_time')) {
+                $raw = $request->visit_day_time;
+                if (is_string($raw)) {
+                    $raw = json_decode($raw, true);
+                }
+                if (is_array($raw)) {
+                    $visitDayTime = PartnerDoctorContactModel::normalizeSchedule($raw);
+                }
+            }
+
+            // 2. Legacy partner_doctor_visit_day format fallback
+            if (empty($visitDayTime) && $request->has('partner_doctor_visit_day')) {
+                $legacyItems = [];
                 foreach ($request->partner_doctor_visit_day as $index => $day) {
-                    $visitDayTime[] = [
+                    $legacyItems[] = [
                         'day' => $day,
                         'start_time' => $request->partner_doctor_visit_start_time[$index] ?? null,
                         'end_time' => $request->partner_doctor_visit_end_time[$index] ?? null,
                     ];
                 }
+                $visitDayTime = PartnerDoctorContactModel::normalizeSchedule($legacyItems);
             }
 
             $validatedData = $validator->validated();
@@ -400,6 +420,7 @@ class ClinicProfileAddApiController extends Controller
             unset($validatedData['partner_doctor_visit_day']);
             unset($validatedData['partner_doctor_visit_start_time']);
             unset($validatedData['partner_doctor_visit_end_time']);
+            unset($validatedData['schedule_data_json']);
             unset($validatedData['doctorbanner']);
 
             $contactDetails = PartnerDoctorContactModel::updateOrCreate(

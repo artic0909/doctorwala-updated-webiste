@@ -84,17 +84,79 @@ class PartnerDoctorContactController extends Controller
 
         
         $visitDayTime = [];
-        if (is_array($request->partner_doctor_visit_day)) {
+
+        // 1. Check if raw schedule JSON is sent
+        if ($request->filled('schedule_data_json')) {
+            $decoded = json_decode($request->schedule_data_json, true);
+            if (is_array($decoded)) {
+                $visitDayTime = PartnerDoctorContactModel::normalizeSchedule($decoded);
+            }
+        }
+
+        // 2. If not sent via JSON, check structured form arrays
+        if (empty($visitDayTime) && $request->has('schedule_type') && is_array($request->schedule_type)) {
+            foreach ($request->schedule_type as $index => $type) {
+                $day = $request->schedule_day[$index] ?? null;
+                $date = $request->schedule_date[$index] ?? null;
+                if ($type === 'date' && !empty($date)) {
+                    try { $day = \Carbon\Carbon::parse($date)->format('l'); } catch (\Exception $e) {}
+                }
+                if (empty($day) && empty($date)) continue;
+
+                $morningEnabled = !empty($request->morning_enabled[$index]);
+                $afternoonEnabled = !empty($request->afternoon_enabled[$index]);
+                $eveningEnabled = !empty($request->evening_enabled[$index]);
+
+                $morningStart = $request->morning_start[$index] ?? null;
+                $morningEnd = $request->morning_end[$index] ?? null;
+                $afternoonStart = $request->afternoon_start[$index] ?? null;
+                $afternoonEnd = $request->afternoon_end[$index] ?? null;
+                $eveningStart = $request->evening_start[$index] ?? null;
+                $eveningEnd = $request->evening_end[$index] ?? null;
+
+                $allStarts = array_filter([$morningEnabled ? $morningStart : null, $afternoonEnabled ? $afternoonStart : null, $eveningEnabled ? $eveningStart : null]);
+                $allEnds = array_filter([$morningEnabled ? $morningEnd : null, $afternoonEnabled ? $afternoonEnd : null, $eveningEnabled ? $eveningEnd : null]);
+                sort($allStarts);
+                rsort($allEnds);
+
+                $visitDayTime[] = [
+                    'type' => $type ?: 'day',
+                    'day' => $day ?? 'Monday',
+                    'date' => $date,
+                    'morning_enabled' => (bool)$morningEnabled,
+                    'morning_start' => $morningStart,
+                    'morning_end' => $morningEnd,
+                    'afternoon_enabled' => (bool)$afternoonEnabled,
+                    'afternoon_start' => $afternoonStart,
+                    'afternoon_end' => $afternoonEnd,
+                    'evening_enabled' => (bool)$eveningEnabled,
+                    'evening_start' => $eveningStart,
+                    'evening_end' => $eveningEnd,
+                    'start_time' => !empty($allStarts) ? reset($allStarts) : ($morningStart ?: '09:00'),
+                    'end_time' => !empty($allEnds) ? reset($allEnds) : ($eveningEnd ?: '20:00'),
+                ];
+            }
+        }
+
+        // 3. Fallback for legacy simple day array
+        if (empty($visitDayTime) && is_array($request->partner_doctor_visit_day)) {
+            $legacyItems = [];
             foreach ($request->partner_doctor_visit_day as $index => $day) {
                 if (!empty($day)) {
-                    $visitDayTime[] = [
+                    $legacyItems[] = [
                         'day' => $day,
                         'start_time' => $request->partner_doctor_visit_start_time[$index] ?? null,
                         'end_time' => $request->partner_doctor_visit_end_time[$index] ?? null,
                     ];
                 }
             }
+            $visitDayTime = PartnerDoctorContactModel::normalizeSchedule($legacyItems);
         }
+
+        // Clean up unneeded form keys from validated data
+        unset($validatedData['partner_doctor_visit_day']);
+        unset($validatedData['partner_doctor_visit_start_time']);
+        unset($validatedData['partner_doctor_visit_end_time']);
 
         $validatedData['visit_day_time'] = $visitDayTime;
         $validatedData['currently_loggedin_partner_id'] = $partnerId;

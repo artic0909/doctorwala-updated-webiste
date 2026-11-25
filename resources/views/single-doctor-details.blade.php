@@ -295,51 +295,116 @@
             <div class="sched-body">
 
                 {{-- Schedule table --}}
+                @php
+                    $normalizedSchedule = $doc->normalized_schedule ?? [];
+                    if (empty($normalizedSchedule) && !empty($doc->visit_day_time)) {
+                        $normalizedSchedule = \App\Models\PartnerDoctorContactModel::normalizeSchedule($doc->visit_day_time);
+                    }
+                @endphp
                 <div class="sched-table-wrap">
-                    <div class="sched-tbl-label">📅 Weekly Visit Schedule</div>
-                    @if(!empty($doc->visit_day_time) && is_array($doc->visit_day_time))
-                    <table class="sched-tbl">
-                        <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>Day</th>
-                                <th>From</th>
-                                <th>To</th>
-                                <th>Status</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach($doc->visit_day_time as $i => $visit)
-                            <tr>
-                                <td>{{ $i + 1 }}</td>
-                                <td><strong style="color:var(--navy)">{{ $visit['day'] ?? 'N/A' }}</strong></td>
-                                <td>
-                                    @if(!empty($visit['start_time']))
-                                    {{ \Carbon\Carbon::parse($visit['start_time'])->format('h:i A') }}
-                                    @else
-                                    <span style="color:var(--muted)">—</span>
-                                    @endif
-                                </td>
-                                <td>
-                                    @if(!empty($visit['end_time']))
-                                    {{ \Carbon\Carbon::parse($visit['end_time'])->format('h:i A') }}
-                                    @else
-                                    <span style="color:var(--muted)">—</span>
-                                    @endif
-                                </td>
-                                <td>
+                    <div class="sched-tbl-label" style="display: flex; align-items: center; justify-content: space-between;">
+                        <span>📅 Chamber & Visiting Schedule</span>
+                        <span class="badge badge-light text-primary font-weight-normal px-2 py-1" style="font-size: 11px; border: 1px solid #dbeafe;">Day & Date Wise</span>
+                    </div>
+
+                    @if(!empty($normalizedSchedule))
+                    <div class="schedule-cards-list" style="display: flex; flex-direction: column; gap: 12px; margin-top: 10px;">
+                        @foreach($normalizedSchedule as $i => $visit)
+                        @php
+                            $isDateWise = ($visit['schedule_type'] ?? '') === 'date';
+                            $visitDate = $visit['date'] ?? null;
+                            $visitDay = $visit['day'] ?? ($isDateWise && $visitDate ? \Carbon\Carbon::parse($visitDate)->format('l') : 'N/A');
+                            $slots = $visit['slots'] ?? [];
+                        @endphp
+                        <div class="sched-item-card" style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 14px 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.04);">
+                            <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 8px; margin-bottom: 8px;">
+                                <div style="display: flex; align-items: center; gap: 10px;">
+                                    <span style="display: inline-flex; align-items: center; justify-content: center; width: 34px; height: 34px; border-radius: 8px; background: {{ $isDateWise ? '#ecfdf5' : '#eff6ff' }}; color: {{ $isDateWise ? '#059669' : '#2563eb' }}; font-size: 15px;">
+                                        <i class="fa-solid {{ $isDateWise ? 'fa-calendar-day' : 'fa-calendar-week' }}"></i>
+                                    </span>
+                                    <div>
+                                        @if($isDateWise && $visitDate)
+                                            <div style="font-weight: 700; color: #0f172a; font-size: 14px;">
+                                                {{ \Carbon\Carbon::parse($visitDate)->format('d M Y') }}
+                                                <span style="font-size: 12px; font-weight: 600; color: #059669; margin-left: 4px;">({{ $visitDay }})</span>
+                                            </div>
+                                            <div style="font-size: 11px; color: #059669; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Specific Date Schedule</div>
+                                        @else
+                                            <div style="font-weight: 700; color: #0f172a; font-size: 14px;">{{ $visitDay }}</div>
+                                            <div style="font-size: 11px; color: #2563eb; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Weekly Routine</div>
+                                        @endif
+                                    </div>
+                                </div>
+                                <div>
                                     @if($doc->status == 'Available')
-                                    <span class="sbadge sbadge-ok">Available</span>
+                                    <span class="sbadge sbadge-ok" style="font-size: 11px; padding: 3px 8px;">Available</span>
                                     @elseif($doc->status == 'Unavailable')
-                                    <span class="sbadge sbadge-no">Unavailable</span>
+                                    <span class="sbadge sbadge-no" style="font-size: 11px; padding: 3px 8px;">Unavailable</span>
                                     @else
-                                    <span class="sbadge sbadge-def">{{ $doc->status ?? 'N/A' }}</span>
+                                    <span class="sbadge sbadge-def" style="font-size: 11px; padding: 3px 8px;">{{ $doc->status ?? 'Active' }}</span>
                                     @endif
-                                </td>
-                            </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
+                                </div>
+                            </div>
+
+                            {{-- Slot list for this day/date --}}
+                            <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 6px;">
+                                @if(!empty($slots))
+                                    @foreach($slots as $slot)
+                                    @php
+                                        $slotId = $slot['id'] ?? '';
+                                        $slotName = $slot['name'] ?? ucfirst($slotId);
+                                        $slotBg = '#f8fafc';
+                                        $slotBorder = '#e2e8f0';
+                                        $slotColor = '#334155';
+                                        $slotIcon = 'fa-regular fa-clock';
+
+                                        if ($slotId === 'morning') {
+                                            $slotBg = '#fefce8';
+                                            $slotBorder = '#fef08a';
+                                            $slotColor = '#854d0e';
+                                            $slotIcon = 'fa-solid fa-sun';
+                                        } elseif ($slotId === 'afternoon') {
+                                            $slotBg = '#fff7ed';
+                                            $slotBorder = '#fed7aa';
+                                            $slotColor = '#9a3412';
+                                            $slotIcon = 'fa-solid fa-cloud-sun';
+                                        } elseif ($slotId === 'evening') {
+                                            $slotBg = '#f5f3ff';
+                                            $slotBorder = '#ddd6fe';
+                                            $slotColor = '#5b21b6';
+                                            $slotIcon = 'fa-solid fa-moon';
+                                        }
+                                    @endphp
+                                    <div style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 8px; background: {{ $slotBg }}; border: 1px solid {{ $slotBorder }}; font-size: 12px; color: {{ $slotColor }}; font-weight: 600;">
+                                        <i class="{{ $slotIcon }}"></i>
+                                        <span>{{ $slotName }}:</span>
+                                        <span style="font-weight: 700;">
+                                            @if(!empty($slot['start_time']) && !empty($slot['end_time']))
+                                                {{ \Carbon\Carbon::parse($slot['start_time'])->format('h:i A') }} - {{ \Carbon\Carbon::parse($slot['end_time'])->format('h:i A') }}
+                                            @elseif(!empty($slot['start_time']))
+                                                From {{ \Carbon\Carbon::parse($slot['start_time'])->format('h:i A') }}
+                                            @else
+                                                Session Active
+                                            @endif
+                                        </span>
+                                    </div>
+                                    @endforeach
+                                @elseif(!empty($visit['start_time']) || !empty($visit['end_time']))
+                                    <div style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 8px; background: #f8fafc; border: 1px solid #e2e8f0; font-size: 12px; color: #334155; font-weight: 600;">
+                                        <i class="fa-regular fa-clock"></i>
+                                        <span>Timing:</span>
+                                        <span style="font-weight: 700;">
+                                            {{ !empty($visit['start_time']) ? \Carbon\Carbon::parse($visit['start_time'])->format('h:i A') : '—' }} - 
+                                            {{ !empty($visit['end_time']) ? \Carbon\Carbon::parse($visit['end_time'])->format('h:i A') : '—' }}
+                                        </span>
+                                    </div>
+                                @else
+                                    <span style="font-size: 12px; color: #94a3b8;">No slot timings specified</span>
+                                @endif
+                            </div>
+                        </div>
+                        @endforeach
+                    </div>
                     @else
                     <p style="color:var(--muted);font-size:13px;padding:8px 0">No schedule available.</p>
                     @endif
@@ -546,15 +611,27 @@
                         @endguest
                     </div>
                     <div id="doctorScheduleNotice{{ $doc->id }}" class="mb-3 p-2 rounded small" style="background: #eff6ff; border: 1px solid #bfdbfe; color: #1e40af; display: none;"></div>
-                    <div class="fr">
-                        <div class="fgrp"><label class="flbl">Appointment Booking Date *</label>
-                            @auth<input class="fc" type="date" name="booking_date" id="docBookingDate{{ $doc->id }}" value="{{ $user->booking_date ?? '' }}" required>@endauth
-                            @guest<input class="fc" name="booking_date" id="docBookingDate{{ $doc->id }}" type="date" required>@endguest
-                        </div>
-                        <div class="fgrp"><label class="flbl">Appointment Booking Time *</label>
-                            @auth<input class="fc" name="booking_time" id="docBookingTime{{ $doc->id }}" type="time" value="{{ $user->booking_time ?? '' }}" required>@endauth
-                            @guest<input class="fc" name="booking_time" id="docBookingTime{{ $doc->id }}" type="time" required>@endguest
-                        </div>
+                    <div class="fgrp">
+                        <label class="flbl">Appointment Booking Date *</label>
+                        @auth<input class="fc" type="date" name="booking_date" id="docBookingDate{{ $doc->id }}" value="{{ $user->booking_date ?? '' }}" required>@endauth
+                        @guest<input class="fc" name="booking_date" id="docBookingDate{{ $doc->id }}" type="date" required>@endguest
+                    </div>
+
+                    {{-- Dynamic Slot Selection Section --}}
+                    <div id="docSlotSection{{ $doc->id }}" class="mb-3" style="display: none; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px 12px;">
+                        <label class="flbl" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                            <span><i class="fa-solid fa-clock text-primary mr-1"></i> Available Slot (Select One) *</span>
+                            <span class="text-muted small" id="docSlotNotice{{ $doc->id }}" style="font-size: 11px;">Select a slot</span>
+                        </label>
+                        <div id="docSlotList{{ $doc->id }}" style="display: flex; flex-wrap: wrap; gap: 8px;"></div>
+                        <input type="hidden" name="booking_slot" id="docBookingSlot{{ $doc->id }}">
+                    </div>
+
+                    <div class="fgrp">
+                        <label class="flbl">Appointment Booking Time *</label>
+                        @auth<input class="fc" name="booking_time" id="docBookingTime{{ $doc->id }}" type="time" value="{{ $user->booking_time ?? '' }}" required>@endauth
+                        @guest<input class="fc" name="booking_time" id="docBookingTime{{ $doc->id }}" type="time" required>@endguest
+                        <small class="text-muted d-block mt-1" id="docTimeHelp{{ $doc->id }}" style="font-size: 11px;">Time will auto-align with your selected visiting slot.</small>
                     </div>
 
                     @if(strtolower($doc->clinic_registration_type ?? '') === 'others' || str_contains(strtolower($doc->partner_doctor_specialist ?? ''), 'physio'))
@@ -835,7 +912,7 @@
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <script>
 function parseScheduleData(rawSchedule) {
-    if (!rawSchedule) return { days: {}, isAllDays: false, summary: '' };
+    if (!rawSchedule) return { days: {}, dates: {}, isAllDays: false, summary: '' };
     let parsed = rawSchedule;
     if (typeof rawSchedule === 'string') {
         let s = rawSchedule.trim();
@@ -846,12 +923,13 @@ function parseScheduleData(rawSchedule) {
         try {
             parsed = JSON.parse(s);
         } catch (e) {
-            return { days: {}, isAllDays: false, summary: '' };
+            return { days: {}, dates: {}, isAllDays: false, summary: '' };
         }
     }
-    if (!Array.isArray(parsed)) return { days: {}, isAllDays: false, summary: '' };
+    if (!Array.isArray(parsed)) return { days: {}, dates: {}, isAllDays: false, summary: '' };
 
     const daysMap = {};
+    const datesMap = {};
     let isAllDays = false;
     const summaryParts = [];
 
@@ -866,33 +944,59 @@ function parseScheduleData(rawSchedule) {
     };
     const numToDayName = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
+    const format12h = (t) => {
+        if (!t) return '';
+        const p = t.split(':');
+        let h = parseInt(p[0], 10);
+        let m = p[1] || '00';
+        const ampm = h >= 12 ? 'PM' : 'AM';
+        h = h % 12 || 12;
+        return (h < 10 ? '0' + h : h) + ':' + m + ' ' + ampm;
+    };
+
     parsed.forEach(item => {
         if (!item) return;
+        const schedType = (item.schedule_type || 'day').toString().trim().toLowerCase();
+        const dateStr = item.date ? item.date.trim() : null;
         const rawDay = (item.day || item.test_day || '').toString().trim().toLowerCase();
-        const start = item.start_time ? item.start_time.trim() : null;
-        const end = item.end_time ? item.end_time.trim() : null;
 
-        const format12h = (t) => {
-            if (!t) return '';
-            const p = t.split(':');
-            let h = parseInt(p[0], 10);
-            let m = p[1] || '00';
-            const ampm = h >= 12 ? 'PM' : 'AM';
-            h = h % 12 || 12;
-            return (h < 10 ? '0' + h : h) + ':' + m + ' ' + ampm;
-        };
+        // Extract slots
+        let itemSlots = [];
+        if (Array.isArray(item.slots) && item.slots.length > 0) {
+            itemSlots = item.slots.map(s => ({
+                id: s.id || 'slot',
+                name: s.name || (s.id ? (s.id.charAt(0).toUpperCase() + s.id.slice(1)) : 'Slot'),
+                start: s.start_time ? s.start_time.trim() : null,
+                end: s.end_time ? s.end_time.trim() : null
+            }));
+        } else if (item.start_time || item.end_time) {
+            itemSlots.push({
+                id: 'regular',
+                name: 'Visiting Hours',
+                start: item.start_time ? item.start_time.trim() : null,
+                end: item.end_time ? item.end_time.trim() : null
+            });
+        }
 
-        let timeStr = '';
-        if (start && end) timeStr = ` (${format12h(start)} - ${format12h(end)})`;
-        else if (start) timeStr = ` (From ${format12h(start)})`;
+        const slotLabels = itemSlots.map(s => {
+            if (s.start && s.end) return `${s.name} (${format12h(s.start)} - ${format12h(s.end)})`;
+            if (s.start) return `${s.name} (From ${format12h(s.start)})`;
+            return s.name;
+        }).join(', ');
+
+        if (schedType === 'date' && dateStr) {
+            datesMap[dateStr] = itemSlots;
+            summaryParts.push(`${dateStr} [${slotLabels || 'Available'}]`);
+            return;
+        }
 
         if (rawDay.includes('all day')) {
             isAllDays = true;
             for (let i = 0; i < 7; i++) {
                 if (!daysMap[i]) daysMap[i] = [];
-                daysMap[i].push({ start, end });
+                daysMap[i].push(...itemSlots);
             }
-            summaryParts.push(`All Days${timeStr}`);
+            summaryParts.push(`All Days (${slotLabels})`);
             return;
         }
 
@@ -900,8 +1004,8 @@ function parseScheduleData(rawSchedule) {
             if (rawDay.includes(key)) {
                 const dayNum = dayNameToNum[key];
                 if (!daysMap[dayNum]) daysMap[dayNum] = [];
-                daysMap[dayNum].push({ start, end });
-                summaryParts.push(`${numToDayName[dayNum].substring(0, 3)}${timeStr}`);
+                daysMap[dayNum].push(...itemSlots);
+                summaryParts.push(`${numToDayName[dayNum].substring(0, 3)} (${slotLabels})`);
                 break;
             }
         }
@@ -909,16 +1013,16 @@ function parseScheduleData(rawSchedule) {
 
     return {
         days: daysMap,
+        dates: datesMap,
         isAllDays: isAllDays,
-        summary: summaryParts.join(', ')
+        summary: summaryParts.join(' | ')
     };
 }
 
-function attachScheduleValidation(dateInput, timeInput, scheduleNoticeEl, rawSchedule, doctorOrTestName) {
+function attachScheduleValidation(dateInput, timeInput, scheduleNoticeEl, slotSectionEl, slotListEl, slotInputEl, rawSchedule, doctorOrTestName) {
     if (!dateInput || !timeInput) return null;
     const sched = parseScheduleData(rawSchedule);
     const numToDayName = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-    const allowedDayNames = Object.keys(sched.days).map(d => numToDayName[d]);
 
     if (scheduleNoticeEl) {
         if (sched.summary) {
@@ -932,10 +1036,99 @@ function attachScheduleValidation(dateInput, timeInput, scheduleNoticeEl, rawSch
     const todayStr = new Date().toISOString().split('T')[0];
     dateInput.min = todayStr;
 
+    function getSlotsForDate(dateStr, dateObj) {
+        if (sched.dates[dateStr] && sched.dates[dateStr].length > 0) {
+            return sched.dates[dateStr];
+        }
+        const dayNum = dateObj.getDay();
+        if (sched.days[dayNum] && sched.days[dayNum].length > 0) {
+            return sched.days[dayNum];
+        }
+        if (sched.isAllDays) {
+            return [{ id: 'all_day', name: 'Visiting Hours', start: '09:00', end: '20:00' }];
+        }
+        return null;
+    }
+
+    function isDateAvailable(dateStr, dateObj) {
+        const hasDateRules = Object.keys(sched.dates).length > 0;
+        const hasDayRules = Object.keys(sched.days).length > 0;
+        if (!hasDateRules && !hasDayRules) return true;
+        if (sched.isAllDays) return true;
+        if (sched.dates[dateStr]) return true;
+        const dayNum = dateObj.getDay();
+        if (sched.days[dayNum]) return true;
+        return false;
+    }
+
+    function renderSlots(slots) {
+        if (!slotSectionEl || !slotListEl) return;
+        slotListEl.innerHTML = '';
+        if (!slots || slots.length === 0) {
+            slotSectionEl.style.display = 'none';
+            if (slotInputEl) slotInputEl.value = '';
+            return;
+        }
+
+        slotSectionEl.style.display = 'block';
+        const format12h = (t) => {
+            if (!t) return '';
+            const p = t.split(':');
+            let h = parseInt(p[0], 10);
+            let m = p[1] || '00';
+            const ampm = h >= 12 ? 'PM' : 'AM';
+            h = h % 12 || 12;
+            return (h < 10 ? '0' + h : h) + ':' + m + ' ' + ampm;
+        };
+
+        slots.forEach((slot, idx) => {
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'btn btn-sm slot-pill-btn';
+            btn.style.cssText = 'border-radius: 8px; font-weight: 600; font-size: 12px; padding: 6px 12px; display: inline-flex; align-items: center; gap: 6px; cursor: pointer; border: 1.5px solid #cbd5e1; background: #ffffff; color: #334155; transition: all 0.2s;';
+
+            let iconHtml = '<i class="fa-regular fa-clock"></i>';
+            if (slot.id === 'morning') iconHtml = '<i class="fa-solid fa-sun text-warning"></i>';
+            else if (slot.id === 'afternoon') iconHtml = '<i class="fa-solid fa-cloud-sun text-warning"></i>';
+            else if (slot.id === 'evening') iconHtml = '<i class="fa-solid fa-moon text-primary"></i>';
+
+            let timeLabel = '';
+            if (slot.start && slot.end) timeLabel = ` (${format12h(slot.start)} - ${format12h(slot.end)})`;
+            else if (slot.start) timeLabel = ` (${format12h(slot.start)})`;
+
+            btn.innerHTML = `${iconHtml} <span>${slot.name}${timeLabel}</span>`;
+
+            btn.onclick = function () {
+                slotListEl.querySelectorAll('.slot-pill-btn').forEach(b => {
+                    b.style.borderColor = '#cbd5e1';
+                    b.style.background = '#ffffff';
+                    b.style.color = '#334155';
+                });
+                btn.style.borderColor = '#2563eb';
+                btn.style.background = '#eff6ff';
+                btn.style.color = '#1d4ed8';
+
+                if (slotInputEl) slotInputEl.value = slot.id || slot.name;
+                if (slot.start) {
+                    timeInput.value = slot.start;
+                    timeInput.min = slot.start;
+                    if (slot.end) timeInput.max = slot.end;
+                }
+            };
+
+            slotListEl.appendChild(btn);
+
+            // Select the first slot by default
+            if (idx === 0) {
+                btn.click();
+            }
+        });
+    }
+
     function validateSelectedTime(dateObj, timeStr, showAlert) {
         if (!timeStr) return true;
-        const dayNum = dateObj.getDay();
-        const slots = sched.days[dayNum];
+        const dateStr = dateInput.value;
+        const slots = getSlotsForDate(dateStr, dateObj);
         if (!slots || slots.length === 0) return true;
 
         const timeParts = timeStr.split(':');
@@ -961,45 +1154,32 @@ function attachScheduleValidation(dateInput, timeInput, scheduleNoticeEl, rawSch
                 h = h % 12 || 12;
                 return (h < 10 ? '0' + h : h) + ':' + m + ' ' + ampm;
             };
-            const slotDescs = slots.map(s => s.start && s.end ? `${format12h(s.start)} - ${format12h(s.end)}` : (s.start ? `From ${format12h(s.start)}` : 'All Day')).join(', ');
-            alert(`Selected time (${timeStr}) is outside the available hours for ${numToDayName[dayNum]}.\nAvailable hours: ${slotDescs}`);
+            const slotDescs = slots.map(s => s.start && s.end ? `${s.name}: ${format12h(s.start)} - ${format12h(s.end)}` : (s.start ? `${s.name}: From ${format12h(s.start)}` : s.name)).join(', ');
+            alert(`Selected time (${timeStr}) is outside the visiting hours for this date.\nAvailable slots: ${slotDescs}`);
         }
         return false;
     }
 
     dateInput.onchange = function () {
-        if (!this.value) return;
+        if (!this.value) {
+            if (slotSectionEl) slotSectionEl.style.display = 'none';
+            return;
+        }
         const parts = this.value.split('-');
         const dateObj = new Date(parseInt(parts[0], 10), parseInt(parts[1], 10) - 1, parseInt(parts[2], 10));
-        const dayNum = dateObj.getDay();
 
-        if (Object.keys(sched.days).length > 0 && !sched.isAllDays && !sched.days[dayNum]) {
-            alert(`Appointment is not available on ${numToDayName[dayNum]}s.\nAllowed days: ${allowedDayNames.join(', ')}`);
+        if (!isDateAvailable(this.value, dateObj)) {
+            const dayNum = dateObj.getDay();
+            alert(`Specialist is NOT available on ${numToDayName[dayNum]} (${this.value}).\nPlease select an available schedule date or day.`);
             this.value = '';
             timeInput.value = '';
+            if (slotSectionEl) slotSectionEl.style.display = 'none';
+            if (slotInputEl) slotInputEl.value = '';
             return;
         }
 
-        const slots = sched.days[dayNum];
-        if (slots && slots.length === 1 && slots[0].start && slots[0].end) {
-            timeInput.min = slots[0].start;
-            timeInput.max = slots[0].end;
-        } else {
-            timeInput.removeAttribute('min');
-            timeInput.removeAttribute('max');
-        }
-
-        if (timeInput.value) {
-            if (!validateSelectedTime(dateObj, timeInput.value, false)) {
-                if (slots && slots[0] && slots[0].start) {
-                    timeInput.value = slots[0].start;
-                } else {
-                    timeInput.value = '';
-                }
-            }
-        } else if (slots && slots[0] && slots[0].start) {
-            timeInput.value = slots[0].start;
-        }
+        const slots = getSlotsForDate(this.value, dateObj);
+        renderSlots(slots);
     };
 
     timeInput.onchange = function () {
@@ -1011,8 +1191,7 @@ function attachScheduleValidation(dateInput, timeInput, scheduleNoticeEl, rawSch
         const parts = dateInput.value.split('-');
         const dateObj = new Date(parseInt(parts[0], 10), parseInt(parts[1], 10) - 1, parseInt(parts[2], 10));
         if (!validateSelectedTime(dateObj, this.value, true)) {
-            const dayNum = dateObj.getDay();
-            const slots = sched.days[dayNum];
+            const slots = getSlotsForDate(dateInput.value, dateObj);
             if (slots && slots[0] && slots[0].start) {
                 this.value = slots[0].start;
             } else {
@@ -1021,7 +1200,7 @@ function attachScheduleValidation(dateInput, timeInput, scheduleNoticeEl, rawSch
         }
     };
 
-    return { sched, validateSelectedTime };
+    return { sched, validateSelectedTime, isDateAvailable, getSlotsForDate };
 }
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -1031,12 +1210,18 @@ document.addEventListener('DOMContentLoaded', function () {
     const dateInput = document.getElementById('docBookingDate{{ $doc->id }}');
     const timeInput = document.getElementById('docBookingTime{{ $doc->id }}');
     const noticeEl = document.getElementById('doctorScheduleNotice{{ $doc->id }}');
+    const slotSection = document.getElementById('docSlotSection{{ $doc->id }}');
+    const slotList = document.getElementById('docSlotList{{ $doc->id }}');
+    const slotInput = document.getElementById('docBookingSlot{{ $doc->id }}');
 
     const validator = attachScheduleValidation(
         dateInput,
         timeInput,
         noticeEl,
-        @json($doc->visit_day_time),
+        slotSection,
+        slotList,
+        slotInput,
+        @json($doc->normalized_schedule ?: ($doc->visit_day_time ?? [])),
         "{{ $doc->partner_doctor_name }}"
     );
 
@@ -1050,8 +1235,8 @@ document.addEventListener('DOMContentLoaded', function () {
             const dayNum = dateObj.getDay();
             const numToDayName = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
-            if (Object.keys(validator.sched.days).length > 0 && !validator.sched.isAllDays && !validator.sched.days[dayNum]) {
-                alert(`Appointment is not available on ${numToDayName[dayNum]}s. Please select an available day.`);
+            if (!validator.isDateAvailable(dateInput.value, dateObj)) {
+                alert(`Appointment is not available on ${numToDayName[dayNum]}s (${dateInput.value}). Please select an available schedule.`);
                 dateInput.focus();
                 return;
             }
@@ -1081,6 +1266,7 @@ document.addEventListener('DOMContentLoaded', function () {
             user_email: (formData.get('user_email') || '').trim(),
             booking_date: formData.get('booking_date'),
             booking_time: formData.get('booking_time'),
+            booking_slot: (formData.get('booking_slot') || '').trim(),
             visit_mode: formData.get('visit_mode') || 'online',
             user_inquiry: (formData.get('user_inquiry') || '').trim(),
             amount: '{{ $doc->partner_doctor_fees ?: 500 }}'
