@@ -46,6 +46,9 @@ Route::post('/twilio/webhook', [TwilioWebhookController::class, 'handle']);
 Route::get('/vapi/webhook', [VapiWebhookController::class, 'ping']);
 Route::post('/vapi/webhook', [VapiWebhookController::class, 'handle']);
 
+// Public slot fetching for doctor/partner appointments
+Route::get('/appointment-booked-slots', [\App\Http\Controllers\Payment\AppointmentPaymentController::class, 'getBookedSlots']);
+
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user-profile', [ApiUserProfileEditController::class, 'getProfile']);

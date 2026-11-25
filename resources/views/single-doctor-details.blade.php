@@ -1765,7 +1765,7 @@ function attachScheduleValidation(dateInput, timeInput, scheduleNoticeEl, slotSe
         }
     };
 
-    return { sched, validateSelectedTime, isDateAvailable, getSlotsForDate };
+    return { sched, validateSelectedTime, isDateAvailable, getSlotsForDate, getCurrentBookedSlots: () => currentBookedSlots };
 }
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -1801,12 +1801,22 @@ document.addEventListener('DOMContentLoaded', function () {
     bookingForm.addEventListener('submit', function (e) {
         e.preventDefault();
 
-        // Validate schedule restrictions before submitting
+        if (!dateInput || !dateInput.value) {
+            alert('Please select an appointment consultation date.');
+            if (dateInput) dateInput.focus();
+            return;
+        }
+
+        if (!timeInput || !timeInput.value) {
+            alert('Please select an available appointment slot.');
+            if (timeInput) timeInput.focus();
+            return;
+        }
+
+        // Validate schedule restrictions & already booked slot
         if (validator && dateInput && dateInput.value) {
             const parts = dateInput.value.split('-');
             const dateObj = new Date(parseInt(parts[0], 10), parseInt(parts[1], 10) - 1, parseInt(parts[2], 10));
-            const dayNum = dateObj.getDay();
-            const numToDayName = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
             if (!validator.isDateAvailable(dateInput.value, dateObj)) {
                 alert(`Appointment is not available on this date (${dateInput.value}). Please select an available scheduled date.`);
@@ -1814,16 +1824,16 @@ document.addEventListener('DOMContentLoaded', function () {
                 return;
             }
 
-            if (timeInput && timeInput.value) {
-                if (typeof currentBookedSlots !== 'undefined' && currentBookedSlots.includes(timeInput.value)) {
-                    alert(`This 10-minute slot (${timeInput.value}) has already been booked by another patient for this date. Please select an available slot.`);
-                    timeInput.focus();
-                    return;
-                }
-                if (!validator.validateSelectedTime(dateObj, timeInput.value, true)) {
-                    timeInput.focus();
-                    return;
-                }
+            const activeBookedSlots = validator.getCurrentBookedSlots ? validator.getCurrentBookedSlots() : [];
+            if (activeBookedSlots.includes(timeInput.value)) {
+                alert(`This 10-minute slot (${timeInput.value}) has already been booked by another patient for this date. Please select an available slot.`);
+                timeInput.focus();
+                return;
+            }
+
+            if (!validator.validateSelectedTime(dateObj, timeInput.value, true)) {
+                timeInput.focus();
+                return;
             }
         }
 
