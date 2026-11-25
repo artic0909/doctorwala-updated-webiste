@@ -44,6 +44,52 @@
     <link href="{{asset('./responsive/service_responsive.css')}}" rel="stylesheet">
     <link href="{{asset('./css/topbar.css')}}" rel="stylesheet">
 
+    <!-- Flatpickr Datepicker -->
+    <link href="{{asset('./lib/flatpickr/flatpickr.min.css')}}" rel="stylesheet">
+    <style>
+        .flatpickr-calendar {
+            z-index: 999999999 !important;
+            box-shadow: 0 15px 35px rgba(15, 23, 42, 0.22) !important;
+            border-radius: 14px !important;
+            border: 1px solid #e2e8f0 !important;
+            font-family: inherit !important;
+            overflow: hidden;
+        }
+        .flatpickr-day {
+            border-radius: 8px !important;
+            transition: all 0.15s ease-in-out;
+        }
+        .flatpickr-day.selected, .flatpickr-day.selected:hover {
+            background: #0284c7 !important;
+            border-color: #0284c7 !important;
+            color: #ffffff !important;
+            font-weight: 700;
+        }
+        .flatpickr-day.flatpickr-disabled, 
+        .flatpickr-day.flatpickr-disabled:hover {
+            color: #cbd5e1 !important;
+            background: #f8fafc !important;
+            cursor: not-allowed !important;
+            text-decoration: line-through !important;
+            opacity: 0.45 !important;
+            pointer-events: none !important;
+        }
+        .flatpickr-day:not(.flatpickr-disabled):not(.selected):hover {
+            background: #e0f2fe !important;
+            border-color: #bae6fd !important;
+            color: #0369a1 !important;
+        }
+        .fc-datepicker, .clemente-datepicker {
+            cursor: pointer;
+            background-color: #fff;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%230284c7' viewBox='0 0 24 24'%3E%3Cpath d='M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zm0-12H5V6h14v2z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            background-size: 18px 18px;
+            padding-right: 36px;
+        }
+    </style>
+
 
 
     <!-- Canonical URL -->

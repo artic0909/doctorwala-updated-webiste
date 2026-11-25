@@ -495,8 +495,8 @@
                     <div class="fr">
                         <div class="fgrp" id="opdManualDateField{{ $opd->id }}">
                             <label class="flbl">Appointment Booking Date *</label>
-                            @auth<input class="fc" type="date" name="booking_date" id="opdBookingDate{{ $opd->id }}" value="{{ $user->booking_date ?? '' }}" required>@endauth
-                            @guest<input class="fc" name="booking_date" id="opdBookingDate{{ $opd->id }}" type="date" required>@endguest
+                            @auth<input class="fc fc-datepicker" type="text" name="booking_date" id="opdBookingDate{{ $opd->id }}" value="{{ $user->booking_date ?? '' }}" placeholder="Select booking date" autocomplete="off" readonly required>@endauth
+                            @guest<input class="fc fc-datepicker" name="booking_date" id="opdBookingDate{{ $opd->id }}" type="text" placeholder="Select booking date" autocomplete="off" readonly required>@endguest
                             <small class="text-danger d-block mt-1 font-weight-bold" id="opdDateError{{ $opd->id }}" style="display: none; font-size: 11px;"></small>
                         </div>
                         <div class="fgrp">
@@ -806,6 +806,31 @@
 
         if (dateErrorEl) dateErrorEl.style.display = 'none';
 
+        // Initialize / Reconfigure Flatpickr with physical calendar day restrictions
+        if (dateInput._flatpickr) {
+            dateInput._flatpickr.destroy();
+        }
+        if (window.flatpickr) {
+            flatpickr(dateInput, {
+                dateFormat: "Y-m-d",
+                minDate: "today",
+                maxDate: new Date().fp_incr(90),
+                disableMobile: true,
+                disable: [
+                    function(date) {
+                        if (sched.isAllDays) return false;
+                        if (!sched.days || Object.keys(sched.days).length === 0) return false;
+                        const dayNum = date.getDay();
+                        return !(sched.days[dayNum] && sched.days[dayNum].length > 0);
+                    }
+                ],
+                onChange: function(selectedDates, dateStr) {
+                    dateInput.value = dateStr;
+                    syncSelectedDate(dateStr);
+                }
+            });
+        }
+
         // Pre-generate upcoming allowed calendar dates (next 10 available dates)
         const candidateDates = [];
         for (let i = 0; i < 45 && candidateDates.length < 10; i++) {
@@ -858,8 +883,11 @@
 
                     if (dateErrorEl) dateErrorEl.style.display = 'none';
 
+                    if (dateInput._flatpickr) {
+                        dateInput._flatpickr.setDate(cand.dateStr, false);
+                    }
                     dateInput.value = cand.dateStr;
-                    dateInput.dispatchEvent(new Event('change'));
+                    syncSelectedDate(cand.dateStr);
                 };
 
                 dateContainerEl.appendChild(pill);
@@ -907,9 +935,9 @@
             return false;
         }
 
-        dateInput.onchange = function () {
-            if (!this.value) return;
-            const parts = this.value.split('-');
+        function syncSelectedDate(dateVal) {
+            if (!dateVal) return;
+            const parts = dateVal.split('-');
             const dateObj = new Date(parseInt(parts[0], 10), parseInt(parts[1], 10) - 1, parseInt(parts[2], 10));
             const dayNum = dateObj.getDay();
 
@@ -920,7 +948,8 @@
                     dateErrorEl.style.display = 'block';
                 }
                 alert(errText);
-                this.value = '';
+                if (dateInput._flatpickr) dateInput._flatpickr.clear();
+                dateInput.value = '';
                 timeInput.value = '';
                 if (selectedDateLabelEl) selectedDateLabelEl.textContent = '';
                 if (dateContainerEl) {
@@ -934,7 +963,7 @@
             // Sync date chip if matches
             if (dateContainerEl) {
                 dateContainerEl.querySelectorAll('.doc-date-chip').forEach(p => {
-                    if (p.dataset.date === this.value) {
+                    if (p.dataset.date === dateVal) {
                         p.classList.add('active');
                         const icon = p.querySelector('i');
                         if (icon) icon.className = 'fa-solid fa-calendar-check';
@@ -970,6 +999,10 @@
             } else if (slots && slots[0] && slots[0].start) {
                 timeInput.value = slots[0].start;
             }
+        }
+
+        dateInput.onchange = function () {
+            syncSelectedDate(this.value);
         };
 
         timeInput.onchange = function () {

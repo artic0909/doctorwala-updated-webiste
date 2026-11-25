@@ -804,8 +804,8 @@
 
                         <div class="mb-3" id="docManualDateField{{ $doc->id }}">
                             <label class="clemente-label">Appointment Booking Date <span class="text-danger">*</span></label>
-                            @auth<input class="clemente-input" type="date" name="booking_date" id="docBookingDate{{ $doc->id }}" value="{{ $user->booking_date ?? '' }}" required>@endauth
-                            @guest<input class="clemente-input" name="booking_date" id="docBookingDate{{ $doc->id }}" type="date" required>@endguest
+                            @auth<input class="clemente-input clemente-datepicker" type="text" name="booking_date" id="docBookingDate{{ $doc->id }}" value="{{ $user->booking_date ?? '' }}" placeholder="Select booking date" autocomplete="off" readonly required>@endauth
+                            @guest<input class="clemente-input clemente-datepicker" name="booking_date" id="docBookingDate{{ $doc->id }}" type="text" placeholder="Select booking date" autocomplete="off" readonly required>@endguest
                         </div>
 
                         <!-- Available Timing Shift Slots -->
@@ -1237,7 +1237,7 @@ function attachScheduleValidation(dateInput, timeInput, scheduleNoticeEl, slotSe
 
     if (dateContainerEl && availableDates.length > 0) {
         if (dateWrapperEl) dateWrapperEl.style.display = 'block';
-        if (manualDateFieldEl) manualDateFieldEl.style.display = 'none';
+        if (manualDateFieldEl) manualDateFieldEl.style.display = 'block';
         if (scheduleNoticeEl) scheduleNoticeEl.style.display = 'none';
 
         dateContainerEl.innerHTML = '';
@@ -1270,8 +1270,11 @@ function attachScheduleValidation(dateInput, timeInput, scheduleNoticeEl, slotSe
                     selectedDateLabelEl.textContent = `${formatted} (${dayName})`;
                 }
 
+                if (dateInput._flatpickr) {
+                    dateInput._flatpickr.setDate(dateStr, false);
+                }
                 dateInput.value = dateStr;
-                dateInput.dispatchEvent(new Event('change'));
+                syncDocSelectedDate(dateStr);
             };
 
             dateContainerEl.appendChild(pill);
@@ -1296,6 +1299,37 @@ function attachScheduleValidation(dateInput, timeInput, scheduleNoticeEl, slotSe
     const todayStr = new Date().toISOString().split('T')[0];
     dateInput.min = todayStr;
 
+    // Initialize Flatpickr with physical date restrictions in calendar popup
+    if (dateInput._flatpickr) {
+        dateInput._flatpickr.destroy();
+    }
+    if (window.flatpickr) {
+        const fpConfig = {
+            dateFormat: "Y-m-d",
+            minDate: "today",
+            maxDate: new Date().fp_incr(90),
+            disableMobile: true,
+            onChange: function(selectedDates, dateStr) {
+                dateInput.value = dateStr;
+                syncDocSelectedDate(dateStr);
+            }
+        };
+
+        if (availableDates.length > 0) {
+            fpConfig.enable = availableDates;
+        } else if (Object.keys(sched.days).length > 0) {
+            fpConfig.disable = [
+                function(date) {
+                    if (sched.isAllDays) return false;
+                    const dayNum = date.getDay();
+                    return !(sched.days[dayNum] && sched.days[dayNum].length > 0);
+                }
+            ];
+        }
+
+        flatpickr(dateInput, fpConfig);
+    }
+
     function getSlotsForDate(dateStr, dateObj) {
         if (dateStr && sched.dates[dateStr] && sched.dates[dateStr].length > 0) {
             return sched.dates[dateStr];
@@ -1305,7 +1339,14 @@ function attachScheduleValidation(dateInput, timeInput, scheduleNoticeEl, slotSe
 
     function isDateAvailable(dateStr, dateObj) {
         if (!dateStr) return false;
-        return Boolean(sched.dates[dateStr] && sched.dates[dateStr].length > 0);
+        if (availableDates.length > 0) {
+            return Boolean(sched.dates[dateStr] && sched.dates[dateStr].length > 0);
+        }
+        if (Object.keys(sched.days).length > 0) {
+            if (sched.isAllDays) return true;
+            return Boolean(dateObj && sched.days[dateObj.getDay()] && sched.days[dateObj.getDay()].length > 0);
+        }
+        return true;
     }
 
     let selectedSlotObj = null;
@@ -1429,27 +1470,56 @@ function attachScheduleValidation(dateInput, timeInput, scheduleNoticeEl, slotSe
         return false;
     }
 
-    dateInput.onchange = function () {
-        if (!this.value) {
+    function syncDocSelectedDate(dateVal) {
+        if (!dateVal) {
             if (slotSectionEl) slotSectionEl.style.display = 'none';
             selectedSlotObj = null;
             return;
         }
-        const parts = this.value.split('-');
+        const parts = dateVal.split('-');
         const dateObj = new Date(parseInt(parts[0], 10), parseInt(parts[1], 10) - 1, parseInt(parts[2], 10));
 
-        if (!isDateAvailable(this.value, dateObj)) {
-            alert(`Specialist is not available on this date (${this.value}).\nPlease select an available scheduled date.`);
-            this.value = '';
+        if (!isDateAvailable(dateVal, dateObj)) {
+            alert(`Specialist is not available on this date (${dateVal}).\nPlease select an available scheduled date.`);
+            if (dateInput._flatpickr) dateInput._flatpickr.clear();
+            dateInput.value = '';
             timeInput.value = '';
             selectedSlotObj = null;
             if (slotSectionEl) slotSectionEl.style.display = 'none';
             if (slotInputEl) slotInputEl.value = '';
+            if (selectedDateLabelEl) selectedDateLabelEl.textContent = '';
+            if (dateContainerEl) {
+                dateContainerEl.querySelectorAll('.doc-date-chip').forEach(p => p.classList.remove('active'));
+            }
             return;
         }
 
-        const slots = getSlotsForDate(this.value, dateObj);
+        // Sync date chip if matches
+        if (dateContainerEl) {
+            dateContainerEl.querySelectorAll('.doc-date-chip').forEach(p => {
+                if (p.dataset.date === dateVal) {
+                    p.classList.add('active');
+                    const icon = p.querySelector('i');
+                    if (icon) icon.className = 'fa-solid fa-calendar-check';
+                    if (selectedDateLabelEl) {
+                        const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+                        const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+                        selectedDateLabelEl.textContent = `${dateObj.getDate()} ${monthNames[dateObj.getMonth()]} ${dateObj.getFullYear()} (${dayNames[dateObj.getDay()]})`;
+                    }
+                } else {
+                    p.classList.remove('active');
+                    const icon = p.querySelector('i');
+                    if (icon) icon.className = 'fa-regular fa-calendar-check text-primary';
+                }
+            });
+        }
+
+        const slots = getSlotsForDate(dateVal, dateObj);
         renderSlots(slots);
+    }
+
+    dateInput.onchange = function () {
+        syncDocSelectedDate(this.value);
     };
 
     timeInput.onchange = function () {
