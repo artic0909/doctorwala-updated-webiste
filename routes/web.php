@@ -33,6 +33,7 @@ Route::middleware('auth')->group(function () {
 // Payment Routes
 Route::post('/payment/create-order', [\App\Http\Controllers\Payment\AppointmentPaymentController::class, 'createOrder'])->name('payment.create.order');
 Route::post('/payment/verify', [\App\Http\Controllers\Payment\AppointmentPaymentController::class, 'verifyPayment'])->name('payment.verify');
+Route::get('/api/appointment-booked-slots', [\App\Http\Controllers\Payment\AppointmentPaymentController::class, 'getBookedSlots'])->name('appointments.booked.slots');
 
 require __DIR__ . '/auth.php';
 require __DIR__ . '/partner-auth.php';

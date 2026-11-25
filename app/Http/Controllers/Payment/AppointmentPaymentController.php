@@ -85,6 +85,29 @@ class AppointmentPaymentController extends Controller
             ], 404);
         }
 
+        // Check if the requested 10-minute slot is already booked on that date
+        if (!empty($request->booking_date) && !empty($request->booking_time)) {
+            $formattedTime = substr(trim($request->booking_time), 0, 5);
+            $alreadyBooked = PartnerPatientInquiry::whereDate('booking_date', $request->booking_date)
+                ->where(function ($q) use ($request, $partner) {
+                    $partnerIds = array_filter([$request->currently_loggedin_partner_id, $partner->id, $partner->partner_id]);
+                    $q->whereIn('currently_loggedin_partner_id', $partnerIds);
+                    if ($request->doctor_id) {
+                        $q->where('doctor_id', $request->doctor_id);
+                    }
+                })
+                ->where('booking_time', 'like', $formattedTime . '%')
+                ->whereNotIn(DB::raw('LOWER(status)'), ['cancelled', 'rejected'])
+                ->exists();
+
+            if ($alreadyBooked) {
+                return response()->json([
+                    'status' => false,
+                    'message' => "The time slot at {$formattedTime} on {$request->booking_date} has already been booked by another patient. Please select an available slot.",
+                ], 422);
+            }
+        }
+
         // Check if partner is Doctor or Others
         $regTypes = $partner->registration_type;
         if (is_string($regTypes)) {
@@ -283,5 +306,51 @@ class AppointmentPaymentController extends Controller
                 'message' => 'Payment received but failed to record appointment: ' . $e->getMessage(),
             ], 500);
         }
+    }
+
+    /**
+     * Get already booked 10-minute slots for a partner / doctor on a given date
+     */
+    public function getBookedSlots(Request $request)
+    {
+        $partnerId = $request->query('partner_id') ?? $request->query('currently_loggedin_partner_id');
+        $doctorId = $request->query('doctor_id');
+        $date = $request->query('date') ?? $request->query('booking_date');
+
+        if (empty($date)) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Date is required',
+                'booked_slots' => [],
+            ], 400);
+        }
+
+        $query = PartnerPatientInquiry::whereDate('booking_date', $date)
+            ->whereNotIn(DB::raw('LOWER(status)'), ['cancelled', 'rejected']);
+
+        if (!empty($partnerId)) {
+            $partner = $this->resolvePartner($partnerId);
+            $partnerIds = array_filter([$partnerId, $partner?->id, $partner?->partner_id]);
+            $query->whereIn('currently_loggedin_partner_id', $partnerIds);
+        }
+
+        if (!empty($doctorId)) {
+            $query->where('doctor_id', $doctorId);
+        }
+
+        $bookedTimes = $query->pluck('booking_time')->map(function ($time) {
+            if (!$time) return null;
+            $parts = explode(':', trim($time));
+            if (count($parts) >= 2) {
+                return sprintf('%02d:%02d', (int)$parts[0], (int)$parts[1]);
+            }
+            return trim($time);
+        })->filter()->unique()->values();
+
+        return response()->json([
+            'status' => true,
+            'date' => $date,
+            'booked_slots' => $bookedTimes,
+        ]);
     }
 }

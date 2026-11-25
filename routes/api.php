@@ -86,6 +86,7 @@ Route::middleware('auth:sanctum')->group(function () {
     // Razorpay Appointment Payments (Doctor & Others)
     Route::post('/payment/create-order', [\App\Http\Controllers\Payment\AppointmentPaymentController::class, 'createOrder']);
     Route::post('/payment/verify', [\App\Http\Controllers\Payment\AppointmentPaymentController::class, 'verifyPayment']);
+    Route::get('/appointment-booked-slots', [\App\Http\Controllers\Payment\AppointmentPaymentController::class, 'getBookedSlots']);
 
 
     // Appointments

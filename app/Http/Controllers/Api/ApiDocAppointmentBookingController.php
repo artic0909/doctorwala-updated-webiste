@@ -49,6 +49,28 @@ class ApiDocAppointmentBookingController extends Controller
                 $data['visit_mode'] = in_array(strtolower($data['visit_mode'] ?? ''), ['online', 'offline']) ? strtolower($data['visit_mode']) : 'offline';
             }
 
+            // Check if slot already booked
+            if (!empty($data['booking_date']) && !empty($data['booking_time'])) {
+                $timeFormatted = substr(trim($data['booking_time']), 0, 5);
+                $alreadyBooked = PartnerPatientInquiry::whereDate('booking_date', $data['booking_date'])
+                    ->where(function ($q) use ($data) {
+                        $q->where('currently_loggedin_partner_id', $data['currently_loggedin_partner_id']);
+                        if (!empty($data['doctor_id'])) {
+                            $q->where('doctor_id', $data['doctor_id']);
+                        }
+                    })
+                    ->where('booking_time', 'like', $timeFormatted . '%')
+                    ->whereNotIn(\Illuminate\Support\Facades\DB::raw('LOWER(status)'), ['cancelled', 'rejected'])
+                    ->exists();
+
+                if ($alreadyBooked) {
+                    return response()->json([
+                        'status'  => false,
+                        'message' => "The time slot at {$timeFormatted} on {$data['booking_date']} has already been booked by another patient.",
+                    ], 422);
+                }
+            }
+
             $inquiry = PartnerPatientInquiry::create($data);
 
             return response()->json([

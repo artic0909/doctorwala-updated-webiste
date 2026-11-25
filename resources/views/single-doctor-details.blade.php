@@ -74,6 +74,67 @@
             display: none !important;
         }
 
+        /* 10-Minute Appointment Sub-Slots */
+        .subslot-btn {
+            background: #ffffff;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 9px;
+            padding: 7px 10px;
+            font-size: 11px;
+            color: #334155;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.18s ease-in-out;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            position: relative;
+        }
+        .subslot-btn:hover:not(.subslot-booked) {
+            border-color: #0284c7;
+            background: #f0f9ff;
+            color: #0369a1;
+        }
+        .subslot-btn.active {
+            background: #0284c7 !important;
+            border-color: #0284c7 !important;
+            color: #ffffff !important;
+            box-shadow: 0 4px 12px rgba(2, 132, 199, 0.28);
+        }
+        .subslot-btn.active .subslot-num,
+        .subslot-btn.active .subslot-time,
+        .subslot-btn.active i {
+            color: #ffffff !important;
+        }
+        .subslot-btn.subslot-booked {
+            background: #f8fafc !important;
+            border-color: #e2e8f0 !important;
+            color: #94a3b8 !important;
+            cursor: not-allowed !important;
+            opacity: 0.65;
+            pointer-events: none;
+            text-decoration: line-through;
+        }
+        .subslot-num {
+            font-weight: 800;
+            font-size: 11px;
+        }
+        .subslot-time {
+            font-size: 10px;
+            color: #64748b;
+            font-weight: 500;
+        }
+        .subslot-badge-booked {
+            font-size: 8.5px;
+            font-weight: 800;
+            color: #ef4444;
+            background: #fee2e2;
+            padding: 1px 5px;
+            border-radius: 4px;
+            letter-spacing: 0.3px;
+            text-decoration: none !important;
+        }
+
         /* ══ CLEMENTE WIDE APPOINTMENT MODAL ══ */
         .modal-ov {
             position: fixed !important;
@@ -809,12 +870,24 @@
                         </div>
 
                         <!-- Available Timing Shift Slots -->
-                        <div id="docSlotSection{{ $doc->id }}" class="mb-3" style="display: none; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 12px;">
+                        <div id="docSlotSection{{ $doc->id }}" class="mb-3" style="display: none; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 12px;">
                             <label class="clemente-label d-flex justify-content-between align-items-center mb-2">
-                                <span><i class="fa-solid fa-clock text-primary mr-1"></i> Available Shift Slot <span class="text-danger">*</span></span>
-                                <span class="text-muted small" id="docSlotNotice{{ $doc->id }}" style="font-size: 11px; font-weight: normal;">Select a slot</span>
+                                <span><i class="fa-solid fa-clock text-primary mr-1"></i> Available Shift <span class="text-danger">*</span></span>
+                                <span class="text-muted small" id="docSlotNotice{{ $doc->id }}" style="font-size: 11px; font-weight: normal;">Select shift</span>
                             </label>
-                            <div id="docSlotList{{ $doc->id }}" style="display: flex; flex-wrap: wrap; gap: 8px;"></div>
+                            <div id="docSlotList{{ $doc->id }}" style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px;"></div>
+
+                            <!-- 10-Minute Appointment Sub-Slots Section -->
+                            <div id="docSubSlotSection{{ $doc->id }}" style="display: none; border-top: 1px dashed #cbd5e1; padding-top: 10px;">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <span style="font-size: 11.5px; font-weight: 700; color: #334155;">
+                                        <i class="fa-regular fa-calendar-check text-success mr-1"></i> Choose 10-Minute Slot:
+                                    </span>
+                                    <span id="docSubSlotCount{{ $doc->id }}" class="badge bg-light text-secondary" style="font-size: 10px; border: 1px solid #e2e8f0;"></span>
+                                </div>
+                                <div id="docSubSlotList{{ $doc->id }}" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 6px;"></div>
+                            </div>
+
                             <input type="hidden" name="booking_slot" id="docBookingSlot{{ $doc->id }}">
                         </div>
 
@@ -1350,6 +1423,29 @@ function attachScheduleValidation(dateInput, timeInput, scheduleNoticeEl, slotSe
     }
 
     let selectedSlotObj = null;
+    let currentBookedSlots = [];
+
+    async function fetchBookedSlots(dateStr) {
+        if (!dateStr) {
+            currentBookedSlots = [];
+            return [];
+        }
+        try {
+            const partnerId = "{{ $doc->currently_loggedin_partner_id }}";
+            const docId = "{{ $doc->id }}";
+            const url = `/api/appointment-booked-slots?partner_id=${encodeURIComponent(partnerId)}&doctor_id=${encodeURIComponent(docId)}&date=${encodeURIComponent(dateStr)}`;
+            const res = await fetch(url);
+            const data = await res.json();
+            if (data.status && Array.isArray(data.booked_slots)) {
+                currentBookedSlots = data.booked_slots;
+            } else {
+                currentBookedSlots = [];
+            }
+        } catch (e) {
+            currentBookedSlots = [];
+        }
+        return currentBookedSlots;
+    }
 
     function renderSlots(slots) {
         if (!slotSectionEl || !slotListEl) return;
@@ -1360,6 +1456,8 @@ function attachScheduleValidation(dateInput, timeInput, scheduleNoticeEl, slotSe
             if (slotInputEl) slotInputEl.value = '';
             timeInput.removeAttribute('min');
             timeInput.removeAttribute('max');
+            const subSec = document.getElementById('docSubSlotSection{{ $doc->id }}');
+            if (subSec) subSec.style.display = 'none';
             return;
         }
 
@@ -1410,6 +1508,9 @@ function attachScheduleValidation(dateInput, timeInput, scheduleNoticeEl, slotSe
                 } else {
                     timeInput.removeAttribute('max');
                 }
+
+                // Sub-divide the chosen shift into 10-minute appointment slots
+                renderSubSlots(slot);
             };
 
             slotListEl.appendChild(btn);
@@ -1419,6 +1520,125 @@ function attachScheduleValidation(dateInput, timeInput, scheduleNoticeEl, slotSe
                 btn.click();
             }
         });
+    }
+
+    function renderSubSlots(shiftSlot) {
+        const subSlotSection = document.getElementById('docSubSlotSection{{ $doc->id }}');
+        const subSlotList = document.getElementById('docSubSlotList{{ $doc->id }}');
+        const subSlotCount = document.getElementById('docSubSlotCount{{ $doc->id }}');
+        if (!subSlotSection || !subSlotList) return;
+
+        subSlotList.innerHTML = '';
+        if (!shiftSlot || !shiftSlot.start) {
+            subSlotSection.style.display = 'none';
+            return;
+        }
+
+        const parseTimeToMin = (t) => {
+            if (!t) return 0;
+            const p = t.split(':');
+            return parseInt(p[0], 10) * 60 + parseInt(p[1] || '0', 10);
+        };
+
+        const minToTimeStr = (min) => {
+            const h = Math.floor(min / 60);
+            const m = min % 60;
+            return (h < 10 ? '0' + h : h) + ':' + (m < 10 ? '0' + m : m);
+        };
+
+        const format12h = (t) => {
+            if (!t) return '';
+            const p = t.split(':');
+            let h = parseInt(p[0], 10);
+            let m = p[1] || '00';
+            const ampm = h >= 12 ? 'PM' : 'AM';
+            h = h % 12 || 12;
+            return (h < 10 ? '0' + h : h) + ':' + m + ' ' + ampm;
+        };
+
+        const startMin = parseTimeToMin(shiftSlot.start);
+        let endMin = shiftSlot.end ? parseTimeToMin(shiftSlot.end) : (startMin + 60);
+        if (endMin <= startMin) endMin = startMin + 60;
+
+        const subSlots = [];
+        let slotNum = 1;
+        for (let m = startMin; m < endMin; m += 10) {
+            const subStart = minToTimeStr(m);
+            const subEndMin = Math.min(m + 10, endMin);
+            const subEnd = minToTimeStr(subEndMin);
+            const isBooked = currentBookedSlots.includes(subStart);
+            subSlots.push({
+                number: slotNum,
+                start: subStart,
+                end: subEnd,
+                label: `Slot ${slotNum} (${format12h(subStart)} - ${format12h(subEnd)})`,
+                isBooked: isBooked
+            });
+            slotNum++;
+        }
+
+        if (subSlots.length === 0) {
+            subSlotSection.style.display = 'none';
+            return;
+        }
+
+        subSlotSection.style.display = 'block';
+        if (subSlotCount) {
+            const avail = subSlots.filter(s => !s.isBooked).length;
+            subSlotCount.innerHTML = `<span class="text-success font-weight-bold">${avail}</span> / ${subSlots.length} available`;
+        }
+
+        let firstSelectableBtn = null;
+
+        subSlots.forEach((sub) => {
+            const subBtn = document.createElement('button');
+            subBtn.type = 'button';
+            subBtn.className = 'subslot-btn';
+            subBtn.dataset.time = sub.start;
+
+            if (sub.isBooked) {
+                subBtn.classList.add('subslot-booked');
+                subBtn.disabled = true;
+                subBtn.innerHTML = `
+                    <div class="d-flex align-items-center justify-content-between w-100">
+                        <span class="subslot-num">Slot ${sub.number}</span>
+                        <span class="subslot-badge-booked">Booked</span>
+                    </div>
+                    <span class="subslot-time">${format12h(sub.start)} - ${format12h(sub.end)}</span>
+                `;
+            } else {
+                subBtn.innerHTML = `
+                    <div class="d-flex align-items-center justify-content-between w-100">
+                        <span class="subslot-num">Slot ${sub.number}</span>
+                        <i class="fa-regular fa-clock text-primary" style="font-size: 10px;"></i>
+                    </div>
+                    <span class="subslot-time">${format12h(sub.start)} - ${format12h(sub.end)}</span>
+                `;
+
+                subBtn.onclick = function () {
+                    subSlotList.querySelectorAll('.subslot-btn').forEach(b => b.classList.remove('active'));
+                    subBtn.classList.add('active');
+
+                    timeInput.value = sub.start;
+                    if (slotInputEl) {
+                        slotInputEl.value = `${shiftSlot.name} - ${sub.label}`;
+                    }
+                };
+
+                if (!firstSelectableBtn) {
+                    firstSelectableBtn = subBtn;
+                }
+            }
+
+            subSlotList.appendChild(subBtn);
+        });
+
+        // Automatically select the first available subslot
+        if (firstSelectableBtn) {
+            firstSelectableBtn.click();
+        } else {
+            timeInput.value = '';
+        }
     }
 
     function validateSelectedTime(dateObj, timeStr, showAlert) {
@@ -1470,7 +1690,7 @@ function attachScheduleValidation(dateInput, timeInput, scheduleNoticeEl, slotSe
         return false;
     }
 
-    function syncDocSelectedDate(dateVal) {
+    async function syncDocSelectedDate(dateVal) {
         if (!dateVal) {
             if (slotSectionEl) slotSectionEl.style.display = 'none';
             selectedSlotObj = null;
@@ -1513,6 +1733,9 @@ function attachScheduleValidation(dateInput, timeInput, scheduleNoticeEl, slotSe
                 }
             });
         }
+
+        // Fetch already booked slots for this date to disable booked 10-min slots
+        await fetchBookedSlots(dateVal);
 
         const slots = getSlotsForDate(dateVal, dateObj);
         renderSlots(slots);
@@ -1592,6 +1815,11 @@ document.addEventListener('DOMContentLoaded', function () {
             }
 
             if (timeInput && timeInput.value) {
+                if (typeof currentBookedSlots !== 'undefined' && currentBookedSlots.includes(timeInput.value)) {
+                    alert(`This 10-minute slot (${timeInput.value}) has already been booked by another patient for this date. Please select an available slot.`);
+                    timeInput.focus();
+                    return;
+                }
                 if (!validator.validateSelectedTime(dateObj, timeInput.value, true)) {
                     timeInput.focus();
                     return;
