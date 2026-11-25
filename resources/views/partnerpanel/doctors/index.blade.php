@@ -135,29 +135,30 @@
                                         <i class="fa-regular fa-calendar-days"></i>
                                     </div>
                                     <div>
-                                        <h5 class="font-weight-bold text-dark mb-0" style="font-size: 1.05rem;">Visiting Schedule (Day-wise & Date-wise)</h5>
-                                        <small class="text-muted">Set up Morning, Afternoon & Evening consultation timing slots by Day or specific Calendar Date</small>
+                                        <h5 class="font-weight-bold text-dark mb-0" style="font-size: 1.05rem;">Visiting Schedule (Date-wise)</h5>
+                                        <small class="text-muted">Set up Morning, Afternoon & Evening consultation timing slots for specific practice dates</small>
                                     </div>
                                 </div>
                                 <div class="d-flex gap-2">
-                                    <button type="button" class="btn btn-primary btn-sm font-weight-bold mr-2" onclick="addScheduleCard('day')" style="border-radius: 8px; padding: 7px 14px; background: #0284c7; border-color: #0284c7;">
-                                        <i class="fa-solid fa-plus mr-1"></i> Add Day Schedule
-                                    </button>
-                                    <button type="button" class="btn btn-outline-info btn-sm font-weight-bold" onclick="addScheduleCard('date')" style="border-radius: 8px; padding: 7px 14px;">
-                                        <i class="fa-regular fa-calendar-plus mr-1"></i> Add Specific Date
+                                    {{-- Day-wise hidden for now, can be enabled later --}}
+                                    <button type="button" class="btn btn-primary btn-sm font-weight-bold" onclick="addScheduleCard('date')" style="border-radius: 8px; padding: 7px 16px; background: #0284c7; border-color: #0284c7;">
+                                        <i class="fa-regular fa-calendar-plus mr-1"></i> Add Visiting Date
                                     </button>
                                 </div>
                             </div>
 
                             @php
                                 $rawVisitData = $contactDetails->visit_day_time ?? [];
-                                $normalizedSchedule = \App\Models\PartnerDoctorContactModel::normalizeSchedule($rawVisitData);
+                                $allNormalized = \App\Models\PartnerDoctorContactModel::normalizeSchedule($rawVisitData);
+                                $normalizedSchedule = array_values(array_filter($allNormalized, function($s) {
+                                    return ($s['type'] ?? $s['schedule_type'] ?? '') === 'date' && !empty($s['date']);
+                                }));
                                 if (empty($normalizedSchedule)) {
                                     $normalizedSchedule = [
                                         [
-                                            'type' => 'day',
-                                            'day' => 'Monday',
-                                            'date' => null,
+                                            'type' => 'date',
+                                            'day' => date('l'),
+                                            'date' => date('Y-m-d'),
                                             'morning_enabled' => true,
                                             'morning_start' => '09:00',
                                             'morning_end' => '12:00',
@@ -231,7 +232,7 @@
                                                     <div class="custom-control custom-checkbox mb-2">
                                                         <input type="checkbox" class="custom-control-input slot-morning-check" id="mCheck{{ $index }}" {{ $mOn ? 'checked' : '' }} onchange="toggleSlotFields(this)">
                                                         <label class="custom-control-label font-weight-bold text-dark" for="mCheck{{ $index }}">
-                                                            🌅 Morning Slot
+                                                            <i class="fa-solid fa-sun text-warning mr-1"></i> Morning Slot
                                                         </label>
                                                     </div>
                                                     <div class="slot-fields row g-1 {{ $mOn ? '' : 'd-none' }}">
@@ -253,7 +254,7 @@
                                                     <div class="custom-control custom-checkbox mb-2">
                                                         <input type="checkbox" class="custom-control-input slot-afternoon-check" id="aCheck{{ $index }}" {{ $aOn ? 'checked' : '' }} onchange="toggleSlotFields(this)">
                                                         <label class="custom-control-label font-weight-bold text-dark" for="aCheck{{ $index }}">
-                                                            ☀️ Afternoon Slot
+                                                            <i class="fa-solid fa-cloud-sun text-warning mr-1"></i> Afternoon Slot
                                                         </label>
                                                     </div>
                                                     <div class="slot-fields row g-1 {{ $aOn ? '' : 'd-none' }}">
@@ -275,7 +276,7 @@
                                                     <div class="custom-control custom-checkbox mb-2">
                                                         <input type="checkbox" class="custom-control-input slot-evening-check" id="eCheck{{ $index }}" {{ $eOn ? 'checked' : '' }} onchange="toggleSlotFields(this)">
                                                         <label class="custom-control-label font-weight-bold text-dark" for="eCheck{{ $index }}">
-                                                            🌙 Evening Slot
+                                                            <i class="fa-solid fa-moon text-primary mr-1"></i> Evening Slot
                                                         </label>
                                                     </div>
                                                     <div class="slot-fields row g-1 {{ $eOn ? '' : 'd-none' }}">
@@ -383,7 +384,7 @@
                         <div class="custom-control custom-checkbox mb-2">
                             <input type="checkbox" class="custom-control-input slot-morning-check" id="mCheck${slotUidCounter}" checked onchange="toggleSlotFields(this)">
                             <label class="custom-control-label font-weight-bold text-dark" for="mCheck${slotUidCounter}">
-                                🌅 Morning Slot
+                                <i class="fa-solid fa-sun text-warning mr-1"></i> Morning Slot
                             </label>
                         </div>
                         <div class="slot-fields row g-1">
@@ -405,7 +406,7 @@
                         <div class="custom-control custom-checkbox mb-2">
                             <input type="checkbox" class="custom-control-input slot-afternoon-check" id="aCheck${slotUidCounter}" checked onchange="toggleSlotFields(this)">
                             <label class="custom-control-label font-weight-bold text-dark" for="aCheck${slotUidCounter}">
-                                ☀️ Afternoon Slot
+                                <i class="fa-solid fa-cloud-sun text-warning mr-1"></i> Afternoon Slot
                             </label>
                         </div>
                         <div class="slot-fields row g-1">
@@ -427,7 +428,7 @@
                         <div class="custom-control custom-checkbox mb-2">
                             <input type="checkbox" class="custom-control-input slot-evening-check" id="eCheck${slotUidCounter}" checked onchange="toggleSlotFields(this)">
                             <label class="custom-control-label font-weight-bold text-dark" for="eCheck${slotUidCounter}">
-                                🌙 Evening Slot
+                                <i class="fa-solid fa-moon text-primary mr-1"></i> Evening Slot
                             </label>
                         </div>
                         <div class="slot-fields row g-1">

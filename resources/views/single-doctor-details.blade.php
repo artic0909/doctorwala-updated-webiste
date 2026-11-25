@@ -296,43 +296,41 @@
 
                 {{-- Schedule table --}}
                 @php
-                    $normalizedSchedule = $doc->normalized_schedule ?? [];
-                    if (empty($normalizedSchedule) && !empty($doc->visit_day_time)) {
-                        $normalizedSchedule = \App\Models\PartnerDoctorContactModel::normalizeSchedule($doc->visit_day_time);
+                    $allSchedule = $doc->normalized_schedule ?? [];
+                    if (empty($allSchedule) && !empty($doc->visit_day_time)) {
+                        $allSchedule = \App\Models\PartnerDoctorContactModel::normalizeSchedule($doc->visit_day_time);
                     }
+                    // Day-wise hidden for now, only date-wise specific dates are shown
+                    $dateSchedule = array_values(array_filter($allSchedule, function($s) {
+                        return ($s['schedule_type'] ?? $s['type'] ?? '') === 'date' && !empty($s['date']);
+                    }));
                 @endphp
                 <div class="sched-table-wrap">
                     <div class="sched-tbl-label" style="display: flex; align-items: center; justify-content: space-between;">
-                        <span>📅 Chamber & Visiting Schedule</span>
-                        <span class="badge badge-light text-primary font-weight-normal px-2 py-1" style="font-size: 11px; border: 1px solid #dbeafe;">Day & Date Wise</span>
+                        <span><i class="fa-solid fa-calendar-check text-primary mr-1"></i> Chamber & Visiting Schedule</span>
+                        <span class="badge badge-light text-primary font-weight-normal px-2 py-1" style="font-size: 11px; border: 1px solid #dbeafe;">Date Wise</span>
                     </div>
 
-                    @if(!empty($normalizedSchedule))
+                    @if(!empty($dateSchedule))
                     <div class="schedule-cards-list" style="display: flex; flex-direction: column; gap: 12px; margin-top: 10px;">
-                        @foreach($normalizedSchedule as $i => $visit)
+                        @foreach($dateSchedule as $i => $visit)
                         @php
-                            $isDateWise = ($visit['schedule_type'] ?? '') === 'date';
                             $visitDate = $visit['date'] ?? null;
-                            $visitDay = $visit['day'] ?? ($isDateWise && $visitDate ? \Carbon\Carbon::parse($visitDate)->format('l') : 'N/A');
+                            $visitDay = $visit['day'] ?? ($visitDate ? \Carbon\Carbon::parse($visitDate)->format('l') : 'N/A');
                             $slots = $visit['slots'] ?? [];
                         @endphp
                         <div class="sched-item-card" style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 14px 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.04);">
                             <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 8px; margin-bottom: 8px;">
                                 <div style="display: flex; align-items: center; gap: 10px;">
-                                    <span style="display: inline-flex; align-items: center; justify-content: center; width: 34px; height: 34px; border-radius: 8px; background: {{ $isDateWise ? '#ecfdf5' : '#eff6ff' }}; color: {{ $isDateWise ? '#059669' : '#2563eb' }}; font-size: 15px;">
-                                        <i class="fa-solid {{ $isDateWise ? 'fa-calendar-day' : 'fa-calendar-week' }}"></i>
+                                    <span style="display: inline-flex; align-items: center; justify-content: center; width: 34px; height: 34px; border-radius: 8px; background: #eff6ff; color: #2563eb; font-size: 15px;">
+                                        <i class="fa-solid fa-calendar-day"></i>
                                     </span>
                                     <div>
-                                        @if($isDateWise && $visitDate)
-                                            <div style="font-weight: 700; color: #0f172a; font-size: 14px;">
-                                                {{ \Carbon\Carbon::parse($visitDate)->format('d M Y') }}
-                                                <span style="font-size: 12px; font-weight: 600; color: #059669; margin-left: 4px;">({{ $visitDay }})</span>
-                                            </div>
-                                            <div style="font-size: 11px; color: #059669; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Specific Date Schedule</div>
-                                        @else
-                                            <div style="font-weight: 700; color: #0f172a; font-size: 14px;">{{ $visitDay }}</div>
-                                            <div style="font-size: 11px; color: #2563eb; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Weekly Routine</div>
-                                        @endif
+                                        <div style="font-weight: 700; color: #0f172a; font-size: 14px;">
+                                            {{ \Carbon\Carbon::parse($visitDate)->format('d M Y') }}
+                                            <span style="font-size: 12px; font-weight: 600; color: #059669; margin-left: 4px;">({{ $visitDay }})</span>
+                                        </div>
+                                        <div style="font-size: 11px; color: #0284c7; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Visiting Date Schedule</div>
                                     </div>
                                 </div>
                                 <div>
@@ -406,7 +404,7 @@
                         @endforeach
                     </div>
                     @else
-                    <p style="color:var(--muted);font-size:13px;padding:8px 0">No schedule available.</p>
+                    <p style="color:var(--muted);font-size:13px;padding:8px 0">No visiting schedule dates currently available.</p>
                     @endif
                 </div>
 
@@ -989,32 +987,13 @@ function parseScheduleData(rawSchedule) {
             summaryParts.push(`${dateStr} [${slotLabels || 'Available'}]`);
             return;
         }
-
-        if (rawDay.includes('all day')) {
-            isAllDays = true;
-            for (let i = 0; i < 7; i++) {
-                if (!daysMap[i]) daysMap[i] = [];
-                daysMap[i].push(...itemSlots);
-            }
-            summaryParts.push(`All Days (${slotLabels})`);
-            return;
-        }
-
-        for (let key in dayNameToNum) {
-            if (rawDay.includes(key)) {
-                const dayNum = dayNameToNum[key];
-                if (!daysMap[dayNum]) daysMap[dayNum] = [];
-                daysMap[dayNum].push(...itemSlots);
-                summaryParts.push(`${numToDayName[dayNum].substring(0, 3)} (${slotLabels})`);
-                break;
-            }
-        }
+        // Day-wise schedules are hidden for online booking for now
     });
 
     return {
         days: daysMap,
         dates: datesMap,
-        isAllDays: isAllDays,
+        isAllDays: false,
         summary: summaryParts.join(' | ')
     };
 }
@@ -1022,11 +1001,10 @@ function parseScheduleData(rawSchedule) {
 function attachScheduleValidation(dateInput, timeInput, scheduleNoticeEl, slotSectionEl, slotListEl, slotInputEl, rawSchedule, doctorOrTestName) {
     if (!dateInput || !timeInput) return null;
     const sched = parseScheduleData(rawSchedule);
-    const numToDayName = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
     if (scheduleNoticeEl) {
         if (sched.summary) {
-            scheduleNoticeEl.innerHTML = `<i class="fa-solid fa-calendar-check text-primary mr-1"></i> Available Schedule: <strong>${sched.summary}</strong>`;
+            scheduleNoticeEl.innerHTML = `<i class="fa-solid fa-calendar-check text-primary mr-1"></i> Available Scheduled Dates: <strong>${sched.summary}</strong>`;
             scheduleNoticeEl.style.display = 'block';
         } else {
             scheduleNoticeEl.style.display = 'none';
@@ -1037,28 +1015,15 @@ function attachScheduleValidation(dateInput, timeInput, scheduleNoticeEl, slotSe
     dateInput.min = todayStr;
 
     function getSlotsForDate(dateStr, dateObj) {
-        if (sched.dates[dateStr] && sched.dates[dateStr].length > 0) {
+        if (dateStr && sched.dates[dateStr] && sched.dates[dateStr].length > 0) {
             return sched.dates[dateStr];
-        }
-        const dayNum = dateObj.getDay();
-        if (sched.days[dayNum] && sched.days[dayNum].length > 0) {
-            return sched.days[dayNum];
-        }
-        if (sched.isAllDays) {
-            return [{ id: 'all_day', name: 'Visiting Hours', start: '09:00', end: '20:00' }];
         }
         return null;
     }
 
     function isDateAvailable(dateStr, dateObj) {
-        const hasDateRules = Object.keys(sched.dates).length > 0;
-        const hasDayRules = Object.keys(sched.days).length > 0;
-        if (!hasDateRules && !hasDayRules) return true;
-        if (sched.isAllDays) return true;
-        if (sched.dates[dateStr]) return true;
-        const dayNum = dateObj.getDay();
-        if (sched.days[dayNum]) return true;
-        return false;
+        if (!dateStr) return false;
+        return Boolean(sched.dates[dateStr] && sched.dates[dateStr].length > 0);
     }
 
     function renderSlots(slots) {
@@ -1169,8 +1134,7 @@ function attachScheduleValidation(dateInput, timeInput, scheduleNoticeEl, slotSe
         const dateObj = new Date(parseInt(parts[0], 10), parseInt(parts[1], 10) - 1, parseInt(parts[2], 10));
 
         if (!isDateAvailable(this.value, dateObj)) {
-            const dayNum = dateObj.getDay();
-            alert(`Specialist is NOT available on ${numToDayName[dayNum]} (${this.value}).\nPlease select an available schedule date or day.`);
+            alert(`Specialist is not available on this date (${this.value}).\nPlease select an available scheduled date.`);
             this.value = '';
             timeInput.value = '';
             if (slotSectionEl) slotSectionEl.style.display = 'none';
@@ -1236,7 +1200,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const numToDayName = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
             if (!validator.isDateAvailable(dateInput.value, dateObj)) {
-                alert(`Appointment is not available on ${numToDayName[dayNum]}s (${dateInput.value}). Please select an available schedule.`);
+                alert(`Appointment is not available on this date (${dateInput.value}). Please select an available scheduled date.`);
                 dateInput.focus();
                 return;
             }
