@@ -74,27 +74,50 @@
             display: none !important;
         }
 
-        /* ══ CLEMENTE MODERN APPOINTMENT MODAL ══ */
+        /* ══ CLEMENTE WIDE APPOINTMENT MODAL ══ */
+        .modal-ov {
+            position: fixed !important;
+            inset: 0 !important;
+            top: 0 !important;
+            left: 0 !important;
+            width: 100vw !important;
+            height: 100vh !important;
+            z-index: 9999999 !important;
+            padding: 16px !important;
+            display: none;
+            align-items: center !important;
+            justify-content: center !important;
+            background: rgba(15, 23, 42, 0.75) !important;
+            backdrop-filter: blur(8px) !important;
+            box-sizing: border-box !important;
+        }
+        .modal-ov.open {
+            display: flex !important;
+        }
+
         .clemente-modal-box {
             background: #ffffff !important;
             border-radius: 20px !important;
             width: 100% !important;
-            max-width: 480px !important;
-            max-height: 88vh !important;
+            max-width: 820px !important;
+            max-height: 86vh !important;
             height: auto !important;
             display: flex !important;
             flex-direction: column !important;
             overflow: hidden !important;
-            box-shadow: 0 25px 60px -15px rgba(15, 23, 42, 0.35) !important;
+            box-shadow: 0 25px 60px -15px rgba(15, 23, 42, 0.4) !important;
             border: 1px solid #e2e8f0 !important;
             padding: 0 !important;
+            margin: auto !important;
+            position: relative !important;
+            z-index: 10000000 !important;
         }
 
         .clemente-modal-header {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 14px 18px;
+            padding: 14px 22px;
             background: #ffffff;
             border-bottom: 1px solid #f1f5f9;
             flex-shrink: 0;
@@ -103,7 +126,7 @@
         .clemente-modal-body {
             flex: 1 1 auto;
             overflow-y: auto;
-            padding: 16px 18px;
+            padding: 18px 22px;
             min-height: 0;
             /* Hide scrollbars across all modern browsers */
             scrollbar-width: none !important;
@@ -117,11 +140,17 @@
 
         .clemente-modal-footer {
             flex-shrink: 0;
-            padding: 12px 18px 14px;
+            padding: 12px 22px 14px;
             background: #ffffff;
             border-top: 1px solid #f1f5f9;
             box-shadow: 0 -4px 16px rgba(15, 23, 42, 0.04);
             border-radius: 0 0 20px 20px;
+        }
+
+        .booking-grid-layout {
+            display: grid;
+            grid-template-columns: 1.15fr 1fr;
+            gap: 22px;
         }
 
         .clemente-input {
@@ -213,16 +242,27 @@
             color: #ffffff !important;
         }
 
-        @media (max-width: 480px) {
+        @media (max-width: 768px) {
+            .modal-ov {
+                padding: 10px !important;
+            }
             .clemente-modal-box {
-                max-height: 94vh !important;
+                max-width: 540px !important;
+                max-height: 92vh !important;
                 border-radius: 16px !important;
             }
+            .booking-grid-layout {
+                grid-template-columns: 1fr;
+                gap: 14px;
+            }
+            .clemente-modal-header {
+                padding: 12px 16px;
+            }
             .clemente-modal-body {
-                padding: 14px 14px;
+                padding: 14px 16px;
             }
             .clemente-modal-footer {
-                padding: 10px 14px 12px;
+                padding: 10px 16px 12px;
             }
         }
     </style>
@@ -732,120 +772,131 @@
 
             <!-- Scrollable Inner Body without scrollbars -->
             <div class="clemente-modal-body">
-                <!-- Doctor Summary Badge Card -->
-                <div class="d-flex align-items-center justify-content-between p-2 mb-3 rounded" style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; gap: 10px;">
-                    <div class="d-flex align-items-center" style="gap: 10px; min-width: 0;">
-                        <div style="width: 38px; height: 38px; border-radius: 10px; background: #eff6ff; color: #0284c7; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0;">
-                            <i class="fa-solid fa-user-doctor"></i>
+                <div class="booking-grid-layout">
+                    <!-- LEFT COLUMN: Doctor info, Date & Slot timing -->
+                    <div class="booking-col-left">
+                        <!-- Doctor Summary Badge Card -->
+                        <div class="d-flex align-items-center justify-content-between p-2 mb-3 rounded" style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; gap: 10px;">
+                            <div class="d-flex align-items-center" style="gap: 10px; min-width: 0;">
+                                <div style="width: 38px; height: 38px; border-radius: 10px; background: #eff6ff; color: #0284c7; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0;">
+                                    <i class="fa-solid fa-user-doctor"></i>
+                                </div>
+                                <div style="min-width: 0;">
+                                    <div style="font-weight: 700; color: #0f172a; font-size: 13.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ $doc->partner_doctor_name }}</div>
+                                    <div style="font-size: 11.5px; color: #64748b; font-weight: 600;">{{ $doc->partner_doctor_specialist }}</div>
+                                </div>
+                            </div>
+                            <span class="badge" style="background: #e0f2fe; color: #0284c7; font-size: 11px; padding: 4px 8px; border-radius: 6px; font-weight: 700; flex-shrink: 0;">
+                                <i class="fa-solid fa-video mr-1"></i> Online Video
+                            </span>
                         </div>
-                        <div style="min-width: 0;">
-                            <div style="font-weight: 700; color: #0f172a; font-size: 13.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ $doc->partner_doctor_name }}</div>
-                            <div style="font-size: 11.5px; color: #64748b; font-weight: 600;">{{ $doc->partner_doctor_specialist }}</div>
+
+                        <div id="doctorScheduleNotice{{ $doc->id }}" class="mb-3 p-2 rounded small" style="background: #eff6ff; border: 1px solid #bfdbfe; color: #1e40af; display: none;"></div>
+
+                        <!-- Available Consultation Dates (Interactive Segment) -->
+                        <div class="mb-3" id="docAvailableDatesWrapper{{ $doc->id }}" style="display: none;">
+                            <label class="clemente-label d-flex justify-content-between align-items-center mb-1">
+                                <span><i class="fa-solid fa-calendar-day text-primary mr-1"></i> Consultation Date <span class="text-danger">*</span></span>
+                                <span class="text-primary small" id="docSelectedDateLabel{{ $doc->id }}" style="font-size: 11px; font-weight: 700;"></span>
+                            </label>
+                            <div id="docAvailableDatesContainer{{ $doc->id }}" style="display: flex; flex-wrap: wrap; gap: 8px;"></div>
+                        </div>
+
+                        <div class="mb-3" id="docManualDateField{{ $doc->id }}">
+                            <label class="clemente-label">Appointment Booking Date <span class="text-danger">*</span></label>
+                            @auth<input class="clemente-input" type="date" name="booking_date" id="docBookingDate{{ $doc->id }}" value="{{ $user->booking_date ?? '' }}" required>@endauth
+                            @guest<input class="clemente-input" name="booking_date" id="docBookingDate{{ $doc->id }}" type="date" required>@endguest
+                        </div>
+
+                        <!-- Available Timing Shift Slots -->
+                        <div id="docSlotSection{{ $doc->id }}" class="mb-3" style="display: none; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 12px;">
+                            <label class="clemente-label d-flex justify-content-between align-items-center mb-2">
+                                <span><i class="fa-solid fa-clock text-primary mr-1"></i> Available Shift Slot <span class="text-danger">*</span></span>
+                                <span class="text-muted small" id="docSlotNotice{{ $doc->id }}" style="font-size: 11px; font-weight: normal;">Select a slot</span>
+                            </label>
+                            <div id="docSlotList{{ $doc->id }}" style="display: flex; flex-wrap: wrap; gap: 8px;"></div>
+                            <input type="hidden" name="booking_slot" id="docBookingSlot{{ $doc->id }}">
+                        </div>
+
+                        <div class="mb-2">
+                            <label class="clemente-label">Booking Time <span class="text-danger">*</span></label>
+                            @auth<input class="clemente-input" name="booking_time" id="docBookingTime{{ $doc->id }}" type="time" value="{{ $user->booking_time ?? '' }}" required>@endauth
+                            @guest<input class="clemente-input" name="booking_time" id="docBookingTime{{ $doc->id }}" type="time" required>@endguest
+                            <small class="text-muted d-block mt-1" id="docTimeHelp{{ $doc->id }}" style="font-size: 10.5px;">Time auto-aligns with your chosen slot.</small>
                         </div>
                     </div>
-                    <span class="badge" style="background: #e0f2fe; color: #0284c7; font-size: 11px; padding: 4px 8px; border-radius: 6px; font-weight: 700; flex-shrink: 0;">
-                        <i class="fa-solid fa-video mr-1"></i> Online Video
-                    </span>
-                </div>
 
-                <!-- Patient Contact Information -->
-                <div class="row g-2 mb-2">
-                    <div class="col-6">
-                        <label class="clemente-label">Your Name <span class="text-danger">*</span></label>
-                        @auth
-                        <input class="clemente-input" name="user_name" value="{{ $user->user_name }}" readonly required>
-                        @endauth
-                        @guest
-                        <input class="clemente-input" name="user_name" placeholder="Full name" required>
-                        @endguest
+                    <!-- RIGHT COLUMN: Patient info, Concern, Visit Mode -->
+                    <div class="booking-col-right">
+                        <!-- Patient Contact Information -->
+                        <div class="row g-2 mb-2">
+                            <div class="col-6">
+                                <label class="clemente-label">Your Name <span class="text-danger">*</span></label>
+                                @auth
+                                <input class="clemente-input" name="user_name" value="{{ $user->user_name }}" readonly required>
+                                @endauth
+                                @guest
+                                <input class="clemente-input" name="user_name" placeholder="Full name" required>
+                                @endguest
+                            </div>
+                            <div class="col-6">
+                                <label class="clemente-label">Mobile Number <span class="text-danger">*</span></label>
+                                @auth
+                                <input class="clemente-input" name="user_mobile" type="tel" value="{{ $user->user_mobile }}" required>
+                                @endauth
+                                @guest
+                                <input class="clemente-input" name="user_mobile" type="tel" placeholder="Mobile number" required>
+                                @endguest
+                            </div>
+                        </div>
+
+                        <div class="mb-2">
+                            <label class="clemente-label">Email Address</label>
+                            @auth
+                            <input class="clemente-input" name="user_email" type="email" value="{{ $user->user_email }}">
+                            @endauth
+                            @guest
+                            <input class="clemente-input" name="user_email" type="email" placeholder="For booking receipt">
+                            @endguest
+                        </div>
+
+                        @if(strtolower($doc->clinic_registration_type ?? '') === 'others' || str_contains(strtolower($doc->partner_doctor_specialist ?? ''), 'physio'))
+                        <div class="mb-2">
+                            <label class="clemente-label">Visit Mode <span class="text-danger">*</span></label>
+                            <select name="visit_mode" class="clemente-input" required>
+                                <option value="offline" {{ old('visit_mode', 'offline') == 'offline' ? 'selected' : '' }}>Physical Visit (Offline)</option>
+                                <option value="online" {{ old('visit_mode') == 'online' ? 'selected' : '' }}>Video Calling (Online)</option>
+                            </select>
+                        </div>
+                        @else
+                        <input type="hidden" name="visit_mode" value="online">
+                        @endif
+
+                        <div class="mb-2">
+                            <label class="clemente-label">Reason / Concern <span class="text-danger">*</span></label>
+                            <textarea class="clemente-input" name="user_inquiry" rows="3" placeholder="Briefly describe your symptoms or reason for consultation..." required style="resize: none; font-size: 12.5px;"></textarea>
+                        </div>
                     </div>
-                    <div class="col-6">
-                        <label class="clemente-label">Mobile Number <span class="text-danger">*</span></label>
-                        @auth
-                        <input class="clemente-input" name="user_mobile" type="tel" value="{{ $user->user_mobile }}" required>
-                        @endauth
-                        @guest
-                        <input class="clemente-input" name="user_mobile" type="tel" placeholder="Mobile number" required>
-                        @endguest
-                    </div>
-                </div>
-
-                <div class="mb-3">
-                    <label class="clemente-label">Email Address</label>
-                    @auth
-                    <input class="clemente-input" name="user_email" type="email" value="{{ $user->user_email }}">
-                    @endauth
-                    @guest
-                    <input class="clemente-input" name="user_email" type="email" placeholder="For booking receipt">
-                    @endguest
-                </div>
-
-                <div id="doctorScheduleNotice{{ $doc->id }}" class="mb-3 p-2 rounded small" style="background: #eff6ff; border: 1px solid #bfdbfe; color: #1e40af; display: none;"></div>
-
-                <!-- Available Consultation Dates (Interactive Segment) -->
-                <div class="mb-3" id="docAvailableDatesWrapper{{ $doc->id }}" style="display: none;">
-                    <label class="clemente-label d-flex justify-content-between align-items-center mb-1">
-                        <span><i class="fa-solid fa-calendar-day text-primary mr-1"></i> Available Consultation Date <span class="text-danger">*</span></span>
-                        <span class="text-primary small" id="docSelectedDateLabel{{ $doc->id }}" style="font-size: 11px; font-weight: 700;"></span>
-                    </label>
-                    <div id="docAvailableDatesContainer{{ $doc->id }}" style="display: flex; flex-wrap: wrap; gap: 8px;"></div>
-                </div>
-
-                <div class="mb-3" id="docManualDateField{{ $doc->id }}">
-                    <label class="clemente-label">Appointment Booking Date <span class="text-danger">*</span></label>
-                    @auth<input class="clemente-input" type="date" name="booking_date" id="docBookingDate{{ $doc->id }}" value="{{ $user->booking_date ?? '' }}" required>@endauth
-                    @guest<input class="clemente-input" name="booking_date" id="docBookingDate{{ $doc->id }}" type="date" required>@endguest
-                </div>
-
-                <!-- Available Timing Shift Slots -->
-                <div id="docSlotSection{{ $doc->id }}" class="mb-3" style="display: none; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 12px;">
-                    <label class="clemente-label d-flex justify-content-between align-items-center mb-2">
-                        <span><i class="fa-solid fa-clock text-primary mr-1"></i> Available Shift Slot <span class="text-danger">*</span></span>
-                        <span class="text-muted small" id="docSlotNotice{{ $doc->id }}" style="font-size: 11px; font-weight: normal;">Select a slot</span>
-                    </label>
-                    <div id="docSlotList{{ $doc->id }}" style="display: flex; flex-wrap: wrap; gap: 8px;"></div>
-                    <input type="hidden" name="booking_slot" id="docBookingSlot{{ $doc->id }}">
-                </div>
-
-                <div class="mb-3">
-                    <label class="clemente-label">Appointment Booking Time <span class="text-danger">*</span></label>
-                    @auth<input class="clemente-input" name="booking_time" id="docBookingTime{{ $doc->id }}" type="time" value="{{ $user->booking_time ?? '' }}" required>@endauth
-                    @guest<input class="clemente-input" name="booking_time" id="docBookingTime{{ $doc->id }}" type="time" required>@endguest
-                    <small class="text-muted d-block mt-1" id="docTimeHelp{{ $doc->id }}" style="font-size: 11px;">Time auto-aligns with your chosen slot.</small>
-                </div>
-
-                @if(strtolower($doc->clinic_registration_type ?? '') === 'others' || str_contains(strtolower($doc->partner_doctor_specialist ?? ''), 'physio'))
-                <div class="mb-3">
-                    <label class="clemente-label">Visit Mode <span class="text-danger">*</span></label>
-                    <select name="visit_mode" class="clemente-input" required>
-                        <option value="offline" {{ old('visit_mode', 'offline') == 'offline' ? 'selected' : '' }}>Physical Visit (Offline)</option>
-                        <option value="online" {{ old('visit_mode') == 'online' ? 'selected' : '' }}>Video Calling (Online)</option>
-                    </select>
-                </div>
-                @else
-                <input type="hidden" name="visit_mode" value="online">
-                @endif
-
-                <div class="mb-1">
-                    <label class="clemente-label">Reason / Concern <span class="text-danger">*</span></label>
-                    <textarea class="clemente-input" name="user_inquiry" rows="2" placeholder="Briefly describe your health issue..." required style="resize: none;"></textarea>
                 </div>
             </div>
 
             <!-- Fixed Bottom Footer (Always Visible, Never Cut Off) -->
             <div class="clemente-modal-footer">
-                <div class="d-flex align-items-center justify-content-between mb-2">
-                    <div>
-                        <span class="small font-weight-bold text-secondary d-block" style="font-size: 11.5px; line-height: 1.2;">Consultation Fee</span>
-                        <small class="text-muted" style="font-size: 10px;">Inclusive of all charges</small>
+                <div class="d-flex align-items-center justify-content-between flex-wrap" style="gap: 12px;">
+                    <div class="d-flex align-items-center" style="gap: 12px;">
+                        <div>
+                            <span class="small font-weight-bold text-secondary d-block" style="font-size: 11px; line-height: 1.2;">Total Payable</span>
+                            <span class="font-weight-bold" style="color: #059669; font-size: 1.35rem; line-height: 1;">₹{{ number_format((float) ($doc->partner_doctor_fees ?: 500), 2) }}</span>
+                        </div>
+                        <div class="d-none d-sm-block border-left pl-3" style="border-color: #e2e8f0 !important;">
+                            <small class="text-muted d-block" style="font-size: 10.5px;"><i class="fa-solid fa-shield-halved text-success mr-1"></i> Inclusive of taxes</small>
+                            <small class="text-muted d-block" style="font-size: 10.5px;">Powered by Razorpay</small>
+                        </div>
                     </div>
-                    <span class="font-weight-bold" style="color: #059669; font-size: 1.25rem;">₹{{ number_format((float) ($doc->partner_doctor_fees ?: 500), 2) }}</span>
-                </div>
-                <button type="submit" id="docPaySubmitBtn{{ $doc->id }}" style="width: 100%; border: none; border-radius: 10px; background: linear-gradient(135deg, #e11d48 0%, #be123c 100%); color: #ffffff; font-weight: 700; font-size: 14px; padding: 11px; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 12px rgba(225, 29, 72, 0.3); transition: all 0.2s;">
-                    <i class="fa-solid fa-lock"></i> Pay ₹{{ number_format((float) ($doc->partner_doctor_fees ?: 500), 2) }} & Confirm Booking
-                </button>
-                <div class="text-center mt-1" style="font-size: 10px; color: #94a3b8;">
-                    <i class="fa-solid fa-shield-halved text-success mr-1"></i> 100% Secure Checkout powered by Razorpay
+
+                    <button type="submit" id="docPaySubmitBtn{{ $doc->id }}" style="flex: 1; min-width: 200px; max-width: 320px; border: none; border-radius: 12px; background: linear-gradient(135deg, #e11d48 0%, #be123c 100%); color: #ffffff; font-weight: 700; font-size: 14px; padding: 11px 18px; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 12px rgba(225, 29, 72, 0.3); transition: all 0.2s;">
+                        <i class="fa-solid fa-lock"></i> Pay ₹{{ number_format((float) ($doc->partner_doctor_fees ?: 500), 2) }} & Confirm
+                    </button>
                 </div>
             </div>
         </form>

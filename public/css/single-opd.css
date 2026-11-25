@@ -779,7 +779,7 @@ a {
     inset: 0;
     background: rgba(13, 45, 58, 0.7);
     backdrop-filter: blur(5px);
-    z-index: 1000;
+    z-index: 9999999 !important;
     align-items: center;
     justify-content: center;
     padding: 14px;
