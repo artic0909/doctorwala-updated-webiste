@@ -38,6 +38,40 @@
         .partner-login {
             display: none !important;
         }
+
+        /* Available Date Chips */
+        .doc-date-chip {
+            border: 1.5px solid #e2e8f0;
+            background: #ffffff;
+            color: #1e293b;
+            border-radius: 10px;
+            padding: 7px 12px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.18s ease;
+        }
+        .doc-date-chip:hover {
+            border-color: #cbd5e1;
+            background: #f8fafc;
+        }
+        .doc-date-chip.active {
+            border-color: #0284c7 !important;
+            background: #eff6ff !important;
+            color: #0284c7 !important;
+            box-shadow: 0 0 0 2px rgba(2, 132, 199, 0.2);
+            font-weight: 700;
+        }
+        .doc-date-chip.active i {
+            color: #0284c7 !important;
+        }
+        .doc-date-chip.active .date-day-badge {
+            background: #0284c7 !important;
+            color: #ffffff !important;
+        }
     </style>
 
 </head>
@@ -449,14 +483,27 @@
 
                     <div id="opdDoctorScheduleNotice{{ $opd->id }}" class="mb-3 p-2 rounded small" style="background: #eff6ff; border: 1px solid #bfdbfe; color: #1e40af; display: none;"></div>
 
+                    <!-- Available Consultation Dates (Interactive Quick Selection) -->
+                    <div class="mb-3" id="opdAvailableDatesWrapper{{ $opd->id }}" style="display: none;">
+                        <label class="flbl d-flex justify-content-between align-items-center mb-1">
+                            <span><i class="fa-solid fa-calendar-day text-primary mr-1"></i> Available Consultation Date <span class="text-danger">*</span></span>
+                            <span class="text-primary small" id="opdSelectedDateLabel{{ $opd->id }}" style="font-size: 11px; font-weight: 700;"></span>
+                        </label>
+                        <div id="opdAvailableDatesContainer{{ $opd->id }}" style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 6px;"></div>
+                    </div>
+
                     <div class="fr">
-                        <div class="fgrp"><label class="flbl">Appointment Booking Date *</label>
+                        <div class="fgrp" id="opdManualDateField{{ $opd->id }}">
+                            <label class="flbl">Appointment Booking Date *</label>
                             @auth<input class="fc" type="date" name="booking_date" id="opdBookingDate{{ $opd->id }}" value="{{ $user->booking_date ?? '' }}" required>@endauth
                             @guest<input class="fc" name="booking_date" id="opdBookingDate{{ $opd->id }}" type="date" required>@endguest
+                            <small class="text-danger d-block mt-1 font-weight-bold" id="opdDateError{{ $opd->id }}" style="display: none; font-size: 11px;"></small>
                         </div>
-                        <div class="fgrp"><label class="flbl">Appointment Booking Time *</label>
+                        <div class="fgrp">
+                            <label class="flbl">Appointment Booking Time *</label>
                             @auth<input class="fc" name="booking_time" id="opdBookingTime{{ $opd->id }}" type="time" value="{{ $user->booking_time ?? '' }}" required>@endauth
                             @guest<input class="fc" name="booking_time" id="opdBookingTime{{ $opd->id }}" type="time" required>@endguest
+                            <small class="text-muted d-block mt-1" id="opdTimeHelp{{ $opd->id }}" style="font-size: 10.5px;">Auto-aligns with visiting hours.</small>
                         </div>
                     </div>
 
@@ -729,7 +776,7 @@
         };
     }
 
-    function attachScheduleValidation(dateInput, timeInput, scheduleNoticeEl, rawSchedule, doctorOrTestName) {
+    function attachScheduleValidation(dateInput, timeInput, scheduleNoticeEl, rawSchedule, doctorOrTestName, dateWrapperEl, dateContainerEl, selectedDateLabelEl, dateErrorEl) {
         if (!dateInput || !timeInput) return null;
         const sched = parseScheduleData(rawSchedule);
         const numToDayName = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
@@ -737,15 +784,93 @@
 
         if (scheduleNoticeEl) {
             if (sched.summary) {
-                scheduleNoticeEl.innerHTML = `<i class="fa-solid fa-calendar-check text-primary mr-1"></i> ${doctorOrTestName ? '<strong>' + doctorOrTestName + '</strong> Schedule: ' : 'Available Schedule: '}<strong>${sched.summary}</strong>`;
+                scheduleNoticeEl.innerHTML = `<i class="fa-solid fa-calendar-check text-primary mr-1"></i> ${doctorOrTestName ? '<strong>' + doctorOrTestName + '</strong> Visiting Hours: ' : 'Available Visiting Hours: '}<strong>${sched.summary}</strong>`;
                 scheduleNoticeEl.style.display = 'block';
             } else {
                 scheduleNoticeEl.style.display = 'none';
             }
         }
 
-        const todayStr = new Date().toISOString().split('T')[0];
+        const today = new Date();
+        const yyyy = today.getFullYear();
+        const mm = String(today.getMonth() + 1).padStart(2, '0');
+        const dd = String(today.getDate()).padStart(2, '0');
+        const todayStr = `${yyyy}-${mm}-${dd}`;
         dateInput.min = todayStr;
+
+        const maxD = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 90);
+        const maxY = maxD.getFullYear();
+        const maxM = String(maxD.getMonth() + 1).padStart(2, '0');
+        const maxDay = String(maxD.getDate()).padStart(2, '0');
+        dateInput.max = `${maxY}-${maxM}-${maxDay}`;
+
+        if (dateErrorEl) dateErrorEl.style.display = 'none';
+
+        // Pre-generate upcoming allowed calendar dates (next 10 available dates)
+        const candidateDates = [];
+        for (let i = 0; i < 45 && candidateDates.length < 10; i++) {
+            const d = new Date(today.getFullYear(), today.getMonth(), today.getDate() + i);
+            const dayNum = d.getDay();
+            if (sched.isAllDays || (sched.days && sched.days[dayNum] && sched.days[dayNum].length > 0)) {
+                const cY = d.getFullYear();
+                const cM = String(d.getMonth() + 1).padStart(2, '0');
+                const cD = String(d.getDate()).padStart(2, '0');
+                candidateDates.push({
+                    dateStr: `${cY}-${cM}-${cD}`,
+                    dateObj: d,
+                    dayNum: dayNum,
+                    slots: sched.days[dayNum] || []
+                });
+            }
+        }
+
+        if (dateContainerEl && candidateDates.length > 0) {
+            if (dateWrapperEl) dateWrapperEl.style.display = 'block';
+            dateContainerEl.innerHTML = '';
+
+            const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+            candidateDates.forEach((cand, idx) => {
+                const d = cand.dateObj;
+                const formatted = `${d.getDate()} ${monthNames[d.getMonth()]} ${d.getFullYear()}`;
+                const dayName = numToDayName[cand.dayNum];
+
+                const pill = document.createElement('button');
+                pill.type = 'button';
+                pill.className = 'doc-date-chip';
+                pill.dataset.date = cand.dateStr;
+                pill.innerHTML = `<i class="fa-regular fa-calendar-check text-primary"></i> <span><strong>${formatted}</strong></span> <span class="date-day-badge" style="background: #f1f5f9; color: #64748b; font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 4px; transition: all 0.18s;">${dayName}</span>`;
+
+                pill.onclick = function () {
+                    dateContainerEl.querySelectorAll('.doc-date-chip').forEach(p => {
+                        p.classList.remove('active');
+                        const icon = p.querySelector('i');
+                        if (icon) icon.className = 'fa-regular fa-calendar-check text-primary';
+                    });
+
+                    pill.classList.add('active');
+                    const icon = pill.querySelector('i');
+                    if (icon) icon.className = 'fa-solid fa-calendar-check';
+
+                    if (selectedDateLabelEl) {
+                        selectedDateLabelEl.textContent = `${formatted} (${dayName})`;
+                    }
+
+                    if (dateErrorEl) dateErrorEl.style.display = 'none';
+
+                    dateInput.value = cand.dateStr;
+                    dateInput.dispatchEvent(new Event('change'));
+                };
+
+                dateContainerEl.appendChild(pill);
+
+                if (idx === 0) {
+                    pill.click();
+                }
+            });
+        } else {
+            if (dateWrapperEl) dateWrapperEl.style.display = 'none';
+        }
 
         function validateSelectedTime(dateObj, timeStr, showAlert) {
             if (!timeStr) return true;
@@ -789,10 +914,40 @@
             const dayNum = dateObj.getDay();
 
             if (Object.keys(sched.days).length > 0 && !sched.isAllDays && !sched.days[dayNum]) {
-                alert(`Appointment is not available on ${numToDayName[dayNum]}s.\nAllowed days: ${allowedDayNames.join(', ')}`);
+                const errText = `Appointment is not available on ${numToDayName[dayNum]}s. Allowed visiting days: ${allowedDayNames.join(', ')}`;
+                if (dateErrorEl) {
+                    dateErrorEl.textContent = errText;
+                    dateErrorEl.style.display = 'block';
+                }
+                alert(errText);
                 this.value = '';
                 timeInput.value = '';
+                if (selectedDateLabelEl) selectedDateLabelEl.textContent = '';
+                if (dateContainerEl) {
+                    dateContainerEl.querySelectorAll('.doc-date-chip').forEach(p => p.classList.remove('active'));
+                }
                 return;
+            }
+
+            if (dateErrorEl) dateErrorEl.style.display = 'none';
+
+            // Sync date chip if matches
+            if (dateContainerEl) {
+                dateContainerEl.querySelectorAll('.doc-date-chip').forEach(p => {
+                    if (p.dataset.date === this.value) {
+                        p.classList.add('active');
+                        const icon = p.querySelector('i');
+                        if (icon) icon.className = 'fa-solid fa-calendar-check';
+                        if (selectedDateLabelEl) {
+                            const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+                            selectedDateLabelEl.textContent = `${dateObj.getDate()} ${monthNames[dateObj.getMonth()]} ${dateObj.getFullYear()} (${numToDayName[dayNum]})`;
+                        }
+                    } else {
+                        p.classList.remove('active');
+                        const icon = p.querySelector('i');
+                        if (icon) icon.className = 'fa-regular fa-calendar-check text-primary';
+                    }
+                });
             }
 
             const slots = sched.days[dayNum];
@@ -858,6 +1013,10 @@
                 const dateInput = document.getElementById('opdBookingDate{{ $opd->id }}');
                 const timeInput = document.getElementById('opdBookingTime{{ $opd->id }}');
                 const noticeEl = document.getElementById('opdDoctorScheduleNotice{{ $opd->id }}');
+                const dateWrapper = document.getElementById('opdAvailableDatesWrapper{{ $opd->id }}');
+                const dateContainer = document.getElementById('opdAvailableDatesContainer{{ $opd->id }}');
+                const selectedDateLabel = document.getElementById('opdSelectedDateLabel{{ $opd->id }}');
+                const dateError = document.getElementById('opdDateError{{ $opd->id }}');
 
                 if (docInfo && dateInput && timeInput) {
                     dateInput.value = '';
@@ -867,7 +1026,11 @@
                         timeInput,
                         noticeEl,
                         docInfo.schedule,
-                        docInfo.name
+                        docInfo.name,
+                        dateWrapper,
+                        dateContainer,
+                        selectedDateLabel,
+                        dateError
                     );
                 }
             }
