@@ -533,23 +533,45 @@
                                     <table class="table" style="font-size: 0.7rem;">
                                         <thead>
                                             <tr>
-                                                <th scope="col">Day</th>
+                                                <th scope="col">Date</th>
                                                 <th scope="col">Time</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @if(!empty($doc->visit_day_time) && is_array($doc->visit_day_time))
+                                            @if(!empty($doc->visit_day_time))
 
                                             @php
-                                            $limitedVisits = array_slice($doc->visit_day_time, 0, 3);
-                                            $totalVisits = count($doc->visit_day_time);
+                                            $allVisits = $doc->visit_day_time;
+                                            if (is_string($allVisits)) {
+                                                $allVisits = json_decode($allVisits, true) ?: [];
+                                            }
+                                            $dateVisits = array_values(array_filter($allVisits, function($v) {
+                                                return !empty($v['date']);
+                                            }));
+                                            $displayVisits = !empty($dateVisits) ? $dateVisits : $allVisits;
+                                            $limitedVisits = array_slice($displayVisits, 0, 3);
+                                            $totalVisits = count($displayVisits);
                                             @endphp
 
                                             {{-- First 3 rows --}}
                                             @foreach($limitedVisits as $index => $visit)
+                                            @php
+                                                $hasDate = !empty($visit['date']);
+                                                $dateFormatted = $hasDate ? \Carbon\Carbon::parse($visit['date'])->format('d M Y') : null;
+                                                $dayName = $visit['day'] ?? ($hasDate ? \Carbon\Carbon::parse($visit['date'])->format('l') : 'N/A');
+                                            @endphp
                                             <tr>
 
-                                                <td>{{ $visit['day'] ?? 'N/A' }}</td>
+                                                <td>
+                                                    @if($hasDate)
+                                                        <div style="font-weight: 700; color: #0f172a; font-size: 0.8rem; line-height: 1.2;">
+                                                            <i class="fa-regular fa-calendar-check text-primary mr-1" style="font-size: 10px;"></i>{{ $dateFormatted }}
+                                                        </div>
+                                                        <small class="text-muted" style="font-size: 0.7rem; font-weight: 600;">{{ $dayName }}</small>
+                                                    @else
+                                                        <span style="font-weight: 600;">{{ $dayName }}</span>
+                                                    @endif
+                                                </td>
 
                                                 <td>
                                                     @if(!empty($visit['start_time']) && !empty($visit['end_time']))
@@ -567,7 +589,7 @@
                                             @if($totalVisits > 3)
                                             <tr>
                                                 <td colspan="4" class="text-center text-primary fw-semibold">
-                                                    <a href="{{ url('/doctor/'.$doc->slug) }}">Click to see full timings →</a>
+                                                    <a href="{{ url('/doctor/'.$doc->slug) }}">Click to see full schedule & book →</a>
                                                 </td>
                                             </tr>
                                             @endif

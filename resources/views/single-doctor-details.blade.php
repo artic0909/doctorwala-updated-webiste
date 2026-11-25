@@ -609,7 +609,17 @@
                         @endguest
                     </div>
                     <div id="doctorScheduleNotice{{ $doc->id }}" class="mb-3 p-2 rounded small" style="background: #eff6ff; border: 1px solid #bfdbfe; color: #1e40af; display: none;"></div>
-                    <div class="fgrp">
+
+                    {{-- Interactive Available Dates Container --}}
+                    <div class="fgrp mb-3" id="docAvailableDatesWrapper{{ $doc->id }}" style="display: none;">
+                        <label class="flbl" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                            <span><i class="fa-solid fa-calendar-day text-primary mr-1"></i> Available Consultation Date (Select One) *</span>
+                            <span class="text-primary small" id="docSelectedDateLabel{{ $doc->id }}" style="font-size: 11px; font-weight: 700;"></span>
+                        </label>
+                        <div id="docAvailableDatesContainer{{ $doc->id }}" style="display: flex; flex-wrap: wrap; gap: 8px;"></div>
+                    </div>
+
+                    <div class="fgrp" id="docManualDateField{{ $doc->id }}">
                         <label class="flbl">Appointment Booking Date *</label>
                         @auth<input class="fc" type="date" name="booking_date" id="docBookingDate{{ $doc->id }}" value="{{ $user->booking_date ?? '' }}" required>@endauth
                         @guest<input class="fc" name="booking_date" id="docBookingDate{{ $doc->id }}" type="date" required>@endguest
@@ -998,16 +1008,75 @@ function parseScheduleData(rawSchedule) {
     };
 }
 
-function attachScheduleValidation(dateInput, timeInput, scheduleNoticeEl, slotSectionEl, slotListEl, slotInputEl, rawSchedule, doctorOrTestName) {
+function attachScheduleValidation(dateInput, timeInput, scheduleNoticeEl, slotSectionEl, slotListEl, slotInputEl, rawSchedule, doctorOrTestName, dateWrapperEl, dateContainerEl, selectedDateLabelEl, manualDateFieldEl) {
     if (!dateInput || !timeInput) return null;
     const sched = parseScheduleData(rawSchedule);
+    const availableDates = Object.keys(sched.dates).sort();
 
-    if (scheduleNoticeEl) {
-        if (sched.summary) {
-            scheduleNoticeEl.innerHTML = `<i class="fa-solid fa-calendar-check text-primary mr-1"></i> Available Scheduled Dates: <strong>${sched.summary}</strong>`;
-            scheduleNoticeEl.style.display = 'block';
-        } else {
-            scheduleNoticeEl.style.display = 'none';
+    if (dateContainerEl && availableDates.length > 0) {
+        if (dateWrapperEl) dateWrapperEl.style.display = 'block';
+        if (manualDateFieldEl) manualDateFieldEl.style.display = 'none';
+        if (scheduleNoticeEl) scheduleNoticeEl.style.display = 'none';
+
+        dateContainerEl.innerHTML = '';
+        availableDates.forEach((dateStr, idx) => {
+            const parts = dateStr.split('-');
+            const d = new Date(parseInt(parts[0], 10), parseInt(parts[1], 10) - 1, parseInt(parts[2], 10));
+            const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+            const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+            const formatted = `${d.getDate()} ${monthNames[d.getMonth()]} ${d.getFullYear()}`;
+            const dayName = dayNames[d.getDay()];
+
+            const pill = document.createElement('button');
+            pill.type = 'button';
+            pill.className = 'btn btn-sm doc-date-pill';
+            pill.dataset.date = dateStr;
+            pill.style.cssText = 'border-radius: 8px; font-weight: 600; font-size: 13px; padding: 7px 14px; display: inline-flex; align-items: center; gap: 6px; cursor: pointer; border: 1.5px solid #cbd5e1; background: #ffffff; color: #1e293b; transition: all 0.2s;';
+            pill.innerHTML = `<i class="fa-regular fa-calendar-check text-primary"></i> <span><strong>${formatted}</strong> <small style="color: #64748b;">(${dayName})</small></span>`;
+
+            pill.onclick = function () {
+                dateContainerEl.querySelectorAll('.doc-date-pill').forEach(p => {
+                    p.style.borderColor = '#cbd5e1';
+                    p.style.background = '#ffffff';
+                    p.style.color = '#1e293b';
+                    const icon = p.querySelector('i');
+                    if (icon) icon.className = 'fa-regular fa-calendar-check text-primary';
+                    const small = p.querySelector('small');
+                    if (small) small.style.color = '#64748b';
+                });
+
+                pill.style.borderColor = '#0284c7';
+                pill.style.background = '#0284c7';
+                pill.style.color = '#ffffff';
+                const icon = pill.querySelector('i');
+                if (icon) icon.className = 'fa-solid fa-calendar-check text-white';
+                const small = pill.querySelector('small');
+                if (small) small.style.color = '#e0f2fe';
+
+                if (selectedDateLabelEl) {
+                    selectedDateLabelEl.textContent = `${formatted} (${dayName})`;
+                }
+
+                dateInput.value = dateStr;
+                dateInput.dispatchEvent(new Event('change'));
+            };
+
+            dateContainerEl.appendChild(pill);
+
+            if (idx === 0) {
+                pill.click();
+            }
+        });
+    } else {
+        if (dateWrapperEl) dateWrapperEl.style.display = 'none';
+        if (manualDateFieldEl) manualDateFieldEl.style.display = 'block';
+        if (scheduleNoticeEl) {
+            if (sched.summary) {
+                scheduleNoticeEl.innerHTML = `<i class="fa-solid fa-calendar-check text-primary mr-1"></i> Available Scheduled Dates: <strong>${sched.summary}</strong>`;
+                scheduleNoticeEl.style.display = 'block';
+            } else {
+                scheduleNoticeEl.style.display = 'none';
+            }
         }
     }
 
@@ -1026,12 +1095,17 @@ function attachScheduleValidation(dateInput, timeInput, scheduleNoticeEl, slotSe
         return Boolean(sched.dates[dateStr] && sched.dates[dateStr].length > 0);
     }
 
+    let selectedSlotObj = null;
+
     function renderSlots(slots) {
         if (!slotSectionEl || !slotListEl) return;
         slotListEl.innerHTML = '';
+        selectedSlotObj = null;
         if (!slots || slots.length === 0) {
             slotSectionEl.style.display = 'none';
             if (slotInputEl) slotInputEl.value = '';
+            timeInput.removeAttribute('min');
+            timeInput.removeAttribute('max');
             return;
         }
 
@@ -1050,6 +1124,7 @@ function attachScheduleValidation(dateInput, timeInput, scheduleNoticeEl, slotSe
             const btn = document.createElement('button');
             btn.type = 'button';
             btn.className = 'btn btn-sm slot-pill-btn';
+            btn.dataset.slotId = slot.id || slot.name || '';
             btn.style.cssText = 'border-radius: 8px; font-weight: 600; font-size: 12px; padding: 6px 12px; display: inline-flex; align-items: center; gap: 6px; cursor: pointer; border: 1.5px solid #cbd5e1; background: #ffffff; color: #334155; transition: all 0.2s;';
 
             let iconHtml = '<i class="fa-regular fa-clock"></i>';
@@ -1073,11 +1148,18 @@ function attachScheduleValidation(dateInput, timeInput, scheduleNoticeEl, slotSe
                 btn.style.background = '#eff6ff';
                 btn.style.color = '#1d4ed8';
 
+                selectedSlotObj = slot;
                 if (slotInputEl) slotInputEl.value = slot.id || slot.name;
                 if (slot.start) {
                     timeInput.value = slot.start;
                     timeInput.min = slot.start;
-                    if (slot.end) timeInput.max = slot.end;
+                } else {
+                    timeInput.removeAttribute('min');
+                }
+                if (slot.end) {
+                    timeInput.max = slot.end;
+                } else {
+                    timeInput.removeAttribute('max');
                 }
             };
 
@@ -1105,6 +1187,26 @@ function attachScheduleValidation(dateInput, timeInput, scheduleNoticeEl, slotSe
             let endMin = s.end ? (parseInt(s.end.split(':')[0], 10) * 60 + parseInt(s.end.split(':')[1] || '0', 10)) : 1439;
 
             if (pickedMin >= startMin && pickedMin <= endMin) {
+                // Sync selected slot pill if user manually picked a time in another valid slot
+                if (slotListEl && (!selectedSlotObj || (selectedSlotObj.id || selectedSlotObj.name) !== (s.id || s.name))) {
+                    const targetBtn = Array.from(slotListEl.querySelectorAll('.slot-pill-btn')).find(
+                        b => b.dataset.slotId === (s.id || s.name || '')
+                    );
+                    if (targetBtn) {
+                        slotListEl.querySelectorAll('.slot-pill-btn').forEach(b => {
+                            b.style.borderColor = '#cbd5e1';
+                            b.style.background = '#ffffff';
+                            b.style.color = '#334155';
+                        });
+                        targetBtn.style.borderColor = '#2563eb';
+                        targetBtn.style.background = '#eff6ff';
+                        targetBtn.style.color = '#1d4ed8';
+                        selectedSlotObj = s;
+                        if (slotInputEl) slotInputEl.value = s.id || s.name;
+                        if (s.start) timeInput.min = s.start; else timeInput.removeAttribute('min');
+                        if (s.end) timeInput.max = s.end; else timeInput.removeAttribute('max');
+                    }
+                }
                 return true;
             }
         }
@@ -1128,6 +1230,7 @@ function attachScheduleValidation(dateInput, timeInput, scheduleNoticeEl, slotSe
     dateInput.onchange = function () {
         if (!this.value) {
             if (slotSectionEl) slotSectionEl.style.display = 'none';
+            selectedSlotObj = null;
             return;
         }
         const parts = this.value.split('-');
@@ -1137,6 +1240,7 @@ function attachScheduleValidation(dateInput, timeInput, scheduleNoticeEl, slotSe
             alert(`Specialist is not available on this date (${this.value}).\nPlease select an available scheduled date.`);
             this.value = '';
             timeInput.value = '';
+            selectedSlotObj = null;
             if (slotSectionEl) slotSectionEl.style.display = 'none';
             if (slotInputEl) slotInputEl.value = '';
             return;
@@ -1156,7 +1260,9 @@ function attachScheduleValidation(dateInput, timeInput, scheduleNoticeEl, slotSe
         const dateObj = new Date(parseInt(parts[0], 10), parseInt(parts[1], 10) - 1, parseInt(parts[2], 10));
         if (!validateSelectedTime(dateObj, this.value, true)) {
             const slots = getSlotsForDate(dateInput.value, dateObj);
-            if (slots && slots[0] && slots[0].start) {
+            if (selectedSlotObj && selectedSlotObj.start) {
+                this.value = selectedSlotObj.start;
+            } else if (slots && slots[0] && slots[0].start) {
                 this.value = slots[0].start;
             } else {
                 this.value = '';
@@ -1177,6 +1283,10 @@ document.addEventListener('DOMContentLoaded', function () {
     const slotSection = document.getElementById('docSlotSection{{ $doc->id }}');
     const slotList = document.getElementById('docSlotList{{ $doc->id }}');
     const slotInput = document.getElementById('docBookingSlot{{ $doc->id }}');
+    const dateWrapper = document.getElementById('docAvailableDatesWrapper{{ $doc->id }}');
+    const dateContainer = document.getElementById('docAvailableDatesContainer{{ $doc->id }}');
+    const selectedDateLabel = document.getElementById('docSelectedDateLabel{{ $doc->id }}');
+    const manualDateField = document.getElementById('docManualDateField{{ $doc->id }}');
 
     const validator = attachScheduleValidation(
         dateInput,
@@ -1186,7 +1296,11 @@ document.addEventListener('DOMContentLoaded', function () {
         slotList,
         slotInput,
         @json($doc->normalized_schedule ?: ($doc->visit_day_time ?? [])),
-        "{{ $doc->partner_doctor_name }}"
+        "{{ $doc->partner_doctor_name }}",
+        dateWrapper,
+        dateContainer,
+        selectedDateLabel,
+        manualDateField
     );
 
     bookingForm.addEventListener('submit', function (e) {
