@@ -646,7 +646,7 @@
     });
 
     // OPD Doctors Schedule Map
-    const opdDoctorsSchedule = @json($opddoctors->keyBy('id')->map(function($d) { return ['name' => $d->doctor_name, 'schedule' => $d->visit_day_time]; }));
+    const opdDoctorsSchedule = @json(($doctors ?? $opddoctors ?? collect())->keyBy('id')->map(function($d) { return ['name' => $d->doctor_name, 'schedule' => $d->visit_day_time]; }));
     let activeOpdValidator = null;
 
     function parseScheduleData(rawSchedule) {

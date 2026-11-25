@@ -76,7 +76,9 @@ class UserAllOPDHandleController extends Controller
             $doctor->visit_day_time = json_decode($doctor->visit_day_time, true);
         }
 
-        return view('single-opd-details', compact('aboutDetails', 'user', 'opd', 'doctors', 'services', 'photos', 'aboutClinics'));
+        $opddoctors = $doctors;
+
+        return view('single-opd-details', compact('aboutDetails', 'user', 'opd', 'doctors', 'opddoctors', 'services', 'photos', 'aboutClinics'));
     }
 
     public function patientInquiry(Request $request)
