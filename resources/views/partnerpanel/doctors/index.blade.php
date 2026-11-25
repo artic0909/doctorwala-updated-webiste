@@ -36,7 +36,7 @@
                 </div>
             </div>
 
-            <form action="{{ route('partner.doctor.contact.store') }}" method="POST">
+            <form id="partnerDoctorForm" action="{{ route('partner.doctor.contact.store') }}" method="POST">
                 @csrf
 
                 <div class="row g-3">
@@ -205,7 +205,7 @@
                                                 @if($sType === 'date')
                                                 <div class="d-flex align-items-center" style="gap: 8px;">
                                                     <label class="small font-weight-bold text-dark mb-0"><i class="fa-regular fa-calendar mr-1 text-primary"></i> Date:</label>
-                                                    <input type="date" class="form-control form-control-sm slot-date-input" value="{{ $sDate }}" min="{{ date('Y-m-d') }}" style="width: 170px; border-radius: 8px; font-weight: 600;" required>
+                                                    <input type="date" class="form-control form-control-sm slot-date-input" value="{{ $sDate }}" style="width: 170px; border-radius: 8px; font-weight: 600;" required>
                                                 </div>
                                                 @else
                                                 <div class="d-flex align-items-center" style="gap: 8px;">
@@ -303,7 +303,7 @@
                     <a href="/partnerpanel/partner-dashboard" class="btn btn-light px-4 font-weight-bold" style="border-radius: 8px; border: 1px solid #e2e8f0;">
                         Cancel
                     </a>
-                    <button type="submit" class="btn btn-primary font-weight-bold px-4 py-2" style="border-radius: 8px; background: #0284c7; border-color: #0284c7;">
+                    <button type="submit" id="saveDoctorBtn" onclick="return serializeSchedule();" class="btn btn-primary font-weight-bold px-4 py-2" style="border-radius: 8px; background: #0284c7; border-color: #0284c7;">
                         <i class="fa-solid fa-floppy-disk mr-2"></i>Save Doctor Details
                     </button>
                 </div>
@@ -338,9 +338,25 @@
         card.style = 'background: #f8fafc; border-color: #cbd5e1 !important; border-radius: 12px;';
 
         const isDate = type === 'date';
-        const tomorrow = new Date();
-        tomorrow.setDate(tomorrow.getDate() + 1);
-        const tomorrowStr = tomorrow.toISOString().split('T')[0];
+
+        // Smart next date calculation
+        let defaultDateStr = '';
+        const existingDateInputs = container.querySelectorAll('.slot-date-input');
+        if (existingDateInputs.length > 0) {
+            const lastVal = existingDateInputs[existingDateInputs.length - 1].value;
+            if (lastVal) {
+                try {
+                    const nextD = new Date(lastVal + 'T00:00:00');
+                    nextD.setDate(nextD.getDate() + 1);
+                    defaultDateStr = nextD.toISOString().split('T')[0];
+                } catch (_) {}
+            }
+        }
+        if (!defaultDateStr) {
+            const d = new Date();
+            d.setDate(d.getDate() + 1);
+            defaultDateStr = d.toISOString().split('T')[0];
+        }
 
         card.innerHTML = `
             <div class="d-flex align-items-center justify-content-between mb-3 pb-2 border-bottom flex-wrap" style="gap: 10px;">
@@ -353,7 +369,7 @@
                     ${isDate ? `
                     <div class="d-flex align-items-center" style="gap: 8px;">
                         <label class="small font-weight-bold text-dark mb-0"><i class="fa-regular fa-calendar mr-1 text-primary"></i> Date:</label>
-                        <input type="date" class="form-control form-control-sm slot-date-input" value="${tomorrowStr}" min="${new Date().toISOString().split('T')[0]}" style="width: 170px; border-radius: 8px; font-weight: 600;" required>
+                        <input type="date" class="form-control form-control-sm slot-date-input" value="${defaultDateStr}" style="width: 170px; border-radius: 8px; font-weight: 600;" required>
                     </div>
                     ` : `
                     <div class="d-flex align-items-center" style="gap: 8px;">
@@ -459,81 +475,103 @@
         }
     }
 
-    // Intercept form submit to serialize all schedule cards into JSON
+    // Function to serialize all cards into JSON for submission
+    function serializeSchedule() {
+        const cards = document.querySelectorAll('.schedule-slot-card');
+        const scheduleList = [];
+        let missingDate = false;
+
+        cards.forEach(card => {
+            const type = card.getAttribute('data-type') || 'date';
+            let day = null;
+            let date = null;
+
+            if (type === 'date') {
+                const dateInput = card.querySelector('.slot-date-input');
+                date = dateInput ? dateInput.value.trim() : null;
+                if (!date) {
+                    missingDate = true;
+                    return;
+                }
+                try {
+                    const d = new Date(date + 'T00:00:00');
+                    const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+                    day = dayNames[d.getDay()];
+                } catch (_) {}
+            } else {
+                const dayInput = card.querySelector('.slot-day-input');
+                day = dayInput ? dayInput.value.trim() : 'Monday';
+            }
+
+            const mCheck = card.querySelector('.slot-morning-check');
+            const mStart = card.querySelector('.slot-morning-start');
+            const mEnd = card.querySelector('.slot-morning-end');
+
+            const aCheck = card.querySelector('.slot-afternoon-check');
+            const aStart = card.querySelector('.slot-afternoon-start');
+            const aEnd = card.querySelector('.slot-afternoon-end');
+
+            const eCheck = card.querySelector('.slot-evening-check');
+            const eStart = card.querySelector('.slot-evening-start');
+            const eEnd = card.querySelector('.slot-evening-end');
+
+            const mOn = mCheck ? mCheck.checked : false;
+            const aOn = aCheck ? aCheck.checked : false;
+            const eOn = eCheck ? eCheck.checked : false;
+
+            // Skip card if completely empty (no slots enabled)
+            if (!mOn && !aOn && !eOn) {
+                return;
+            }
+
+            scheduleList.push({
+                type: type,
+                day: day,
+                date: date,
+                morning_enabled: mOn,
+                morning_start: mOn && mStart ? mStart.value : null,
+                morning_end: mOn && mEnd ? mEnd.value : null,
+                afternoon_enabled: aOn,
+                afternoon_start: aOn && aStart ? aStart.value : null,
+                afternoon_end: aOn && aEnd ? aEnd.value : null,
+                evening_enabled: eOn,
+                evening_start: eOn && eStart ? eStart.value : null,
+                evening_end: eOn && eEnd ? eEnd.value : null,
+                start_time: (mOn && mStart ? mStart.value : (aOn && aStart ? aStart.value : (eOn && eStart ? eStart.value : '09:00'))),
+                end_time: (eOn && eEnd ? eEnd.value : (aOn && aEnd ? aEnd.value : (mOn && mEnd ? mEnd.value : '20:00')))
+            });
+        });
+
+        if (missingDate) {
+            alert('Please select a valid date for all visiting schedule cards.');
+            return false;
+        }
+
+        if (scheduleList.length === 0) {
+            alert('Please configure at least one active visiting schedule slot (Morning, Afternoon, or Evening) before saving.');
+            return false;
+        }
+
+        const jsonInput = document.getElementById('scheduleDataJson');
+        if (jsonInput) {
+            jsonInput.value = JSON.stringify(scheduleList);
+        }
+
+        return true;
+    }
+
+    // Attach form submit listener
     document.addEventListener('DOMContentLoaded', function () {
-        const form = document.querySelector('form[action*="partner-doctor-contact"]');
+        const form = document.getElementById('partnerDoctorForm') 
+                  || document.querySelector('form[action*="partner-doctors"]') 
+                  || document.querySelector('form[action*="partner-doctor-contact"]');
         if (!form) return;
 
         form.addEventListener('submit', function (e) {
-            const cards = document.querySelectorAll('.schedule-slot-card');
-            const scheduleList = [];
-
-            cards.forEach(card => {
-                const type = card.getAttribute('data-type') || 'day';
-                let day = null;
-                let date = null;
-
-                if (type === 'date') {
-                    const dateInput = card.querySelector('.slot-date-input');
-                    date = dateInput ? dateInput.value.trim() : null;
-                    if (date) {
-                        try {
-                            const d = new Date(date);
-                            const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-                            day = dayNames[d.getDay()];
-                        } catch (_) {}
-                    }
-                } else {
-                    const dayInput = card.querySelector('.slot-day-input');
-                    day = dayInput ? dayInput.value.trim() : 'Monday';
-                }
-
-                const mCheck = card.querySelector('.slot-morning-check');
-                const mStart = card.querySelector('.slot-morning-start');
-                const mEnd = card.querySelector('.slot-morning-end');
-
-                const aCheck = card.querySelector('.slot-afternoon-check');
-                const aStart = card.querySelector('.slot-afternoon-start');
-                const aEnd = card.querySelector('.slot-afternoon-end');
-
-                const eCheck = card.querySelector('.slot-evening-check');
-                const eStart = card.querySelector('.slot-evening-start');
-                const eEnd = card.querySelector('.slot-evening-end');
-
-                const mOn = mCheck ? mCheck.checked : false;
-                const aOn = aCheck ? aCheck.checked : false;
-                const eOn = eCheck ? eCheck.checked : false;
-
-                // At least one slot should be enabled for this day/date
-                if (!mOn && !aOn && !eOn) {
-                    return; // skip completely empty card
-                }
-
-                scheduleList.push({
-                    type: type,
-                    day: day,
-                    date: date,
-                    morning_enabled: mOn,
-                    morning_start: mOn && mStart ? mStart.value : null,
-                    morning_end: mOn && mEnd ? mEnd.value : null,
-                    afternoon_enabled: aOn,
-                    afternoon_start: aOn && aStart ? aStart.value : null,
-                    afternoon_end: aOn && aEnd ? aEnd.value : null,
-                    evening_enabled: eOn,
-                    evening_start: eOn && eStart ? eStart.value : null,
-                    evening_end: eOn && eEnd ? eEnd.value : null,
-                    start_time: (mOn && mStart ? mStart.value : (aOn && aStart ? aStart.value : (eOn && eStart ? eStart.value : '09:00'))),
-                    end_time: (eOn && eEnd ? eEnd.value : (aOn && aEnd ? aEnd.value : (mOn && mEnd ? mEnd.value : '20:00')))
-                });
-            });
-
-            if (scheduleList.length === 0) {
+            if (!serializeSchedule()) {
                 e.preventDefault();
-                alert('Please configure at least one active visiting schedule slot (Morning, Afternoon, or Evening) before saving.');
                 return false;
             }
-
-            document.getElementById('scheduleDataJson').value = JSON.stringify(scheduleList);
         });
     });
 </script>
